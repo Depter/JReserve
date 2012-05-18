@@ -1,0 +1,234 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Subsection
+Mack Method
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $C_{i,j}$
+\end_inset
+
+: cummulated claim for accident period i, development period j.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $f_{i,j}$
+\end_inset
+
+: development factor from 
+\begin_inset Formula $C_{i,j}$
+\end_inset
+
+ to 
+\begin_inset Formula $C_{i,j+1}$
+\end_inset
+
+.
+ 
+\begin_inset Formula 
+\[
+f_{i,j}=\frac{C_{i,j}}{C_{i,j+1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $f_{j}$
+\end_inset
+
+: estimated development factor for period j.
+\begin_inset Formula 
+\[
+f_{j}=\frac{\sum_{i=1}^{n}C_{i,j}f_{i,j}}{\sum_{i=1}^{n}C_{i,j}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $\sigma_{i}$
+\end_inset
+
+: standard error for 
+\begin_inset Formula $C_{i,J}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\sigma_{i,J}^{2}=C_{i,J}^{2}\sum_{j=1}^{n}\frac{\alpha_{j}^{2}}{f_{j}^{2}}(\frac{1}{C_{i,j}}+\frac{1}{\sum_{a=1}^{n}C_{a,j}})
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\[
+\alpha_{j}^{2}=\frac{1}{I-j-1}\sum_{i=1}^{I-j}C_{i,j}(\frac{C_{i,j+1}}{C_{i,j}}-f_{j})^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $R_{i}$
+\end_inset
+
+: Is the outstanding reserve for accident year i., given by the standard
+ chain-ladder method.
+\end_layout
+
+\begin_layout Enumerate
+Calculate significance intervals by assuming 
+\begin_inset Formula $R_{i}\sim N(R_{i},\sigma_{j})$
+\end_inset
+
+, or 
+\begin_inset Formula $R_{i}\sim LN(\mu_{i},s_{j})$
+\end_inset
+
+ where:
+\begin_inset Formula 
+\[
+s_{i}=ln(1+\frac{\sigma_{i}^{2}}{R_{i}^{2}})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\mu_{i}=ln(R_{i})-\frac{s_{i}^{2}}{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Assumptions of chain-ladder method
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $f_{i,j}$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{i,j+1}$
+\end_inset
+
+ are uncorrelated.
+ (Appendix G)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $\{C_{a,1}\ldots C_{a,}j\}$
+\end_inset
+
+ and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\{C_{b,1}\ldots C_{b,}j\}$
+\end_inset
+
+ are independent for 
+\begin_inset Formula $a\neq b$
+\end_inset
+
+.
+ (Appendix H)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $Var(C_{i,j+1}|C_{i,1}\ldots C_{i,j})=C_{i,j}\alpha_{j}^{2}$
+\end_inset
+
+.
+ where 
+\begin_inset Formula $\alpha_{j}$
+\end_inset
+
+ is an unknown proportionality constant.
+ Thus the variance of claim amounts are proportional to the previous year.
+ (Chapter V.)
+\end_layout
+
+\end_body
+\end_document
