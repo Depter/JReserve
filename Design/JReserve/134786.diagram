@@ -1,0 +1,84 @@
+format 76
+
+activitynodecanvas 128002 activitynode_ref 135298 // initial_node
+  xyz 38 27 2000
+end
+activityactioncanvas 128130 activityaction_ref 136834 // activity action Select triangle
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 110 18 2000 102 40
+end
+activityactioncanvas 128258 activityaction_ref 136962 // activity action Select exposire
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 262 18 2000 103 40
+end
+activityactioncanvas 128386 activityaction_ref 137090 // activity action Set ratios
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 424 17 2000 100 40
+end
+activityactioncanvas 128898 activityaction_ref 137218 // activity action Exclude individual factors
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 101 113 2000 102 40
+end
+activityactioncanvas 129026 activityaction_ref 137346 // activity action Comment excluded factor
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 102 191 2000 101 40
+end
+activitynodecanvas 129154 activitynode_ref 135426 // decision
+  xyz 140 272 2000
+end
+activityactioncanvas 130306 activityaction_ref 137474 // activity action Select development factors
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 88 360 2000 131 40
+end
+flowcanvas 128514 flow_ref 137602 // <flow>
+  
+  from ref 128002 z 2001 to ref 128130
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 128642 flow_ref 137730 // <flow>
+  
+  from ref 128130 z 2001 to ref 128258
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 128770 flow_ref 137858 // <flow>
+  
+  from ref 128258 z 2001 to ref 128386
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129282 flow_ref 137986 // <flow>
+  geometry VHV
+  
+  from ref 128386 z 2001 to point 471 82
+  line 129410 z 2001 to point 149 82
+  line 129538 z 2001 to ref 128898
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129666 flow_ref 138114 // <flow>
+  
+  from ref 128898 z 2001 to ref 129026
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129794 flow_ref 138242 // <flow>
+  
+  from ref 129026 z 2001 to ref 129154
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129922 flow_ref 138370 // <flow>
+  
+  from ref 129154 z 2001 to point 259 288
+  line 130050 z 2001 to point 259 129
+  line 130178 z 2001 to ref 128898
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130434 flow_ref 138498 // <flow>
+  
+  from ref 129154 z 2001 to ref 130306
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+end

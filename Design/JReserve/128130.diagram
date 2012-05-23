@@ -1,0 +1,134 @@
+format 76
+
+activitynodecanvas 128002 activitynode_ref 128002 // initial_node
+  xyz 35 30 2000
+end
+activityactioncanvas 128130 activityaction_ref 128002 // activity action Set name
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 114 21 2000 100 40
+end
+activityactioncanvas 128386 activityaction_ref 128130 // activity action Add comment to triangle
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 114 123 2000 100 47
+end
+activityactioncanvas 128642 activityaction_ref 128258 // activity action Select LoB
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 253 118 2000 100 60
+end
+activityactioncanvas 128770 activityaction_ref 128386 // activity action Select ClaimType
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 389 117 2000 100 60
+end
+activityactioncanvas 128898 activityaction_ref 128514 // activity action Select DataType
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 525 118 2000 100 60
+end
+activityactioncanvas 129410 activityaction_ref 128642 // activity action Select dates
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 122 246 2000 99 40
+end
+activityactioncanvas 129538 activityaction_ref 128770 // activity action Select geometry
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 250 248 2000 103 40
+end
+activityactioncanvas 129666 activityaction_ref 128898 // activity action Corrigate cell
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 424 315 2000 98 40
+end
+activityactioncanvas 129794 activityaction_ref 129026 // activity action Comment cell
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 423 396 2000 102 40
+end
+activitynodecanvas 130818 activitynode_ref 128130 // decision
+  xyz 461 468 2000
+end
+activityactioncanvas 131458 activityaction_ref 129154 // activity action Save triangle
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 428 564 2000 93 40
+end
+activitynodecanvas 131714 activitynode_ref 128258 // activity_final
+  xyz 463 649 2000
+end
+flowcanvas 128258 flow_ref 128002 // <flow>
+  
+  from ref 128002 z 2001 to ref 128130
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 128514 flow_ref 128130 // <flow>
+  
+  from ref 128130 z 2001 to ref 128386
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129026 flow_ref 128258 // <flow>
+  
+  from ref 128386 z 2001 to ref 128642
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129154 flow_ref 128386 // <flow>
+  
+  from ref 128642 z 2001 to ref 128770
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129282 flow_ref 128514 // <flow>
+  
+  from ref 128770 z 2001 to ref 128898
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129922 flow_ref 128642 // <flow>
+  geometry VHV
+  
+  from ref 128898 z 2001 to point 572 209
+  line 130178 z 2001 to point 169 209
+  line 130306 z 2001 to ref 129410
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130050 flow_ref 128770 // <flow>
+  
+  from ref 129410 z 2001 to ref 129538
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130434 flow_ref 128898 // <flow>
+  geometry HV
+  
+  from ref 129538 z 2001 to point 470 265
+  line 130562 z 2001 to ref 129666
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130690 flow_ref 129026 // <flow>
+  
+  from ref 129666 z 2001 to ref 129794
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130946 flow_ref 129154 // <flow>
+  
+  from ref 129794 z 2001 to ref 130818
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 131074 flow_ref 129282 // <flow>
+  
+  from ref 130818 z 2001 to point 560 484
+  line 131202 z 2001 to point 560 331
+  line 131330 z 2001 to ref 129666
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 131586 flow_ref 129410 // <flow>
+  
+  from ref 130818 z 2001 to ref 131458
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 131842 flow_ref 129538 // <flow>
+  
+  from ref 131458 z 2001 to ref 131714
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+end

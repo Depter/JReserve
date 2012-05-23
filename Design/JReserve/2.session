@@ -1,0 +1,14 @@
+window_sizes 1366 716 320 960 512 82
+diagrams
+  active  activitydiagram_ref 128258 // ChainLadderMethod
+    1040 560 100 4 0 0
+  activitydiagram_ref 134786 // BornhuetterFergusonMethod
+    828 448 100 4 155 0
+end
+show_stereotypes
+selected activitydiagram_ref 128258 // ChainLadderMethod
+open
+  activity_ref 128258 // ChainLadderMethod
+  activity_ref 134786 // BornhuetterFergusonMethod
+end
+end
