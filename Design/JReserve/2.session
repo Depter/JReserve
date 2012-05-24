@@ -1,14 +1,20 @@
-window_sizes 1366 716 320 960 512 82
+window_sizes 1366 716 409 951 512 82
 diagrams
-  active  activitydiagram_ref 128258 // ChainLadderMethod
+  active  classdiagram_ref 135810 // cdm_Data
+    951 560 100 4 0 0
+  activitydiagram_ref 128130 // CreateTriangle
+    828 448 100 4 0 0
+  activitydiagram_ref 128258 // ChainLadderMethod
     1040 560 100 4 0 0
-  activitydiagram_ref 134786 // BornhuetterFergusonMethod
-    828 448 100 4 155 0
 end
 show_stereotypes
-selected activitydiagram_ref 128258 // ChainLadderMethod
+selected class_ref 130178 // Comment
 open
-  activity_ref 128258 // ChainLadderMethod
-  activity_ref 134786 // BornhuetterFergusonMethod
+  classview_ref 128002 // classes
+  classview_ref 128642 // diagrams
+  classview_ref 128770 // classes
+  usecaseview_ref 128002 // CreateTriangle
+  
+  package_ref 134914 // java
 end
 end

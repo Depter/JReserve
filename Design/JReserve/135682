@@ -1,6 +1,6 @@
 format 76
 "methods" // org.decsi.jreserve::methods
-  revision 1
+  revision 2
   modified_by 2 "Peti"
   // class settings
   //class diagram settings
@@ -85,6 +85,19 @@ ${members}}
 	idl_decl ""
       end
 
+      attribute 139650 "factorCellComments"
+	private type class_ref 130178 // Comment
+	multiplicity "*"
+	stereotype "map"
+	cpp_decl ""
+	java_decl "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${stereotype}<${type}> ${name}${value};
+"
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+	comment "Contains a list of comments for each individual factor cell."
+      end
+
       operation 148226 "getName"
 	public return_type class_ref 128130 // String
 	nparams 0
@@ -121,6 +134,22 @@ ${members}}
 	
 	
 	
+      end
+
+      operation 155394 "getCommentForIndividualFactor"
+	public return_type class_ref 130178 // Comment
+	multiplicity "*"
+	nparams 2
+	  param in name "accident" explicit_type "int"
+	  param in name "development" explicit_type "int"
+	
+	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${throws}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	comment "Returns a list of comments for the given cell."
       end
     end
   end
