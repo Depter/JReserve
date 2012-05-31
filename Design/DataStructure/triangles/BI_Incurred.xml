@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<triangle name="BI_Incurred" type="incurred">
+    <geometry>
+        <first-date year="1997" month="0"/>
+        <last-date year="2004" month="0"/>
+        <month-per-accident>12</month-per-accident>
+        <mont-per-development>12</mont-per-development>
+    </geometry>
+    <comments>
+        <comment id="0" date="2012-12-31 20:12:07" user="Peter Decsi">
+            This is the first comment
+        </comment>
+        <comment id="1" date="2012-12-31 20:12:08" user="Peter Decsi">
+            This is the last comment
+        </comment>
+    </comments>
+    <accident-period year="1997" month="0">
+        <development year="0" month="0">
+            <original>3013647.785</original>
+            <actual>3013647.785</actual>
+            <comments>
+                <comment id="0" date="2012-12-31 20:12:07" user="Peter Decsi">
+                    This is the first comment
+                </comment>
+                <comment id="1" date="2012-12-31 20:12:08" user="Peter Decsi">
+                    This is the last comment
+                </comment>
+            </comments>
+        </development>
+        <development year="1" month="0">3839525.762</development>
+        <development year="2" month="0">3941805.092</development>
+        <development year="3" month="0">3943124.728</development>
+        <development year="4" month="0">3951754.468</development>
+        <development year="5" month="0">4236189.546</development>
+        <development year="6" month="0">4108739.035</development>
+        <development year="7" month="0">3988869.54</development>
+    </accident-period>
+    <accident-period year="1998" month="0">
+        <development year="0" month="0">1677038.902</development>
+        <development year="1" month="0">1916667.404</development>
+        <development year="2" month="0">2031342.237</development>
+        <development year="3" month="0">2311544.194</development>
+        <development year="4" month="0">2829382.92</development>
+        <development year="5" month="0">2715374.258</development>
+        <development year="6" month="0">2507187.377</development>
+    </accident-period>
+    <accident-period year="1999" month="0">
+        <development year="0" month="0">2119736.737</development>
+        <development year="1" month="0">2484931.133</development>
+        <development year="2" month="0">2725846.301</development>
+        <development year="3" month="0">3329335.559</development>
+        <development year="4" month="0">3331173.085</development>
+        <development year="5" month="0">3057422.099</development>
+    </accident-period>
+    <accident-period year="2000" month="0">
+        <development year="0" month="0">1947059.996</development>
+        <development year="1" month="0">3152329.593</development>
+        <development year="2" month="0">3926747.839</development>
+        <development year="3" month="0">3966003.902</development>
+        <development year="4" month="0">4155949.438</development>
+    </accident-period>
+    <accident-period year="2001" month="0">
+        <development year="0" month="0">3059368.599</development>
+        <development year="1" month="0">4219792.572</development>
+        <development year="2" month="0">4746258.998</development>
+        <development year="3" month="0">5099074.525</development>
+    </accident-period>
+    <accident-period year="2002" month="0">
+        <development year="0" month="0">4320019.156</development>
+        <development year="1" month="0">4214318.406</development>
+        <development year="2" month="0">5425728.553</development>
+    </accident-period>
+    <accident-period year="2003" month="0">
+        <development year="0" month="0">2713203.465</development>
+        <development year="1" month="0">3796244.984</development>
+    </accident-period>
+    <accident-period year="2004" month="0">
+        <development year="0" month="0">3461298.109</development>
+    </accident-period>
+</triangle>
