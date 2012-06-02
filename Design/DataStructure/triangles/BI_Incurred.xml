@@ -5,7 +5,7 @@ and open the template in the editor.
 -->
 
 
-<triangle name="BI_Incurred" type="incurred">
+<triangle name="BI_Incurred" datatype="incurred" claimtype="BI">
     <geometry>
         <first-date year="1997" month="0"/>
         <last-date year="2004" month="0"/>

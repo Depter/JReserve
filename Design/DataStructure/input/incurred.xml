@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<input type="incurred">
+    <record>
+        <accident-period year="2012" month="0"/>
+        <development-period year="0" month="0"/>
+        <value>1000.25</value>
+    </record>
+    <record>
+        <accident-period year="2012" month="0"/>
+        <development-period year="0" month="1"/>
+        <value>1000.25</value>
+    </record>
+</root>

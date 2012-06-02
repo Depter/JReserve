@@ -10,8 +10,9 @@ public enum DataType {
     PAID(0, true),
     INCURED(1, true),
     CLAIM_NUMBER(2, true),
-    PREMIUM(3, true),
-    POLICIES(4, true);
+    CASE_LOSS(3, true),
+    PREMIUM(4, false),
+    POLICIES(5, false);
     
     private boolean isTriangle;
     private int id;

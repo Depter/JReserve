@@ -1,0 +1,41 @@
+ChainLadder 			: EstimationMethod
+   - InputTriangle 		: Triangle
+	- Smoothings
+   - IndividualFactors 		: Triangle
+	- Smoothing
+	- Exclusion
+   - FactorSelection
+	- DevelopmentYears
+   	- UserDefinedFactor	: Vector
+   	- SelectedFactors  	: Vector
+
+BF 				: EstimationMethod
+   - InputTriangle 		: Triangle
+	- Smoothings
+	- Exposure		: Vector
+	- TargetRatios		: Vector
+   - IndividualFactors 		: Triangle
+	- Smoothing
+	- Exclusion
+   - FactorSelection
+	- DevelopmentYears
+   	- UserDefinedFactor	: Vector
+   	- SelectedFactors  	: Vector
+
+CapeCod 			: EstimationMethod
+   - InputTriangle 		: Triangle
+	- Smoothings
+	- Exposure		: Vector
+	- TargetRatios		: Vector
+   - IndividualFactors 		: Triangle
+	- Smoothing
+	- Exclusion
+   - FactorSelection
+	- DevelopmentYears
+   	- UserDefinedFactor	: Vector
+   	- SelectedFactors  	: Vector
+
+
+Munich_CL 			: EstimationMethod
+   - CLforPaid 			: ChainLadderEstimation
+   - CLforIncurred 		: ChainLadderEstimation

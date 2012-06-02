@@ -7,8 +7,8 @@ package org.decsi.jreserve.data;
  */
 public class MonthDate implements Comparable<MonthDate> {
     
-    private int year;
-    private int month;
+    private final int year;
+    private final int month;
     
     public MonthDate(int year, int month) {
         this.year = year;

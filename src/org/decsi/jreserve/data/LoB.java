@@ -1,65 +1,56 @@
 package org.decsi.jreserve.data;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * An LoB represents a line of business within the company.
- * 
+ *
  * @author Peter Decsi
  * @version 1.0
  */
-public class LoB implements Comparable<LoB> {
+public class LoB {
+    private final int id;
+    private final String shortName;
+    private final String name;
+    private final List<ClaimType> claimTypes = new ArrayList<ClaimType>();
     
-    private int id;
-    private String name;
-    private String shortName;
-    private List<ClaimType> claimTypes = new ArrayList<>();
+    LoB(int id, String shortName, String name) {
+        this.id = id;
+        this.shortName = shortName;
+        this.name = name;
+    }
     
     public int getId() {
         return id;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
     }
     
     public String getShortName() {
         return shortName;
     }
     
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
+    public String getName() {
+        return name;
+    }
+    
+    void addClaimType(ClaimType claimType) {
+        this.claimTypes.add(claimType);
     }
     
     public List<ClaimType> getClaimTypes() {
-        return claimTypes;
-    }
-    
-    public void addClaimType(ClaimType claimType) {
-        if(claimTypes.contains(claimType))
-           return;
-        claimTypes.add(claimType);
-        Collections.sort(claimTypes);
-    }
-    
-    @Override
-    public int compareTo(LoB lob) {
-        if(lob == null)
-            return -1;
-        return id - lob.id;
+        return new ArrayList<ClaimType>(claimTypes);
     }
     
     @Override
     public boolean equals(Object o) {
         if(o instanceof LoB)
-            return compareTo((LoB)o) == 0;
+            return equals((LoB) o);
         return false;
+    }
+    
+    public boolean equals(LoB lob) {
+        if(lob == null)
+            return false;
+        return id == lob.id;
     }
     
     @Override
@@ -69,6 +60,7 @@ public class LoB implements Comparable<LoB> {
     
     @Override
     public String toString() {
-        return String.format("LoB [%d, %s]", id, shortName);
+        return String.format("LoB [%d; %s]",
+                id, shortName);
     }
 }
