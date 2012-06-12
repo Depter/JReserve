@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="BaseDataPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>org.jreserve.data.base.Lob</class>
+    <class>org.jreserve.data.base.ClaimType</class>
+    <class>org.jreserve.data.base.DataType</class>
+    <class>org.jreserve.data.base.Project</class>
+    <class>org.jreserve.data.base.Triangle</class>
+    <class>org.jreserve.data.base.TriangleCell</class>
+    <class>org.jreserve.data.base.TriangleComment</class>
+    <class>org.jreserve.data.base.Vector</class>
+    <class>org.jreserve.data.base.VectorCell</class>
+    <class>org.jreserve.data.base.VectorComment</class>
+    <class>org.jreserve.data.base.ChangeLog</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:derby:C:\Munka\JAVA\NetbeansWS\JReserve\NetbeansProject\Database;create=true"/>
+      <property name="javax.persistence.jdbc.password" value=""/>
+      <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+      <property name="javax.persistence.jdbc.user" value=""/>
+    </properties>
+  </persistence-unit>
+</persistence>
