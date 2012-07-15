@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.jreserve.database.api
+OpenIDE-Module-Localizing-Bundle: org/jreserve/database/api/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

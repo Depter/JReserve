@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.jreserve.json
+OpenIDE-Module-Localizing-Bundle: org/jreserve/json/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

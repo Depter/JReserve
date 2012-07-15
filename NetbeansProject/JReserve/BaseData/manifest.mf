@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.jreserve.basedata
+OpenIDE-Module-Localizing-Bundle: org/jreserve/basedata/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
