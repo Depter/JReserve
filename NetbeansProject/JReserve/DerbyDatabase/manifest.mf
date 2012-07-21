@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
-OpenIDE-Module: org.jreserve.derbydatabase
-OpenIDE-Module-Localizing-Bundle: org/jreserve/derbydatabase/Bundle.properties
+OpenIDE-Module: org.jreserve.database.derby
+OpenIDE-Module-Layer: org/jreserve/database/derby/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/jreserve/database/derby/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
 
