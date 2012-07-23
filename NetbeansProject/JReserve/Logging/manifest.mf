@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.jreserve.logging
+OpenIDE-Module-Install: org/jreserve/logging/Installer.class
+OpenIDE-Module-Localizing-Bundle: org/jreserve/logging/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

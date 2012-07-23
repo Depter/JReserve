@@ -3,6 +3,8 @@ package org.jreserve.database;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
+import org.jreserve.logging.Logging;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -15,6 +17,8 @@ import org.openide.util.Exceptions;
  * @version 1.0
  */
 public class DatabaseUtil {
+    
+    private final static Logger logger = Logging.getLogger(DatabaseUtil.class.getName());
     
     private final static String DB_EXTENSION = "database";
     private final static String HOME_DIR = "Databases";
@@ -46,6 +50,7 @@ public class DatabaseUtil {
     }
     
     public static void refresh() {
+        logger.info("Loading databases...");
         if(HOME == null)
             initHomeDirectory();
         loadDatabasees();
@@ -64,16 +69,19 @@ public class DatabaseUtil {
         databases = new ArrayList<AbstractDatabase>();
         for(FileObject file : HOME.getChildren())
             if(file.isData() && file.getMIMEType().equals("jreserve/database"))
-                addFileToList(databases, file);
+                addFileToList(file);
     }
     
-    private static void addFileToList(List<AbstractDatabase> list, FileObject file) {
+    private static void addFileToList(FileObject file) {
         try {
+            logger.info(String.format("Loading database file %s.", file.getPath()));
             DataObject obj = DataObject.find(file);
             if(!(obj instanceof AbstractDatabase))
                 return;
             databases.add((AbstractDatabase) obj);
-        } catch (DataObjectNotFoundException ex) {}
+        } catch (DataObjectNotFoundException ex) {
+            logger.warn("Unable to load file!", ex);
+        }
     }
     
     private static boolean hasProperty(AbstractDatabase db, String proeprty, String value) {
