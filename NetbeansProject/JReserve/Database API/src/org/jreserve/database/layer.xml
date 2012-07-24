@@ -6,12 +6,14 @@
         <folder name="jreserve">
             <folder name="database">
                 <folder name="Factories">
+                    <!--
                     <file name="DatabaseLoader.instance">
                         <attr name="dataObjectClass" stringvalue="org.jreserve.persistence.database.AbstractDatabase"/>
                         <attr name="iconBase" stringvalue="resources/database.png"/>
                         <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
                         <attr name="mimeType" stringvalue="jreserve/test"/>
                     </file>
+                    -->
                 </folder>
             </folder>
         </folder>

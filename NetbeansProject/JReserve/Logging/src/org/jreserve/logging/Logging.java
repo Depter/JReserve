@@ -1,7 +1,5 @@
 package org.jreserve.logging;
 
-import org.apache.log4j.Logger;
-
 /**
  *
  * @author Peter Decsi
@@ -10,6 +8,10 @@ import org.apache.log4j.Logger;
 public class Logging {
     
     public static Logger getLogger(String name) {
-        return Logger.getLogger(name);
+        return new Log4jLogger(getLog4jLogger(name));
+    }
+    
+    private static org.apache.log4j.Logger getLog4jLogger(String name) {
+        return org.apache.log4j.Logger.getLogger(name);
     }
 }

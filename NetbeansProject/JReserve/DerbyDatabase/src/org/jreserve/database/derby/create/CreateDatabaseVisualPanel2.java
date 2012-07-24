@@ -14,9 +14,9 @@ import org.openide.util.NbBundle;
     "CTL_userName=User name",
     "CTL_password=Password:",
     "CTL_helpMsg=Fill in these fields to protect the database,\n or leave them empty to create an unprotected database.",
-    "CTL_createDbLabel=Creating database...",
+    "CTL_createDbLabel=Creating database..."
 })
-final class CreateDatabaseVisualPanel2 extends JPanel {
+class CreateDatabaseVisualPanel2 extends JPanel {
 
     public CreateDatabaseVisualPanel2() {
         initComponents();

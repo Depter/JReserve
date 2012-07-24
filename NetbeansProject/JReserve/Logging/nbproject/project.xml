@@ -32,7 +32,6 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
-                <package>org.apache.log4j</package>
                 <package>org.jreserve.logging</package>
             </public-packages>
             <class-path-extension>

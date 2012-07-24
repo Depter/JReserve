@@ -3,7 +3,7 @@ package org.jreserve.database;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.jreserve.logging.Logger;
 import org.jreserve.logging.Logging;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -50,9 +50,9 @@ public class DatabaseUtil {
     }
     
     public static void refresh() {
-        logger.info("Loading databases...");
         if(HOME == null)
             initHomeDirectory();
+        logger.info("Loading databases...");
         loadDatabasees();
     }
     
@@ -60,7 +60,9 @@ public class DatabaseUtil {
         try {
             FileObject configHome = FileUtil.getConfigRoot();
             HOME = FileUtil.createFolder(configHome, HOME_DIR);
+            logger.info("Database home directory set to '%s'.", HOME.getPath());
         } catch (IOException ex) {
+            logger.error(ex, "Unable to create directory '%s' in user dir!", HOME_DIR);
             Exceptions.printStackTrace(ex);
         }
     }
@@ -74,13 +76,13 @@ public class DatabaseUtil {
     
     private static void addFileToList(FileObject file) {
         try {
-            logger.info(String.format("Loading database file %s.", file.getPath()));
+            logger.info(String.format("Loading database file '%s'.", file.getPath()));
             DataObject obj = DataObject.find(file);
             if(!(obj instanceof AbstractDatabase))
                 return;
             databases.add((AbstractDatabase) obj);
         } catch (DataObjectNotFoundException ex) {
-            logger.warn("Unable to load file!", ex);
+            logger.error("Unable to load file!", ex);
         }
     }
     
@@ -111,6 +113,8 @@ public class DatabaseUtil {
         try {
             return HOME.createData(name, DB_EXTENSION);
         } catch (IOException ex) {
+            logger.error(ex, "Unable to create file '%s.%s' in '%s'", 
+                name, DB_EXTENSION, HOME.getPath());
             return null;
         }
     }

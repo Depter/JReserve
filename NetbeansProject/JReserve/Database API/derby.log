@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Tue Jul 24 11:20:20 CEST 2012:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-0138-b849-7c83-0000021b1a18 
+on database directory D:\Temp\db1  with class loader ModuleCL@1972e3a[org.jreserve.database.derby] 
+Loaded from jar:file:/D:/Eigen/GitRepos/JReserve/NetbeansProject/JReserve/build/cluster/modules/ext/derby.jar!/
+java.vendor=Sun Microsystems Inc.
+java.runtime.version=1.6.0_17-b04
+user.dir=D:\Eigen\GitRepos\JReserve\NetbeansProject\JReserve\Database API
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue Jul 24 11:20:25 CEST 2012:
+Shutting down instance a816c00e-0138-b849-7c83-0000021b1a18 on database directory D:\Temp\db1 with class loader ModuleCL@1972e3a[org.jreserve.database.derby] 

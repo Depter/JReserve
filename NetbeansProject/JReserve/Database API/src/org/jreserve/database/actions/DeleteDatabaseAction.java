@@ -11,6 +11,8 @@ import java.util.List;
 import org.jreserve.database.AbstractDatabase;
 import org.jreserve.database.DatabaseUtil;
 import org.jreserve.database.explorer.DatabaseRootChildren;
+import org.jreserve.logging.Logger;
+import org.jreserve.logging.Logging;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -35,6 +37,8 @@ displayName = "#CTL_DeleteDatabaseAction")
 })
 public final class DeleteDatabaseAction implements ActionListener {
 
+    private final static Logger logger = Logging.getLogger(DeleteDatabaseAction.class.getName());
+    
     private final List<AbstractDatabase> databases;
 
     public DeleteDatabaseAction(List<AbstractDatabase> context) {
@@ -72,8 +76,10 @@ public final class DeleteDatabaseAction implements ActionListener {
     private void deleteDatabases() {
         for(AbstractDatabase database : databases) {
             try {
+                logger.info("Deleting database: %s", database.getShortName());
                 database.deleteDatabase();
             } catch (IOException ex) {
+                logger.error(ex, "Unable to delete database '%s'!", database.getShortName());
                 Exceptions.printStackTrace(ex);
                 return;
             }

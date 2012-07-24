@@ -11,6 +11,8 @@ import java.util.List;
 import org.jreserve.database.AbstractDatabase;
 import org.jreserve.database.DatabaseUtil;
 import org.jreserve.database.explorer.DatabaseRootChildren;
+import org.jreserve.logging.Logger;
+import org.jreserve.logging.Logging;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -34,6 +36,8 @@ import org.openide.util.NbBundle.Messages;
 })
 public final class CloseDatabaseAction implements ActionListener {
 
+    private final static Logger logger = Logging.getLogger(CloseDatabaseAction.class.getName());
+    
     private final List<AbstractDatabase> context;
 
     public CloseDatabaseAction(List<AbstractDatabase> context) {
@@ -50,11 +54,13 @@ public final class CloseDatabaseAction implements ActionListener {
     }
     
     private boolean saveDatabase(AbstractDatabase database) {
+        logger.info("Closing database: %s", database.getShortName());
         database.setOpened(false);
         try {
             database.save();
             return true;
         } catch (IOException ex) {
+            logger.error(ex, "Unable to save database '%s'!", database.getShortName());
             Exceptions.printStackTrace(ex);
             return false;
         }

@@ -2,6 +2,8 @@ package org.jreserve.database;
 
 import java.io.IOException;
 import java.util.Properties;
+import org.jreserve.logging.Logger;
+import org.jreserve.logging.Logging;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -10,6 +12,8 @@ import org.openide.filesystems.FileObject;
  * @version 1.0
  */
 public class DatabaseFactory {
+    
+    private final static Logger logger = Logging.getLogger(DatabaseFactory.class.getName());
     
     protected Properties properties = new Properties();
     private String dbName;
@@ -53,6 +57,11 @@ public class DatabaseFactory {
             properties.remove(property);
         else
             properties.put(property, value);
+        logger.trace("Database [%s]: %s => %s", getShortName(), property, value);
+    }
+    
+    private String getShortName() {
+        return properties.getProperty(AbstractDatabase.SHORT_NAME);
     }
     
     public void setBooleanProperty(String property, boolean value) {
@@ -64,5 +73,7 @@ public class DatabaseFactory {
         FileObject file = DatabaseUtil.getFileForName(dbName);
         PropertyWriter writer = new PropertyWriter(file);
         writer.writeProperties(properties);
+        logger.debug("Database '%s' created in file '%s'.", 
+                getShortName(), file.getPath());
     }
 }

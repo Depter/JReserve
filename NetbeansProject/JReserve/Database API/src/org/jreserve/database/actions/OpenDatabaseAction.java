@@ -7,6 +7,8 @@ import java.util.List;
 import org.jreserve.database.AbstractDatabase;
 import org.jreserve.database.DatabaseUtil;
 import org.jreserve.database.explorer.DatabaseRootChildren;
+import org.jreserve.logging.Logger;
+import org.jreserve.logging.Logging;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -24,6 +26,8 @@ displayName = "#CTL_OpenDatabaseAction")
 @Messages("CTL_OpenDatabaseAction=Open Database")
 public final class OpenDatabaseAction implements ActionListener {
 
+    private final static Logger logger = Logging.getLogger(OpenDatabaseAction.class.getName());
+
     @Override
     public void actionPerformed(ActionEvent e) {
         List<AbstractDatabase> databases = new OpenDatabaseDialog().getDatabases();
@@ -39,11 +43,13 @@ public final class OpenDatabaseAction implements ActionListener {
     }
     
     private boolean openDatabase(AbstractDatabase database) {
+        logger.info("Opening database: %s", database.getShortName());
         database.setOpened(true);
         try {
             database.save();
             return true;
         } catch (IOException ex) {
+            logger.error(ex, "Unable to save database '%s'!", database.getShortName());
             Exceptions.printStackTrace(ex);
             return false;
         }
