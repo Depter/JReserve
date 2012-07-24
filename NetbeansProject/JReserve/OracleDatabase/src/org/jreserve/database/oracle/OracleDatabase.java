@@ -11,6 +11,8 @@ import org.openide.loaders.DataObjectExistsException;
  * @version 1.0
  */
 public class OracleDatabase extends AbstractDatabase {
+    private final static String ORACLE_DIALECT = "org.hibernate.dialect.OracleDialect";
+    
     public static final String URL =  "jdbc:oracle:thin:@%s:%d:%s";
     
     public final static String HOST  = "db.host";
@@ -19,6 +21,14 @@ public class OracleDatabase extends AbstractDatabase {
 
     OracleDatabase(FileObject file, OracleDatabaseLoader loader) throws DataObjectExistsException, IOException {
         super(file, loader);
+    }
+    
+    @Override
+    protected void checkProperties() throws IOException {
+        super.checkProperties();
+        checkPropertySet(HOST);
+        checkPropertySet(PORT);
+        checkPropertySet(SID);
     }
     
     public String getHost() {
@@ -48,5 +58,18 @@ public class OracleDatabase extends AbstractDatabase {
     
     public void setSID(String sid) {
         setProperty(SID, sid);
-    } 
+    }
+
+    @Override
+    public String getConnectionUrl() {
+        String host = getHost();
+        int port = getPort();
+        String sid = getSID();
+        return String.format(URL, host, port, sid);
+    }
+
+    @Override
+    public String getDialect() {
+        return ORACLE_DIALECT;
+    }
 }

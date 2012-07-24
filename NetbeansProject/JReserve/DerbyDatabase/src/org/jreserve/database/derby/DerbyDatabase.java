@@ -20,6 +20,12 @@ public class DerbyDatabase extends AbstractDatabase {
         super(file, loader);
     }
     
+    @Override
+    protected void checkProperties() throws IOException{
+        super.checkProperties();
+        checkPropertySet(DB_FOLDER);
+    }
+    
     public String getDatabaseFolder() {
         return super.getProperty(DB_FOLDER);
     }
@@ -33,5 +39,15 @@ public class DerbyDatabase extends AbstractDatabase {
         String home = getDatabaseFolder();
         DerbyDatabaseDeleter deleter = new DerbyDatabaseDeleter(home);
         deleter.deleteDatabase();
+    }
+
+    @Override
+    public String getConnectionUrl() {
+        return String.format(URL, getProperty(DB_FOLDER));
+    }
+
+    @Override
+    public String getDialect() {
+        return null;
     }
 }

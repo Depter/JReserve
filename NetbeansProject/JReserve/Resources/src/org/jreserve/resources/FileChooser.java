@@ -1,4 +1,7 @@
 package org.jreserve.resources;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Point;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
@@ -7,6 +10,7 @@ import org.openide.filesystems.FileChooserBuilder;
 import org.openide.filesystems.FileChooserBuilder.BadgeProvider;
 import org.openide.filesystems.FileChooserBuilder.SelectionApprover;
 import org.openide.util.NbBundle.Messages;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -174,9 +178,22 @@ public class FileChooser {
     }
 
     public JFileChooser createFileChooser() {
-        return builder.createFileChooser();
+        JFileChooser chooser = builder.createFileChooser();
+        centerDialog(chooser);
+        return chooser;
     }
-
+    
+    private void centerDialog(JFileChooser chooser) {
+        Frame main = WindowManager.getDefault().getMainWindow();
+        Point mainLocation = main.getLocation();
+        Dimension mainSize = main.getSize();
+        
+        Dimension mySize  = chooser.getSize();
+        int x = mainLocation.x + (mainSize.width - mySize.width) / 2 ;
+        int y = mainLocation.y + (mainSize.height - mySize.height) / 2 ;
+        chooser.setLocation(x, y);
+    }
+    
     public File[] showMultiOpenDialog() {
         return builder.showMultiOpenDialog();
     }
