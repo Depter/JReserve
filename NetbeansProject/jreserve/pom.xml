@@ -15,11 +15,6 @@
             <name>NetBeans</name>
             <url>http://bits.netbeans.org/maven2/</url>
         </repository>
-        <repository>
-            <id>netbeans-snapshot</id>
-            <name>NetBeans Snapshots</name>
-            <url>http://bits.netbeans.org/netbeans/trunk/maven-snapshot/</url>
-        </repository>
     </repositories>
 
     <build>
@@ -35,6 +30,7 @@
                         <cluster>${brandingToken}</cluster>
                     </configuration>
                 </plugin>
+                
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -44,14 +40,15 @@
                         <target>1.6</target>
                     </configuration>
                 </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-                <configuration>
-                    <useDefaultManifestFile>true</useDefaultManifestFile>
-                </configuration>
-            </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.3.1</version>
+                    <configuration>
+                        <useDefaultManifestFile>true</useDefaultManifestFile>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -59,14 +56,14 @@
     <modules>
         <module>branding</module>
         <module>application</module>
-        <module>jreserve-logging</module>
         <module>jreserve-resources</module>
+        <module>jreserve-logging</module>
         <module>jreserve-database</module>
         <module>jreserve-database-derby</module>
         <module>jreserve-database-oracle</module>
         <module>jreserve-persistence</module>
         <module>jreserve-project</module>
-  </modules>
+    </modules>
 
     <properties>
         <netbeans.version>RELEASE72</netbeans.version>

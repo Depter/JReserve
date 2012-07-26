@@ -28,3 +28,12 @@
 /NetbeansProject/JReserve/Project API/build/
 /NetbeansProject/JReserve/Persistence API/nbproject/private/
 /NetbeansProject/JReserve/Project API/nbproject/private/
+/NetbeansProject/jreserve/branding/target/
+/NetbeansProject/jreserve/jreserve-logging/target/
+/NetbeansProject/jreserve/jreserve-resources/target/
+/NetbeansProject/jreserve/jreserve-database/target/
+/NetbeansProject/jreserve/jreserve-database-derby/target/
+/NetbeansProject/jreserve/jreserve-database-oracle/target/
+/NetbeansProject/jreserve/jreserve-persistence/target/
+/NetbeansProject/jreserve/jreserve-project/target/
+/NetbeansProject/jreserve/application/target/
