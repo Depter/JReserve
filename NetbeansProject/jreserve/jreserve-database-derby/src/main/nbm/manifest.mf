@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Layer: org/jreserve/database/derby/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/jreserve/database/derby/Bundle.properties

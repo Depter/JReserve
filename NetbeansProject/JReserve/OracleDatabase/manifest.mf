@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.jreserve.database.oracle
-OpenIDE-Module-Layer: org/jreserve/database/oracle/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/jreserve/database/oracle/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
-

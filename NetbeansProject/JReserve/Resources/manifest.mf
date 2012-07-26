@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.jreserve.resources
-OpenIDE-Module-Localizing-Bundle: org/jreserve/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
-
