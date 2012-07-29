@@ -18,6 +18,7 @@ import org.openide.util.lookup.Lookups;
 public class DatabaseNode extends AbstractNode {
 
     private final static Image NORMAL = ImageUtilities.loadImage("resources/database.png");
+    private final static Image CONNECTED = ImageUtilities.loadImage("resources/database_connected.png");
     
     private AbstractDatabase database;
     
@@ -29,12 +30,14 @@ public class DatabaseNode extends AbstractNode {
 
     @Override
     public Image getIcon(int type) {
+        if(database.isUsed())
+            return CONNECTED;
         return NORMAL;
     }
 
     @Override
     public Image getOpenedIcon(int type) {
-        return NORMAL;
+        return getIcon(type);
     }
 
     @Override

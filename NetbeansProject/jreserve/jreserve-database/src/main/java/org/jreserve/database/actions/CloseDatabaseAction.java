@@ -55,7 +55,7 @@ public final class CloseDatabaseAction implements ActionListener {
     
     private boolean saveDatabase(AbstractDatabase database) {
         logger.info("Closing database: %s", database.getShortName());
-        database.setOpened(false);
+        closeDatabase(database);
         try {
             database.save();
             return true;
@@ -64,6 +64,12 @@ public final class CloseDatabaseAction implements ActionListener {
             Exceptions.printStackTrace(ex);
             return false;
         }
+    }
+    
+    private void closeDatabase(AbstractDatabase database) {
+        if(database.isUsed())
+            database.setUsed(false);
+        database.setOpened(false);
     }
     
     private void refresh() {

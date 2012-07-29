@@ -1,4 +1,4 @@
-package org.jreserve.project;
+package org.jreserve.project.entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;

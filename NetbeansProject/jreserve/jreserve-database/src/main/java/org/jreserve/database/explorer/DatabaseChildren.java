@@ -27,7 +27,9 @@ public abstract class DatabaseChildren extends Children.Keys<AbstractDatabase>{
     }
     
     public final void refreshDatabases() {
-        setKeys(getSortedDatabases());
+        setKeys(new AbstractDatabase[0]);
+        List<AbstractDatabase> dbs = getSortedDatabases();
+        setKeys(dbs);
         super.refresh();
     }
     
