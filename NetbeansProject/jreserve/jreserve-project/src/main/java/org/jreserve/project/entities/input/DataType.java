@@ -1,4 +1,4 @@
-package org.jreserve.project.entities;
+package org.jreserve.project.entities.input;
 
 import java.io.Serializable;
 import javax.persistence.Column;
