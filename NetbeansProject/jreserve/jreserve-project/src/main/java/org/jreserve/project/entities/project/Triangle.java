@@ -3,10 +3,7 @@ package org.jreserve.project.entities.project;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.input.ClaimType;
 import org.jreserve.project.entities.input.DataType;
@@ -16,10 +13,24 @@ import org.jreserve.project.entities.input.DataType;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(entityClass=Triangle.class)
+@EntityRegistration(generateId=true)
 @Entity
 @Table(name="TRIANGLE", schema="JRESERVE")
+@TableGenerator(
+    name="org.jreserve.project.entities.project.Triangle",
+    catalog=EntityRegistration.CATALOG,
+    schema=EntityRegistration.SCHEMA,
+    table=EntityRegistration.TABLE,
+    pkColumnName=EntityRegistration.ID_COLUMN,
+    valueColumnName=EntityRegistration.VALUE_COLUMN,
+    pkColumnValue="org.jreserve.project.entities.project.Triangle"
+)
 public class Triangle extends AbstractData implements Serializable {
+    
+    @Id
+    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.project.entities.project.Triangle")
+    @Column(name="ID")
+    private long id;
     
     @Embedded
     private TriangleGeometry geometry;
@@ -35,6 +46,10 @@ public class Triangle extends AbstractData implements Serializable {
     
     public Triangle(Project project, ClaimType claimType, DataType dataType, String name) {
         super(project, claimType, dataType, name);
+    }
+
+    public long getId() {
+        return id;
     }
     
     public TriangleGeometry getGeometry() {

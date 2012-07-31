@@ -1,13 +1,16 @@
 package org.jreserve.project.entities;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
-import org.jreserve.project.entities.input.*;
+import org.jreserve.project.entities.input.ClaimData;
+import org.jreserve.project.entities.input.ClaimType;
+import org.jreserve.project.entities.input.DataType;
+import org.jreserve.project.entities.input.LoB;
 import org.jreserve.project.entities.project.*;
 
 /**
@@ -18,7 +21,6 @@ import org.jreserve.project.entities.project.*;
 public class HibernateUtil {
     
     private final static Class<?>[] ENTITIES = {
-        IdGenerator.class,
         DataType.class,
         LoB.class,
         ClaimType.class,
@@ -34,26 +36,19 @@ public class HibernateUtil {
     };
     
     private static Logger logger = Logger.getLogger(HibernateUtil.class);
-    private static final SessionFactory sessionFactory = buildFactory();
     
-    private static SessionFactory buildFactory() {
-        try {
-            Configuration cfg = getConfiguration();
-            ServiceRegistry reg = getServiceRegistry(cfg);
-            SessionFactory factory = cfg.buildSessionFactory(reg);
-            IdGenerator.generateIds(factory, ENTITIES);
-            return cfg.buildSessionFactory(reg);
-        } catch (Throwable ex) {
-            logger.error("SessionFactory creation failed!", ex);
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
+    private final static Configuration cfg = getConfiguration();
+    private final static ServiceRegistry reg = getServiceRegistry(cfg);
+    
+    
+    private static SessionFactory sessionFactory;
+    
     
     private static Configuration getConfiguration() {
-        Configuration cfg = new Configuration();
-        cfg.configure();
-        addEntities(cfg);
-        return cfg;
+        Configuration config = new Configuration();
+        config.configure();
+        addEntities(config);
+        return config;
     }
     
     private static void addEntities(Configuration cfg) {
@@ -67,7 +62,32 @@ public class HibernateUtil {
         return builder.buildServiceRegistry();    
     }
     
+    public static void open() {
+        try {
+            sessionFactory = cfg.buildSessionFactory(reg);
+        } catch (Throwable ex) {
+            logger.error("SessionFactory creation failed!", ex);
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
+    
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
+    }
+    
+    public static Session getCurrentSession() {
+        return sessionFactory.getCurrentSession();
+    }
+    
+    public static void close() {
+        sessionFactory.close();
+        closeDb();
+    }
+    
+    private static void closeDb() {
+        try {
+            Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+            DriverManager.getConnection("jdbc:derby:memory:TestDb;drop=true");
+        } catch (Exception ex) {}
     }
 }

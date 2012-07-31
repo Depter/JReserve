@@ -1,10 +1,7 @@
 package org.jreserve.project.entities.input;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
 
@@ -13,14 +10,24 @@ import org.jreserve.persistence.PersistenceUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(entityClass=DataType.class)
+@EntityRegistration(generateId=true)
 @Entity
-@Table(name="LOB", schema="JRESERVE")
+@Table(name="DATA_TYPE", schema="JRESERVE")
+@TableGenerator(
+    name="org.jreserve.project.entities.input.DataType",
+    catalog=EntityRegistration.CATALOG,
+    schema=EntityRegistration.SCHEMA,
+    table=EntityRegistration.TABLE,
+    pkColumnName=EntityRegistration.ID_COLUMN,
+    valueColumnName=EntityRegistration.VALUE_COLUMN,
+    pkColumnValue="org.jreserve.project.entities.input.DataType"
+)
 public class DataType implements Serializable {
     private final static long serialVersionUID = 1L;
     private final static int NAME_LENGTH = 64;
     
-    @Id
+    @Id 
+    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.project.entities.input.DataType")
     @Column(name="ID", nullable=false)
     private long id;
     
@@ -51,13 +58,13 @@ public class DataType implements Serializable {
     @Override
     public boolean equals(Object o) {
         if(o instanceof DataType)
-            return id == ((DataType)o).id;
+            return name.equalsIgnoreCase(((DataType)o).name);
         return false;
     }
     
     @Override
     public int hashCode() {
-        return (int) id;
+        return name.hashCode();
     }
     
     @Override

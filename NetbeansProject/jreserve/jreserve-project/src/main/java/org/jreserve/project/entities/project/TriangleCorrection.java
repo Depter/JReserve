@@ -4,14 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 import org.jreserve.persistence.EntityRegistration;
-import org.jreserve.persistence.PersistenceUtil;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(entityClass=TriangleCorrection.class)
+@EntityRegistration
 @Entity
 @IdClass(TriangleCorrectionPk.class)
 @Table(name="TRIANGLE_CORRECTION", schema="JRESERVE")

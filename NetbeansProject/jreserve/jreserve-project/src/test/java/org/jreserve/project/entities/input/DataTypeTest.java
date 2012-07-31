@@ -1,12 +1,8 @@
 package org.jreserve.project.entities.input;
 
-import org.hibernate.Session;
-import org.jreserve.project.entities.HibernateUtil;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.jreserve.project.entities.TestUtil;
 import static org.junit.Assert.*;
-import org.junit.Before;
+import org.junit.*;
 
 /**
  *
@@ -16,31 +12,21 @@ public class DataTypeTest {
     
     private final static String NAME = "Paid";
     
-    private static Session session;
     private DataType dataType;
     
     public DataTypeTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        session = HibernateUtil.getSessionFactory().getCurrentSession();
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-        session.close();
     }
     
     @Before
     public void setUp() {
         dataType = new DataType(NAME);
     }
-
+    
     @Test
     public void testGetId() {
+        assertEquals(0, dataType.getId());
     }
-
+    
     @Test
     public void testGetName() {
         assertEquals(NAME, dataType.getName());
@@ -48,18 +34,55 @@ public class DataTypeTest {
 
     @Test
     public void testSetName() {
+        dataType.setName("bela");
+        assertEquals("bela", dataType.getName());
+    }
+
+    @Test(expected=NullPointerException.class)
+    public void testSetName_Null() {
+        dataType.setName(null);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testSetName_EmptyString() {
+        dataType.setName("");
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testSetName_TooLong() {
+        dataType.setName(TestUtil.TEXT_65);
+    }
+
+    @Test(expected=NullPointerException.class)
+    public void testConstructor_Null() {
+        new DataType(null);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testConstructor_EmptyString() {
+        new DataType("");
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testConstructor_TooLong() {
+        new DataType(TestUtil.TEXT_65);
     }
 
     @Test
     public void testEquals() {
-    }
-
-    @Test
-    public void testHashCode() {
+        DataType dt1 = new DataType(NAME.toUpperCase());
+        DataType dt2 = new DataType(NAME.toLowerCase());
+        DataType dt3 = new DataType(NAME+NAME);
+        
+        assertFalse(dt1.equals(null));
+        assertTrue(dt1.equals(dt2));
+        assertFalse(dt1.equals(dt3));
     }
 
     @Test
     public void testToString() {
+        String expected = String.format("DataType [0; %s]", NAME);
+        assertEquals(expected, dataType.toString());
     }
 
 }

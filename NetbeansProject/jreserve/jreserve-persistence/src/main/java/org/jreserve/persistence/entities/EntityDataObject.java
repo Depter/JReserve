@@ -15,6 +15,7 @@ import org.openide.util.lookup.Lookups;
 public class EntityDataObject extends MultiDataObject {
 
     final static String CLASS_ATTRIBUTE = "class";
+    final static String GENERATED_ID = "generatedId";
     private final Lookup lookup;
     
     public EntityDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException {

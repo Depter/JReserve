@@ -10,7 +10,7 @@ import org.jreserve.persistence.EntityRegistration;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(entityClass=ClaimData.class)
+@EntityRegistration
 @Entity
 @IdClass(ClaimDataPk.class)
 @Table(name="CLAIM_DATA", schema="JRESERVE")
@@ -104,6 +104,10 @@ public class ClaimData implements Serializable {
 
     public double getClaimValue() {
         return claimValue;
+    }
+    
+    public void setClaimValue(double value) {
+        this.claimValue = value;
     }
     
     @Override

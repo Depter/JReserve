@@ -12,15 +12,25 @@ import org.jreserve.persistence.PersistenceUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(entityClass=LoB.class)
+@EntityRegistration(generateId=true)
 @Entity
 @Table(name="LOB", schema="JRESERVE")
+@TableGenerator(
+    name="org.jreserve.project.entities.input.LoB",
+    catalog=EntityRegistration.CATALOG,
+    schema=EntityRegistration.SCHEMA,
+    table=EntityRegistration.TABLE,
+    pkColumnName=EntityRegistration.ID_COLUMN,
+    valueColumnName=EntityRegistration.VALUE_COLUMN,
+    pkColumnValue="org.jreserve.project.entities.input.LoB"
+)
 public class LoB implements Serializable {
     private final static long serialVersionUID = 1L;
 
     private final static int NAME_LENGTH = 64;
     
     @Id
+    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.project.entities.input.LoB")
     @Column(name="ID", nullable=false)
     private long id;
     
@@ -51,19 +61,30 @@ public class LoB implements Serializable {
         this.name = name;
     }
     
+    protected List<ClaimType> getRealClaimTypes() {
+        return claimTypes;
+    }
+    
     public List<ClaimType> getClaimTypes() {
         return new ArrayList<ClaimType>(claimTypes);
     }
     
     public void addClaimType(ClaimType claimType) {
-        if(claimTypes.contains(claimType))
+        if(containsClaimType(claimType.getName()))
             return;
         claimType.setLoB(this);
         claimTypes.add(claimType);
     }
     
+    boolean containsClaimType(String ctName) {
+        for(ClaimType ct : claimTypes)
+            if(ct.getName().equalsIgnoreCase(ctName))
+                return true;
+        return false;
+    }
+    
     public void removeClaimType(ClaimType claimType) {
-        if(!claimTypes.contains(claimType))
+        if(!claimTypes.contains(claimType) || !this.equals(claimType.getLoB()))
             return;
         claimTypes.remove(claimType);
         claimType.setLoB(null);
@@ -71,13 +92,13 @@ public class LoB implements Serializable {
     @Override
     public boolean equals(Object o) {
         if(o instanceof LoB)
-            return id == ((LoB)o).id;
+            return name.equalsIgnoreCase(((LoB)o).name);
         return false;
     }
     
     @Override
     public int hashCode() {
-        return (int) id;
+        return name.hashCode();
     }
     
     @Override

@@ -12,9 +12,18 @@ import org.jreserve.persistence.PersistenceUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(entityClass=VectorComment.class)
+@EntityRegistration(generateId=true)
 @Entity
 @Table(name="VECTOR_COMMENT", schema="JRESERVE")
+@TableGenerator(
+    name="org.jreserve.project.entities.project.VectorComment",
+    catalog=EntityRegistration.CATALOG,
+    schema=EntityRegistration.SCHEMA,
+    table=EntityRegistration.TABLE,
+    pkColumnName=EntityRegistration.ID_COLUMN,
+    valueColumnName=EntityRegistration.VALUE_COLUMN,
+    pkColumnValue="org.jreserve.project.entities.project.VectorComment"
+)
 public class VectorComment implements Serializable {
     private final static long serialVersionUID = 1L;
     
@@ -22,6 +31,7 @@ public class VectorComment implements Serializable {
     
     @Id
     @Column(name="ID")
+    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.project.entities.project.VectorComment")
     private long id;
     
     @ManyToOne(cascade= CascadeType.ALL)

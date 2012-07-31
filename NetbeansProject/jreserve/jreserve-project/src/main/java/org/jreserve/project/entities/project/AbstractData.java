@@ -20,10 +20,6 @@ public abstract class AbstractData {
     
     private final static int NAME_SIZE = 64;
     
-    @Id
-    @Column(name="ID")
-    private long id;
-    
     @ManyToOne(cascade=CascadeType.REMOVE)
     @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
     private Project project;
@@ -84,10 +80,6 @@ public abstract class AbstractData {
     private void initName(String name) {
         PersistenceUtil.checkVarchar(name, NAME_SIZE);
         this.name = name;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public Project getProject() {

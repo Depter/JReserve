@@ -10,7 +10,7 @@ import org.jreserve.persistence.EntityRegistration;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(entityClass=VectorCorrection.class)
+@EntityRegistration
 @Entity
 @IdClass(VectorCorrectionPk.class)
 @Table(name="VECTOR_CORRECTION", schema="JRESERVE")

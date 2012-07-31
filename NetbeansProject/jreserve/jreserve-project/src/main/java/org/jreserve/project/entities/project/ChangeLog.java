@@ -11,13 +11,23 @@ import org.jreserve.persistence.EntityRegistration;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(entityClass=ChangeLog.class)
+@EntityRegistration(generateId=true)
 @Entity
 @Table(name="CHANGE_LOG", schema="JRESERVE")
+@TableGenerator(
+    name="org.jreserve.project.entities.project.ChangeLog",
+    catalog=EntityRegistration.CATALOG,
+    schema=EntityRegistration.SCHEMA,
+    table=EntityRegistration.TABLE,
+    pkColumnName=EntityRegistration.ID_COLUMN,
+    valueColumnName=EntityRegistration.VALUE_COLUMN,
+    pkColumnValue="org.jreserve.project.entities.project.ChangeLog"
+)
 public class ChangeLog implements Serializable {
     private final static long serialVersionUID = 1L;
     
     @Id
+    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.project.entities.project.ChangeLog")
     @Column(name="ID")
     private long id;
     
