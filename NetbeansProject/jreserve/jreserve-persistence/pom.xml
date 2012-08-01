@@ -113,6 +113,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>javax.persistence</publicPackage>
+                        <publicPackage>org.hibernate.annotations</publicPackage>
                         <publicPackage>org.jreserve.persistence</publicPackage>
                     </publicPackages>
                 </configuration>

@@ -8,7 +8,7 @@
   <session-factory>
     <!-- DB connection settings -->
     <property name="connection.driver_class">org.apache.derby.jdbc.EmbeddedDriver</property>
-    <property name="hibernate.connection.url">jdbc:derby:memory:TestDb;create=true</property>
+    <property name="hibernate.connection.url">jdbc:derby:memory:TestDb</property>
     <!--
     <property name="dialect">org.hibernate.dialect.DerbyTenSevenDialect</property>
     -->
