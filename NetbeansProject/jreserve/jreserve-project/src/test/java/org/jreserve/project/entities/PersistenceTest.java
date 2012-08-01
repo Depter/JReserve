@@ -4,12 +4,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import org.hibernate.Session;
+import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.HibernateUtil;
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.*;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
 
 /**
  *
@@ -17,6 +15,9 @@ import org.junit.BeforeClass;
  */
 public class PersistenceTest {
     private final static String DERBY_SHUTDOWN_STATE = "08006";
+    private final static String DELETE_IDS = String.format("DELETE FROM %s.%s",
+              EntityRegistration.SCHEMA, EntityRegistration.TABLE);
+    
     private Session session;
     
     public PersistenceTest() {
@@ -30,7 +31,6 @@ public class PersistenceTest {
 
     private static void createDatabase() throws Exception {
         System.setProperty("derby.stream.error.field", "java.lang.System.err");
-        //System.setProperty("derby.stream.error.logSeverityLevel", "60000");
         Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
         DriverManager.getConnection("jdbc:derby:memory:TestDb;create=true").close();
     }
@@ -55,8 +55,18 @@ public class PersistenceTest {
         session = HibernateUtil.getCurrentSession();
     }
     
+    @After
+    public void tearDown() {
+        session = HibernateUtil.getCurrentSession();
+        session.beginTransaction();
+        session.createSQLQuery(DELETE_IDS).executeUpdate();
+        session.clear();
+        session.getTransaction().commit();
+    }
+    
     @Test
     public void testDataType() throws Exception {
+        System.out.println("testDataType");
         session.beginTransaction();
         try {
             DataType dt1 = new DataType("DataType 1");
@@ -85,6 +95,7 @@ public class PersistenceTest {
     
     @Test
     public void testCreateLob() throws Exception {
+        System.out.println("testCreateLob");
         session.beginTransaction();
         try {
             LoB lob1 = new LoB("Dummy Lob 1");
@@ -103,6 +114,49 @@ public class PersistenceTest {
             lobs = session.createQuery("from LoB").list();
             assertTrue(lobs.isEmpty());
             
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            session.getTransaction().rollback();
+            throw ex;
+        }
+    }
+    
+    @Test
+    public void testClaimType() throws Throwable {
+        System.out.println("testClaimType");
+        session.beginTransaction();
+        try {
+            LoB lob = new LoB("LOB");
+            ClaimType claimType = new ClaimType("ClaimType");
+            lob.addClaimType(claimType);
+            
+            session.persist(lob);
+            assertTrue(lob.getId() > 0);
+            assertEquals(1, claimType.getId());
+
+            session.delete(lob);
+            List claimTypes = session.createQuery("from ClaimType").list();
+            assertTrue(claimTypes.isEmpty());
+            
+            List lobs = session.createQuery("from LoB").list();
+            assertTrue(lobs.isEmpty());
+            
+            session.getTransaction().commit();
+        } catch (Throwable ex) {
+            session.getTransaction().rollback();
+            throw ex;
+        }
+    }
+    
+    @Test(expected=Exception.class)
+    public void testClaimType_NoLob() throws Exception {
+        System.out.println("tetClaimType_NoLob");
+        session.beginTransaction();
+        try {
+            ClaimType claimType = new ClaimType("ClaimType");
+            session.save(claimType);
+            
+            session.delete(claimType);
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();

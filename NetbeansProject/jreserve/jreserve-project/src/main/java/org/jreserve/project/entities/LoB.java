@@ -37,7 +37,7 @@ public class LoB implements Serializable {
     @Column(name="LOB_NAME", nullable=false, length=NAME_LENGTH)
     private String name;
     
-    @OneToMany(mappedBy="lob")
+    @OneToMany(mappedBy="lob", orphanRemoval=true, cascade= CascadeType.PERSIST)
     private List<ClaimType> claimTypes = new ArrayList<ClaimType>();
     
     protected LoB() {

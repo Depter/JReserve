@@ -34,8 +34,8 @@ public class ClaimType implements Serializable {
     @Column(name="LOB_NAME", nullable=false, length=NAME_LENGTH)
     private String name;
     
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="LOB_ID")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="LOB_ID", referencedColumnName="ID", nullable=false)
     private LoB lob;
     
     protected ClaimType() {
@@ -61,13 +61,6 @@ public class ClaimType implements Serializable {
         String msg = "Name '%s' is already used in LoB '%s'";
         msg = String.format(msg, name, lob.getName());
         throw new IllegalArgumentException(msg);
-    }
-    
-    private boolean nameUsedInLoB(String name) {
-        for(ClaimType ct : lob.getRealClaimTypes())
-            if(ct.getName().equalsIgnoreCase(name))
-                return true;
-        return false;
     }
     
     public String getName() {
