@@ -12,8 +12,8 @@ import org.junit.Before;
 public class ProjectTest {
 
     private final static String NAME = "Project";
-    private final static ClaimType claimType = new ClaimType("ClaimType");
     
+    private ClaimType claimType;;
     private Project project;
     
     public ProjectTest() {
@@ -21,27 +21,24 @@ public class ProjectTest {
 
     @Before
     public void setUp() {
-        project = new Project(claimType, NAME);
-    }
-
-    @Test(expected=NullPointerException.class)
-    public void testConstructor_ClaimTypeNull() {
-        new Project(null, NAME);
+        claimType = new ClaimType("ClaimType");
+        project = new Project(NAME);
+        claimType.addProject(project);
     }
 
     @Test(expected=NullPointerException.class)
     public void testConstructor_NameNull() {
-        new Project(claimType, null);
+        new Project(null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_NameTooShort() {
-        new Project(claimType, "");
+        new Project("");
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_NameTooLong() {
-        new Project(claimType, TestUtil.TEXT_65);
+        new Project(TestUtil.TEXT_65);
     }
     
     @Test
@@ -106,13 +103,16 @@ public class ProjectTest {
         Project p2 = null;
         assertFalse(project.equals(p2));
         
-        p2 = new Project(claimType, NAME.toLowerCase());
-        assertTrue(project.equals(p2));
+        p2 = new Project(NAME.toLowerCase());
+        Project p3 = new Project(NAME.toUpperCase());
+        assertTrue(p2.equals(p3));
         
-        p2 = new Project(claimType, NAME+NAME);
+        p2 = new Project(NAME+NAME);
+        claimType.addProject(p2);
         assertFalse(project.equals(p2));
         
-        p2 = new Project(new ClaimType("CT 2"), NAME);
+        p2 = new Project(NAME);
+        new ClaimType("CT 2").addProject(p2);
         assertFalse(project.equals(p2));
     }
 

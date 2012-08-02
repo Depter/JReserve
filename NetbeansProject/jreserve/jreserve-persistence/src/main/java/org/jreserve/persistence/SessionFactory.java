@@ -4,7 +4,7 @@ import org.hibernate.cfg.Configuration;
 import org.jreserve.database.PersistenceDatabase;
 import org.jreserve.logging.Logger;
 import org.jreserve.logging.Logging;
-import org.jreserve.persistence.entities.EntityUtil;
+import org.jreserve.persistence.entities.EntityFactory;
 
 /**
  *
@@ -50,7 +50,8 @@ class SessionFactory {
     private final static String SECOND_LEVEL_CACHE = "org.hibernate.cache.internal.NoCacheProvider";
     private final static boolean ECHO_SQL = false;
     private final static String SESSION_CONTEXT = "thread";
-
+    private final static String UPDATE_SCHMEA = "update";
+    
     private final Configuration config;
     
     SessionFactory() {
@@ -67,6 +68,7 @@ class SessionFactory {
         setProperty(Properties.SECOND_LEVEL_CACHE, SECOND_LEVEL_CACHE);
         setProperty(Properties.SESSION_CONTEXT, SESSION_CONTEXT);
         setProperty(Properties.ECHO_SQL, ECHO_SQL);
+        setProperty(Properties.SCHEMA_GENERATION, UPDATE_SCHMEA);
     }
     
     private void setProperty(Properties property, int value) {
@@ -119,8 +121,8 @@ class SessionFactory {
     }
     
     private void addEntities() {
-        EntityUtil entities = new EntityUtil();
-        for(Class<?> clazz : entities.getEntities())
+        EntityFactory entityFactory = new EntityFactory();
+        for(Class<?> clazz : entityFactory.getEntityClasses())
             config.addAnnotatedClass(clazz);
-    }    
+    }
 }

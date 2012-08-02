@@ -42,5 +42,11 @@ public class ConnectDatabaseAction implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent ev) {
+        //TODO check if there is an opened database, with unsaved changes.
+        LoginDialog dialog = new LoginDialog(database);
+        dialog.setVisible(true);
+        if(dialog.isCancelled())
+            return;
+        
     }
 }

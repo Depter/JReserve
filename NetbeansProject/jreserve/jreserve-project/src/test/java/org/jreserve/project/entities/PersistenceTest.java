@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.HibernateUtil;
 import org.junit.*;
@@ -57,110 +58,161 @@ public class PersistenceTest {
     
     @After
     public void tearDown() {
-        session = HibernateUtil.getCurrentSession();
+        if(session.isOpen())
+            session.getTransaction().rollback();
+    }
+    
+    @Test
+    public void testDataType() {
         session.beginTransaction();
-        session.createSQLQuery(DELETE_IDS).executeUpdate();
-        session.clear();
+        
+        DataType dt1 = new DataType("DataType 1");
+        DataType dt2 = new DataType("DataType 2");
+            
+        session.save(dt1);
+        session.save(dt2);
+        assertTrue(0 < dt1.getId());
+        assertTrue(0 < dt2.getId());
+        
+        List<DataType> dts = session.createQuery("from DataType").list();
+        assertEquals(2, dts.size());
+        
+        for(DataType dt : dts)
+            session.delete(dt);
+        
+        dts = session.createQuery("from DataType").list();
+        assertTrue(dts.isEmpty());
+            
         session.getTransaction().commit();
     }
     
     @Test
-    public void testDataType() throws Exception {
-        System.out.println("testDataType");
+    public void testCreateLob() {
         session.beginTransaction();
-        try {
-            DataType dt1 = new DataType("DataType 1");
-            DataType dt2 = new DataType("DataType 2");
-            
-            session.save(dt1);
-            session.save(dt2);
-            assertEquals(1, dt1.getId());
-            assertEquals(2, dt2.getId());
         
-            List<DataType> dts = session.createQuery("from DataType").list();
-            assertEquals(2, dts.size());
+        LoB lob1 = new LoB("Dummy Lob 1");
+        LoB lob2 = new LoB("Dummy Lob 2");
+        session.save(lob1);
+        session.save(lob2);
+        assertTrue(0 < lob1.getId());
+        assertTrue(0 < lob2.getId());
         
-            for(DataType dt : dts)
-                session.delete(dt);
+        List<LoB> lobs = session.createQuery("from LoB").list();
+        assertEquals(2, lobs.size());
         
-            dts = session.createQuery("from DataType").list();
-            assertTrue(dts.isEmpty());
-            
-            session.getTransaction().commit();
-        } catch (Exception ex) {
-            session.getTransaction().rollback();
-            throw ex;
-        }
-    }
-    
-    @Test
-    public void testCreateLob() throws Exception {
-        System.out.println("testCreateLob");
-        session.beginTransaction();
-        try {
-            LoB lob1 = new LoB("Dummy Lob 1");
-            LoB lob2 = new LoB("Dummy Lob 2");
-            session.save(lob1);
-            session.save(lob2);
-            assertEquals(1, lob1.getId());
-            assertEquals(2, lob2.getId());
-        
-            List<LoB> lobs = session.createQuery("from LoB").list();
-            assertEquals(2, lobs.size());
-        
-            for(LoB lob : lobs)
-                session.delete(lob);
-        
-            lobs = session.createQuery("from LoB").list();
-            assertTrue(lobs.isEmpty());
-            
-            session.getTransaction().commit();
-        } catch (Exception ex) {
-            session.getTransaction().rollback();
-            throw ex;
-        }
-    }
-    
-    @Test
-    public void testClaimType() throws Throwable {
-        System.out.println("testClaimType");
-        session.beginTransaction();
-        try {
-            LoB lob = new LoB("LOB");
-            ClaimType claimType = new ClaimType("ClaimType");
-            lob.addClaimType(claimType);
-            
-            session.persist(lob);
-            assertTrue(lob.getId() > 0);
-            assertEquals(1, claimType.getId());
-
+        for(LoB lob : lobs)
             session.delete(lob);
-            List claimTypes = session.createQuery("from ClaimType").list();
-            assertTrue(claimTypes.isEmpty());
+        
+        lobs = session.createQuery("from LoB").list();
+        assertTrue(lobs.isEmpty());
             
-            List lobs = session.createQuery("from LoB").list();
-            assertTrue(lobs.isEmpty());
+        session.getTransaction().commit();
+    }
+    
+    @Test
+    public void testClaimType() {
+        session.beginTransaction();
+
+        LoB lob = new LoB("LOB");
+        ClaimType claimType = new ClaimType("ClaimType");
+        lob.addClaimType(claimType);
             
-            session.getTransaction().commit();
-        } catch (Throwable ex) {
-            session.getTransaction().rollback();
-            throw ex;
-        }
+        session.persist(lob);
+        session.persist(claimType);
+        assertTrue(0 < lob.getId());
+        assertTrue(0 < claimType.getId());
+
+        session.delete(lob);
+        List claimTypes = session.createQuery("from ClaimType").list();
+        assertTrue(claimTypes.isEmpty());
+            
+        List lobs = session.createQuery("from LoB").list();
+        assertTrue(lobs.isEmpty());
+            
+        session.getTransaction().commit();
     }
     
     @Test(expected=Exception.class)
-    public void testClaimType_NoLob() throws Exception {
-        System.out.println("tetClaimType_NoLob");
+    public void testClaimType_NoLob() {
         session.beginTransaction();
-        try {
-            ClaimType claimType = new ClaimType("ClaimType");
-            session.save(claimType);
-            
-            session.delete(claimType);
-            session.getTransaction().commit();
-        } catch (Exception ex) {
-            session.getTransaction().rollback();
-            throw ex;
-        }
+
+        ClaimType claimType = new ClaimType("ClaimType");
+        session.save(claimType);
+        session.getTransaction().commit();
+    }
+    
+    @Test
+    public void testProject() throws Exception {
+        session.beginTransaction();
+
+        LoB lob = new LoB("LOB");
+        ClaimType claimType = new ClaimType("ClaimType");
+        Project project = new Project("Project");
+        
+        lob.addClaimType(claimType);
+        claimType.addProject(project);
+        
+        session.persist(lob);
+        session.persist(claimType);
+        session.persist(project);
+        assertTrue(0 < lob.getId());
+        assertTrue(0 < claimType.getId());
+        assertTrue(0 < project.getId());
+        List projects = session.createQuery("from Project").list();
+        assertFalse(projects.isEmpty());
+        
+        session.delete(lob);
+        projects = session.createQuery("from Project").list();
+        assertTrue(projects.isEmpty());
+        
+        session.getTransaction().commit();
+    }
+    
+    @Test(expected=Exception.class)
+    public void testProject_NoClaimType() {
+        session.beginTransaction();
+        
+        Project project = new Project("Project");
+        session.save(project);
+        session.getTransaction().commit();
+    }
+    
+    @Test
+    public void testChangeLog() {
+        session.beginTransaction();
+        
+        LoB lob = new LoB("LoB");
+        ClaimType claimType = new ClaimType("ClaimType");
+        Project project = new Project("Project");
+        
+        lob.addClaimType(claimType);
+        claimType.addProject(project);
+        
+        ChangeLog log = new ChangeLog("Changed!");
+        project.addChange(log);
+        
+        session.persist(lob);
+        session.persist(claimType);
+        session.persist(project);
+        session.persist(log);
+        
+        assertTrue(0 < log.getId());
+        List logs = session.createQuery("from ChangeLog").list();
+        assertFalse(logs.isEmpty());
+        
+        session.delete(log);
+        logs = session.createQuery("from ChangeLog").list();
+        assertTrue(logs.isEmpty());
+        
+        session.getTransaction().commit();
+    }
+    
+    @Test(expected=Exception.class)
+    public void testChangeLog_NoProject() {
+        session.beginTransaction();
+        
+        ChangeLog log = new ChangeLog("Changed!");
+        session.save(log);
+        session.getTransaction().commit();
     }
 }

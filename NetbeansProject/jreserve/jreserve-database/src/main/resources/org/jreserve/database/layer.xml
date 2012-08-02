@@ -22,13 +22,4 @@
             <attr name="position" intvalue="150"/>
         </folder>
     </folder>    
-    
-    <folder name="Services">
-        <folder name="MIMEResolver">
-            <file name="DatabaseResolver.xml" url="DatabaseResolver.xml">
-                <attr name="displayName" bundlevalue="org.jreserve.database.Bundle#Services/MIMEResolver/DatabaseResolver.xml"/>
-            </file>
-        </folder>
-    </folder>
-    
 </filesystem>

@@ -72,4 +72,9 @@ public class OracleDatabase extends AbstractDatabase {
     public String getDialect() {
         return ORACLE_DIALECT;
     }
+
+    @Override
+    public void loadDriver() throws Exception {
+        Class.forName(OracleDatabaseProvider.DRIVER_NAME);
+    }
 }

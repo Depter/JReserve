@@ -81,6 +81,12 @@
         </dependency>
         
         <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-windows</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-database</artifactId>
             <version>${project.version}</version>
@@ -89,6 +95,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-logging</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-resources</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -3,9 +3,11 @@ package org.jreserve.database;
 import java.io.IOException;
 import java.util.Properties;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.nodes.Node;
+import org.openide.util.NbBundle.Messages;
 
 /**
  * This class represents the possible database connections to use.
@@ -20,6 +22,13 @@ import org.openide.nodes.Node;
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "CTL_DatabaseResolverDisplayName=Database descriptors"
+})
+@MIMEResolver.Registration(
+    displayName="#CTL_DatabaseResolverDisplayName",
+    resource="DatabaseResolver.xml"
+)
 public abstract class AbstractDatabase extends MultiDataObject implements PersistenceDatabase {
 
     public final static String DRIVER_CLASS = "driver.class";

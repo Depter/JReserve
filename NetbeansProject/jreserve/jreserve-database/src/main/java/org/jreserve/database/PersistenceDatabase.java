@@ -41,4 +41,10 @@ public interface PersistenceDatabase {
      * used to display this database. Can not be null.
      */
     public String getShortName();
+    
+    /**
+     * This method should lode the driver, this database instance uses.
+     * This method may be called from multiple threads.
+     */
+    public void loadDriver() throws Exception;
 }

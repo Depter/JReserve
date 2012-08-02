@@ -30,8 +30,11 @@ import org.openide.util.lookup.ServiceProvider;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class EntityRegistrationProcessor extends LayerGeneratingProcessor {
     
-    private final static String LOCATION = "jreserve/entities/%s.entity";
-    
+    final static String ENTITY_DIRECTORY = "jreserve/entities";
+    final static String CLASS_ATRIBUTE = "className";
+    final static String GENERATED_ID_ATTRIBUTE = "generatedId";
+    private final static String LOCATION = ENTITY_DIRECTORY + "/%s.entity";
+
     private final static String ERR_NOT_ENTITY = 
         "Class '%s' is not annotated with '%s'!";
     private final static String ERR_NO_TABLE_GENERATOR = 
@@ -257,8 +260,8 @@ public class EntityRegistrationProcessor extends LayerGeneratingProcessor {
     
     private void addClass(String cName, TypeElement e) {
         LayerBuilder.File file = layer(e).file(getFileName(cName));
-        EntityRegistration registration = getRegistration(e);
-        buildFile(file, registration);
+        file.stringvalue(CLASS_ATRIBUTE, cName);
+        buildFile(file, getRegistration(e));
     }
     
     private String getFileName(String name) {
@@ -267,7 +270,7 @@ public class EntityRegistrationProcessor extends LayerGeneratingProcessor {
     }
     
     private void buildFile(LayerBuilder.File file, EntityRegistration registration) {
-        file.boolvalue(EntityDataObject.GENERATED_ID, registration.generateId());
+        file.boolvalue(GENERATED_ID_ATTRIBUTE, registration.generateId());
         file.write();
     }
 }

@@ -37,7 +37,7 @@ public class LoB implements Serializable {
     @Column(name="LOB_NAME", nullable=false, length=NAME_LENGTH)
     private String name;
     
-    @OneToMany(mappedBy="lob", orphanRemoval=true, cascade= CascadeType.PERSIST)
+    @OneToMany(mappedBy="lob", orphanRemoval=true)
     private List<ClaimType> claimTypes = new ArrayList<ClaimType>();
     
     protected LoB() {
@@ -69,11 +69,12 @@ public class LoB implements Serializable {
         return new ArrayList<ClaimType>(claimTypes);
     }
     
-    public void addClaimType(ClaimType claimType) {
+    public boolean addClaimType(ClaimType claimType) {
         if(containsClaimType(claimType.getName()))
-            return;
+            return false;
         claimType.setLoB(this);
         claimTypes.add(claimType);
+        return true;
     }
     
     boolean containsClaimType(String ctName) {
@@ -83,12 +84,14 @@ public class LoB implements Serializable {
         return false;
     }
     
-    public void removeClaimType(ClaimType claimType) {
+    public boolean removeClaimType(ClaimType claimType) {
         if(!claimTypes.contains(claimType) || !this.equals(claimType.getLoB()))
-            return;
+            return false;
         claimTypes.remove(claimType);
         claimType.setLoB(null);
+        return true;
     }
+    
     @Override
     public boolean equals(Object o) {
         if(o instanceof LoB)

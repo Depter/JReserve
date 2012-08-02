@@ -1,6 +1,8 @@
 package org.jreserve.project.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
@@ -34,9 +36,12 @@ public class ClaimType implements Serializable {
     @Column(name="LOB_NAME", nullable=false, length=NAME_LENGTH)
     private String name;
     
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY, optional=false)
     @JoinColumn(name="LOB_ID", referencedColumnName="ID", nullable=false)
     private LoB lob;
+    
+    @OneToMany(mappedBy="claimType", orphanRemoval=true)
+    private List<Project> projects = new ArrayList<Project>();
     
     protected ClaimType() {
     }
@@ -74,6 +79,33 @@ public class ClaimType implements Serializable {
     void setLoB(LoB lob) {
         this.lob = lob;
     }
+    
+    public List<Project> getProjects() {
+        return new ArrayList<Project>();
+    }
+    
+    public boolean addProject(Project project) {
+        if(containsProject(project.getName()))
+            return false;
+        project.setClaimType(this);
+        projects.add(project);
+        return true;
+    }
+    
+    boolean containsProject(String projectName) {
+        for(Project p : projects)
+            if(p.getName().equalsIgnoreCase(projectName))
+                return true;
+        return false;
+    }
+    
+    public boolean removeProject(Project project) {
+        if(!projects.contains(project) || !this.equals(project.getClaimType()))
+            return false;
+        projects.remove(project);
+        project.setClaimType(null);
+        return true;
+    }    
     
     @Override
     public boolean equals(Object o) {

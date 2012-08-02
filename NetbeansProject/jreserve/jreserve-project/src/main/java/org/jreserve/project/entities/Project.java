@@ -35,7 +35,7 @@ public class Project implements Serializable {
     @Column(name="ID")
     private long id;
     
-    @ManyToOne(cascade=CascadeType.REMOVE)
+    @ManyToOne(cascade=CascadeType.REMOVE, optional=false)
     @JoinColumn(name="CLAIM_TYPE_ID", referencedColumnName="ID", nullable=false)
     private ClaimType claimType;
     
@@ -46,21 +46,14 @@ public class Project implements Serializable {
     @Type(type="org.hibernate.type.TextType")
     private String description;
     
-    @OneToMany(mappedBy="project", orphanRemoval=true, cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="project", orphanRemoval=true)
     private List<ChangeLog> changes = new ArrayList<ChangeLog>();
     
     protected Project() {
     }
     
-    public Project(ClaimType claimType, String name) {
-        initClaimType(claimType);
+    public Project(String name) {
         initName(name);
-    }
-    
-    private void initClaimType(ClaimType claimType) {
-        if(claimType == null)
-            throw new NullPointerException("ClaimType is null!");
-        this.claimType = claimType;
     }
     
     private void initName(String name) {
@@ -74,6 +67,10 @@ public class Project implements Serializable {
     
     public ClaimType getClaimType() {
         return claimType;
+    }
+    
+    void setClaimType(ClaimType claimType) {
+        this.claimType = claimType;
     }
     
     public String getName() {
@@ -109,8 +106,14 @@ public class Project implements Serializable {
     }
     
     private boolean equals(Project o) {
-        return claimType.equals(o.claimType) &&
+        return claimTypeEquals(o.claimType) &&
                name.equalsIgnoreCase(o.name);
+    }
+    
+    private boolean claimTypeEquals(ClaimType claimType) {
+        if(this.claimType == null)
+            return claimType == null;
+        return this.claimType.equals(claimType);
     }
     
     @Override
@@ -121,6 +124,7 @@ public class Project implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("Project [%s; %s]", name, claimType.getName());
+        String ctName = (claimType==null? null : claimType.getName());
+        return String.format("Project [%s; %s]", name, ctName);
     }
 }

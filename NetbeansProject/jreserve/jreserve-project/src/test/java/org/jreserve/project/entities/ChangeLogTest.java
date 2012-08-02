@@ -35,7 +35,7 @@ public class ChangeLogTest {
     
     @Test
     public void testSetProject() {
-        Project project = new Project(new ClaimType("ClaimType"), "Project");
+        Project project = new Project("Project");
         log.setProject(project);
         assertEquals(project, log.getProject());
     }
@@ -47,9 +47,13 @@ public class ChangeLogTest {
     
     @Test(expected=IllegalStateException.class)
     public void testSetProject_ProjectAlreadySet() {
-        ClaimType claimType = new ClaimType("ClaimType");
-        log.setProject(new Project(claimType, "Project 1"));
-        log.setProject(new Project(claimType, "Project 2"));
+        try {
+            log.setProject(new Project("Project 1"));
+            log.setProject(new Project("Project 2"));
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
     }
 
     @Test

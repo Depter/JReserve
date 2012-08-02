@@ -15,12 +15,4 @@
         </folder>
     </folder>
     
-    <folder name="Services">
-        <folder name="MIMEResolver">
-            <file name="EntityResolver.xml" url="entities/EntityResolver.xml">
-                <attr name="displayName" bundlevalue="org.jreserve.persistence.Bundle#Services/MIMEResolver/EntityResolver.xml"/>
-            </file>
-        </folder>
-    </folder>
-    
 </filesystem>
