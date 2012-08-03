@@ -1,9 +1,6 @@
 package org.jreserve.persistence.connection;
 
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.SwingWorker;
 import org.hibernate.SessionFactory;
@@ -78,12 +75,16 @@ class LoginDialog extends javax.swing.JDialog {
     private void centerDialog() {
         Container parent = super.getParent();
         Point mainLocation = parent.getLocation();
-        Dimension mainSize = parent.getSize();
+        Dimension mainSize = parent.isVisible()? parent.getSize() : getScreenSize();
         
         Dimension mySize  = getSize();
         int x = mainLocation.x + (mainSize.width - mySize.width) / 2 ;
         int y = mainLocation.y + (mainSize.height - mySize.height) / 2 ;
         setLocation(x, y);
+    }
+    
+    private Dimension getScreenSize() {
+        return Toolkit.getDefaultToolkit().getScreenSize();
     }
     
     boolean isCancelled() {
@@ -278,7 +279,7 @@ class LoginDialog extends javax.swing.JDialog {
         
         @Override
         protected SessionFactory doInBackground() throws Exception {
-            logger.debug("Checking connection to '%s' with driver '%s'.", url, driver);
+            logger.info("Checking connection to '%s' with driver '%s'.", url, driver);
             ProxyDriver.registerDriver(driver);
             return createFactory();
         }

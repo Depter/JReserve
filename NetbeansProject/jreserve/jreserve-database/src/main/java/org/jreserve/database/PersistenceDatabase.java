@@ -53,7 +53,14 @@ public interface PersistenceDatabase {
     
     /**
      * Marks that this databae is the one that is currently used. Never 
-     * set this property directly. Setting this value will trigger a save.
+     * set this property directly.
      */
-    public void setUsed(boolean used) throws IOException;
+    public void setUsed(boolean used);
+    
+    /**
+     * Saves the database.
+     * 
+     * @throws IOException 
+     */
+    public void save() throws IOException;
 }

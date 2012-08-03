@@ -162,9 +162,8 @@ public abstract class AbstractDatabase extends MultiDataObject implements Persis
      * set this property directly.
      */
     @Override
-    public void setUsed(boolean used) throws IOException {
+    public void setUsed(boolean used) {
         setBooleanProperty(IS_USED, used);
-        save();
     }
     
     /**
@@ -236,6 +235,7 @@ public abstract class AbstractDatabase extends MultiDataObject implements Persis
      * @throws IOException when something goes wrong with the 
      *                     "ConfigHome/Databases/db.database" file.
      */
+    @Override
     public void save() throws IOException {
         PropertyWriter writer = new PropertyWriter(getPrimaryFile());
         writer.writeProperties(properties);
