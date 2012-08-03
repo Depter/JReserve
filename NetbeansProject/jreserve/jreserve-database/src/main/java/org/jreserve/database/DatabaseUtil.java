@@ -26,6 +26,13 @@ public class DatabaseUtil {
     private static FileObject HOME;
     private static List<AbstractDatabase> databases = null;
     
+    public synchronized static PersistenceDatabase getUsedDatabase() {
+        for(AbstractDatabase db : getOpenedDatabases())
+            if(db.isUsed())
+                return db;
+        return null;
+    }
+    
     public synchronized static List<AbstractDatabase> getOpenedDatabases() {
         return getAllByProperty(AbstractDatabase.IS_OPENED, AbstractDatabase.TRUE);
     }

@@ -1,14 +1,17 @@
 package org.jreserve.persistence.action;
 
+import org.jreserve.persistence.connection.LoginDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.jreserve.database.AbstractDatabase;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.io.IOException;
+import org.hibernate.SessionFactory;
+import org.jreserve.database.PersistenceDatabase;
+import org.jreserve.persistence.connection.SessionFactoryBuilder;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -31,22 +34,42 @@ import org.openide.util.NbBundle;
     "CTL_ConnectDatabaseAction=Connect Database"
 })
 public class ConnectDatabaseAction implements ActionListener {
-
-    private final static Logger logger = Logging.getLogger(ConnectDatabaseAction.class.getName());
     
-    private final AbstractDatabase database;
+    private final PersistenceDatabase database;
 
-    public ConnectDatabaseAction(AbstractDatabase database) {
+    public ConnectDatabaseAction(PersistenceDatabase database) {
         this.database = database;
     }
     
     @Override
     public void actionPerformed(ActionEvent ev) {
+        if(database.isUsed())
+            return;
         //TODO check if there is an opened database, with unsaved changes.
+        LoginDialog login = login();
+        if(login != null) {
+            setUsed();
+            createSessionFactory(login.getSessionFactory());
+        }
+    }
+    
+    private boolean setUsed() {
+        try {
+            database.setUsed(true);
+            return true;
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+            return false;
+        }
+    }
+    
+    private LoginDialog login() {
         LoginDialog dialog = new LoginDialog(database);
         dialog.setVisible(true);
-        if(dialog.isCancelled())
-            return;
-        
+        return dialog.isCancelled()? null : dialog;
+    }
+    
+    private void createSessionFactory(SessionFactory sessionFactory) {
+        sessionFactory.close();
     }
 }

@@ -1,4 +1,4 @@
-package org.jreserve.persistence.entities;
+package org.jreserve.persistence.connection;
 
 import java.util.ArrayList;
 import java.util.Collections;

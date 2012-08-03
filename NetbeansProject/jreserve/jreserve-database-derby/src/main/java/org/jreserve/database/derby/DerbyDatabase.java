@@ -2,7 +2,6 @@ package org.jreserve.database.derby;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.DriverManager;
 import org.jreserve.database.AbstractDatabase;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObjectExistsException;
@@ -50,10 +49,5 @@ public class DerbyDatabase extends AbstractDatabase {
     @Override
     public String getDialect() {
         return null;
-    }
-
-    @Override
-    public void loadDriver() throws Exception {
-        Class.forName(DerbyDatabaseProvider.DRIVER_NAME);
     }
 }

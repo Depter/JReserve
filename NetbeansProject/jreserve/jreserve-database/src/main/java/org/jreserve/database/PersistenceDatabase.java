@@ -1,5 +1,7 @@
 package org.jreserve.database;
 
+import java.io.IOException;
+
 /**
  * This interface defines the contract between the Database API and
  * the Persistence API.
@@ -42,9 +44,16 @@ public interface PersistenceDatabase {
      */
     public String getShortName();
     
+    
     /**
-     * This method should lode the driver, this database instance uses.
-     * This method may be called from multiple threads.
+     * Returuns wether this database is the one that is currently
+     * used.
      */
-    public void loadDriver() throws Exception;
+    public boolean isUsed();
+    
+    /**
+     * Marks that this databae is the one that is currently used. Never 
+     * set this property directly. Setting this value will trigger a save.
+     */
+    public void setUsed(boolean used) throws IOException;
 }

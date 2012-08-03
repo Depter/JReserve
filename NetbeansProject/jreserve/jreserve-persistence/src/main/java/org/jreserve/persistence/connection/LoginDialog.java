@@ -1,20 +1,16 @@
-package org.jreserve.persistence.action;
+package org.jreserve.persistence.connection;
 
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.*;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.util.Enumeration;
-import java.util.List;
 import javax.swing.SwingWorker;
+import org.hibernate.SessionFactory;
 import org.jreserve.database.PersistenceDatabase;
 import org.jreserve.logging.Logger;
 import org.jreserve.logging.Logging;
 import org.jreserve.resources.images.ImageResources;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.WindowManager;
 
@@ -68,9 +64,8 @@ class LoginDialog extends javax.swing.JDialog {
     
     private final PersistenceDatabase database;
     private boolean cancelled = true;
-    private String userName = null;
-    private char[] password = null;
     private ConnectionChecker checker;
+    private SessionFactory sessionFactory;
     
     LoginDialog(PersistenceDatabase database) {
         super(getParentWindow(), getTitle(database), MODAL);
@@ -95,17 +90,13 @@ class LoginDialog extends javax.swing.JDialog {
         return cancelled;
     }
     
-    String getUserName() {
-        return userName;
-    }
-    
-    char[] getPassword() {
-        return password;
+    SessionFactory getSessionFactory() {
+        return sessionFactory;
     }
     
     private void cancel() {
         stopChecker();
-        cancelState();
+        cancelled = true;
         dispose();
     }
     
@@ -114,12 +105,6 @@ class LoginDialog extends javax.swing.JDialog {
             return;
         checker.cancel(true);
         checker = null;
-    }
-    
-    private void cancelState() {
-        cancelled = true;
-        userName = null;
-        password = null;
     }
     
     private void ok() {
@@ -137,25 +122,20 @@ class LoginDialog extends javax.swing.JDialog {
         msgLabel.setVisible(isChecking);
         pBar.setIndeterminate(isChecking);
         pBar.setVisible(isChecking);
+        pack();
     }
     
     private void checkerFinnished() {
         setCheckState(false);
         try {
-            checker.get();
-            okState();
+            sessionFactory = checker.get();
+            cancelled = false;
             dispose();
         } catch (Exception ex) {
             showException(ex);
         } finally {
             checker = null;
         }
-    }
-    
-    private void okState() {
-        cancelled = false;
-        password = passwordText.getPassword();
-        userName = escapeUserName();
     }
     
     private String escapeUserName() {
@@ -277,17 +257,18 @@ class LoginDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     
-    private class ConnectionChecker extends SwingWorker<Void, Void> {
+    private class ConnectionChecker extends SwingWorker<SessionFactory, Void> {
         
         private final String driver;
         private final String url;
+        private final String dialect;
         private final String user = escapeUserName();
         private final char[] password = passwordText.getPassword();
-        private final ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
         
         private ConnectionChecker() {
             this.driver = database.getDriverClass();
             this.url = database.getConnectionUrl();
+            this.dialect = database.getDialect();
         }
         
         @Override
@@ -296,31 +277,16 @@ class LoginDialog extends javax.swing.JDialog {
         }
         
         @Override
-        protected Void doInBackground() throws Exception {
-            registerDriver();
-            printDrivers();
-            DriverManager.getConnection(url, user, getPassAsString()).close();
-            return null;
+        protected SessionFactory doInBackground() throws Exception {
+            logger.debug("Checking connection to '%s' with driver '%s'.", url, driver);
+            ProxyDriver.registerDriver(driver);
+            return createFactory();
         }
         
-        private void registerDriver() throws Exception {
-            for(Driver driverInstance : Lookup.getDefault().lookupAll(Driver.class))
-                DriverManager.registerDriver(driverInstance);
-            //Class<?> driverClass = classLoader.loadClass(driver);
-            //Driver driverInstance = (Driver) driverClass.newInstance();
-            //DriverManager.registerDriver(driverInstance);
-        }
-        
-        private void printDrivers() {
-            Enumeration<Driver> drivers = DriverManager.getDrivers();
-            while(drivers.hasMoreElements())
-                logger.debug("Driver: %s", drivers.nextElement().getClass());
-        }
-        
-        private String getPassAsString() {
-            if(password == null)
-                return null;
-            return new String(password);
+        private SessionFactory createFactory() {
+            SessionFactoryBuilder builder = new SessionFactoryBuilder();
+            builder.setDatabase(url, dialect);
+            return builder.createSessionFactory(user, password);
         }
     }
 }

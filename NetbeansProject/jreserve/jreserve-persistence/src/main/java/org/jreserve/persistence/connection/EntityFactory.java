@@ -1,4 +1,4 @@
-package org.jreserve.persistence.entities;
+package org.jreserve.persistence.connection;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,9 +20,9 @@ import org.openide.util.NbBundle;
 })
 @MIMEResolver.Registration(
     displayName="#CTL_EntityResolverDisplayName",
-    resource="EntityResolver.xml"
+    resource="../EntityResolver.xml"
 )
-public class EntityFactory {
+class EntityFactory {
     
     private final static Logger logger = Logging.getLogger(EntityFactory.class.getName());
     private final static String MIME_TYPE = "jreserve/entity";

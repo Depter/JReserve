@@ -7,6 +7,7 @@ import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -151,6 +152,7 @@ public abstract class AbstractDatabase extends MultiDataObject implements Persis
      * Returuns wether this database is the one that is currently
      * used.
      */
+    @Override
     public boolean isUsed() {
         return getBooleanProperty(IS_USED);
     }
@@ -159,8 +161,10 @@ public abstract class AbstractDatabase extends MultiDataObject implements Persis
      * Marks that this databae is the one that is currently used. Never 
      * set this property directly.
      */
-    public void setUsed(boolean used) {
+    @Override
+    public void setUsed(boolean used) throws IOException {
         setBooleanProperty(IS_USED, used);
+        save();
     }
     
     /**
@@ -176,11 +180,17 @@ public abstract class AbstractDatabase extends MultiDataObject implements Persis
      * or deletes the property if value is <i>null</i>
      */
     protected void setProperty(String property, String value) {
+        String oldValue = properties.getProperty(property);
+        setNewValue(property, value);
+        firePropertyChange(property, oldValue, value);
+        setModified(true);
+    }
+    
+    private void setNewValue(String property, String value) {
         if(value == null)
             properties.remove(property);
         else
             properties.setProperty(property, value);
-        setModified(true);
     }
     
     /**
@@ -251,6 +261,11 @@ public abstract class AbstractDatabase extends MultiDataObject implements Persis
      * database directory for a derby db), than you should do it here.
      */
     protected void beforeDelete() {
+    }
+    
+    @Override
+    public Lookup getLookup() {
+        return getCookieSet().getLookup();
     }
     
     @Override

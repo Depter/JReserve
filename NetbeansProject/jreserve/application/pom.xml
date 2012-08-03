@@ -83,6 +83,12 @@
             <artifactId>jreserve-project</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-triangle</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
