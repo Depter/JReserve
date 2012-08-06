@@ -1,6 +1,7 @@
 package org.jreserve.project.filesystem;
 
 import org.jreserve.project.entities.LoB;
+import org.openide.nodes.Node;
 
 /**
  *
@@ -15,6 +16,11 @@ class LoBElement extends ProjectElement {
         super(lob.getName());
         this.lob = lob;
         super.getCookieSet().add(new EntityCookieImpl<LoB>(lob));
+    }
+
+    @Override
+    public Node createNodeDelegate() {
+        return new LoBNode(this);
     }
     
     

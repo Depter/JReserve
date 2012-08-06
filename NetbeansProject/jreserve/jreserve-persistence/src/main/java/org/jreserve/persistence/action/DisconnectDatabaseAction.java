@@ -20,7 +20,7 @@ import org.openide.util.NbBundle.Messages;
     id = "org.jreserve.persistence.action.DisconnectDatabaseAction"
 )
 @ActionRegistration(
-    iconBase = "resources/connect.png",
+    iconBase = "resources/disconnect.png",
     displayName = "#CTL_DisconnectDatabaseAction"
 )
 @ActionReferences({

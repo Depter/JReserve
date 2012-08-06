@@ -1,6 +1,7 @@
 package org.jreserve.project.filesystem;
 
 import org.jreserve.project.entities.ClaimType;
+import org.openide.nodes.Node;
 
 /**
  *
@@ -16,5 +17,9 @@ class ClaimTypeElement extends ProjectElement {
         this.claimType = claimType;
         super.getCookieSet().add(new EntityCookieImpl<ClaimType>(claimType));
     }
-
+    
+    @Override
+    public Node createNodeDelegate() {
+        return new ClaimTypeNode(this);
+    }
 }

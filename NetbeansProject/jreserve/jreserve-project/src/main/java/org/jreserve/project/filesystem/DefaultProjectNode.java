@@ -1,5 +1,6 @@
 package org.jreserve.project.filesystem;
 
+import java.awt.Image;
 import org.openide.nodes.AbstractNode;
 import org.openide.util.lookup.Lookups;
 
@@ -15,6 +16,16 @@ class DefaultProjectNode extends AbstractNode {
     DefaultProjectNode(ProjectElement element) {
         super(new ProjectChildren(element), Lookups.proxy(element));
         setDisplayName(element.getName());
+    }
+
+    @Override
+    public <T extends Cookie> T getCookie(Class<T> type) {
+        return element.getCookie(type);
+    }
+
+    @Override
+    public Image getOpenedIcon(int type) {
+        return super.getIcon(type);
     }
 
     
