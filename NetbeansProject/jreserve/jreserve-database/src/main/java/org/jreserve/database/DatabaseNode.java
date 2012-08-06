@@ -3,6 +3,8 @@ package org.jreserve.database;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
@@ -22,6 +24,21 @@ public class DatabaseNode extends AbstractNode {
 
     private final static Image NORMAL = ImageUtilities.loadImage("resources/database.png");
     private final static Image CONNECTED = ImageUtilities.loadImage("resources/database_connected.png");
+    
+    private final static Comparator<Action> ACTION_COMPARATOR = new Comparator<Action>() {
+        @Override
+        public int compare(Action a1, Action a2) {
+            if(a1 == null)
+                return a2==null? 0 : 1;
+            return a2==null? -1 : compareNames(a1, a2);
+        }
+        
+        private int compareNames(Action a1, Action a2) {
+            String n1 = (String) a1.getValue(Action.NAME);
+            String n2 = (String) a2.getValue(Action.NAME);
+            return n1.compareTo(n2);
+        }
+    };
     
     private PropertyChangeListener dbListener = new PropertyChangeListener() {
         @Override
@@ -61,6 +78,7 @@ public class DatabaseNode extends AbstractNode {
     @Override
     public Action[] getActions(boolean context) {
         List<? extends Action> actions = Utilities.actionsForPath("Actions/Database/Database");
+        Collections.sort(actions, ACTION_COMPARATOR);
         return actions.toArray(new Action[actions.size()]);
     }    
 }

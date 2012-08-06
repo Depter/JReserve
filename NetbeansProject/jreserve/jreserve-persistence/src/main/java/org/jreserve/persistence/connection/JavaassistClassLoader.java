@@ -4,7 +4,13 @@ import javassist.util.proxy.ProxyFactory;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Utility class for hibernate. Hibernate uses Javasist, which 
+ * wants to use the same ClassLoader, which were used to load the 
+ * entity classes. The entities are loaded with 
+ * {@link Lookup#lookup(java.lang.Class) Lookup.lookup(ClasSLoader.class)}, 
+ * so this utility sets this classloader for Javassist.
+ * 
+ * 
  * @author Peter Decsi
  * @version 1.0
  */

@@ -17,18 +17,32 @@ import org.openide.windows.TopComponent;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//org.jreserve.persistence.databaseexplorer//DatabaseExplorer//EN",
-autostore = false)
-@TopComponent.Description(preferredID = "DatabaseExplorerTopComponent",
-iconBase = "org/jreserve/persistence/database/database.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "explorer", openAtStartup = true)
-@ActionID(category = "Window", id = "org.jreserve.persistence.databaseexplorer.DatabaseExplorerTopComponent")
-@ActionReference(path = "Menu/Window" /*
+@ConvertAsProperties(
+    dtd = "-//org.jreserve.persistence.databaseexplorer//DatabaseExplorer//EN",
+    autostore = false
+)
+@TopComponent.Description(
+    preferredID = "DatabaseExplorerTopComponent",
+    iconBase = "org/jreserve/persistence/database/database.png",
+    persistenceType = TopComponent.PERSISTENCE_ALWAYS
+)
+@TopComponent.Registration(
+    mode = "explorer", 
+    openAtStartup = true, 
+    position=2
+)
+@ActionID(
+    category = "Window", 
+    id = "org.jreserve.persistence.databaseexplorer.DatabaseExplorerTopComponent"
+)
+@ActionReference(
+    path = "Menu/Window" /*
  * , position = 333
  */)
-@TopComponent.OpenActionRegistration(displayName = "#CTL_DatabaseExplorerAction",
-preferredID = "DatabaseExplorerTopComponent")
+@TopComponent.OpenActionRegistration(
+    displayName = "#CTL_DatabaseExplorerAction",
+    preferredID = "DatabaseExplorerTopComponent"
+)
 @Messages({
     "CTL_DatabaseExplorerAction=Databases",
     "CTL_DatabaseExplorerTopComponent=Database",

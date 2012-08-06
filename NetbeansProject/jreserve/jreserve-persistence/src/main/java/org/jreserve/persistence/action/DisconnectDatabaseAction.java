@@ -8,7 +8,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.NbBundle;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -17,31 +17,29 @@ import org.openide.util.NbBundle;
  */
 @ActionID(
     category = "Database/Database",
-    id = "org.jreserve.persistence.action.ConnectDatabaseAction"
+    id = "org.jreserve.persistence.action.DisconnectDatabaseAction"
 )
 @ActionRegistration(
     iconBase = "resources/connect.png",
-    displayName = "#CTL_ConnectDatabaseAction"
+    displayName = "#CTL_DisconnectDatabaseAction"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Database", position = 3633)
+    @ActionReference(path = "Menu/Database", position = 3634)
 })
-@NbBundle.Messages({
-    "CTL_ConnectDatabaseAction=Connect Database"
+@Messages({
+    "CTL_DisconnectDatabaseAction=Disconnect database"
 })
-public class ConnectDatabaseAction implements ActionListener {
+public class DisconnectDatabaseAction implements ActionListener {
     
     private final static boolean APP_CLOSING = false;
     private final PersistenceDatabase database;
-
-    public ConnectDatabaseAction(PersistenceDatabase database) {
+    
+    public DisconnectDatabaseAction(PersistenceDatabase database) {
         this.database = database;
     }
     
     @Override
-    public void actionPerformed(ActionEvent ev) {
-        if(database.isUsed() || !HibernateUtil.close(APP_CLOSING))
-            return;
-        HibernateUtil.login(database);
-    }    
+    public void actionPerformed(ActionEvent e) {
+        HibernateUtil.close(APP_CLOSING);
+    }
 }

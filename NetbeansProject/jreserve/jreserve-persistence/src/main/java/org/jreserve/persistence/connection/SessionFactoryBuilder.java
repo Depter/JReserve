@@ -59,7 +59,6 @@ public class SessionFactoryBuilder {
     private final Configuration config;
     
     public SessionFactoryBuilder() {
-        JavaassistClassLoader.initialize();
         config = new Configuration();
         initConfiguration();
         addEntities();
