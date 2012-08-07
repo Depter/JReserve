@@ -4,9 +4,9 @@
  */
 package org.jreserve.project.explorer;
 
-import org.jreserve.project.filesystem.ProjectChildren;
-import org.jreserve.project.filesystem.ProjectElement;
-import org.jreserve.project.filesystem.ProjectFileSystem;
+import org.jreserve.project.system.ProjectChildren;
+import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.RootElement;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -63,8 +63,8 @@ public final class ProjectExplorerTopComponent extends TopComponent
     }
     
     private void initializeTree() {
-        ProjectElement root = ProjectFileSystem.getDefault().getRoot();
-        em.setRootContext(new AbstractNode(new ProjectChildren(root)));
+        ProjectElement root = new RootElement();
+        em.setRootContext(root.createNodeDelegate());
         associateLookup(ExplorerUtils.createLookup(em, getActionMap()));
         projectTree.setRootVisible(false);
     }

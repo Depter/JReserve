@@ -10,10 +10,14 @@ import org.hibernate.Session;
  */
 class HibernateSession implements org.jreserve.persistence.Session {
     
+    private final HibernatePersistenceUnit pu;
     private final Session session;
-
-    public HibernateSession(Session session) {
+    private final int id;
+    
+    public HibernateSession(Session session, HibernatePersistenceUnit pu, int id) {
+        this.pu = pu;
         this.session = session;
+        this.id = id;
     }
     
     @Override
@@ -34,6 +38,7 @@ class HibernateSession implements org.jreserve.persistence.Session {
     @Override
     public void close() {
         session.close();
+        pu.sessionClosed(this);
     }
 
     @Override
@@ -51,5 +56,26 @@ class HibernateSession implements org.jreserve.persistence.Session {
     public void persist(Object... entities) {
         for(Object entity : entities)
             persist(entity);
+    }
+    
+    int getId() {
+        return id;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof HibernateSession)
+            return id == ((HibernateSession)o).id;
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return id;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("HibernateSession [%d]", id);
     }
 }

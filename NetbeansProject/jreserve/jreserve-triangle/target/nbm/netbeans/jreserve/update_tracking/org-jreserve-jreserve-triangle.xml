@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.jreserve.jreserve.triangle">
+    <module_version install_time="1344351887456" last="true" origin="installer" specification_version="1.0">
+        <file crc="2733260982" name="config/Modules/org-jreserve-jreserve-triangle.xml"/>
+        <file crc="2768076533" name="modules/org-jreserve-jreserve-triangle.jar"/>
+    </module_version>
+</module>

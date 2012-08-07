@@ -23,7 +23,6 @@ public class HibernateUtil {
     
     private static PersistenceDatabase database;
     private static HibernatePersistenceUnit pu;
-    private static org.jreserve.persistence.Session session;
     
     static void startupLogin(PersistenceDatabase db) {
         SessionFactory sessionFactory = loginToDb(db);
@@ -44,13 +43,6 @@ public class HibernateUtil {
         logger.debug("SessionFactory initialized.");
         pu = new HibernatePersistenceUnit(factory);
         ic.add(pu);
-        createSession();
-    }
-    
-    private static void createSession() {
-        session = pu.getSession();
-        session.beginTransaction();
-        ic.add(session);
     }
     
     private static void setUsedDb(PersistenceDatabase db) {
@@ -79,15 +71,7 @@ public class HibernateUtil {
     
     private static void closeSessionFactory() {
         logger.info("CLosing SessionFactory...");
-        closeSession();
         closePU();
-    }
-    
-    private static void closeSession() {
-        if(session == null) return;
-        ic.remove(session);
-        session.comitTransaction();
-        session = null;
     }
     
     private static void closePU() {

@@ -64,7 +64,8 @@
         <module>jreserve-persistence</module>
         <module>jreserve-project</module>
         <module>jreserve-triangle</module>
-    </modules>
+        <module>jreserve-project-system</module>
+  </modules>
 
     <properties>
         <netbeans.version>RELEASE72</netbeans.version>

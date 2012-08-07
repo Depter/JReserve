@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -14,6 +15,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.persistence.*;
+import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
 import org.jreserve.persistence.EntityRegistration;
 import static org.jreserve.persistence.EntityRegistration.*;
 import org.openide.filesystems.annotations.LayerBuilder;
@@ -75,12 +78,16 @@ public class EntityRegistrationProcessor extends LayerGeneratingProcessor {
         if(roundEnv.processingOver())
             return false;
         processRoundEnviroment(roundEnv);
-        return true;
+        return false;
     }
     
     private void processRoundEnviroment(RoundEnvironment roundEnv) throws LayerGenerationException {
-        for (Element e : getElements(roundEnv))
-            processElement((TypeElement) e);
+        Messager messager = processingEnv.getMessager();
+        for (Element e : getElements(roundEnv)) {
+            TypeElement type = (TypeElement) e;
+            messager.printMessage(Kind.WARNING, "Processing entity registration: "+getClassName(type));
+            processElement(type);
+        }
     }
     
     private Set<? extends Element> getElements(RoundEnvironment roundEnv) {

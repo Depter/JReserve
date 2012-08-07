@@ -1,5 +1,8 @@
 package org.jreserve.persistence;
 
+import org.jreserve.persistence.connection.HibernateUtil;
+import org.openide.util.Lookup;
+
 
 /**
  *
@@ -7,7 +10,7 @@ package org.jreserve.persistence;
  * @version 1.0
  */
 public class PersistenceUtil {
-
+    
     private final static String ERR_VARCHAR_LONG = 
             "Varchar %s can not be longer then %d characters!";
     private final static String ERR_VARCHAR_SHORT = 
@@ -26,5 +29,9 @@ public class PersistenceUtil {
             return;
         throw new IllegalArgumentException(
             String.format(ERR_VARCHAR_LONG, value, length));
+    }
+    
+    public static Lookup getLookup() {
+        return HibernateUtil.getLookup();
     }
 }
