@@ -1,11 +1,15 @@
 package org.jreserve.project.system.util;
 
 import java.awt.Image;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.SwingUtilities;
 import org.jreserve.project.system.ProjectElement;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -14,11 +18,19 @@ import org.openide.nodes.Children;
  */
 public class LoadingElement extends ProjectElement {
 
+    private final static String IMG_BASE = "resources/load_%d.png";
+    private final static int LAST_IMG = 9;
+    
     public LoadingElement() {
         super("Loading...");
     }
     
-    private static class LoadingNode extends AbstractNode {
+    @Override
+    public Node createNodeDelegate() {
+        return new LoadingNode("Loading...");
+    }
+    
+    private class LoadingNode extends AbstractNode {
         
         private Image icon;
         private Timer timer;
@@ -26,9 +38,22 @@ public class LoadingElement extends ProjectElement {
         LoadingNode(String caption) {
             super(Children.LEAF);
             setDisplayName(caption);
+            startTimer();
         }
 
-        private synchronized void setIcon(Image icon) {
+        private void startTimer() {
+            timer = new Timer(true);
+            timer.schedule(new ChangeIconTask(LoadingNode.this), 0, 100);
+        }
+        
+        @Override
+        public void destroy() throws IOException {
+            super.destroy();
+            timer.cancel();
+        }
+
+        
+        private void setIcon(Image icon) {
             this.icon = icon;
             super.fireIconChange();
         }
@@ -44,9 +69,11 @@ public class LoadingElement extends ProjectElement {
         }
     }
     
-    private static class ChangeIconTask extends TimerTask {
+    private class ChangeIconTask extends TimerTask {
+        
         
         private final LoadingNode node;
+        private int id;
         
         ChangeIconTask(LoadingNode node) {
             this.node = node;
@@ -54,8 +81,25 @@ public class LoadingElement extends ProjectElement {
         
         @Override
         public void run() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            String name = String.format(IMG_BASE, nextId());
+            Image img = ImageUtilities.loadImage(name);
+            setIcon(img);
         }
-    
+        
+        private int nextId() {
+            id++;
+            if(id > LAST_IMG)
+                id = 0;
+            return id;
+        }
+        
+        private void setIcon(final Image image) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    node.setIcon(image);
+                }
+            });
+        }
     }
 }

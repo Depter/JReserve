@@ -1,16 +1,15 @@
 package org.jreserve.project.system;
 
-import org.jreserve.project.system.util.FactoryUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 import org.jreserve.logging.Logger;
 import org.jreserve.logging.Logging;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
+import org.jreserve.project.system.util.FactoryUtil;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.nodes.AbstractNode;
@@ -155,6 +154,7 @@ public class RootElement extends ProjectElement {
         public void run() {
             try {
                 progress.start();
+                Thread.sleep(3000);
                 openSession();
                 elements = loadElements();
             } catch(Exception lex) {
