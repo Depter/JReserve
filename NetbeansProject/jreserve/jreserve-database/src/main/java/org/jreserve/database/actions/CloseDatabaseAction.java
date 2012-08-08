@@ -69,6 +69,7 @@ public final class CloseDatabaseAction implements ActionListener {
         database.setOpened(false);
         if(database.isUsed())
             database.setUsed(false);
+        database.save();
     }
     
     private void refresh() {

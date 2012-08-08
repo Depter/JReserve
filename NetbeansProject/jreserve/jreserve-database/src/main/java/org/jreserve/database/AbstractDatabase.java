@@ -239,7 +239,6 @@ public abstract class AbstractDatabase extends MultiDataObject implements Persis
     public void save() throws IOException {
         PropertyWriter writer = new PropertyWriter(getPrimaryFile());
         writer.writeProperties(properties);
-        getCookieSet().remove(this);
         setModified(false);
     }
     

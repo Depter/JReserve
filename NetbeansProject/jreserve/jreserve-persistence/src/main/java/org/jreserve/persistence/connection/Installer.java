@@ -1,9 +1,6 @@
 package org.jreserve.persistence.connection;
 
-import org.jreserve.database.DatabaseUtil;
-import org.jreserve.database.PersistenceDatabase;
 import org.openide.modules.ModuleInstall;
-import org.openide.windows.WindowManager;
 
 /**
  * Perform tasks related to startup and close.
@@ -28,33 +25,14 @@ public class Installer extends ModuleInstall {
     
     @Override
     public void restored() {
-        super.restored();
-        initializeJavassistClassLoader();
-        loginToOpenedDatabase();
-    }
-    
-    private void initializeJavassistClassLoader() {
         JavaassistClassLoader.initialize();
+        new StartupLogin().login();
     }
     
-    private void loginToOpenedDatabase() {
-        PersistenceDatabase database = DatabaseUtil.getUsedDatabase();
-        if(database != null)
-            loginFromAwtThread(database);
-    }
-    
-    private void loginFromAwtThread(final PersistenceDatabase database) {
-        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-            @Override
-            public void run() {
-                HibernateUtil.startupLogin(database);
-            }
-        });
-    }
-
     @Override
     public void close() {
         super.close();
         HibernateUtil.close(APP_CLOSING);
     }
+    
 }

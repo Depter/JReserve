@@ -1,6 +1,7 @@
 package org.jreserve.project.system;
 
 import java.awt.Image;
+import java.io.IOException;
 import org.openide.nodes.AbstractNode;
 import org.openide.util.lookup.Lookups;
 
@@ -18,11 +19,6 @@ public class DefaultProjectNode extends AbstractNode {
         this.element = element;
         Object value = element.getValue();
         setDisplayName(value==null? "null" : value.toString());
-    }
-
-    @Override
-    public <T extends Cookie> T getCookie(Class<T> type) {
-        return element.getCookie(type);
     }
 
     @Override

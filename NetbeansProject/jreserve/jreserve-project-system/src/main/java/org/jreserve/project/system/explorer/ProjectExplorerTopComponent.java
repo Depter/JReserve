@@ -1,10 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.jreserve.project.explorer;
+package org.jreserve.project.system.explorer;
 
-import org.jreserve.project.system.ProjectChildren;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.RootElement;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -12,7 +7,6 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
-import org.openide.nodes.AbstractNode;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
@@ -20,7 +14,7 @@ import org.openide.windows.TopComponent;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-    dtd = "-//org.jreserve.project.explorer//ProjectExplorer//EN",
+    dtd = "-//org.jreserve.project.system.explorer//ProjectExplorer//EN",
     autostore = false
 )
 @TopComponent.Description(
@@ -35,7 +29,7 @@ import org.openide.windows.TopComponent;
 )
 @ActionID(
     category = "Window", 
-    id = "org.jreserve.project.explorer.ProjectExplorerTopComponent"
+    id = "org.jreserve.project.system.explorer.ProjectExplorerTopComponent"
 )
 @ActionReference(
     path = "Menu/Window" /*

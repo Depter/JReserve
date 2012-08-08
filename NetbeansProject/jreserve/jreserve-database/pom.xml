@@ -112,6 +112,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.database</publicPackage>
+                        <publicPackage>org.jreserve.database.util</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

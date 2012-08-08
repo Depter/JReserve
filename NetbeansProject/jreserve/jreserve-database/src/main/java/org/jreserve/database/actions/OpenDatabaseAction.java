@@ -7,6 +7,9 @@ import java.util.List;
 import org.jreserve.database.AbstractDatabase;
 import org.jreserve.database.DatabaseUtil;
 import org.jreserve.database.explorer.DatabaseRootChildren;
+import org.jreserve.database.util.DatabaseChildren;
+import org.jreserve.database.util.SelectDatabaseDialog;
+import org.jreserve.database.util.SelectDatabaseDialog.SelectionMode;
 import org.jreserve.logging.Logger;
 import org.jreserve.logging.Logging;
 import org.openide.awt.ActionID;
@@ -23,16 +26,26 @@ displayName = "#CTL_OpenDatabaseAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Database", position = 3233)
 })
-@Messages("CTL_OpenDatabaseAction=Open Database")
+@Messages({
+    "CTL_OpenDatabaseAction=Open Database",
+    "CTL_openDatabaseActionDialogTitle=Open Database"
+})
 public final class OpenDatabaseAction implements ActionListener {
 
     private final static Logger logger = Logging.getLogger(OpenDatabaseAction.class.getName());
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        List<AbstractDatabase> databases = new OpenDatabaseDialog().getDatabases();
+        List<AbstractDatabase> databases = getDatabasesToOpen();
         if(!databases.isEmpty())
             openDatabases(databases);
+    }
+    
+    private List<AbstractDatabase> getDatabasesToOpen() {
+        String title = Bundle.CTL_openDatabaseActionDialogTitle();
+        DatabaseChildren children = DatabaseChildren.getFixedChildren(DatabaseUtil.getClosedDatabases());
+        SelectionMode mode = SelectionMode.MULTIPLE_INTERVAL;
+        return new SelectDatabaseDialog(title, children, mode).getDatabases();
     }
     
     private void openDatabases(List<AbstractDatabase> databases) {

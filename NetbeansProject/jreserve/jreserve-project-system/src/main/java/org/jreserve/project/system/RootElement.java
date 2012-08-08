@@ -2,6 +2,7 @@ package org.jreserve.project.system;
 
 import org.jreserve.project.system.util.FactoryUtil;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -90,16 +91,27 @@ public class RootElement extends ProjectElement {
         }
         
         private void loadChildren(PersistenceUnit pu) {
-            RootElement.this.addChild(LOADING_CHILD);
+            addLoadingChild();
             new RootLoader(this, pu).start();
+        }
+        
+        private void addLoadingChild() {
+            RootElement.this.addChild(LOADING_CHILD);
+            setKeys(Collections.singleton(LOADING_CHILD));
         }
         
         private void loadingFinnished(RootLoader loader) {
             try {
+                removeLoadingChild();
                 setChildren(loader.get());
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }
+        }
+        
+        private void removeLoadingChild() {
+            RootElement.this.removeChild(LOADING_CHILD);
+            setKeys(Collections.EMPTY_LIST);
         }
         
         private void setChildren(List<ProjectElement> newChildren) {

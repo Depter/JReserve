@@ -2,13 +2,10 @@ package org.jreserve.project.system;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.openide.nodes.CookieSet;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -19,9 +16,8 @@ public class ProjectElement implements Lookup.Provider {
     
     private final static String PATH_SEPARATOR = "/";
     
-    private CookieSet cookies = new CookieSet();
     private InstanceContent ic = new InstanceContent();
-    private Lookup lookup = new ProxyLookup(Lookups.proxy(cookies), new AbstractLookup(ic));
+    private Lookup lookup = new AbstractLookup(ic);
     
     private boolean isLoaded = false;
     private ProjectElement parent;
@@ -54,12 +50,12 @@ public class ProjectElement implements Lookup.Provider {
         return lookup;
     }
     
-    public CookieSet getCookieSet() {
-        return cookies;
+    protected void addToLookup(Object o) {
+        ic.add(o);
     }
     
-    public <E extends Node.Cookie> E getCookie(Class<E> clazz) {
-        return cookies.getCookie(clazz);
+    protected void removeFromLookup(Object o) {
+        ic.remove(o);
     }
     
     public Node createNodeDelegate() {

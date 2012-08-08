@@ -1,4 +1,4 @@
-package org.jreserve.database.actions;
+package org.jreserve.database.util;
 
 import java.awt.Dialog;
 import java.awt.event.MouseAdapter;
@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ActionMap;
+import javax.swing.DefaultListSelectionModel;
 import org.jreserve.database.AbstractDatabase;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -23,23 +24,26 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  * @version 1.0
  */
-@Messages({
-    "CTL_openDatabaseDialogTitle=Open Database"
-})
-class OpenDatabaseDialog extends DialogDescriptor {
+public class SelectDatabaseDialog extends DialogDescriptor {
+    
     private final static boolean MODAL = true;
     
     private Result<AbstractDatabase> result;
     private List<AbstractDatabase> databases = new ArrayList<AbstractDatabase>();
     private Dialog dialog;
     
-    public OpenDatabaseDialog() {
-        super(new OpenDatabasesPanel(), Bundle.CTL_openDatabaseDialogTitle(), MODAL,  
+    public SelectDatabaseDialog(String title, DatabaseChildren children) {
+        this(title, children, SelectionMode.MULTIPLE_INTERVAL);
+    }
+    
+    public SelectDatabaseDialog(String title, DatabaseChildren children, SelectionMode selectionMode) {
+        super(new SelectDatabasesPanel(children, selectionMode), 
+                title, MODAL,  
                 NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.CANCEL_OPTION, null );
-        ((OpenDatabasesPanel) getMessage()).addDblClickListener(new DblClickListener());
-        
+        ((SelectDatabasesPanel) getMessage()).addDblClickListener(new DblClickListener());
         setValid(false);
     }
+    
     
     @Override
     protected void initialize() {
@@ -49,7 +53,7 @@ class OpenDatabaseDialog extends DialogDescriptor {
         result.addLookupListener(new DatabaseLookupListener());
     }
     
-    List<AbstractDatabase> getDatabases() {
+    public List<AbstractDatabase> getDatabases() {
         openDialog();
         if(getValue() != NotifyDescriptor.OK_OPTION)
             databases.clear();
@@ -79,6 +83,23 @@ class OpenDatabaseDialog extends DialogDescriptor {
                 setValue(DialogDescriptor.OK_OPTION);
                 dialog.setVisible(false);
             }
+        }
+    }
+    
+    public static enum SelectionMode {
+        
+        SINGLE(DefaultListSelectionModel.SINGLE_SELECTION),
+        SINGLE_INTERVAL(DefaultListSelectionModel.SINGLE_INTERVAL_SELECTION),
+        MULTIPLE_INTERVAL(DefaultListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        
+        private int swingValue;
+        
+        private SelectionMode(int swingValue) {
+            this.swingValue = swingValue;
+        }
+        
+        int getSwingValue() {
+            return swingValue;
         }
     }
 }

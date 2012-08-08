@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jreserve.database.actions;
+package org.jreserve.database.util;
 
 import java.awt.event.MouseListener;
 import javax.swing.event.DocumentEvent;
@@ -19,16 +19,18 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "CTL_databaseName=Name:"
 })
-public class OpenDatabasesPanel extends javax.swing.JPanel implements ExplorerManager.Provider, DocumentListener {
+class SelectDatabasesPanel extends javax.swing.JPanel implements ExplorerManager.Provider, DocumentListener {
 
     private final ExplorerManager em = new ExplorerManager();
-    private ClosedDatabaseChildren children = new ClosedDatabaseChildren();
+    private DatabaseChildren children;
     
     /**
      * Creates new form OpendatabasesPanel
      */
-    public OpenDatabasesPanel() {
+    SelectDatabasesPanel(DatabaseChildren children, SelectDatabaseDialog.SelectionMode selectionMode) {
         initComponents();
+        listView1.setSelectionMode(selectionMode.getSwingValue());
+        this.children = children;
         em.setRootContext(new AbstractNode(children));
     }
 
@@ -47,7 +49,7 @@ public class OpenDatabasesPanel extends javax.swing.JPanel implements ExplorerMa
 
         filterLabel.setText(Bundle.CTL_databaseName());
 
-        filterText.setText(org.openide.util.NbBundle.getMessage(OpenDatabasesPanel.class, "OpenDatabasesPanel.filterText.text")); // NOI18N
+        filterText.setText(org.openide.util.NbBundle.getMessage(SelectDatabasesPanel.class, "SelectDatabasesPanel.filterText.text")); // NOI18N
         filterText.getDocument().addDocumentListener(this);
 
         listView1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
