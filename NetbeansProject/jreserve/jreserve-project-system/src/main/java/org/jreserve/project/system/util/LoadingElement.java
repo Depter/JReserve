@@ -10,6 +10,7 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -33,29 +34,25 @@ public class LoadingElement extends ProjectElement {
     private class LoadingNode extends AbstractNode {
         
         private Image icon;
-        private Timer timer;
+        private ChangeIconTask task;
         
         LoadingNode(String caption) {
             super(Children.LEAF);
             setDisplayName(caption);
-            startTimer();
-        }
-
-        private void startTimer() {
-            timer = new Timer(true);
-            timer.schedule(new ChangeIconTask(LoadingNode.this), 0, 100);
+            task = new ChangeIconTask(this);
         }
         
         @Override
         public void destroy() throws IOException {
             super.destroy();
-            timer.cancel();
+            task.cancel();
         }
 
         
         private void setIcon(Image icon) {
             this.icon = icon;
             super.fireIconChange();
+            
         }
         
         @Override
@@ -69,14 +66,16 @@ public class LoadingElement extends ProjectElement {
         }
     }
     
-    private class ChangeIconTask extends TimerTask {
-        
+    private class ChangeIconTask implements Runnable {
         
         private final LoadingNode node;
-        private int id;
+        private volatile int id = 0;
+        private RequestProcessor.Task task;
         
-        ChangeIconTask(LoadingNode node) {
+        public ChangeIconTask(LoadingNode node) {
             this.node = node;
+            this.task = RequestProcessor.getDefault().create(this);
+            run();
         }
         
         @Override
@@ -84,6 +83,7 @@ public class LoadingElement extends ProjectElement {
             String name = String.format(IMG_BASE, nextId());
             Image img = ImageUtilities.loadImage(name);
             setIcon(img);
+            task.schedule(100);
         }
         
         private int nextId() {
@@ -100,6 +100,10 @@ public class LoadingElement extends ProjectElement {
                     node.setIcon(image);
                 }
             });
+        }
+        
+        void cancel() {
+            task.cancel();
         }
     }
 }

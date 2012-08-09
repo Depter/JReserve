@@ -1,4 +1,4 @@
-package org.jreserve.project.filesystem.impl;
+package org.jreserve.project.system.impl;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
@@ -10,17 +10,16 @@ import org.openide.util.ImageUtilities;
  * @author Peter Decsi
  * @version 1.0
  */
-class LoBNode extends DefaultProjectNode {
+class ClaimTypeNode extends DefaultProjectNode {
 
-    private final static ImageIcon LOB_ICON = ImageUtilities.loadImageIcon("resources/lob.png", false);
+    private final static ImageIcon CLAIM_TYPE_ICON = ImageUtilities.loadImageIcon("resources/claim_type.png", false);
     
-    LoBNode(LoBElement element) {
+    ClaimTypeNode(ClaimTypeElement element) {
         super(element);
     }
     
     @Override
     public Image getIcon(int type) {
-        return LOB_ICON.getImage();
+        return CLAIM_TYPE_ICON.getImage();
     }
-    
 }

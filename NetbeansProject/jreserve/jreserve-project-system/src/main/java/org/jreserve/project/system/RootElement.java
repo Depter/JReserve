@@ -10,6 +10,7 @@ import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.system.util.FactoryUtil;
+import org.jreserve.project.system.util.LoadingElement;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.nodes.AbstractNode;
@@ -33,7 +34,7 @@ public class RootElement extends ProjectElement {
     }
     
     private final static Logger logger = Logging.getLogger(RootElement.class.getName());
-    private final static ProjectElement LOADING_CHILD = new ProjectElement("Loading...");
+    private final static ProjectElement LOADING_CHILD = new LoadingElement();
     private final static RootValue VALUE = new RootValue();
     
     public RootElement() {
@@ -154,7 +155,6 @@ public class RootElement extends ProjectElement {
         public void run() {
             try {
                 progress.start();
-                Thread.sleep(3000);
                 openSession();
                 elements = loadElements();
             } catch(Exception lex) {
@@ -175,7 +175,7 @@ public class RootElement extends ProjectElement {
         private List<ProjectElement> loadElements() {
             List<ProjectElement> result = new ArrayList<ProjectElement>();
             for(ProjectElementFactory factory : FactoryUtil.getInterestedFactories(VALUE))
-                result.addAll(factory.createChildren(VALUE, session));
+                result.addAll(factory.createChildren(VALUE, new RootSession(session)));
             return result;
         }
         
@@ -202,5 +202,48 @@ public class RootElement extends ProjectElement {
                 return elements;
             throw ex;
         }
+    }
+    
+    private class RootSession implements Session {
+        
+        private final Session session;
+        private RootSession(Session session) {
+            this.session = session;
+        }
+        
+        @Override
+        public void beginTransaction() {
+            throw new UnsupportedOperationException("Transaction already opened!");
+        }
+
+        @Override
+        public void comitTransaction() {
+            throw new UnsupportedOperationException("Do not comit this session, others may need it!");
+        }
+
+        @Override
+        public void rollBackTransaction() {
+            throw new UnsupportedOperationException("Do not roll back this session, others may need it!");
+        }
+
+        @Override
+        public void close() {
+            throw new UnsupportedOperationException("Do not close this session, others may need it!");
+        }
+
+        @Override
+        public <E> List<E> getAll(Class<E> c) {
+            return session.getAll(c);
+        }
+
+        @Override
+        public void persist(Object o) {
+            throw new UnsupportedOperationException("Do not use this session to save entities! this sesison is only for loading.");
+        }
+
+        @Override
+        public void persist(Object... o) {
+            throw new UnsupportedOperationException("Do not use this session to save entities! this sesison is only for loading.");
+        }    
     }
 }

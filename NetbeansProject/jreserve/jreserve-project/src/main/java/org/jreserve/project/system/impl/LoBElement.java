@@ -1,4 +1,4 @@
-package org.jreserve.project.filesystem.impl;
+package org.jreserve.project.system.impl;
 
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;

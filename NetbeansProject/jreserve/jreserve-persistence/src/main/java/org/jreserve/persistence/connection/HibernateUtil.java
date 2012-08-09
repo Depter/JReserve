@@ -29,6 +29,9 @@ public class HibernateUtil {
         if(sessionFactory != null) {
             setSessionFactory(sessionFactory);
             setUsedDb(db);
+        } else {
+            if(db.isUsed())
+                DatabaseUtil.setUsed(db, false);
         }
     }
     

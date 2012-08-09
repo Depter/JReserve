@@ -1,4 +1,4 @@
-package org.jreserve.project.filesystem.impl;
+package org.jreserve.project.system.impl;
 
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
