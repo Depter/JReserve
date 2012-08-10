@@ -1,6 +1,9 @@
 package org.jreserve.project.system.newdialog;
 
+import java.util.List;
 import org.jreserve.project.system.ElementCreatorWizard;
+import org.jreserve.project.system.ElementCreatorWizard.Category;
+import org.jreserve.project.system.util.ElementCategoryUtil;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
@@ -16,15 +19,16 @@ import org.openide.util.lookup.Lookups;
  */
 class ElementCategoryChildren extends Children.Keys<FileObject>{
     
-    private ElementCategory category;
+    private Category category;
 
-    ElementCategoryChildren(ElementCategory category) {
+    ElementCategoryChildren(Category category) {
         this.category = category;
     }
 
     @Override
     protected void addNotify() {
-        setKeys(category.getElementCreators());
+        List<FileObject> creators = ElementCategoryUtil.getElementCreators(category);
+        setKeys(creators);
     }
 
     @Override
@@ -48,14 +52,14 @@ class ElementCategoryChildren extends Children.Keys<FileObject>{
     }
     
     private void setIcon(AbstractNode node, FileObject file) {
-        String iconBase = (String) file.getAttribute("iconBase");
+        String iconBase = (String) file.getAttribute(ElementCategoryUtil.CATEGORY_ELEMENT_ICON);
         if(iconBase == null)
             return ;
         node.setIconBaseWithExtension(iconBase);
     }
     
     private void setDisplayName(AbstractNode node, FileObject file) {
-        String name = (String) file.getAttribute("displayName");
+        String name = (String) file.getAttribute(ElementCategoryUtil.CATEGORY_ELEMENT_NAME);
         if(name == null)
             name = file.getName();
         node.setDisplayName(name);

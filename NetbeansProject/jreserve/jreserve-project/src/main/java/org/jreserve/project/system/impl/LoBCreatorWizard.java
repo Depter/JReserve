@@ -11,15 +11,15 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  * @version 1.0
  */
+@ElementCreatorWizard.Registration(
+    category=ElementCreatorWizard.Category.PROJECT,
+    iconBase="resources/lob.png",
+    displayName="#LoBCreatorWizard.name"
+)
 @Messages({
     "LoBCreatorWizard.name=LoB"
 })
 public class LoBCreatorWizard implements ElementCreatorWizard {
-
-    @Override
-    public String getName() {
-        return "LoB";
-    }
 
     @Override
     public void setWizardLookup(Lookup lookup) {

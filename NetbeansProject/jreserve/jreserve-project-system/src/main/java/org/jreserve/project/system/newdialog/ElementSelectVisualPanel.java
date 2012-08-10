@@ -1,9 +1,11 @@
 package org.jreserve.project.system.newdialog;
 
+import org.jreserve.project.system.util.ElementCategoryUtil;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import org.jreserve.project.system.ElementCreatorWizard.Category;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.ListView;
@@ -32,12 +34,12 @@ class ElementSelectVisualPanel extends JPanel {
     private LabeledListPanel elementPanel;
     private JTextArea infoText;
     
-    private Result<ElementCategory> categoryResult;
+    private Result<Category> categoryResult;
     
     ElementSelectVisualPanel() {
         initComponents();
         bindPanels();
-        categoryPanel.setChilden(ElementCategory.getChildren());
+        categoryPanel.setChilden(ElementCategoryUtil.getChildren());
     }
     
     private void initComponents() {
@@ -82,7 +84,7 @@ class ElementSelectVisualPanel extends JPanel {
     }
     
     private void bindCategoryPanel() {
-        categoryResult = categoryPanel.getLookup().lookupResult(ElementCategory.class);
+        categoryResult = categoryPanel.getLookup().lookupResult(Category.class);
         categoryResult.addLookupListener(new LookupListener() {
             @Override
             public void resultChanged(LookupEvent le) {
@@ -92,13 +94,13 @@ class ElementSelectVisualPanel extends JPanel {
     }
     
     private void categorySelected() {
-        ElementCategory category = getElementCategory();
+        Category category = getElementCategory();
         Children children = category==null? Children.LEAF : new ElementCategoryChildren(category);
         elementPanel.setChilden(children);
     }
     
-    private ElementCategory getElementCategory() {
-        return categoryPanel.getLookup().lookup(ElementCategory.class);
+    private Category getElementCategory() {
+        return categoryPanel.getLookup().lookup(Category.class);
     }
     
     @Override

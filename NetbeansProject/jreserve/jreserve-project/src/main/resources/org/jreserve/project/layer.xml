@@ -1,14 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
-<filesystem>
-    <folder name="jreserve">
-        <folder name="new-wizard">
-            <folder name="project">
-                <file name="org-jreserve-project-system-impl-LoBCreatorWizard.instance">
-                    <attr name="displayName" bundlevalue="org.jreserve.project.system.impl.Bundle#LoBCreatorWizard.name"/>
-                    <attr name="iconBase" stringvalue="resources/lob.png"/>
-                </file>
-            </folder>
-        </folder>
-    </folder>
-</filesystem>
+<filesystem/>
