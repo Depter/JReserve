@@ -13,13 +13,12 @@ import org.jreserve.project.system.util.FactoryUtil;
 import org.jreserve.project.system.util.LoadingElement;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -27,23 +26,44 @@ import org.openide.util.RequestProcessor;
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "LBL_RootElement.loadingmsg=Loading database"
+})
 public class RootElement extends ProjectElement {
-    
-    public static List<ProjectElementFactory> getFactories(Object value) {
-        return FactoryUtil.getInterestedFactories(value);
-    }
     
     private final static Logger logger = Logging.getLogger(RootElement.class.getName());
     private final static ProjectElement LOADING_CHILD = new LoadingElement();
     private final static RootValue VALUE = new RootValue();
     
-    public RootElement() {
+    private static RootElement DEFAULT = null;
+    
+    public static RootElement getDefault() {
+        if(DEFAULT == null)
+            DEFAULT = new RootElement();
+        return DEFAULT;
+    }
+    
+    public static List<ProjectElementFactory> getFactories(Object value) {
+        return FactoryUtil.getInterestedFactories(value);
+    }
+    
+    private Result<PersistenceUnit> puResult;
+    private LookupListener puListener = new LookupListener() {
+        @Override
+        public void resultChanged(LookupEvent le) {
+            puResultChanged();
+        }
+    };
+    
+    private RootElement() {
         super(VALUE);
+        puResult = PersistenceUtil.getLookup().lookupResult(PersistenceUnit.class);
+        puResult.addLookupListener(puListener);
     }
 
     @Override
     public Node createNodeDelegate() {
-        return new AbstractNode(new RootChildren());
+        return new DefaultProjectNode(this);
     }
 
     @Override
@@ -56,6 +76,27 @@ public class RootElement extends ProjectElement {
         throw new UnsupportedOperationException("Can not set parent for root!");
     }
     
+    private void puResultChanged() {
+        PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
+        if(pu == null)
+            setChildren(Collections.EMPTY_LIST);
+        else
+            loadChildren(pu);
+    }
+        
+    private void loadChildren(PersistenceUnit pu) {
+        addChild(LOADING_CHILD);
+        new RootLoader(this, pu).start();
+    }
+        
+    private void loadingFinnished(RootLoader loader) {
+        try {
+            setChildren(loader.get());
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+            
     public static class RootValue {
         @Override
         public String toString() {
@@ -63,70 +104,9 @@ public class RootElement extends ProjectElement {
         }
     }
     
-    private class RootChildren extends Children.Keys<ProjectElement> implements LookupListener {
-        
-        private final Result<PersistenceUnit> result;
-        
-        private RootChildren() {
-            result = PersistenceUtil.getLookup().lookupResult(PersistenceUnit.class);
-            result.addLookupListener(this);
-        }
-
-        @Override
-        protected void addNotify() {
-            resultChanged(null);
-        }
-
-        @Override
-        public void resultChanged(LookupEvent le) {
-            PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
-            if(pu == null)
-                removeChildren();
-            else
-                loadChildren(pu);
-        }
-        
-        private void removeChildren() {
-            setChildren(new ArrayList<ProjectElement>());
-        }
-        
-        private void loadChildren(PersistenceUnit pu) {
-            addLoadingChild();
-            new RootLoader(this, pu).start();
-        }
-        
-        private void addLoadingChild() {
-            RootElement.this.addChild(LOADING_CHILD);
-            setKeys(Collections.singleton(LOADING_CHILD));
-        }
-        
-        private void loadingFinnished(RootLoader loader) {
-            try {
-                removeLoadingChild();
-                setChildren(loader.get());
-            } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        
-        private void removeLoadingChild() {
-            RootElement.this.removeChild(LOADING_CHILD);
-            setKeys(Collections.EMPTY_LIST);
-        }
-        
-        private void setChildren(List<ProjectElement> newChildren) {
-            super.setKeys(newChildren);
-        }
-        
-        @Override
-        protected Node[] createNodes(ProjectElement t) {
-            return new Node[]{t.createNodeDelegate()};
-        }
-    }
-    
     private class RootLoader implements Runnable {
         
-        private final RootChildren children;
+        private final RootElement rootElement;
         private final PersistenceUnit pu;
         private Session session;
         private ProgressHandle progress;
@@ -135,15 +115,15 @@ public class RootElement extends ProjectElement {
         private List<ProjectElement> elements;
         private Exception ex;
         
-        private RootLoader(RootChildren children, PersistenceUnit pu) {
-            this.children = children;
+        private RootLoader(RootElement rootElement, PersistenceUnit pu) {
+            this.rootElement = rootElement;
             this.pu = pu;
             initialize();
         }
         
         private void initialize() {
             task = RequestProcessor.getDefault().create(this);
-            progress = ProgressHandleFactory.createHandle("Loading database");
+            progress = ProgressHandleFactory.createHandle(Bundle.LBL_RootElement_loadingmsg());
             progress.switchToIndeterminate();
         }
         
@@ -192,7 +172,7 @@ public class RootElement extends ProjectElement {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    children.loadingFinnished(loader);
+                    rootElement.loadingFinnished(loader);
                 }
             });
         }

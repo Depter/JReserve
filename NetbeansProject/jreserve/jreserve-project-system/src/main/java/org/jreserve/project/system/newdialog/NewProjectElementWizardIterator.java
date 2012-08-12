@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.openide.WizardDescriptor;
+import org.openide.WizardDescriptor.Panel;
 
 /**
  *
@@ -27,8 +29,18 @@ public class NewProjectElementWizardIterator implements WizardDescriptor.Iterato
     private void initializePanels() {
         if(basicPanels == null)
             createBasicPanels();
-        currentPanels.addAll(basicPanels);
-        int length = basicPanels.size();
+        initPanels(currentPanels);
+    }
+    
+    private void createBasicPanels() {
+        basicPanels = new ArrayList<WizardDescriptor.Panel>();
+        basicPanels.add(new ElementSelectWizardPanel());
+        basicPanels.add(new DummyElementWizardPanel());
+        currentPanels = new ArrayList<WizardDescriptor.Panel>(basicPanels);
+    }
+    
+    private void initPanels(List<WizardDescriptor.Panel> panels) {
+        int length = panels.size();
         String[] steps = new String[length];
         
         for (int i = 0; i < length; i++) {
@@ -43,14 +55,6 @@ public class NewProjectElementWizardIterator implements WizardDescriptor.Iterato
                 jc.putClientProperty("WizardPanel_contentNumbered", Boolean.TRUE);
             }
         }
-    }
-    //wizardDesc.putProperty(WizardDescriptor.PROP_CONTENT_DATA, contentData);
-    
-    private void createBasicPanels() {
-        basicPanels = new ArrayList<WizardDescriptor.Panel>();
-        basicPanels.add(new ElementSelectWizardPanel());
-        basicPanels.add(new DummyElementWizardPanel());
-        currentPanels = new ArrayList<WizardDescriptor.Panel>(basicPanels);
     }
     
     @Override
@@ -67,30 +71,63 @@ public class NewProjectElementWizardIterator implements WizardDescriptor.Iterato
     }
 
     @Override
+    public void nextPanel() {
+        checkHasNext();
+        if(index == 0)
+            setCreatorPanels();
+        index++;
+        descriptor.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, index);
+    }
+    
+    private void checkHasNext() {
+        if(!hasNext())
+            throw new NoSuchElementException();
+    }
+
+    @Override
     public boolean hasNext() {
         initializePanels();
         return index + 1 < currentPanels.size();
     }
 
+    private void setCreatorPanels() {
+        ElementCreatorWizard creator = getCreatorWizard();
+        currentPanels.remove(1);
+        setCurrentPanels(creator);
+    }
+    
+    private ElementCreatorWizard getCreatorWizard() {
+        Object creator = descriptor.getProperty(ElementSelectWizardPanel.ELEMENT_CREATOR_WIZARD);
+        return (ElementCreatorWizard) creator;
+    }
+    
+    private void setCurrentPanels(ElementCreatorWizard creator) {
+        for(WizardDescriptor.Panel panel : creator.getPanels())
+            currentPanels.add(panel);
+        initPanels(currentPanels);
+    }
+    
+    @Override
+    public void previousPanel() {
+        checkHasPrevious();
+        if(index == 1)
+            setBackToBasicPanels();
+        index--;
+        descriptor.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, index);
+    }
+    
+    private void checkHasPrevious() {
+        if(!hasPrevious())
+            throw new NoSuchElementException();
+    }
+    
+    private void setBackToBasicPanels() {
+        currentPanels = new ArrayList<Panel>(basicPanels);
+    }
+    
     @Override
     public boolean hasPrevious() {
         return index > 0;
-    }
-
-    @Override
-    public void nextPanel() {
-        if(!hasNext())
-            throw new NoSuchElementException();
-        index++;
-        descriptor.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, index);
-    }
-
-    @Override
-    public void previousPanel() {
-        if(!hasPrevious())
-            throw new NoSuchElementException();
-        index--;
-        descriptor.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, index);
     }
 
     @Override

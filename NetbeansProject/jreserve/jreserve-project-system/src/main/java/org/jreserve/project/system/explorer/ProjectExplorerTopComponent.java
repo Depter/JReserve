@@ -57,7 +57,7 @@ public final class ProjectExplorerTopComponent extends TopComponent
     }
     
     private void initializeTree() {
-        ProjectElement root = new RootElement();
+        ProjectElement root = RootElement.getDefault();
         em.setRootContext(root.createNodeDelegate());
         associateLookup(ExplorerUtils.createLookup(em, getActionMap()));
         projectTree.setRootVisible(false);

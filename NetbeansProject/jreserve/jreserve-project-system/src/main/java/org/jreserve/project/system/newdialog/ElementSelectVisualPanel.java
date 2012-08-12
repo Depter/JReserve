@@ -1,11 +1,12 @@
 package org.jreserve.project.system.newdialog;
 
-import org.jreserve.project.system.util.ElementCategoryUtil;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import org.jreserve.project.system.ElementCreatorWizard.Category;
+import org.jreserve.project.system.management.ElementCreatorWizard;
+import org.jreserve.project.system.management.ElementCreatorWizard.Category;
+import org.jreserve.project.system.util.ElementCategoryUtil;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.ListView;
@@ -32,9 +33,10 @@ class ElementSelectVisualPanel extends JPanel {
     
     private LabeledListPanel categoryPanel;
     private LabeledListPanel elementPanel;
-    private JTextArea infoText;
+    private JTextArea descriptionText;
     
     private Result<Category> categoryResult;
+    private Result<ElementCreatorWizard> creatorResult;
     
     ElementSelectVisualPanel() {
         initComponents();
@@ -69,18 +71,19 @@ class ElementSelectVisualPanel extends JPanel {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel(Bundle.LBL_ElementSelectVisualPanel_description()), BorderLayout.PAGE_START);
         
-        infoText = new JTextArea();
-        infoText.setEditable(false);
-        infoText.setColumns(20);
-        infoText.setRows(5);
-        infoText.setMinimumSize(new Dimension(0, 100));
+        descriptionText = new JTextArea();
+        descriptionText.setEditable(false);
+        descriptionText.setColumns(20);
+        descriptionText.setRows(5);
+        descriptionText.setMinimumSize(new Dimension(0, 100));
         
-        panel.add(new JScrollPane(infoText), BorderLayout.CENTER);
+        panel.add(new JScrollPane(descriptionText), BorderLayout.CENTER);
         add(panel, BorderLayout.PAGE_END);
     }
     
     private void bindPanels() {
         bindCategoryPanel();
+        bindCreatorPanel();
     }
     
     private void bindCategoryPanel() {
@@ -101,6 +104,31 @@ class ElementSelectVisualPanel extends JPanel {
     
     private Category getElementCategory() {
         return categoryPanel.getLookup().lookup(Category.class);
+    }
+    
+    private void bindCreatorPanel() {
+        creatorResult = elementPanel.getLookup().lookupResult(ElementCreatorWizard.class);
+        creatorResult.addLookupListener(new LookupListener() {
+            @Override
+            public void resultChanged(LookupEvent le) {
+                elementCreatorWizardSelected();
+            }
+        });
+    }
+    
+    private void elementCreatorWizardSelected() {
+        ElementCreatorWizard wizard = getElementCreatorWizard();
+        putClientProperty(ElementSelectWizardPanel.ELEMENT_CREATOR_WIZARD, wizard);
+        setDescription(wizard);
+    }
+    
+    private ElementCreatorWizard getElementCreatorWizard() {
+        return elementPanel.getLookup().lookup(ElementCreatorWizard.class);
+    }
+    
+    private void setDescription(ElementCreatorWizard wizard) {
+        String description = wizard==null? null : wizard.getDescription();
+        descriptionText.setText(description);
     }
     
     @Override

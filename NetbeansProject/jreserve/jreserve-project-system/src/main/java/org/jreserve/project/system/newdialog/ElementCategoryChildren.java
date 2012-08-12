@@ -1,8 +1,8 @@
 package org.jreserve.project.system.newdialog;
 
 import java.util.List;
-import org.jreserve.project.system.ElementCreatorWizard;
-import org.jreserve.project.system.ElementCreatorWizard.Category;
+import org.jreserve.project.system.management.ElementCreatorWizard;
+import org.jreserve.project.system.management.ElementCreatorWizard.Category;
 import org.jreserve.project.system.util.ElementCategoryUtil;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;

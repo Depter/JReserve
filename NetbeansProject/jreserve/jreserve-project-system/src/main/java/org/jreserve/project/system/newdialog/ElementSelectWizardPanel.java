@@ -4,62 +4,112 @@
  */
 package org.jreserve.project.system.newdialog;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.NotificationLineSupport;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle.Messages;
 
+@Messages({
+    "LBL_ElementSelectWizardPanel.err.select=Select 'Category' and 'Element'."
+})
 class ElementSelectWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
 
-    /**
-     * The visual component that displays this panel. If you need to access the
-     * component from this class, just use getComponent().
-     */
+    final static String ELEMENT_CREATOR_WIZARD = "ELEMENT_CREATOR_WIZARD";
+    
+    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final PropertyChangeListener elementWizardListenr = new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if(ELEMENT_CREATOR_WIZARD.equals(evt.getPropertyName()))
+                validateSelection();
+        }
+    };
+    private WizardDescriptor wizard;
     private ElementSelectVisualPanel component;
-
-    // Get the visual component for the panel. In this template, the component
-    // is kept separate. This can be more efficient: if the wizard is created
-    // but never displayed, or not all panels are displayed, it is better to
-    // create only those which really need to be visible.
+    private boolean isValid = false;
+    
     @Override
     public ElementSelectVisualPanel getComponent() {
-        if(component == null)
+        if(component == null) {
             component = new ElementSelectVisualPanel();
+            component.addPropertyChangeListener(elementWizardListenr);
+        }
         return component;
     }
-
+    
+    private void validateSelection() {
+        isValid = (component.getClientProperty(ELEMENT_CREATOR_WIZARD) != null);
+        if(isValid) {
+            clearErrorMessage();
+        } else {
+            setErrorMessage(Bundle.LBL_ElementSelectWizardPanel_err_select());
+        }
+        fireChangeEvent();
+    }
+    
+    private void setErrorMessage(final String msg) {
+        NotificationLineSupport nls = wizard.getNotificationLineSupport();
+        nls.setErrorMessage(msg);
+    }
+    
+    private void clearErrorMessage() {
+        NotificationLineSupport nls = wizard.getNotificationLineSupport();
+        nls.clearMessages();
+    }
+    
+    private void fireChangeEvent() {
+        ChangeEvent evt = new ChangeEvent(this);
+        for(ChangeListener l : new ArrayList<ChangeListener>(listeners))
+            l.stateChanged(evt);
+    }
+    
     @Override
     public HelpCtx getHelp() {
-        // Show no Help button for this panel:
         return HelpCtx.DEFAULT_HELP;
-        // If you have context help:
-        // return new HelpCtx("help.key.here");
     }
 
     @Override
     public boolean isValid() {
-        // If it is always OK to press Next or Finish, then:
-        return true;
-        // If it depends on some condition (form filled out...) and
-        // this condition changes (last form field filled in...) then
-        // use ChangeSupport to implement add/removeChangeListener below.
-        // WizardDescriptor.ERROR/WARNING/INFORMATION_MESSAGE will also be useful.
+        return isValid;
     }
 
     @Override
     public void addChangeListener(ChangeListener l) {
+        if(!listeners.contains(l))
+            listeners.add(l);
     }
 
     @Override
     public void removeChangeListener(ChangeListener l) {
+        listeners.remove(l);
     }
 
     @Override
     public void readSettings(WizardDescriptor wiz) {
+        this.wizard = wiz;
+        setInitialErrorMessage();
         // use wiz.getProperty to retrieve previous panel state
     }
 
+    private void setInitialErrorMessage() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setErrorMessage(Bundle.LBL_ElementSelectWizardPanel_err_select());
+            }
+        });
+    }
+    
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        // use wiz.putProperty to remember current panel state
+        Object value = component.getClientProperty(ELEMENT_CREATOR_WIZARD);
+        wiz.putProperty(ELEMENT_CREATOR_WIZARD, value);
     }
 }

@@ -1,4 +1,4 @@
-package org.jreserve.project.system.impl;
+package org.jreserve.project.entities.lob;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;

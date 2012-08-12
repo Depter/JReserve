@@ -2,7 +2,7 @@ package org.jreserve.project.system.util;
 
 import java.awt.Image;
 import java.util.*;
-import org.jreserve.project.system.ElementCreatorWizard.Category;
+import org.jreserve.project.system.management.ElementCreatorWizard.Category;
 import org.jreserve.resources.images.ImageResources;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

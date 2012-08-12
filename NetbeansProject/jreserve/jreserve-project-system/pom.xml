@@ -63,7 +63,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-awt</artifactId>
-            <version>${netbeans.version}</version>
+            <version>RELEASE72</version>
         </dependency>
         
         <dependency>
@@ -93,7 +93,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util</artifactId>
-            <version>${netbeans.version}</version>
+            <version>RELEASE72</version>
         </dependency>
         
         <dependency>
@@ -130,6 +130,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.project.system</publicPackage>
+                        <publicPackage>org.jreserve.project.system.management</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

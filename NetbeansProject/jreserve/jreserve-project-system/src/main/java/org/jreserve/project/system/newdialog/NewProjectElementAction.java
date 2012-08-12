@@ -22,7 +22,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @ActionRegistration(displayName = "#CTL_NewProjectElementAction")
 @ActionReferences({
-    @ActionReference(path = "Menu/Project", position = 1300)
+    @ActionReference(path = "Menu/Project", position = 1300, separatorAfter = 1350)
 })
 @Messages("CTL_NewProjectElementAction=New...")
 public final class NewProjectElementAction implements ActionListener {

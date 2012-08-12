@@ -1,4 +1,4 @@
-package org.jreserve.project.system.impl;
+package org.jreserve.project.entities.lob;
 
 import java.util.Collections;
 import java.util.Comparator;

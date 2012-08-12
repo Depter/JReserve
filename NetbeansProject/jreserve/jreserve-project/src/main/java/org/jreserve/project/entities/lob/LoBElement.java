@@ -1,7 +1,8 @@
-package org.jreserve.project.system.impl;
+package org.jreserve.project.entities.lob;
 
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.management.Deletable;
 import org.openide.nodes.Node;
 
 /**
@@ -16,6 +17,7 @@ class LoBElement extends ProjectElement {
     LoBElement(LoB lob) {
         super(lob.getName());
         this.lob = lob;
+        super.addToLookup(new MyDeletable());
     }
 
     @Override
@@ -23,5 +25,11 @@ class LoBElement extends ProjectElement {
         return new LoBNode(this);
     }
     
+    private class MyDeletable extends Deletable {
+
+        @Override
+        public void delete() {
+        }
     
+    }
 }

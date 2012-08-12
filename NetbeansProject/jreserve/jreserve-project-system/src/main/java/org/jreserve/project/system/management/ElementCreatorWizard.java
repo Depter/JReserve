@@ -1,4 +1,4 @@
-package org.jreserve.project.system;
+package org.jreserve.project.system.management;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 import org.openide.WizardDescriptor;
-import org.openide.util.Lookup;
 
 /**
  *
@@ -22,7 +21,7 @@ public interface ElementCreatorWizard {
         BOOTSTRAP
     };
     
-    public void setWizardLookup(Lookup lookup);
+    public String getDescription();
     
     public List<WizardDescriptor.Panel> getPanels();
     

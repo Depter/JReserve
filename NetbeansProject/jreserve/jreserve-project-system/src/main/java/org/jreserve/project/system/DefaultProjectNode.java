@@ -1,7 +1,6 @@
 package org.jreserve.project.system;
 
 import java.awt.Image;
-import java.io.IOException;
 import org.openide.nodes.AbstractNode;
 import org.openide.util.lookup.Lookups;
 
@@ -15,7 +14,7 @@ public class DefaultProjectNode extends AbstractNode {
     private ProjectElement element;
     
     public DefaultProjectNode(ProjectElement element) {
-        super(new ProjectChildren(element), Lookups.proxy(element));
+        super(new ProjectElementChildren(element), Lookups.proxy(element));
         this.element = element;
         Object value = element.getValue();
         setDisplayName(value==null? "null" : value.toString());

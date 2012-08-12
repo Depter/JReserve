@@ -20,5 +20,10 @@ public interface ProjectElementListener {
      * @param child the removed element.
      */
     public void childRemoved(ProjectElement child);
+    
+    /**
+     * Called when the children of this element is completly changed.
+     */
+    public void childrenChanged();
 
 }

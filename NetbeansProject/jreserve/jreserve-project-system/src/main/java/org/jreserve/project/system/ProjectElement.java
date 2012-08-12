@@ -1,6 +1,8 @@
 package org.jreserve.project.system;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
@@ -8,7 +10,9 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
- *
+ * This class is the basic element in representing data structure within the
+ * application.
+ * 
  * @author Peter Decsi
  * @version 1.0
  */
@@ -25,14 +29,20 @@ public class ProjectElement implements Lookup.Provider {
     private List<ProjectElementListener> listeners = new ArrayList<ProjectElementListener>();
     
     private Object value;
-
-    private ProjectElement() {
-    }
     
+    /**
+     * Creates an instance with the given value. This value is added to the lookup.
+     */
     public ProjectElement(Object value) {
+        if(value == null)
+            throw new NullPointerException("Null value not allowed!");
         this.value = value;
+        ic.add(value);
     }
     
+    /**
+     * Returns the value, this element represents.
+     */
     public Object getValue() {
         return value;
     }
@@ -45,6 +55,9 @@ public class ProjectElement implements Lookup.Provider {
         this.isLoaded = loaded;
     }
     
+    /**
+     * Returns the lookup for this element.
+     */
     @Override
     public Lookup getLookup() {
         return lookup;
@@ -70,10 +83,24 @@ public class ProjectElement implements Lookup.Provider {
         return new ArrayList<ProjectElement>(children);
     }
     
+    public <T> List<T> getChildValues(Class<T> clazz) {
+        List result = new ArrayList();
+        for(ProjectElement child : children) {
+            Object childValue = child.getValue();
+            if(clazz.isAssignableFrom(childValue.getClass()))
+                result.add(childValue);
+        }
+        return result;
+    }
+    
     public void addChild(ProjectElement child) {
+        addChild(children.size(), child);
+    }
+    
+    public void addChild(int index, ProjectElement child) {
         checkNewChild(child);
         child.setParent(this);
-        children.add(child);
+        children.add(index, child);
         fireChildAdded(child);
     }
     
@@ -97,15 +124,13 @@ public class ProjectElement implements Lookup.Provider {
     }
     
     public boolean valueExists(Object value) {
-        for(ProjectElement element : children)
-            if(valueEquals(value, element.getValue()))
+        for(ProjectElement child : children)
+            if(valueEquals(value, child.getValue()))
                 return true;
         return false;
     }
     
     private boolean valueEquals(Object v1, Object v2) {
-        if(v1 == null)
-            return v2 == null;
         if(v1 instanceof String)
             return (v2 instanceof String)? ((String)v1).equalsIgnoreCase((String) v2) : false;
         return v1.equals(v2);
@@ -152,15 +177,46 @@ public class ProjectElement implements Lookup.Provider {
         listeners.remove(listener);
     }
     
-    public String getPath() {
-        if(parent == null)
-            return "";
-        String name = value==null? "null" : value.toString();
-        return parent.getPath()+PATH_SEPARATOR+name;
+    public void setChildren(List<ProjectElement> newChildren) {
+        checkNewChildren(newChildren);
+        removeAllChildren();
+        addAllChildren(newChildren);
+        fireChildrenChanged();
+    }
+    
+    private void checkNewChildren(List<ProjectElement> newChildren) {
+        for(ProjectElement element : newChildren)
+            checkNewChild(element);
+    }
+    
+    private void removeAllChildren() {
+        for(Iterator<ProjectElement> it = children.iterator(); it.hasNext();) {
+            it.next().setParent(null);
+            it.remove();
+        }
+    }
+
+    private void addAllChildren(List<ProjectElement> newChildren) {
+        for(ProjectElement element : newChildren) {
+            element.setParent(this);
+            children.add(element);
+        }
+    }
+    
+    private void fireChildrenChanged() {
+        for(ProjectElementListener listener : new ArrayList<ProjectElementListener>(listeners))
+            listener.childrenChanged();
     }
     
     @Override
     public String toString() {
         return getPath();
+    }
+    
+    public String getPath() {
+        if(parent == null)
+            return "";
+        String name = value==null? "null" : value.toString();
+        return parent.getPath()+PATH_SEPARATOR+name;
     }
 }
