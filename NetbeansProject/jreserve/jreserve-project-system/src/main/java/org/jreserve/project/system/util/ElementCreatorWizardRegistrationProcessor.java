@@ -24,7 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedAnnotationTypes("org.jreserve.project.system.ElementCreatorWizard.Registration")
+@SupportedAnnotationTypes("org.jreserve.project.system.management.ElementCreatorWizard.Registration")
 public class ElementCreatorWizardRegistrationProcessor extends LayerGeneratingProcessor {
     
     private final static String ERR_NOT_IMPLEMENTS_INTERFACE = 

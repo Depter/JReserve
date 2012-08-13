@@ -25,11 +25,14 @@ class LoBElement extends ProjectElement {
         return new LoBNode(this);
     }
     
-    private class MyDeletable extends Deletable {
-
+    private class MyDeletable implements Deletable {
         @Override
         public void delete() {
         }
-    
+
+        @Override
+        public Node getNode() {
+            return LoBElement.this.createNodeDelegate();
+        }
     }
 }

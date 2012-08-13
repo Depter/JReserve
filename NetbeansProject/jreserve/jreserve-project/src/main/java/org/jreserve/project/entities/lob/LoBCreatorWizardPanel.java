@@ -203,7 +203,7 @@ class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDe
     private LoB createPersistedLoB(Session session) {
         session.beginTransaction();
         LoB lob = new LoB(getLoBName());
-        //session.persist(lob);
+        session.persist(lob);
         session.comitTransaction();
         return lob;
     }
