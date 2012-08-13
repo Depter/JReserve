@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jreserve.database.actions;
 
 import java.awt.event.ActionEvent;
@@ -31,9 +27,13 @@ displayName = "#CTL_DeleteDatabaseAction")
 })
 @Messages({
     "CTL_DeleteDatabaseAction=Delete Database",
+    "# {0} - database name",
     "CTL_deleteQuestionOneDatabase=Do you want to delete database: {0}",
+    "# {0} - names of databases",
     "CTL_deleteQuestionManyDatabase=Do you want to delete databases:{0}",
-    "CTL_deleteQuestionTitle=Delete database"
+    "CTL_deleteQuestionTitle=Delete database",
+    "# {0} - name of database",
+    "MSG_DeleteDatabaseAction.dbopened=Database \"{0}\" can not be deleted, while it is connected!"
 })
 public final class DeleteDatabaseAction implements ActionListener {
 
@@ -47,7 +47,7 @@ public final class DeleteDatabaseAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        if(!confirmByUser())
+        if(isUsedDatabase() || !confirmByUser())
             return;
         deleteDatabases();
         refreshDatabases();
@@ -58,6 +58,21 @@ public final class DeleteDatabaseAction implements ActionListener {
             getUserMessage(), Bundle.CTL_deleteQuestionTitle(), 
             NotifyDescriptor.YES_NO_OPTION);
         return DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.YES_OPTION;
+    }
+    
+    private boolean isUsedDatabase() {
+        for(AbstractDatabase db : databases)
+            if(db.isUsed()) {
+                notifyOpenedDatabase(db);
+                return true;
+            }
+        return false;
+    }
+    
+    private void notifyOpenedDatabase(AbstractDatabase db) {
+        String msg = Bundle.MSG_DeleteDatabaseAction_dbopened(db.getName());
+        NotifyDescriptor nd = new NotifyDescriptor.Message(msg, NotifyDescriptor.WARNING_MESSAGE);
+        DialogDisplayer.getDefault().notify(nd);
     }
     
     private String getUserMessage() {

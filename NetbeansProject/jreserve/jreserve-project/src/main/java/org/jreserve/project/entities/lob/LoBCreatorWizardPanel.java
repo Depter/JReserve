@@ -180,7 +180,7 @@ class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDe
     private boolean isAfter(String name, Object child) {
         if(child instanceof LoB) {
             String childName = ((LoB)child).getName();
-            return childName.compareToIgnoreCase(name) > 0;
+            return childName.compareToIgnoreCase(name) < 0;
         }
         return false;
     }

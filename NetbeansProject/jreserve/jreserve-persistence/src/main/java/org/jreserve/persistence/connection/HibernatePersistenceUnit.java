@@ -42,7 +42,7 @@ class HibernatePersistenceUnit implements PersistenceUnit {
     
     void sessionClosed(HibernateSession session) {
         openSessions.remove(session);
-        logger.debug("Session [%d] cloased.", session.getId());
+        logger.debug("Session [%d] closed.", session.getId());
     }
     
     void close() {

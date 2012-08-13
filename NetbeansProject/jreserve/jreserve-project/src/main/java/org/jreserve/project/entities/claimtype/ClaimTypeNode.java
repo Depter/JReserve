@@ -1,4 +1,4 @@
-package org.jreserve.project.system.impl;
+package org.jreserve.project.entities.claimtype;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
@@ -16,6 +16,7 @@ class ClaimTypeNode extends DefaultProjectNode {
     
     ClaimTypeNode(ClaimTypeElement element) {
         super(element);
+        setDisplayName(element.getValue().getName());
     }
     
     @Override

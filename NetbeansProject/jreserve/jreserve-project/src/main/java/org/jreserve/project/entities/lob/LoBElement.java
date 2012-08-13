@@ -10,13 +10,10 @@ import org.openide.nodes.Node;
  * @author Peter Decsi
  * @version 1.0
  */
-class LoBElement extends ProjectElement {
-    
-    private LoB lob;
+class LoBElement extends ProjectElement<LoB> {
     
     LoBElement(LoB lob) {
-        super(lob.getName());
-        this.lob = lob;
+        super(lob);
         super.addToLookup(new MyDeletable());
     }
 

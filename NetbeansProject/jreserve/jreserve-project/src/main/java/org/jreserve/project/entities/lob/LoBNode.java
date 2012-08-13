@@ -16,6 +16,7 @@ class LoBNode extends DefaultProjectNode {
     
     LoBNode(LoBElement element) {
         super(element);
+        setDisplayName(element.getValue().getName());
     }
     
     @Override

@@ -1,7 +1,6 @@
 package org.jreserve.project.system;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.openide.nodes.Node;
@@ -16,7 +15,7 @@ import org.openide.util.lookup.InstanceContent;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ProjectElement implements Lookup.Provider {
+public class ProjectElement<T> implements Lookup.Provider {
     
     private final static String PATH_SEPARATOR = "/";
     
@@ -28,12 +27,12 @@ public class ProjectElement implements Lookup.Provider {
     private List<ProjectElement> children = new ArrayList<ProjectElement>();
     private List<ProjectElementListener> listeners = new ArrayList<ProjectElementListener>();
     
-    private Object value;
+    private T value;
     
     /**
      * Creates an instance with the given value. This value is added to the lookup.
      */
-    public ProjectElement(Object value) {
+    public ProjectElement(T value) {
         if(value == null)
             throw new NullPointerException("Null value not allowed!");
         this.value = value;
@@ -43,7 +42,7 @@ public class ProjectElement implements Lookup.Provider {
     /**
      * Returns the value, this element represents.
      */
-    public Object getValue() {
+    public T getValue() {
         return value;
     }
     
@@ -83,6 +82,16 @@ public class ProjectElement implements Lookup.Provider {
         return new ArrayList<ProjectElement>(children);
     }
     
+    public <T> List<ProjectElement> getChildren(Class<T> valueClass) {
+        List<ProjectElement> result = new ArrayList<ProjectElement>();
+        for(ProjectElement child : children) {
+            Class clazz = child.getValue().getClass();
+            if(valueClass.isAssignableFrom(clazz))
+                result.add(child);
+        }
+        return result;
+    }
+    
     public <T> List<T> getChildValues(Class<T> clazz) {
         List result = new ArrayList();
         for(ProjectElement child : children) {
@@ -91,6 +100,13 @@ public class ProjectElement implements Lookup.Provider {
                 result.add(childValue);
         }
         return result;
+    }
+    
+    public ProjectElement getChild(Object value) {
+        for(ProjectElement child : children)
+            if(child.getValue().equals(value))
+                return child;
+        return null;
     }
     
     public void addChild(ProjectElement child) {
