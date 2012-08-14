@@ -228,7 +228,6 @@ class DeleteDialog extends JDialog implements ExplorerManager.Provider {
         
         @Override
         protected Void doInBackground() throws Exception {
-            Thread.sleep(5000);
             for(Deletable deletable : deletables)
                 delete(deletable);
             return null;
@@ -249,6 +248,8 @@ class DeleteDialog extends JDialog implements ExplorerManager.Provider {
         @Override
         protected void done() {
             setWorkingStatus(false);
+            if(context.isEmpty())
+                dispose();
         }
     }
 }

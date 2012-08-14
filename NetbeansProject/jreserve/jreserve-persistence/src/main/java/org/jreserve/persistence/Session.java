@@ -22,4 +22,8 @@ public interface Session {
     public void persist(Object o);
     
     public void persist(Object... o);
+    
+    public void delete(Object o);
+    
+    public void delete(Object... o);
 }

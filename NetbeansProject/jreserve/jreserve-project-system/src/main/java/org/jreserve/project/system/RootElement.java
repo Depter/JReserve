@@ -224,6 +224,16 @@ public class RootElement extends ProjectElement {
         @Override
         public void persist(Object... o) {
             throw new UnsupportedOperationException("Do not use this session to save entities! this sesison is only for loading.");
-        }    
+        }
+
+        @Override
+        public void delete(Object o) {
+            throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
+        }
+
+        @Override
+        public void delete(Object... o) {
+            throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
+        }
     }
 }
