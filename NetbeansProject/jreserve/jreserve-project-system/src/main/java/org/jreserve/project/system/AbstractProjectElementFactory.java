@@ -2,6 +2,8 @@ package org.jreserve.project.system;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jreserve.logging.Logger;
+import org.jreserve.logging.Logging;
 import org.jreserve.persistence.Session;
 
 /**
@@ -19,7 +21,9 @@ import org.jreserve.persistence.Session;
  * @version 1.0
  */
 public abstract class AbstractProjectElementFactory<T> implements ProjectElementFactory {
-
+    
+    private final static Logger logger = Logging.getLogger(AbstractProjectElementFactory.class.getName());
+    
     @Override
     public List<ProjectElement> createChildren(Object value, Session session) {
         List<ProjectElement> result = new ArrayList<ProjectElement>();
@@ -42,6 +46,7 @@ public abstract class AbstractProjectElementFactory<T> implements ProjectElement
      * </p>
      */
     protected ProjectElement getChildElement(T value, Session session) {
+        logger.debug("Loaded project element: %s", value);
         ProjectElement element = createProjectElement(value);
         for(ProjectElement child : getChildren(value, session))
             element.addChild(child);

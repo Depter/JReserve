@@ -87,7 +87,7 @@ public class SessionFactoryBuilder {
         } else {
             config.setProperty(propName, value);
         }
-        logger.info("Hibernate property set: %s => %s", propName, value);
+        logger.debug("Hibernate property set: %s => %s", propName, value);
     }
     
     private void setProperty(Properties property, boolean value) {
@@ -108,7 +108,7 @@ public class SessionFactoryBuilder {
     private void addEntities() {
         EntityFactory entityFactory = new EntityFactory();
         for(Class<?> clazz : entityFactory.getEntityClasses()) {
-            logger.info("Entity class '%s' added to configuration!", clazz.getName());
+            logger.debug("Entity class '%s' added to configuration!", clazz.getName());
             config.addAnnotatedClass(clazz);
         }
     }
@@ -132,7 +132,7 @@ public class SessionFactoryBuilder {
         } else {
             config.setProperty(propName, password);
         }
-        logger.info("Hibernate property set: %s => ****", propName);
+        logger.debug("Hibernate property set: %s => ****", propName);
     }
     
     private String escapePassword(char[] password) {

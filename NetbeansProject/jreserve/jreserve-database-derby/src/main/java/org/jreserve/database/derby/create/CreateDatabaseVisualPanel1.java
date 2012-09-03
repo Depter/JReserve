@@ -84,9 +84,9 @@ final class CreateDatabaseVisualPanel1 extends JPanel implements DocumentListene
         pathLabel = new javax.swing.JLabel();
         pathText = new javax.swing.JTextField();
 
-        org.openide.awt.Mnemonics.setLocalizedText(nameLabel, Bundle.CTL_location());
+        org.openide.awt.Mnemonics.setLocalizedText(nameLabel, Bundle.CTL_name());
 
-        org.openide.awt.Mnemonics.setLocalizedText(locationLabel, Bundle.CTL_name());
+        org.openide.awt.Mnemonics.setLocalizedText(locationLabel, Bundle.CTL_location());
 
         nameText.setText(org.openide.util.NbBundle.getMessage(CreateDatabaseVisualPanel1.class, "CreateDatabaseVisualPanel1.nameText.text")); // NOI18N
         nameText.getDocument().addDocumentListener(this);

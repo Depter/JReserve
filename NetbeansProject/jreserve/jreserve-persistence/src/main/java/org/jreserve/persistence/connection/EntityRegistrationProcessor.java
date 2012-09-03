@@ -15,7 +15,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.persistence.*;
-import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import org.jreserve.persistence.EntityRegistration;
 import static org.jreserve.persistence.EntityRegistration.*;

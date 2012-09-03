@@ -74,14 +74,14 @@
     <Component class="javax.swing.JLabel" name="nameLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="Bundle.CTL_location()" type="code"/>
+          <Connection code="Bundle.CTL_name()" type="code"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="locationLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="Bundle.CTL_name()" type="code"/>
+          <Connection code="Bundle.CTL_location()" type="code"/>
         </Property>
       </Properties>
     </Component>

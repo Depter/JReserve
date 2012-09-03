@@ -57,7 +57,7 @@ class EntityFactory {
     }
     
     private void addEntity(FileObject file) {
-        logger.info("Processing entity file '%s'.", file.getPath());
+        logger.debug("Processing entity file '%s'.", file.getPath());
         String className = (String) file.getAttribute(EntityRegistrationProcessor.CLASS_ATRIBUTE);
         try {
             entities.add(classLoader.loadClass(className));
