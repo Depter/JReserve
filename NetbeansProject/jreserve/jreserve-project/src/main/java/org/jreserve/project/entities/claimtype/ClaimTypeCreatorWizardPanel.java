@@ -35,6 +35,7 @@ import org.openide.util.NbBundle.Messages;
 class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDescriptor> {
 
     final static String LOB_VALUE = "SELECTED_LOB";
+    final static String PROJECT_ELEMENT_VALUE = "SELECTED_PROJECT_ELEMENT";
     final static String NAME_VALUE = "SELECTED_NAME";
     private final static Logger logger = Logging.getLogger(ClaimTypeCreatorWizardPanel.class.getName());
     
@@ -147,10 +148,15 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
     @Override
     public void validate() throws WizardValidationException {
         LoB lob = getLoB();
-        ProjectElement parent = RootElement.getDefault().getChild(lob);
+        ProjectElement parent = getParentElement();
         ClaimType ct = createClaimType(lob);
         ProjectElement child = new ClaimTypeElement(ct);
         parent.addChild(getIndex(parent.getChildren(), ct.getName()), child);
+    }
+    
+    private ProjectElement getParentElement() {
+        Object parent = panel.getClientProperty(PROJECT_ELEMENT_VALUE);
+        return (ProjectElement) parent;
     }
     
     private ClaimType createClaimType(LoB lob) throws WizardValidationException {

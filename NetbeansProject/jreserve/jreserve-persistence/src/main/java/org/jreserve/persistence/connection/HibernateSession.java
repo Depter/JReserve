@@ -13,6 +13,7 @@ class HibernateSession implements org.jreserve.persistence.Session {
     private final HibernatePersistenceUnit pu;
     private final Session session;
     private final int id;
+    private boolean isClosed = false;
     
     public HibernateSession(Session session, HibernatePersistenceUnit pu, int id) {
         this.pu = pu;
@@ -28,17 +29,32 @@ class HibernateSession implements org.jreserve.persistence.Session {
     @Override
     public void comitTransaction() {
         session.getTransaction().commit();
+        close();
     }
 
     @Override
     public void rollBackTransaction() {
         session.getTransaction().rollback();
+        close();
     }
 
     @Override
     public void close() {
-        session.close();
+        setToClosedState();
+        closeHibernateSession();
         pu.sessionClosed(this);
+    }
+    
+    private void setToClosedState() {
+        if(isClosed)
+            throw new IllegalStateException("Session is already closed!");
+        isClosed = true;
+    }
+    
+    private void closeHibernateSession() {
+        if(session.getTransaction().isActive())
+            throw new IllegalStateException("Transaction is still active! Have to call commit or rollBack first!");
+        session.close();
     }
 
     @Override

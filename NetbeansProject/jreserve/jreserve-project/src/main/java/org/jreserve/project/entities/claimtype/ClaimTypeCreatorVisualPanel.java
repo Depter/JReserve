@@ -86,7 +86,7 @@ class ClaimTypeCreatorVisualPanel extends JPanel implements ExplorerManager.Prov
     
     private void initExplorerManager() {
         em.setRootContext(new AbstractNode(new LoBChildren()));
-        em.getRootContext().setDisplayName("Bela");
+        em.getRootContext().setDisplayName("ROOT");
         lookup = ExplorerUtils.createLookup(em, new ActionMap());
         selection = lookup.lookupResult(LoB.class);
         selection.addLookupListener(new LoBListener());
@@ -123,8 +123,10 @@ class ClaimTypeCreatorVisualPanel extends JPanel implements ExplorerManager.Prov
 
         @Override
         public void resultChanged(LookupEvent le) {
-            LoB lob = lookup.lookup(LoB.class);
-            putClientProperty(ClaimTypeCreatorWizardPanel.LOB_VALUE, lob);
+            putClientProperty(ClaimTypeCreatorWizardPanel.LOB_VALUE, 
+                    lookup.lookup(LoB.class));
+            putClientProperty(ClaimTypeCreatorWizardPanel.PROJECT_ELEMENT_VALUE, 
+                    lookup.lookup(ProjectElement.class));
         }
     }
     

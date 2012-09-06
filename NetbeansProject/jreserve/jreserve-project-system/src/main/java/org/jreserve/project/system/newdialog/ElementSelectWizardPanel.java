@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jreserve.project.system.newdialog;
 
 import java.beans.PropertyChangeEvent;

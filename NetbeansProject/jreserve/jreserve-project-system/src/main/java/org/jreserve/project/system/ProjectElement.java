@@ -37,6 +37,7 @@ public class ProjectElement<T> implements Lookup.Provider {
             throw new NullPointerException("Null value not allowed!");
         this.value = value;
         ic.add(value);
+        ic.add(this);
     }
     
     /**
@@ -62,14 +63,29 @@ public class ProjectElement<T> implements Lookup.Provider {
         return lookup;
     }
     
+    /**
+     * Adds the given object to the lookup. 
+     * The object can not be null!
+     */
     protected void addToLookup(Object o) {
+        if(o == null)
+            throw new NullPointerException("Can not add null value to the lookup!");
         ic.add(o);
     }
     
+    /**
+     * Removes the given object from the lookup.
+     */
     protected void removeFromLookup(Object o) {
         ic.remove(o);
     }
     
+    /**
+     * Returns a {@link org.openide.nodes.Node Node} representing this
+     * project element. If not overriden, this method will return a
+     * {@link org.jreserve.project.system.DefaultProjectNode
+     * @return 
+     */
     public Node createNodeDelegate() {
         return new DefaultProjectNode(this);
     }

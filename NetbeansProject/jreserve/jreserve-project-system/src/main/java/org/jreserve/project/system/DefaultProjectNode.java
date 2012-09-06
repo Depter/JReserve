@@ -10,12 +10,9 @@ import org.openide.util.lookup.Lookups;
  * @version 1.0
  */
 public class DefaultProjectNode extends AbstractNode {
-
-    private ProjectElement element;
     
     public DefaultProjectNode(ProjectElement element) {
         super(new ProjectElementChildren(element), Lookups.proxy(element));
-        this.element = element;
         Object value = element.getValue();
         setDisplayName(value==null? "null" : value.toString());
     }

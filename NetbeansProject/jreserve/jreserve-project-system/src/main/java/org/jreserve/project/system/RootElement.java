@@ -163,7 +163,6 @@ public class RootElement extends ProjectElement {
             if(session == null)
                 return;
             session.comitTransaction();
-            session.close();
             session = null;
         }
         
