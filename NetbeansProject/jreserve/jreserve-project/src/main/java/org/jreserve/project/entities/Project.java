@@ -35,7 +35,7 @@ public class Project implements Serializable {
     @Column(name="ID")
     private long id;
     
-    @ManyToOne(cascade=CascadeType.REMOVE, optional=false)
+    @ManyToOne(fetch= FetchType.LAZY, optional=false)
     @JoinColumn(name="CLAIM_TYPE_ID", referencedColumnName="ID", nullable=false)
     private ClaimType claimType;
     

@@ -206,6 +206,7 @@ class DeleteDialog extends JDialog implements ExplorerManager.Provider {
                 delete(selection.allInstances());
             } else if(source == deleteAll) {
                 delete(context);
+                
             }
         }
     }
@@ -248,8 +249,7 @@ class DeleteDialog extends JDialog implements ExplorerManager.Provider {
         @Override
         protected void done() {
             setWorkingStatus(false);
-            if(context.isEmpty())
-                dispose();
+            dispose();
         }
     }
 }

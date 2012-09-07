@@ -43,7 +43,8 @@ public final class LayerExplorerTopComponent extends TopComponent implements Exp
     }
     
     private void initTree() {
-        FileNode root = new FileNode(FileUtil.getConfigFile("jreserve"));
+        //FileNode root = new FileNode(FileUtil.getConfigFile("jreserve"));
+        FileNode root = new FileNode(FileUtil.getConfigFile(""));
         em.setRootContext(root);
         associateLookup(ExplorerUtils.createLookup(em, getActionMap()));
         beanTreeView1.setRootVisible(false);

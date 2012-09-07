@@ -16,7 +16,6 @@ class ClaimTypeNode extends DefaultProjectNode {
     
     ClaimTypeNode(ClaimTypeElement element) {
         super(element);
-        setDisplayName(element.getValue().getName());
     }
     
     @Override

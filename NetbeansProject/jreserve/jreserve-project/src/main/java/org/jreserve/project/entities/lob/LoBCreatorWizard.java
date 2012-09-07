@@ -14,7 +14,8 @@ import org.openide.util.NbBundle.Messages;
 @ElementCreatorWizard.Registration(
     category=ElementCreatorWizard.Category.PROJECT,
     iconBase="resources/lob.png",
-    displayName="#LoBCreatorWizard.name"
+    displayName="#LoBCreatorWizard.name",
+    position=10
 )
 @Messages({
     "LoBCreatorWizard.name=LoB",

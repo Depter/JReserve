@@ -32,6 +32,6 @@ public interface ElementCreatorWizard {
         public Category category();
         public String displayName();
         public String iconBase();
-    }
-    
+        public int position() default Integer.MAX_VALUE;
+    }    
 }

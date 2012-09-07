@@ -15,7 +15,6 @@ import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.project.system.RootElement;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
@@ -30,7 +29,7 @@ import org.openide.util.NbBundle.Messages;
     "MSG_ClaimTypeCreatorWizardPanel_noname=Field 'name' is empty!",
     "# {0} - name of claim type, typed by the user",
     "# {1} - name of LoB, selected by the user",
-    "MSG_ClaimTypeCreatorWizardPanel_nameexists=Claim type '{0}' already exists in LoB '{1}'!"
+    "MSG_ClaimTypeCreatorWizardPanel_nameexists=Claim type \"{0}\" already exists in LoB \"{1}\"!"
 })
 class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDescriptor> {
 

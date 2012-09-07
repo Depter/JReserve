@@ -8,7 +8,7 @@ import org.openide.nodes.Node;
  */
 public interface Deletable {
 
-    public abstract void delete();
+    public void delete();
     
     public Node getNode();
 }

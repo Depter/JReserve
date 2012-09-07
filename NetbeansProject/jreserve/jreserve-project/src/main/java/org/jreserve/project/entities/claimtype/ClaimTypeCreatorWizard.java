@@ -14,7 +14,8 @@ import org.openide.util.NbBundle.Messages;
 @ElementCreatorWizard.Registration(
     category=ElementCreatorWizard.Category.PROJECT,
     iconBase="resources/claim_type.png",
-    displayName="#ClaimTypeCreatorWizard.name"
+    displayName="#ClaimTypeCreatorWizard.name",
+    position=20
 )
 @Messages({
     "ClaimTypeCreatorWizard.name=Claim Type",

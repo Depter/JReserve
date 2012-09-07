@@ -112,6 +112,7 @@ public class ElementCreatorWizardRegistrationProcessor extends LayerGeneratingPr
         LayerBuilder.File file = layer(element).file(name);
         file.bundlevalue(ElementCategoryUtil.CATEGORY_ELEMENT_NAME, registration.displayName());
         file.stringvalue(ElementCategoryUtil.CATEGORY_ELEMENT_ICON, registration.iconBase());
+        file.intvalue(ElementCategoryUtil.CATEGORY_ELEMENT_POSITION, registration.position());
         file.write();
     }
     

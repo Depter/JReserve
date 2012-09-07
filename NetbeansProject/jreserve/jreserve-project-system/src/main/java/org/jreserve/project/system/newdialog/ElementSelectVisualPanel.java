@@ -2,6 +2,7 @@ package org.jreserve.project.system.newdialog;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.beans.PropertyVetoException;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import org.jreserve.project.system.management.ElementCreatorWizard;
@@ -12,6 +13,7 @@ import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.ListView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
@@ -31,6 +33,9 @@ import org.openide.util.NbBundle.Messages;
 })
 class ElementSelectVisualPanel extends JPanel {
     
+    private static Category lastCategory = null;
+    private static ElementCreatorWizard lastWizard = null;
+    
     private LabeledListPanel categoryPanel;
     private LabeledListPanel elementPanel;
     private JTextArea descriptionText;
@@ -42,6 +47,7 @@ class ElementSelectVisualPanel extends JPanel {
         initComponents();
         bindPanels();
         categoryPanel.setChilden(ElementCategoryUtil.getChildren());
+        initSelectedElementCategory();
     }
     
     private void initComponents() {
@@ -97,8 +103,8 @@ class ElementSelectVisualPanel extends JPanel {
     }
     
     private void categorySelected() {
-        Category category = getElementCategory();
-        Children children = category==null? Children.LEAF : new ElementCategoryChildren(category);
+        lastCategory = getElementCategory();
+        Children children = lastCategory==null? Children.LEAF : new ElementCategoryChildren(lastCategory);
         elementPanel.setChilden(children);
     }
     
@@ -117,7 +123,11 @@ class ElementSelectVisualPanel extends JPanel {
     }
     
     private void elementCreatorWizardSelected() {
-        ElementCreatorWizard wizard = getElementCreatorWizard();
+        elementCreatorWizardSelected(getElementCreatorWizard());
+    }
+    
+    private void elementCreatorWizardSelected(ElementCreatorWizard wizard) {
+        lastWizard = wizard;
         putClientProperty(ElementSelectWizardPanel.ELEMENT_CREATOR_WIZARD, wizard);
         setDescription(wizard);
     }
@@ -129,6 +139,20 @@ class ElementSelectVisualPanel extends JPanel {
     private void setDescription(ElementCreatorWizard wizard) {
         String description = wizard==null? null : wizard.getDescription();
         descriptionText.setText(description);
+    }
+    
+    private void initSelectedElementCategory() {
+        if(lastCategory == null)
+            return;
+        categoryPanel.selectNode(lastCategory.name());
+        initSelectedWizard();
+    }
+    
+    private void initSelectedWizard() {
+        if(lastWizard == null)
+            return;
+        elementPanel.selectNode(lastWizard.getClass().getName());
+        elementCreatorWizardSelected(lastWizard);
     }
     
     @Override
@@ -170,6 +194,21 @@ class ElementSelectVisualPanel extends JPanel {
         
         void setChilden(Children children) {
             em.setRootContext(new AbstractNode(children));
+        }
+        
+        void selectNode(String name) {
+            Node node = em.getRootContext().getChildren().findChild(name);
+            if(node != null)
+                selectNodes(node);
+            else
+                selectNodes();
+        }
+        
+        private void selectNodes(Node... nodes) {
+            try {
+                em.setSelectedNodes(nodes);
+            } catch (PropertyVetoException ex) {
+            }
         }
         
         Lookup getLookup() {

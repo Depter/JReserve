@@ -143,6 +143,7 @@
                     <publicPackages>
                         <publicPackage>org.jreserve.project.system</publicPackage>
                         <publicPackage>org.jreserve.project.system.management</publicPackage>
+                        <publicPackage>org.jreserve.project.system.visual</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

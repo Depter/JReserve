@@ -33,7 +33,7 @@ public class ClaimType implements Serializable {
     @Column(name="ID", nullable=false)
     private long id;
     
-    @Column(name="LOB_NAME", nullable=false, length=NAME_LENGTH)
+    @Column(name="CLAIM_TYPE_NAME", nullable=false, length=NAME_LENGTH)
     private String name;
     
     @ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -81,7 +81,7 @@ public class ClaimType implements Serializable {
     }
     
     public List<Project> getProjects() {
-        return new ArrayList<Project>();
+        return new ArrayList<Project>(projects);
     }
     
     public boolean addProject(Project project) {

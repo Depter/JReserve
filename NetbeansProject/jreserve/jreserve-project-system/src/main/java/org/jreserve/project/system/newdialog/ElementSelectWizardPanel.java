@@ -98,7 +98,8 @@ class ElementSelectWizardPanel implements WizardDescriptor.Panel<WizardDescripto
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                setErrorMessage(Bundle.LBL_ElementSelectWizardPanel_err_select());
+                validateSelection();
+                //setErrorMessage(Bundle.LBL_ElementSelectWizardPanel_err_select());
             }
         });
     }

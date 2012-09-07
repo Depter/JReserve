@@ -29,7 +29,7 @@ import org.openide.util.NbBundle.Messages;
     "LBL_LoBCreatorWizardPanel.error.connection=There is no connected database!",
     "LBL_LoBCreatorWizardPanel.error.name.empty=Name is empty!",
     "# {0} - The name entered by the user",
-    "LBL_LoBCreatorWizardPanel.error.name.exists=Name '{0}' already used!"
+    "LBL_LoBCreatorWizardPanel.error.name.exists=Name \"{0}\" already used!"
 })
 class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDescriptor> {
     

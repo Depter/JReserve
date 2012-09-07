@@ -19,11 +19,15 @@ public interface Session {
     
     public <E> List<E> getAll(Class<E> c);
     
-    public void persist(Object o);
+    public void persist(Object entity);
     
-    public void persist(Object... o);
+    public void persist(Object... entity);
     
-    public void delete(Object o);
+    public void delete(Object entity);
     
-    public void delete(Object... o);
+    public void delete(Object... entity);
+    
+    public void update(Object entity);
+    
+    public void update(Object... entity);
 }

@@ -27,8 +27,10 @@ public class ElementCategoryUtil {
     
     public final static String CATEGORY_ELEMENT_NAME = "displayName";
     public final static String CATEGORY_ELEMENT_ICON = "iconBase";
+    public final static String CATEGORY_ELEMENT_POSITION = "position";
     
     private final static String CATEGORY_ROOT = "jreserve/new-wizard/";
+    
     private static final Map<Category, String> roots = new EnumMap<Category, String>(Category.class);
     private static final Map<Category, String> names = new EnumMap<Category, String>(Category.class);
     
@@ -44,6 +46,10 @@ public class ElementCategoryUtil {
         
         roots.put(Category.BOOTSTRAP, CATEGORY_ROOT+"bootstrap");
         names.put(Category.BOOTSTRAP, Bundle.LBL_ElementCategory_bootstrap());
+    }
+    
+    public static String getDisplayName(Category category) {
+        return names.get(category);
     }
     
     public static String getRootName(Category category) {
@@ -75,6 +81,14 @@ public class ElementCategoryUtil {
             return new Node[]{new ElementCategoryNode(t)};
         }
     
+        @Override
+        public Node findChild(String name) {
+            Category[] values = Category.values();
+            for(int i=0, length=values.length; i<length; i++)
+                if(values[i].name().equals(name))
+                    return super.getNodeAt(i);
+            return null;
+        }
     }
     
     private static class ElementCategoryNode extends AbstractNode {

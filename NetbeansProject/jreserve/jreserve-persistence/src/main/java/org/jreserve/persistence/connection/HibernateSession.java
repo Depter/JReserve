@@ -84,6 +84,17 @@ class HibernateSession implements org.jreserve.persistence.Session {
         for(Object entity : entities)
             delete(entity);
     }
+
+    @Override
+    public void update(Object entity) {
+        session.update(entity);
+    }
+
+    @Override
+    public void update(Object... entities) {
+        for(Object entity : entities)
+            update(entity);
+    }
     
     int getId() {
         return id;
