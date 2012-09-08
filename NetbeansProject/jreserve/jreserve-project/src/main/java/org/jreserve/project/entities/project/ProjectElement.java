@@ -4,6 +4,7 @@ import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentRenameable;
+import org.netbeans.api.actions.Openable;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle.Messages;
 
@@ -24,6 +25,7 @@ class ProjectElement extends org.jreserve.project.system.ProjectElement<Project>
         super.setProperty(NAME_PROPERTY, project.getName());
         addToLookup(new ProjectDeletable());
         addToLookup(new ProjectRenameable());
+        addToLookup(new ProjectOpenable());
     }
     
     @Override
@@ -83,6 +85,19 @@ class ProjectElement extends org.jreserve.project.system.ProjectElement<Project>
         @Override
         protected Object getEntity() {
             return getValue();
+        }
+    }
+    
+    private class ProjectOpenable implements Openable {
+        
+        private ProjectEditorTopComponent editor;
+        
+        @Override
+        public void open() {
+            if(editor == null)
+                editor = new ProjectEditorTopComponent(ProjectElement.this);
+            editor.open();
+            editor.requestActive();
         }
     }
 }

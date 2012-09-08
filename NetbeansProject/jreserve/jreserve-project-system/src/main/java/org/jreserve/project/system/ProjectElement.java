@@ -20,7 +20,7 @@ import org.openide.util.lookup.InstanceContent;
  */
 public class ProjectElement<T> implements Lookup.Provider {
     
-    protected final static String NAME_PROPERTY = "ELEMENT_NAME";
+    public final static String NAME_PROPERTY = "ELEMENT_NAME";
     private final static String PATH_SEPARATOR = "/";
     
     

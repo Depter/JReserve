@@ -1,11 +1,14 @@
 package org.jreserve.project.system;
 
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.jreserve.project.system.management.Renameable;
+import org.netbeans.api.actions.Openable;
 import org.openide.nodes.AbstractNode;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
@@ -53,5 +56,22 @@ public class DefaultProjectNode extends AbstractNode implements PropertyChangeLi
     public void propertyChange(PropertyChangeEvent evt) {
         if(ProjectElement.NAME_PROPERTY.equalsIgnoreCase(evt.getPropertyName()))
             setDisplayName((String) evt.getNewValue());
+    }
+    
+    @Override
+    public Action getPreferredAction() {
+        Openable openable = getLookup().lookup(Openable.class);
+        if(openable == null)
+            return super.getPreferredAction();
+        return getOpenAction(openable);
+    }
+    
+    private Action getOpenAction(final Openable openable) {
+        return new AbstractAction(getDisplayName(), null) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openable.open();
+            }
+        };
     }
 }
