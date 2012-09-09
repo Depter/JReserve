@@ -1,12 +1,16 @@
 package org.jreserve.project.entities.project;
 
+import javax.swing.SwingUtilities;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.project.editor.ProjectEditor;
 import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentRenameable;
 import org.netbeans.api.actions.Openable;
+import org.netbeans.api.actions.Closable;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle.Messages;
+import org.openide.windows.TopComponent;
 
 /**
  *
@@ -18,11 +22,16 @@ import org.openide.util.NbBundle.Messages;
     "# {1} - the name of the parent ClaimType",
     "MSG.ProjectElement.nameexists=Name \"{0}\" in claim type \"{1}\" already exists!"
 })
-class ProjectElement extends org.jreserve.project.system.ProjectElement<Project> {
+public class ProjectElement extends org.jreserve.project.system.ProjectElement<Project> {
 
     public ProjectElement(Project project) {
         super(project);
         super.setProperty(NAME_PROPERTY, project.getName());
+        initLookupContent();
+    }
+    
+    private void initLookupContent() {
+        addToLookup(getValue().getChanges());
         addToLookup(new ProjectDeletable());
         addToLookup(new ProjectRenameable());
         addToLookup(new ProjectOpenable());
@@ -41,9 +50,25 @@ class ProjectElement extends org.jreserve.project.system.ProjectElement<Project>
         
         @Override
         protected void cleanUpEntity() {
+            closeEditor();
             Project project = getValue();
             ClaimType ct = project.getClaimType();
             ct.removeProject(project);
+        }
+        
+        private void closeEditor() {
+            ProjectOpenable openable = getLookup().lookup(ProjectOpenable.class);
+            if(openable != null && openable.editor != null)
+                closeEditor(openable.editor);
+        }
+        
+        private void closeEditor(final TopComponent editor) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    editor.close();
+                }
+            });
         }
         
         @Override
@@ -90,13 +115,14 @@ class ProjectElement extends org.jreserve.project.system.ProjectElement<Project>
     
     private class ProjectOpenable implements Openable {
         
-        private ProjectEditorTopComponent editor;
+        private TopComponent editor;
         
         @Override
         public void open() {
-            if(editor == null)
-                editor = new ProjectEditorTopComponent(ProjectElement.this);
-            editor.open();
+            if(editor == null) {
+                editor = ProjectEditor.createTopComponent(ProjectElement.this);
+                editor.open();
+            }
             editor.requestActive();
         }
     }

@@ -2,8 +2,6 @@ package org.jreserve.project.system.util;
 
 import java.awt.Image;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.SwingUtilities;
 import org.jreserve.project.system.ProjectElement;
 import org.openide.nodes.AbstractNode;
@@ -22,13 +20,21 @@ public class LoadingElement extends ProjectElement {
     private final static String IMG_BASE = "resources/load_%d.png";
     private final static int LAST_IMG = 9;
     
+    private LoadingNode node;
+    
     public LoadingElement() {
         super("Loading...");
     }
     
     @Override
     public Node createNodeDelegate() {
-        return new LoadingNode("Loading...");
+        if(node == null)
+            node = new LoadingNode("Loading...");
+        return node;
+    }
+    
+    public void stop() {
+        node.stop();
     }
     
     private class LoadingNode extends AbstractNode {
@@ -40,6 +46,10 @@ public class LoadingElement extends ProjectElement {
             super(Children.LEAF);
             setDisplayName(caption);
             task = new ChangeIconTask(this);
+        }
+        
+        private void stop() {
+            task.cancel();
         }
         
         @Override

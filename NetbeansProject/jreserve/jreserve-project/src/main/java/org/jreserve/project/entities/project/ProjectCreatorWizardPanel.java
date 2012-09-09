@@ -12,6 +12,7 @@ import org.jreserve.logging.Logging;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
+import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.entities.Project;
@@ -32,7 +33,8 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - name of project, typed by the user",
     "# {1} - name of LoB, typed by the user",
     "# {2} - name of ClaimType, typed by the user",
-    "MSG.ProjectCreatorWizardPanel.nameexists=Project \"{0}\" already exists in \"{1}\\{2}\"!"
+    "MSG.ProjectCreatorWizardPanel.nameexists=Project \"{0}\" already exists in \"{1}\\{2}\"!",
+    "MSG.ProjectCreatorWizardPanel.projectcreated=Created."
 })
 class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDescriptor>{
     
@@ -199,8 +201,12 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
         Project project = new Project(getName());
         setDescription(project);
         ct.addProject(project);
-        
         session.persist(project);
+        
+        ChangeLog log = new ChangeLog(Bundle.MSG_ProjectCreatorWizardPanel_projectcreated());
+        project.addChange(log);
+        session.persist(log);
+        
         session.comitTransaction();
         return project;
     }

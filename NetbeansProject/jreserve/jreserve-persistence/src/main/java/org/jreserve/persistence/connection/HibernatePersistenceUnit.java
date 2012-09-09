@@ -49,5 +49,6 @@ class HibernatePersistenceUnit implements PersistenceUnit {
         for(HibernateSession session : new ArrayList<HibernateSession>(openSessions))
             session.close();
         factory.close();
+        HibernateDataSource.getInstance().close();
     }
 }

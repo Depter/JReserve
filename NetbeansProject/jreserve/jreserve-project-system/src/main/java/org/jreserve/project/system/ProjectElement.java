@@ -2,10 +2,7 @@ package org.jreserve.project.system;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
@@ -106,6 +103,15 @@ public class ProjectElement<T> implements Lookup.Provider {
         if(o == null)
             throw new NullPointerException("Can not add null value to the lookup!");
         ic.add(o);
+    }
+    
+    /**
+     * Adds the elements of a collection to the lookup.
+     * The elements of the collection must not be null!
+     */
+    protected void addToLookup(Collection c) {
+        for(Object o : c)
+            addToLookup(o);
     }
     
     /**

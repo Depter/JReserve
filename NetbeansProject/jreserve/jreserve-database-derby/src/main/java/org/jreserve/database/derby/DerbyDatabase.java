@@ -2,7 +2,11 @@ package org.jreserve.database.derby;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import org.jreserve.database.AbstractDatabase;
+import org.jreserve.logging.Logger;
+import org.jreserve.logging.Logging;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObjectExistsException;
 
@@ -12,8 +16,10 @@ import org.openide.loaders.DataObjectExistsException;
  * @version 1.0
  */
 public class DerbyDatabase extends AbstractDatabase {
-    public final static String URL = "jdbc:derby:%s";
     
+    private final static Logger logger = Logging.getLogger(DerbyDatabase.class.getName());
+    
+    public final static String URL = "jdbc:derby:%s";
     public final static String DB_FOLDER  = "db.location";
     
     DerbyDatabase(FileObject file, DerbyDatabaseLoader loader) throws DataObjectExistsException, IOException {
@@ -49,5 +55,22 @@ public class DerbyDatabase extends AbstractDatabase {
     @Override
     public String getDialect() {
         return null;
+    }
+    
+    @Override
+    public void setUsed(boolean used) {
+        super.setUsed(used);
+        if(!used)
+            shutDownDerby();
+    }
+    
+    private void shutDownDerby() {
+        try {
+            logger.debug("Shutting down derby database: %s", getDatabaseFolder());
+            DriverManager.getConnection("jdbc:derby:;shutdown=true");
+        } catch (SQLException ex) {
+            if(!ex.getSQLState().equalsIgnoreCase("XJ015"))
+                logger.error(ex, "Unable to shut down derby database: %s", getDatabaseFolder());
+        }
     }
 }

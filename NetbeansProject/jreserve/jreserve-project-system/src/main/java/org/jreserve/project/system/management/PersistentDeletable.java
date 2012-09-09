@@ -36,13 +36,12 @@ public abstract class PersistentDeletable implements Deletable {
         session.beginTransaction();
     }
     
-    protected abstract void cleanUpEntity();
-    
     protected void deleteEntity() {
         Object entity = element.getValue();
         logger.info("Deleting entity: %s.", entity);
         try {
             session.delete(element.getValue());
+            cleanUpEntity();
             session.comitTransaction();
         } catch (RuntimeException ex) {
             session.rollBackTransaction();
@@ -50,6 +49,8 @@ public abstract class PersistentDeletable implements Deletable {
             throw ex;
         }
     }
+    
+    protected abstract void cleanUpEntity();
     
     protected void deleteProjectElement() {
         SwingUtilities.invokeLater(new Runnable() {

@@ -2,10 +2,7 @@ package org.jreserve.database.derby.create;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import org.jreserve.database.DatabaseFactory;
 import org.jreserve.database.derby.DerbyDatabase;
 import org.jreserve.database.derby.DerbyDatabaseProvider;
@@ -22,9 +19,10 @@ class DerbyDatabaseFactory {
     
     private static Object derbyInstance = null;
     
-    private static void loadDriver() throws ClassNotFoundException{
-        if(derbyInstance == null)
-            derbyInstance = Class.forName(DerbyDatabaseProvider.DRIVER_NAME);
+    private static void loadDriver() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException{
+        //if(derbyInstance == null)
+            derbyInstance = Class.forName(DerbyDatabaseProvider.DRIVER_NAME).newInstance();
+            DriverManager.registerDriver((Driver) derbyInstance);
     }
     
     private final File dbHome;

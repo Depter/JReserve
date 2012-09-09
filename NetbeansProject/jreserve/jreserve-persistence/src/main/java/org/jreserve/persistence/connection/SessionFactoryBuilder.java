@@ -29,7 +29,8 @@ public class SessionFactoryBuilder {
         C3PO_MAX_STATEMENT(Environment.C3P0_MAX_STATEMENTS),        //init
         SECOND_LEVEL_CACHE(Environment.CACHE_PROVIDER_CONFIG),      //init
         ECHO_SQL(Environment.SHOW_SQL),                             //init
-        SESSION_CONTEXT(Environment.CURRENT_SESSION_CONTEXT_CLASS); //init
+        SESSION_CONTEXT(Environment.CURRENT_SESSION_CONTEXT_CLASS), //init
+        CONNECTION_PROVIDER(Environment.CONNECTION_PROVIDER);       //init
         
         private final String propertyName;
         
@@ -50,6 +51,8 @@ public class SessionFactoryBuilder {
     private final static int C3PO_MAX_SIZE = 5;
     private final static int C3PO_TIMEOUT = 1800;
     private final static int C3PO_MAX_STATEMENTS = 50;
+    private final static String CONNECTION_PROVIDER = "org.jreserve.persistence.connection.HibernateDataSource";
+    
     //No second-level cache
     private final static String SECOND_LEVEL_CACHE = "org.hibernate.cache.internal.NoCacheProvider";
     private final static boolean ECHO_SQL = false;
@@ -70,6 +73,7 @@ public class SessionFactoryBuilder {
         setProperty(Properties.C3PO_MAX_SIZE, C3PO_MAX_SIZE);
         setProperty(Properties.C3PO_TIMEOUT, C3PO_TIMEOUT);
         setProperty(Properties.C3PO_MAX_STATEMENT, C3PO_MAX_STATEMENTS);
+        setProperty(Properties.CONNECTION_PROVIDER, CONNECTION_PROVIDER);
         setProperty(Properties.SECOND_LEVEL_CACHE, SECOND_LEVEL_CACHE);
         setProperty(Properties.SESSION_CONTEXT, SESSION_CONTEXT);
         setProperty(Properties.ECHO_SQL, ECHO_SQL);

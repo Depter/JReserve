@@ -32,7 +32,7 @@ import org.openide.util.RequestProcessor;
 public class RootElement extends ProjectElement {
     
     private final static Logger logger = Logging.getLogger(RootElement.class.getName());
-    private final static ProjectElement LOADING_CHILD = new LoadingElement();
+    private final static LoadingElement LOADING_CHILD = new LoadingElement();
     private final static RootValue VALUE = new RootValue();
     
     private static RootElement DEFAULT = null;
@@ -91,6 +91,7 @@ public class RootElement extends ProjectElement {
         
     private void loadingFinnished(RootLoader loader) {
         try {
+            LOADING_CHILD.stop();
             setChildren(loader.get());
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
