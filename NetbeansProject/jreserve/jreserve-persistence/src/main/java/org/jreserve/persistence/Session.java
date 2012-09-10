@@ -30,4 +30,8 @@ public interface Session {
     public void update(Object entity);
     
     public void update(Object... entity);
+    
+    public Query createQuery(String query);
+    
+    public Query createNamedQuery(String name);
 }

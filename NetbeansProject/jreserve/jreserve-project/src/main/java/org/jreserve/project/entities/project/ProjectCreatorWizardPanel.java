@@ -12,10 +12,8 @@ import org.jreserve.logging.Logging;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
-import org.jreserve.project.entities.ChangeLog;
-import org.jreserve.project.entities.ClaimType;
-import org.jreserve.project.entities.LoB;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.*;
+import org.jreserve.project.entities.ChangeLog.Type;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
@@ -181,17 +179,21 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
     
     private Project createProject(ClaimType ct) throws WizardValidationException {
         Session session = null;
+        Project project = null;
+        
         try {
             session = persistenceUnit.getSession();
-            Project project = createPersistedProject(session, ct);
+            project = createPersistedProject(session, ct);
+            
             logger.info("Project '%s' in ClaimType '%s' created.", project.getName(), ct);
-            return project;
         } catch (Exception ex) {
             if(session != null)
                 session.rollBackTransaction();
             logger.error(ex, "Unable to create Project '%s' in ClaimType '%s'!", getName(), ct);
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
         }
+        createLog(project);
+        return project;
     }
     
     private Project createPersistedProject(Session session, ClaimType ct) {
@@ -203,12 +205,14 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
         ct.addProject(project);
         session.persist(project);
         
-        ChangeLog log = new ChangeLog(Bundle.MSG_ProjectCreatorWizardPanel_projectcreated());
-        project.addChange(log);
-        session.persist(log);
-        
         session.comitTransaction();
         return project;
+    }
+    
+    private void createLog(Project project) {
+        ChangeLogUtil util = ChangeLogUtil.getDefault();
+        util.addChange(project, Type.PROJECT, Bundle.MSG_ProjectCreatorWizardPanel_projectcreated());
+        util.saveLogs(project);
     }
     
     private void setDescription(Project project) {

@@ -4,11 +4,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.HibernateUtil;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.*;
 
 /**
  *
@@ -188,8 +187,7 @@ public class PersistenceTest {
         lob.addClaimType(claimType);
         claimType.addProject(project);
         
-        ChangeLog log = new ChangeLog("Changed!");
-        project.addChange(log);
+        ChangeLog log = new ChangeLog(project, ChangeLog.Type.PROJECT, "Changed!");
         
         session.persist(lob);
         session.persist(claimType);
@@ -204,15 +202,6 @@ public class PersistenceTest {
         logs = session.createQuery("from ChangeLog").list();
         assertTrue(logs.isEmpty());
         
-        session.getTransaction().commit();
-    }
-    
-    @Test(expected=Exception.class)
-    public void testChangeLog_NoProject() {
-        session.beginTransaction();
-        
-        ChangeLog log = new ChangeLog("Changed!");
-        session.save(log);
         session.getTransaction().commit();
     }
 }

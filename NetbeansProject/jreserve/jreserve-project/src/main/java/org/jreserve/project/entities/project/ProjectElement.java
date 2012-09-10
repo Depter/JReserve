@@ -1,13 +1,16 @@
 package org.jreserve.project.entities.project;
 
 import javax.swing.SwingUtilities;
+import org.jreserve.project.entities.ChangeLog.Type;
+import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.editor.ProjectEditor;
 import org.jreserve.project.system.management.PersistentDeletable;
-import org.jreserve.project.system.management.PersistentRenameable;
+import org.jreserve.project.system.management.PersistentSavable;
+import org.jreserve.project.system.management.RenameableProjectElement;
 import org.netbeans.api.actions.Openable;
-import org.netbeans.api.actions.Closable;
+import org.netbeans.api.actions.Savable;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
@@ -18,9 +21,10 @@ import org.openide.windows.TopComponent;
  * @version 1.0
  */
 @Messages({
-    "# {0} - the new name",
-    "# {1} - the name of the parent ClaimType",
-    "MSG.ProjectElement.nameexists=Name \"{0}\" in claim type \"{1}\" already exists!"
+    "# {0} - the old name",
+    "# {1} - the new name",
+    "LOG.ProjectElement.rename=Renamed from \"{0}\" to \"{1}\".",
+    "LOG.ProjectElement.description=Description edited."
 })
 public class ProjectElement extends org.jreserve.project.system.ProjectElement<Project> {
 
@@ -31,15 +35,39 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
     }
     
     private void initLookupContent() {
-        addToLookup(getValue().getChanges());
         addToLookup(new ProjectDeletable());
-        addToLookup(new ProjectRenameable());
         addToLookup(new ProjectOpenable());
+        addToLookup(new ProjectRenamable());
     }
     
     @Override
     public Node createNodeDelegate() {
         return new ProjectNode(this);
+    }
+    
+    @Override
+    public void setProperty(String property, Object value) {
+        if(NAME_PROPERTY.equals(property))
+            setName((String) value);
+        else if(DESCRIPTION_PROPERTY.equals(property))
+            setDescription((String) property);
+        super.setProperty(property, value);
+    }
+    
+    private void setName(String newName) {
+        getValue().setName(newName);
+        addSavableToLookup();
+    }
+    
+    private void setDescription(String newDescription) {
+        getValue().setDescription(newDescription);
+        addSavableToLookup();
+    }
+    
+    private void addSavableToLookup() {
+        Savable s = getLookup().lookup(Savable.class);
+        if(s == null)
+            addToLookup(new PersistentSavable(this));
     }
     
     private class ProjectDeletable extends PersistentDeletable {
@@ -77,40 +105,26 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         }
     }
     
-    private class ProjectRenameable extends PersistentRenameable {
-
-        @Override
-        protected String getEntityName() {
-            return getValue().getName();
+    private class ProjectRenamable extends RenameableProjectElement {
+        
+        private ProjectRenamable() {
+            super(ProjectElement.this);
         }
 
         @Override
-        protected boolean checkNotExists(String name) {
-            ClaimType ct = getValue().getClaimType();
-            for(Project project : ct.getProjects())
-                if(project.getName().equalsIgnoreCase(name)) {
-                    showNameExistsError(name, ct);
-                    return false;
-                }
-            return true;
+        protected void setNewName(String newName) {
+            String oldName = getValue().getName();
+            super.setNewName(newName);
+            makeLog(oldName, newName);
         }
         
-        private void showNameExistsError(String name, ClaimType ct) {
-            String ctName = ct.getName();
-            String msg = Bundle.MSG_ProjectElement_nameexists(name, ctName);
-            showError(msg);
+        private void makeLog(String oldName, String newName) {
+            String msg = Bundle.LOG_ProjectElement_rename(oldName, newName);
+            ChangeLogUtil util = ChangeLogUtil.getDefault();
+            util.addChange(getValue(), Type.PROJECT, msg);
+            util.saveLogs(getValue());
         }
-
-        @Override
-        protected void setEntityName(String newName) {
-            getValue().setName(newName);
-            setProperty(NAME_PROPERTY, newName);
-        }
-
-        @Override
-        protected Object getEntity() {
-            return getValue();
-        }
+        
     }
     
     private class ProjectOpenable implements Openable {
@@ -119,10 +133,10 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         
         @Override
         public void open() {
-            if(editor == null) {
+            if(editor == null)
                 editor = ProjectEditor.createTopComponent(ProjectElement.this);
+            if(!editor.isOpened())
                 editor.open();
-            }
             editor.requestActive();
         }
     }

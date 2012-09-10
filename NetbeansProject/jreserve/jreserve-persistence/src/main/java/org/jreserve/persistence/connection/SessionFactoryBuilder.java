@@ -51,7 +51,7 @@ public class SessionFactoryBuilder {
     private final static int C3PO_MAX_SIZE = 5;
     private final static int C3PO_TIMEOUT = 1800;
     private final static int C3PO_MAX_STATEMENTS = 50;
-    private final static String CONNECTION_PROVIDER = "org.jreserve.persistence.connection.HibernateDataSource";
+    private final static String CONNECTION_PROVIDER = "org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider";
     
     //No second-level cache
     private final static String SECOND_LEVEL_CACHE = "org.hibernate.cache.internal.NoCacheProvider";

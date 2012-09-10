@@ -1,8 +1,6 @@
 package org.jreserve.project.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.*;
 import org.hibernate.annotations.Type;
 import org.jreserve.persistence.EntityRegistration;
@@ -45,9 +43,9 @@ public class Project implements Serializable {
     @Column(name="PROJECT_DESCRIPTION")
     @Type(type="org.hibernate.type.TextType")
     private String description;
-    
-    @OneToMany(mappedBy="project", orphanRemoval=true)
-    private List<ChangeLog> changes = new ArrayList<ChangeLog>();
+//    
+//    @OneToMany(mappedBy="project", orphanRemoval=true)
+//    private List<ChangeLog> changes = new ArrayList<ChangeLog>();
     
     protected Project() {
     }
@@ -89,14 +87,14 @@ public class Project implements Serializable {
         this.description = description;
     }
     
-    public List<ChangeLog> getChanges() {
-        return new ArrayList<ChangeLog>(changes);
-    }
-    
-    public void addChange(ChangeLog change) {
-        change.setProject(this);
-        changes.add(change);
-    } 
+//    public List<ChangeLog> getChanges() {
+//        return new ArrayList<ChangeLog>(changes);
+//    }
+//    
+//    public void addChange(ChangeLog change) {
+//        change.setProject(this);
+//        changes.add(change);
+//    } 
     
     @Override
     public boolean equals(Object o) {

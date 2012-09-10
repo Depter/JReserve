@@ -1,12 +1,13 @@
 package org.jreserve.project.entities.project.editor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.jreserve.project.entities.ChangeLog;
+import org.jreserve.project.entities.ChangeLogListener;
+import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.ProjectElement;
-import org.openide.util.Lookup.Result;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -16,38 +17,30 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.ChangeLogTableModel.creationDate=Created",
     "LBL.ChangeLogTableModel.userName=User",
+    "LBL.ChangeLogTableModel.type=Type",
     "LBL.ChangeLogTableModel.message=Message"
 })
-class ChangeLogTableModel extends AbstractTableModel implements LookupListener {
+class ChangeLogTableModel extends AbstractTableModel implements ChangeLogListener {
     
     private final static int DATE_COLUMN = 0;
     private final static int USER_COLUMN = 1;
-    private final static int MESSAGE_COLUMN = 2;
-    
-    private final static Comparator<ChangeLog> CHANGE_COMPARATOR = new Comparator<ChangeLog>() {
-        @Override
-        public int compare(ChangeLog o1, ChangeLog o2) {
-            Date d1 = o1.getCreationTime();
-            Date d2 = o2.getCreationTime();
-            return compare(d1, d2);
-        }
-        
-        private int compare(Date d1, Date d2) {
-            if(d1.before(d2))
-                return -1;
-            return d1.after(d2)? 1 : 0;
-        }
-    };
+    private final static int TYPE_COLUMN = 2;
+    private final static int MESSAGE_COLUMN = 3;
+    final static int COLUMN_COUNT = 4;
     
     private ProjectElement element;
-    private Result<ChangeLog> changeResult;
     private List<ChangeLog> changes = new ArrayList<ChangeLog>();
     
     ChangeLogTableModel(ProjectElement element) {
         this.element = element;
-        changeResult = element.getLookup().lookupResult(ChangeLog.class);
-        changeResult.addLookupListener(this);
         loadChanges();
+    }
+    
+    private void loadChanges() {
+        Project project = element.getValue();
+        ChangeLogUtil util = ChangeLogUtil.getDefault();
+        changes.addAll(util.getChanges(project));
+        util.addChangeLogListener(project, this);
     }
     
     @Override
@@ -57,7 +50,7 @@ class ChangeLogTableModel extends AbstractTableModel implements LookupListener {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return COLUMN_COUNT;
     }
 
     @Override
@@ -66,6 +59,7 @@ class ChangeLogTableModel extends AbstractTableModel implements LookupListener {
         switch(columnIndex) {
             case DATE_COLUMN: return log.getCreationTime();
             case USER_COLUMN: return log.getUserName();
+            case TYPE_COLUMN: return log.getType();
             case MESSAGE_COLUMN: return log.getLogMessage();
             default:
                 throw new IllegalArgumentException("Column index out of bounds [0,2]! "+columnIndex);
@@ -79,6 +73,8 @@ class ChangeLogTableModel extends AbstractTableModel implements LookupListener {
                 return Bundle.LBL_ChangeLogTableModel_creationDate();
             case USER_COLUMN: 
                 return Bundle.LBL_ChangeLogTableModel_userName();
+            case TYPE_COLUMN:
+                return Bundle.LBL_ChangeLogTableModel_type();
             case MESSAGE_COLUMN: 
                 return Bundle.LBL_ChangeLogTableModel_message();
             default:
@@ -90,16 +86,11 @@ class ChangeLogTableModel extends AbstractTableModel implements LookupListener {
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return false;
     }
-    
+
     @Override
-    public void resultChanged(LookupEvent le) {
-        loadChanges();
-        super.fireTableDataChanged();
-    }
-    
-    private void loadChanges() {
-        changes.clear();
-        changes.addAll(element.getLookup().lookupAll(ChangeLog.class));
-        Collections.sort(changes, CHANGE_COMPARATOR);
+    public void changeLogAdded(ChangeLog change) {
+        changes.add(change);
+        int row = changes.size() - 1;
+        fireTableRowsInserted(row, row);
     }
 }

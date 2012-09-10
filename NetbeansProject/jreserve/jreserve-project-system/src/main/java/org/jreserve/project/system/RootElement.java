@@ -8,6 +8,7 @@ import org.jreserve.logging.Logger;
 import org.jreserve.logging.Logging;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
+import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.system.util.FactoryUtil;
 import org.jreserve.project.system.util.LoadingElement;
@@ -244,6 +245,16 @@ public class RootElement extends ProjectElement {
         @Override
         public void update(Object... entity) {
             throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
+        }
+
+        @Override
+        public Query createQuery(String query) {
+            throw new UnsupportedOperationException("Do not use this session to query entities! this sesison is only for loading.");
+        }
+
+        @Override
+        public Query createNamedQuery(String name) {
+            throw new UnsupportedOperationException("Do not use this session to query entities! this sesison is only for loading.");
         }
     }
 }

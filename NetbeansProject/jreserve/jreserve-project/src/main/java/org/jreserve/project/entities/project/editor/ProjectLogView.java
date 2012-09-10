@@ -24,31 +24,34 @@ class ProjectLogView extends JPanel implements MultiViewElement {
     private final static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private JToolBar toolBar = new JToolBar();
     private MultiViewElementCallback callBack;
+    private ProjectElement element;
     
     private JScrollPane tableScroll;
     private JTable table;
-
+    
     public ProjectLogView(ProjectElement element) {
-        initTable(element);
+        this.element = element;
+        initTable();
         initComponents();
     }
     
-    private void initTable(ProjectElement element) {
+    private void initTable() {
         table = new JTable(new ChangeLogTableModel(element));
         table.getColumnModel().getColumn(0).setCellRenderer(new DateRenderer());
         table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         table.getColumnModel().getColumn(0).setPreferredWidth(150);
-        table.getColumnModel().getColumn(0).setMinWidth(150);
+        table.getColumnModel().getColumn(0).setMinWidth(10);
         table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setMinWidth(100);
-        table.getColumnModel().getColumn(2).setPreferredWidth(150);
-        table.getColumnModel().getColumn(2).setMinWidth(150);
+        table.getColumnModel().getColumn(1).setMinWidth(10);
+        table.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table.getColumnModel().getColumn(2).setMinWidth(10);
+        table.getColumnModel().getColumn(3).setPreferredWidth(150);
+        table.getColumnModel().getColumn(3).setMinWidth(150);
     }
     
     private void initComponents() {
         setLayout(new BorderLayout());
         tableScroll = new JScrollPane(table);
-        //tableScroll.addComponentListener(resize);
         add(tableScroll, BorderLayout.CENTER);
     }
     
@@ -76,7 +79,7 @@ class ProjectLogView extends JPanel implements MultiViewElement {
 
     @Override
     public Lookup getLookup() {
-        return Lookups.singleton(this);
+        return element.getLookup();
     }
 
     @Override public void componentOpened() {}

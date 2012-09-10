@@ -3,7 +3,6 @@ package org.jreserve.project.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
-import org.hibernate.annotations.Type;
 import org.jreserve.persistence.EntityRegistration;
 
 /**
@@ -43,16 +42,31 @@ public class ChangeLog implements Serializable, Comparable<ChangeLog> {
     private String userName;
     
     @Column(name="LOG_MESSAGE", nullable=false)
-    @Type(type="org.hibernate.type.TextType")
+    @org.hibernate.annotations.Type(type="org.hibernate.type.TextType")
     private String logMessage;
+    
+    @Column(name="TYPE_ID", nullable=false)
+    private int typeId;
     
     protected ChangeLog() {
     }
     
-    public ChangeLog(String log) {
+    public ChangeLog(Project project, Type type, String log) {
+        setProject(project);
+        this.typeId = type.getDbId();
         initLogMessage(log);
         creationTime = new Date();
         initUserName();
+    }
+    
+    private void setProject(Project project) {
+        checkState(project);
+        this.project = project;
+    }
+    
+    private void checkState(Project project) {
+        if(project == null)
+            throw new NullPointerException("Project is null!");
     }
     
     private void initLogMessage(String log) {
@@ -77,18 +91,6 @@ public class ChangeLog implements Serializable, Comparable<ChangeLog> {
         return project;
     }
     
-    void setProject(Project project) {
-        checkState(project);
-        this.project = project;
-    }
-    
-    private void checkState(Project project) {
-        if(project == null)
-            throw new NullPointerException("Project is null!");
-        if(this.project != null)
-            throw new IllegalStateException("ChangeLog is already added to project: "+this.project);
-    }
-    
     public Date getCreationTime() {
         return creationTime;
     }
@@ -99,6 +101,14 @@ public class ChangeLog implements Serializable, Comparable<ChangeLog> {
     
     public String getLogMessage() {
         return logMessage;
+    }
+    
+    public Type getType() {
+        return parseType(typeId);
+    }
+    
+    public void setType(Type type) {
+        this.typeId = type.getDbId();
     }
     
     @Override
@@ -132,5 +142,27 @@ public class ChangeLog implements Serializable, Comparable<ChangeLog> {
     public String toString() {
         return String.format("%1$s (%2$tF %2$tT) [%3$s]: %4$s",
             userName, creationTime, project, logMessage);
+    }
+    
+    public static enum Type {
+        PROJECT(1);
+        
+        private int dbId;
+        
+        private Type(int dbId) {
+            this.dbId = dbId;
+        }
+        
+        public int getDbId() {
+            return dbId;
+        }
+    }
+    
+    private static Type parseType(int dbId) {
+        for(Type type : Type.values())
+            if(type.dbId == dbId)
+                return type;
+        String msg = String.format("Unknwon database id for ChangeLog.Type: %d", dbId);
+        throw new IllegalArgumentException(msg);
     }
 }

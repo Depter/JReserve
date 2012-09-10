@@ -57,15 +57,7 @@ public class ClaimType implements Serializable {
     
     public void setName(String name) {
         PersistenceUtil.checkVarchar(name, NAME_LENGTH);
-        checkNameInLob(name);
         this.name = name;
-    }
-    
-    private void checkNameInLob(String name) {
-        if(lob == null || !lob.containsClaimType(name)) return;
-        String msg = "Name '%s' is already used in LoB '%s'";
-        msg = String.format(msg, name, lob.getName());
-        throw new IllegalArgumentException(msg);
     }
     
     public String getName() {

@@ -1,9 +1,9 @@
 package org.jreserve.project.entities;
 
 import org.jreserve.project.TestUtil;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
@@ -87,15 +87,6 @@ public class ProjectTest {
         String description = "This is the description!";
         project.setDescription(description);
         assertEquals(description, project.getDescription());
-    }
-
-    @Test
-    public void testGetChanges() {
-        assertTrue(project.getChanges().isEmpty());
-        ChangeLog log = new ChangeLog("This is the change!");
-        project.addChange(log);
-        assertEquals(1, project.getChanges().size());
-        assertEquals(project, log.getProject());
     }
 
     @Test

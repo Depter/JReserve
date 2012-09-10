@@ -1,9 +1,10 @@
 package org.jreserve.project.entities;
 
 import java.util.Date;
-import org.junit.Test;
+import org.jreserve.project.entities.ChangeLog.Type;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
@@ -13,6 +14,7 @@ public class ChangeLogTest {
 
     private final static String MSG = "Important message.";
     
+    private Project project;
     private ChangeLog log;
     
     public ChangeLogTest() {
@@ -20,7 +22,8 @@ public class ChangeLogTest {
 
     @Before
     public void setUp() {
-        log = new ChangeLog(MSG);
+        project = new Project("Project");
+        log = new ChangeLog(project, Type.PROJECT, MSG);
     }
 
     @Test
@@ -31,29 +34,6 @@ public class ChangeLogTest {
     @Test
     public void testGetProject() {
         assertEquals(null, log.getProject());
-    }
-    
-    @Test
-    public void testSetProject() {
-        Project project = new Project("Project");
-        log.setProject(project);
-        assertEquals(project, log.getProject());
-    }
-    
-    @Test(expected=NullPointerException.class)
-    public void testSetProject_NullProject() {
-        log.setProject(null);
-    }
-    
-    @Test(expected=IllegalStateException.class)
-    public void testSetProject_ProjectAlreadySet() {
-        try {
-            log.setProject(new Project("Project 1"));
-            log.setProject(new Project("Project 2"));
-        } catch (NullPointerException ex) {
-            ex.printStackTrace();
-            throw ex;
-        }
     }
 
     @Test

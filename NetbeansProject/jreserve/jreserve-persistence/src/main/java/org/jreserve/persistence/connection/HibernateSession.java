@@ -2,6 +2,7 @@ package org.jreserve.persistence.connection;
 
 import java.util.List;
 import org.hibernate.Session;
+import org.jreserve.persistence.Query;
 
 /**
  *
@@ -94,6 +95,16 @@ class HibernateSession implements org.jreserve.persistence.Session {
     public void update(Object... entities) {
         for(Object entity : entities)
             update(entity);
+    }
+    
+    @Override
+    public Query createQuery(String query) {
+        return new HibernateQuery(session.createQuery(query));
+    }
+    
+    @Override
+    public Query createNamedQuery(String name) {
+        return new HibernateQuery(session.getNamedQuery(name));
     }
     
     int getId() {

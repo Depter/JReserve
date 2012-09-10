@@ -17,13 +17,21 @@ import org.openide.util.lookup.InstanceContent;
  */
 public class ProjectElement<T> implements Lookup.Provider {
     
+    /**
+     * The name of the enclosed object.
+     */
     public final static String NAME_PROPERTY = "ELEMENT_NAME";
+    /**
+     * The description of the enclosed object, if it contains any.
+     */
+    public final static String DESCRIPTION_PROPERTY = "DESCRIPTION";
+    
     private final static String PATH_SEPARATOR = "/";
     
     
     private InstanceContent ic = new InstanceContent();
     private Lookup lookup = new AbstractLookup(ic);
-    private Properties properties = new Properties();
+    protected Properties properties = new Properties();
     private List<PropertyChangeListener> propertyListeners = new ArrayList<PropertyChangeListener>();
     
     private boolean isLoaded = false;
@@ -99,7 +107,7 @@ public class ProjectElement<T> implements Lookup.Provider {
      * Adds the given object to the lookup. 
      * The object can not be null!
      */
-    protected void addToLookup(Object o) {
+    public void addToLookup(Object o) {
         if(o == null)
             throw new NullPointerException("Can not add null value to the lookup!");
         ic.add(o);
@@ -109,7 +117,7 @@ public class ProjectElement<T> implements Lookup.Provider {
      * Adds the elements of a collection to the lookup.
      * The elements of the collection must not be null!
      */
-    protected void addToLookup(Collection c) {
+    public void addToLookup(Collection c) {
         for(Object o : c)
             addToLookup(o);
     }
@@ -117,7 +125,7 @@ public class ProjectElement<T> implements Lookup.Provider {
     /**
      * Removes the given object from the lookup.
      */
-    protected void removeFromLookup(Object o) {
+    public void removeFromLookup(Object o) {
         ic.remove(o);
     }
     
