@@ -1,30 +1,22 @@
 package org.jreserve.project.system.management;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.beans.BeanInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import org.jreserve.logging.Logger;
 import org.jreserve.logging.Logging;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.system.ProjectElement;
-import org.netbeans.spi.actions.AbstractSavable;
-import org.openide.nodes.Node;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class PersistentSavable extends AbstractSavable implements Icon {
+public class PersistentSavable extends AbstractProjectElementSavable {
     
     public static enum Order {
         UPDATE_SAVE {
@@ -47,9 +39,6 @@ public class PersistentSavable extends AbstractSavable implements Icon {
     
     private final static Logger logger = Logging.getLogger(PersistentSavable.class.getName());
     
-    private ProjectElement element;
-    private Node elementNode;
-    private Icon nodeIcon;
     private Order order = Order.SAVE_UPDATE;
     
     private List<Object> toUpdate = new ArrayList<Object>();
@@ -63,18 +52,9 @@ public class PersistentSavable extends AbstractSavable implements Icon {
     }
     
     public PersistentSavable(ProjectElement element) {
-        this.element = element;
-        this.elementNode = element.createNodeDelegate();
-        this.nodeIcon = getNodeIcon();
+        super(element);
         toUpdate.add(element.getValue());
         register();
-    }
-    
-    private Icon getNodeIcon() {
-        Image img = elementNode.getIcon(BeanInfo.ICON_COLOR_16x16);
-        if(img == null)
-            return null;
-        return new ImageIcon(img);
     }
     
     public void setUpdates(Object... updates) {
@@ -93,27 +73,6 @@ public class PersistentSavable extends AbstractSavable implements Icon {
     
     public void addSaves(Object... saves) {
         toSave.addAll(Arrays.asList(saves));
-    }
-    
-    @Override
-    protected String findDisplayName() {
-        return elementNode.getDisplayName();
-    }
-
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-        if(nodeIcon != null)
-            nodeIcon.paintIcon(c, g, x, y);
-    }
-
-    @Override
-    public int getIconWidth() {
-        return nodeIcon==null? 0 : nodeIcon.getIconWidth();
-    }
-
-    @Override
-    public int getIconHeight() {
-        return nodeIcon==null? 0 : nodeIcon.getIconHeight();
     }
 
     @Override
@@ -150,17 +109,5 @@ public class PersistentSavable extends AbstractSavable implements Icon {
             logger.debug("Saving entity: %s", o);
             session.persist(o);
         }
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if(o instanceof PersistentSavable)
-            return ((PersistentSavable)o).element.equals(element);
-        return false;
-    }
-    
-    @Override
-    public int hashCode() {
-        return element.hashCode();
     }
 }

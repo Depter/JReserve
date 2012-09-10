@@ -56,18 +56,10 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
     
     private void setName(String newName) {
         getValue().setName(newName);
-        addSavableToLookup();
     }
     
     private void setDescription(String newDescription) {
         getValue().setDescription(newDescription);
-        addSavableToLookup();
-    }
-    
-    private void addSavableToLookup() {
-        Savable s = getLookup().lookup(Savable.class);
-        if(s == null)
-            addToLookup(new PersistentSavable(this));
     }
     
     private class ProjectDeletable extends PersistentDeletable {
@@ -116,6 +108,7 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
             String oldName = getValue().getName();
             super.setNewName(newName);
             makeLog(oldName, newName);
+            addSavableToLookup();
         }
         
         private void makeLog(String oldName, String newName) {
@@ -123,6 +116,12 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
             ChangeLogUtil util = ChangeLogUtil.getDefault();
             util.addChange(getValue(), Type.PROJECT, msg);
             util.saveLogs(getValue());
+        }
+    
+        private void addSavableToLookup() {
+            Savable s = getLookup().lookup(Savable.class);
+            if(s == null)
+                addToLookup(new PersistentSavable(ProjectElement.this));
         }
         
     }

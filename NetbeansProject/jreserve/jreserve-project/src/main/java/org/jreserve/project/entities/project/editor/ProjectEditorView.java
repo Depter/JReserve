@@ -1,6 +1,8 @@
 package org.jreserve.project.entities.project.editor;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -10,7 +12,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.ProjectElement;
-import org.jreserve.project.system.management.PersistentSavable;
+import org.jreserve.project.system.management.AbstractProjectElementSavable;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -20,7 +22,6 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
-import org.openide.util.lookup.Lookups;
         
 /**
  *
@@ -153,12 +154,15 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
     
     private void changed() {
         showError(null);
-        if(!changeName())
-            return;
+        if(nameChanged()) {
+            //savable.setName();
+        } else {
+            //savable.setClearName();
+        }
         changeDescription();
     }
-        
-    private boolean changeName() {
+       
+    private boolean nameChanged() {
         String name = nameText.getText();
         if(!isNameSaveable(name))
             return false;
@@ -251,5 +255,17 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
         if(equals(newText, descriptionText.getText()))
             return;
         descriptionText.setText(newText);
+    }
+    
+    private class DynamicSavable extends AbstractProjectElementSavable {
+        
+        private DynamicSavable() {
+            super(ProjectEditorView.this.element);
+        }
+        
+        @Override
+        protected void handleSave() throws IOException {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     }
 }
