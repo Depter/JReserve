@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.beans.BeanInfo;
-import java.io.IOException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.jreserve.project.system.ProjectElement;
@@ -25,6 +24,7 @@ public abstract class AbstractProjectElementSavable extends AbstractSavable impl
         this.element = element;
         this.elementNode = element.createNodeDelegate();
         initIcon();
+        register();
     }
     
     private void initIcon() {

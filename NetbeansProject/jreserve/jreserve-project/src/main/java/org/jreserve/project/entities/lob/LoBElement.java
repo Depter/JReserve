@@ -3,7 +3,7 @@ package org.jreserve.project.entities.lob;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
-import org.jreserve.project.system.management.PersistentSavable;
+import org.jreserve.project.system.management.MultiPersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle.Messages;
@@ -41,7 +41,7 @@ class LoBElement extends ProjectElement<LoB> {
     
     private void setName(String name) {
         getValue().setName(name);
-        addToLookup(new PersistentSavable(this));
+        addToLookup(new MultiPersistentSavable(this));
     }
     
     private class LoBDeletable extends PersistentDeletable {

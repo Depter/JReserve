@@ -18,7 +18,8 @@ public class ProjectEditor {
             new ProjectLogDescriptor(element)
         };
         TopComponent tc = MultiViewFactory.createCloneableMultiView(desc, desc[0]);
-        tc.setDisplayName(element.getValue().getName());
+        String name = element.getValue().getName();
+        tc.setHtmlDisplayName("<html>"+name+"</html>");
         tc.setIcon(ImageUtilities.loadImage("resources/project.png"));
         return tc;
     }

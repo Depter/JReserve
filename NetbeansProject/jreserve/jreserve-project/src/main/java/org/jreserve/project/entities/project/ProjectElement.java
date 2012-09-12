@@ -23,8 +23,7 @@ import org.openide.windows.TopComponent;
 @Messages({
     "# {0} - the old name",
     "# {1} - the new name",
-    "LOG.ProjectElement.rename=Renamed from \"{0}\" to \"{1}\".",
-    "LOG.ProjectElement.description=Description edited."
+    "LOG.ProjectElement.rename=Project renamed from \"{0}\" to \"{1}\"."
 })
 public class ProjectElement extends org.jreserve.project.system.ProjectElement<Project> {
 
@@ -50,7 +49,7 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         if(NAME_PROPERTY.equals(property))
             setName((String) value);
         else if(DESCRIPTION_PROPERTY.equals(property))
-            setDescription((String) property);
+            setDescription((String) value);
         super.setProperty(property, value);
     }
     

@@ -149,6 +149,7 @@ public class ChangeLogUtil {
         if(cache == null || cache.isEmpty())
             return;
         session.persist(cache.toArray());
+        saveCache.remove(projectId);
     }
     
     public synchronized List<ChangeLog> getChanges(Project project) {
