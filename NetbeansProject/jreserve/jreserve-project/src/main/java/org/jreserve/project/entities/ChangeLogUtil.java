@@ -146,10 +146,16 @@ public class ChangeLogUtil {
     
     private void saveLogs(Long projectId, Session session) {
         Set<ChangeLog> cache = saveCache.get(projectId);
-        if(cache == null || cache.isEmpty())
-            return;
-        session.persist(cache.toArray());
+        if(cache != null && !cache.isEmpty())
+            saveLogs(cache, session);
         saveCache.remove(projectId);
+    }
+    
+    private void saveLogs(Set<ChangeLog> logs, Session session) {
+        for(ChangeLog log : logs) {
+            session.persist(log);
+            logger.trace("Saving log: %s", log);
+        }
     }
     
     public synchronized List<ChangeLog> getChanges(Project project) {

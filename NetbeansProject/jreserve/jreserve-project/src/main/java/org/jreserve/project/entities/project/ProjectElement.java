@@ -1,6 +1,8 @@
 package org.jreserve.project.entities.project;
 
 import javax.swing.SwingUtilities;
+import org.jreserve.persistence.Query;
+import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ChangeLog.Type;
 import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.ClaimType;
@@ -63,14 +65,25 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
     
     private class ProjectDeletable extends PersistentDeletable {
 
+        private Project project;
+        
         private ProjectDeletable() {
             super(ProjectElement.this);
+            this.project = getValue();
         }
         
         @Override
-        protected void cleanUpEntity() {
+        protected void cleanUpBeforeEntity(Session session) {
+            String sql = "delete from ChangeLog c " + 
+                         "where c.project.id= :projectId";
+            Query query = session.createQuery(sql);
+            query.setParameter("projectId", project.getId());
+            logger.debug("Deleted %d change logs for project '%s'.", query.executeUpdate(), project.getName());
+        }
+        
+        @Override
+        protected void cleanUpAfterEntity(Session session) {
             closeEditor();
-            Project project = getValue();
             ClaimType ct = project.getClaimType();
             ct.removeProject(project);
         }
@@ -88,11 +101,6 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
                     editor.close();
                 }
             });
-        }
-        
-        @Override
-        public Node getNode() {
-            return createNodeDelegate();
         }
     }
     

@@ -184,12 +184,11 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
         try {
             session = persistenceUnit.getSession();
             project = createPersistedProject(session, ct);
-            
-            logger.info("Project '%s' in ClaimType '%s' created.", project.getName(), ct);
+            logger.info("Project '%s' created.", project.getPath());
         } catch (Exception ex) {
             if(session != null)
                 session.rollBackTransaction();
-            logger.error(ex, "Unable to create Project '%s' in ClaimType '%s'!", getName(), ct);
+            logger.error(ex, "Unable to create Project '%s' in ClaimType '%s'!", getName(), ct.getPath());
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
         }
         createLog(project);

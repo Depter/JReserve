@@ -1,10 +1,11 @@
 package org.jreserve.project.entities.claimtype;
 
+import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
-import org.jreserve.project.system.management.MultiPersistentSavable;
+import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.openide.nodes.Node;
 
@@ -37,7 +38,7 @@ class ClaimTypeElement extends ProjectElement<ClaimType> {
     
     private void setName(String name) {
         getValue().setName(name);
-        addToLookup(new MultiPersistentSavable(this));
+        addToLookup(new PersistentSavable(this));
     }
     
     private class ClaimTypeDeletable extends PersistentDeletable {
@@ -47,15 +48,10 @@ class ClaimTypeElement extends ProjectElement<ClaimType> {
         }
         
         @Override
-        protected void cleanUpEntity() {
+        protected void cleanUpBeforeEntity(Session session) {
             ClaimType ct = getValue();
             LoB lob = ct.getLoB();
             lob.removeClaimType(ct);
-        }
-        
-        @Override
-        public Node getNode() {
-            return createNodeDelegate();
         }
     }
 }

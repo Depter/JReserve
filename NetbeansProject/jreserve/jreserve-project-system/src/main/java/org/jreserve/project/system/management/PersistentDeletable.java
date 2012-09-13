@@ -1,6 +1,5 @@
 package org.jreserve.project.system.management;
 
-import javax.swing.SwingUtilities;
 import org.jreserve.logging.Logger;
 import org.jreserve.logging.Logging;
 import org.jreserve.persistence.PersistenceUnit;
@@ -12,52 +11,71 @@ import org.jreserve.project.system.ProjectElement;
  *
  * @author Peter Decsi
  */
-public abstract class PersistentDeletable implements Deletable {
+public class PersistentDeletable extends AbstractProjectElementDeletable {
     
-    private final static Logger logger = Logging.getLogger(PersistentDeletable.class.getName());
-    
-    protected final ProjectElement element;
-    protected Session session;
+    protected final static Logger logger = Logging.getLogger(PersistentDeletable.class.getName());
 
-    protected PersistentDeletable(ProjectElement element) {
-        this.element = element;
+    private boolean managesSession = false;
+
+    public PersistentDeletable(ProjectElement element) {
+        super(element);
     }
     
     @Override
-    public void delete() {
-        initSession();
-        deleteEntity();
-        deleteProjectElement();
+    protected void handleSave(Session session) {
+        session = initSession(session);
+        try {
+            super.deleteChildren(session);
+            deleteEntity(session);
+            commit(session);
+        } catch (RuntimeException ex) {
+            rollBack(session);
+            throw ex;
+        }
+        super.deleteProjectElement();
     }
     
-    private void initSession() {
+    private Session initSession(Session session) {
+        managesSession = session == null;
+        if(managesSession)
+            session = createSession();
+        return session;
+    }
+    
+    private Session createSession() {
         PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
-        session = pu.getSession();
+        Session session = pu.getSession();
         session.beginTransaction();
+        return session;
     }
     
-    protected void deleteEntity() {
+    private void deleteEntity(Session session) {
         Object entity = element.getValue();
         logger.info("Deleting entity: %s.", entity);
         try {
+            cleanUpBeforeEntity(session);
             session.delete(element.getValue());
-            cleanUpEntity();
-            session.comitTransaction();
+            cleanUpAfterEntity(session);
         } catch (RuntimeException ex) {
-            session.rollBackTransaction();
             logger.error(ex, "Unable to delete entity '%s'!", entity);
             throw ex;
         }
     }
     
-    protected abstract void cleanUpEntity();
+    protected void cleanUpBeforeEntity(Session session) {
+    }
     
-    protected void deleteProjectElement() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                element.removeFromParent();
-            }
-        });
+    protected void cleanUpAfterEntity(Session session) {
+    }
+    
+    private void commit(Session session) {
+        if(managesSession)
+            session.comitTransaction();
+    }
+    
+    private void rollBack(Session session) {
+        if(managesSession) {
+            session.rollBackTransaction();
+        }
     }
 }

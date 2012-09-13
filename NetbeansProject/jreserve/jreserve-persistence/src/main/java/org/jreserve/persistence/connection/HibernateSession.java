@@ -88,7 +88,8 @@ class HibernateSession implements org.jreserve.persistence.Session {
 
     @Override
     public void update(Object entity) {
-        session.update(entity);
+        session.merge(entity);
+        //session.update(entity);
     }
 
     @Override

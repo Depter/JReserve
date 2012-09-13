@@ -43,9 +43,6 @@ public class Project implements Serializable {
     @Column(name="PROJECT_DESCRIPTION")
     @Type(type="org.hibernate.type.TextType")
     private String description;
-//    
-//    @OneToMany(mappedBy="project", orphanRemoval=true)
-//    private List<ChangeLog> changes = new ArrayList<ChangeLog>();
     
     protected Project() {
     }
@@ -87,15 +84,6 @@ public class Project implements Serializable {
         this.description = description;
     }
     
-//    public List<ChangeLog> getChanges() {
-//        return new ArrayList<ChangeLog>(changes);
-//    }
-//    
-//    public void addChange(ChangeLog change) {
-//        change.setProject(this);
-//        changes.add(change);
-//    } 
-    
     @Override
     public boolean equals(Object o) {
         if(o instanceof Project)
@@ -122,7 +110,12 @@ public class Project implements Serializable {
     
     @Override
     public String toString() {
-        String ctName = (claimType==null? null : claimType.getName());
-        return String.format("Project [%s; %s]", name, ctName);
+        return String.format("Project [%d; %s]", id, name);
+    }
+    
+    public String getPath() {
+        if(claimType == null)
+            return toString();
+        return String.format("%s/%s", claimType.getPath(), this);
     }
 }

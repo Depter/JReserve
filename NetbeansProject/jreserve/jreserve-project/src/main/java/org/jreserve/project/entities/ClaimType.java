@@ -124,6 +124,12 @@ public class ClaimType implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("ClaimType [%d; %s; %s]", id, name, lob);
+        return String.format("ClaimType [%d; %s]", id, name);
+    }
+    
+    public String getPath() {
+        if(lob == null)
+            return toString();
+        return String.format("%s/%s", lob, this);
     }
 }

@@ -108,4 +108,8 @@ public class LoB implements Serializable {
     public String toString() {
         return String.format("LoB [%d; %s]", id, name);
     }
+    
+    public String getPath() {
+        return toString();
+    }
 }

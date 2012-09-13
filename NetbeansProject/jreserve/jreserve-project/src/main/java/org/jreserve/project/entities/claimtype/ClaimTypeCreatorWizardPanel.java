@@ -163,12 +163,12 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
         try {
             session = persistenceUnit.getSession();
             ClaimType ct = createPersistedClaimType(session, lob);
-            logger.info("ClaimType '%s' in LoB '%s' created.", ct.getName(), lob.getName());
+            logger.info("ClaimType '%s' created.", ct.getPath());
             return ct;
         } catch (Exception ex) {
             if(session != null)
                 session.rollBackTransaction();
-            logger.error(ex, "Unable to create ClaimType '%s' in LoB '%s'!", getName(), lob.getName());
+            logger.error(ex, "Unable to create ClaimType '%s' in LoB '%s'!", getName(), lob.getPath());
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
         }
     }

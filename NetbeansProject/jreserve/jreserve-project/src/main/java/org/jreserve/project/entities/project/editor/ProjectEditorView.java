@@ -208,7 +208,7 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
         if(equals(newText, nameText.getText()))
             return;
         nameText.setText(newText);
-        savable.setOriginalName(newText);
+        savable.setName(newText);
     }
     
     private boolean equals(String s1, String s2) {
@@ -221,7 +221,7 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
         if(equals(newText, descriptionText.getText()))
             return;
         descriptionText.setText(newText);
-        savable.setOriginalDescription(newText);
+        savable.setDescription(newText);
     }
     
     private String getChangedHtmlDisplayName() {
