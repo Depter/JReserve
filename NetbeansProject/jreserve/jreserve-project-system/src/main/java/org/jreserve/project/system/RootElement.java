@@ -1,5 +1,6 @@
 package org.jreserve.project.system;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -255,6 +256,11 @@ public class RootElement extends ProjectElement {
         @Override
         public Query createNamedQuery(String name) {
             throw new UnsupportedOperationException("Do not use this session to query entities! this sesison is only for loading.");
+        }
+
+        @Override
+        public <T> T find(Class<T> type, Serializable oid) {
+            return session.find(type, oid);
         }
     }
 }

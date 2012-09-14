@@ -62,30 +62,6 @@ public class PersistenceTest {
     }
     
     @Test
-    public void testDataType() {
-        session.beginTransaction();
-        
-        DataType dt1 = new DataType("DataType 1");
-        DataType dt2 = new DataType("DataType 2");
-            
-        session.save(dt1);
-        session.save(dt2);
-        assertTrue(0 < dt1.getId());
-        assertTrue(0 < dt2.getId());
-        
-        List<DataType> dts = session.createQuery("from DataType").list();
-        assertEquals(2, dts.size());
-        
-        for(DataType dt : dts)
-            session.delete(dt);
-        
-        dts = session.createQuery("from DataType").list();
-        assertTrue(dts.isEmpty());
-            
-        session.getTransaction().commit();
-    }
-    
-    @Test
     public void testCreateLob() {
         session.beginTransaction();
         

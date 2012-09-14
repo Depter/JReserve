@@ -1,8 +1,8 @@
 package org.jreserve.triangle.entities;
 
 import javax.persistence.*;
+import org.jreserve.data.DataType;
 import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.project.entities.DataType;
 import org.jreserve.project.entities.Project;
 
 /**
@@ -21,7 +21,7 @@ public abstract class AbstractData {
     
     @ManyToOne
     @JoinColumn(name="DATA_TYPE_ID", referencedColumnName="ID", nullable=false)
-    private DataType dataType;
+    private int dataTypeId;
     
     @Column(name="NAME", nullable=false, length=64)
     private String name;
@@ -45,7 +45,7 @@ public abstract class AbstractData {
     private void initDataType(DataType dataType) {
         if(dataType == null)
             throw new NullPointerException("DataType is null!");
-        this.dataType = dataType;
+        this.dataTypeId = dataType.getDbId();
     }
     
     private void initName(String name) {
@@ -58,7 +58,7 @@ public abstract class AbstractData {
     }
 
     public DataType getDataType() {
-        return dataType;
+        return DataType.parse(dataTypeId);
     }
 
     public String getName() {

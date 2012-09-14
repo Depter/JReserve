@@ -1,6 +1,5 @@
 package org.jreserve.project;
 
-import java.sql.DriverManager;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,9 +7,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.jreserve.project.entities.ChangeLog;
-import org.jreserve.project.entities.ClaimData;
 import org.jreserve.project.entities.ClaimType;
-import org.jreserve.project.entities.DataType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.entities.Project;
 
@@ -22,10 +19,8 @@ import org.jreserve.project.entities.Project;
 public class HibernateUtil {
     
     private final static Class<?>[] ENTITIES = {
-        DataType.class,
         LoB.class,
         ClaimType.class,
-        ClaimData.class,
         ChangeLog.class,
         Project.class
     };

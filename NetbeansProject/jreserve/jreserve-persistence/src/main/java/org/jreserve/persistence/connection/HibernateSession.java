@@ -1,5 +1,6 @@
 package org.jreserve.persistence.connection;
 
+import java.io.Serializable;
 import java.util.List;
 import org.hibernate.Session;
 import org.jreserve.persistence.Query;
@@ -106,6 +107,11 @@ class HibernateSession implements org.jreserve.persistence.Session {
     @Override
     public Query createNamedQuery(String name) {
         return new HibernateQuery(session.getNamedQuery(name));
+    }
+    
+    @Override
+    public <T> T find(Class<T> type, Serializable oid) {
+        return (T) session.get(type, oid);
     }
     
     int getId() {

@@ -1,5 +1,6 @@
 package org.jreserve.persistence;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -34,4 +35,6 @@ public interface Session {
     public Query createQuery(String query);
     
     public Query createNamedQuery(String name);
+    
+    public <T> T find(Class<T> type, Serializable oid);
 }

@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import org.jreserve.data.DataType;
 import org.jreserve.persistence.EntityRegistration;
-import org.jreserve.project.entities.DataType;
 import org.jreserve.project.entities.Project;
 
 /**

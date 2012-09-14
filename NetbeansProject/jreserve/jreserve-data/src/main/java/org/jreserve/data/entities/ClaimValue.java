@@ -1,9 +1,11 @@
-package org.jreserve.project.entities;
+package org.jreserve.data.entities;
 
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.jreserve.data.DataType;
 import org.jreserve.persistence.EntityRegistration;
+import org.jreserve.project.entities.ClaimType;
 
 /**
  *
@@ -12,9 +14,9 @@ import org.jreserve.persistence.EntityRegistration;
  */
 @EntityRegistration
 @Entity
-@IdClass(ClaimDataPk.class)
+@IdClass(ClaimValuePk.class)
 @Table(name="CLAIM_DATA", schema="JRESERVE")
-public class ClaimData implements Serializable {
+public class ClaimValue implements Serializable {
     private final static long serialVersionUID = 1L;
     
     private final static String ERR_DEV_BEFORE_ACC = 
@@ -26,9 +28,8 @@ public class ClaimData implements Serializable {
     private ClaimType claimType;
     
     @Id
-    @ManyToOne
-    @JoinColumn(name="DATA_TYPE_ID", referencedColumnName="ID", nullable=false)
-    private DataType dataType;
+    @Column(name="DATA_TYPE_ID", nullable=false)
+    private int dataTypeId;
     
     @Id
     @Column(name="ACCIDENT_DATE", nullable=false)
@@ -43,10 +44,10 @@ public class ClaimData implements Serializable {
     @Column(name="CLAIM_VALUE", nullable=false)
     private double claimValue;
     
-    protected ClaimData() {
+    protected ClaimValue() {
     }
     
-    public ClaimData(ClaimType claimType, DataType dataType, 
+    public ClaimValue(ClaimType claimType, DataType dataType, 
             Date accidentDate, Date developmentDate) {
         initClaimType(claimType);
         initDataType(dataType);
@@ -63,7 +64,7 @@ public class ClaimData implements Serializable {
     private void initDataType(DataType dataType) {
         if(dataType == null)
             throw new NullPointerException("DataType is null!");
-        this.dataType = dataType;
+        this.dataTypeId = dataType.getDbId();
     }
     
     private void initAccidentDate(Date date) {
@@ -91,7 +92,7 @@ public class ClaimData implements Serializable {
     }
 
     public DataType getDataType() {
-        return dataType;
+        return DataType.parse(dataTypeId);
     }
 
     public Date getAccidentDate() {
@@ -112,14 +113,14 @@ public class ClaimData implements Serializable {
     
     @Override
     public boolean equals(Object o) {
-        if(o instanceof ClaimData)
-            return equals((ClaimData) o);
+        if(o instanceof ClaimValue)
+            return equals((ClaimValue) o);
         return false;
     }
     
-    private boolean equals(ClaimData o) {
+    private boolean equals(ClaimValue o) {
         return claimType.equals(o.claimType) &&
-               dataType.equals(o.dataType) &&
+               dataTypeId == o.dataTypeId &&
                accidentDate.equals(o.accidentDate) &&
                developmentDate.equals(o.developmentDate);
     }
@@ -127,7 +128,7 @@ public class ClaimData implements Serializable {
     @Override
     public int hashCode() {
         int hash = 31 + claimType.hashCode();
-        hash = 17 * hash + dataType.hashCode();
+        hash = 17 * hash + dataTypeId;
         hash = 17 * hash + accidentDate.hashCode();
         return 17 * hash + developmentDate.hashCode();
     }
@@ -136,7 +137,7 @@ public class ClaimData implements Serializable {
     public String toString() {
         return String.format(
             "ClaimData [%s; %s; %tF; %tF; %f]",
-            claimType.getName(), dataType.getName(),
+            claimType.getName(), DataType.parse(dataTypeId),
             accidentDate, developmentDate, claimValue);
     }
 }

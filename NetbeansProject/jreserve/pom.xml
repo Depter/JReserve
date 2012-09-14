@@ -65,6 +65,7 @@
         <module>jreserve-project</module>
         <module>jreserve-triangle</module>
         <module>jreserve-project-system</module>
+        <module>jreserve-data</module>
   </modules>
 
     <properties>

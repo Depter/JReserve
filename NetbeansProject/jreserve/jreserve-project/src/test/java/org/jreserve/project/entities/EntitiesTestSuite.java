@@ -10,8 +10,6 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     ClaimTypeTest.class,
-    DataTypeTest.class,
-    ClaimDataTest.class,
     LoBTest.class,
     ProjectTest.class,
     ChangeLogTest.class,
