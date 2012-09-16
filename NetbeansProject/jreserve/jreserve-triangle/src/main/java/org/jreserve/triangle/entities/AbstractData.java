@@ -19,8 +19,7 @@ public abstract class AbstractData {
     @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
     private Project project;
     
-    @ManyToOne
-    @JoinColumn(name="DATA_TYPE_ID", referencedColumnName="ID", nullable=false)
+    @Column(name="DATA_TYPE_ID", nullable=false)
     private int dataTypeId;
     
     @Column(name="NAME", nullable=false, length=64)

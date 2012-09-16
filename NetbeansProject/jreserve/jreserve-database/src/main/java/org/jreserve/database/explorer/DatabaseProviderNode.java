@@ -21,6 +21,7 @@ import org.openide.util.lookup.Lookups;
 })
 class DatabaseProviderNode extends AbstractNode {
 
+    private final static String ACTION_PATH = "JReserve/Popup/DatabaseRoot-Providers-Provider";
     private final static String ICON = "resources/gear.png";
     
     private DatabaseProvider provider;
@@ -43,7 +44,7 @@ class DatabaseProviderNode extends AbstractNode {
 
     @Override
     public Action[] getActions(boolean context) {
-        List<? extends Action> actions = Utilities.actionsForPath("Actions/Database/Provider");
+        List<? extends Action> actions = Utilities.actionsForPath(ACTION_PATH);
         return actions.toArray(new Action[actions.size()]);
     }
 }

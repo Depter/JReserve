@@ -9,14 +9,6 @@ import org.jreserve.project.entities.ClaimType;
  * @version 1.0
  */
 public class Criteria {
-
-    private final static String DATE_LITERAL = "{d '%1$tY-%1$tm-%1$td'}";
-    
-    static String getDateLiteral(Date date) {
-        if(date == null)
-            return null;
-        return String.format(DATE_LITERAL, date);
-    }
     
     private ClaimType ct;
     private DataType dataType = null;

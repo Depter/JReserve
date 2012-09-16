@@ -18,7 +18,7 @@ public class Data {
         return dataType;
     }
     
-    Data setDataType(DataType dt) {
+    public Data setDataType(DataType dt) {
         this.dataType = dt;
         return this;
     }
@@ -27,7 +27,7 @@ public class Data {
         return accidentDate;
     }
     
-    Data setAccidentDate(Date date) {
+    public Data setAccidentDate(Date date) {
         this.accidentDate = date;
         return this;
     }
@@ -36,7 +36,7 @@ public class Data {
         return developmentDate;
     }
     
-    Data setDevelopmentDate(Date date) {
+    public Data setDevelopmentDate(Date date) {
         this.developmentDate = date;
         return this;
     }
@@ -45,7 +45,7 @@ public class Data {
         return value;
     }
     
-    Data setValue(double value) {
+    public Data setValue(double value) {
         this.value = value;
         return this;
     }

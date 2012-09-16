@@ -1,6 +1,8 @@
-package org.jreserve.data;
+package org.jreserve.data.query;
 
 import java.util.Date;
+import org.jreserve.data.Criteria;
+import org.jreserve.data.DataType;
 
 /**
  *
@@ -9,6 +11,7 @@ import java.util.Date;
  */
 class AbstractQuery {
 
+    private final static String DATE_LITERAL = "{d '%1$tY-%1$tm-%1$td'}";
     
     protected String buildCriteria(String begin, Criteria criteria) {
         StringBuilder sb = new StringBuilder(begin);
@@ -28,13 +31,19 @@ class AbstractQuery {
     private void addFromDate(StringBuilder sb, Date from) {
         if(from == null)
             return;
-        sb.append(" AND c.accidentDate >= ").append(Criteria.getDateLiteral(from));
+        sb.append(" AND c.accidentDate >= ").append(getDateLiteral(from));
     }
 
     private void addToDate(StringBuilder sb, Date to) {
         if(to == null)
             return;
-        sb.append(" AND c.developmentDate >= ").append(Criteria.getDateLiteral(to));
+        sb.append(" AND c.developmentDate >= ").append(getDateLiteral(to));
+    }
+    
+    private String getDateLiteral(Date date) {
+        if(date == null)
+            return null;
+        return String.format(DATE_LITERAL, date);
     }
     
 }

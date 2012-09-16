@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jreserve.database.actions;
 
 import java.awt.event.ActionEvent;
@@ -16,15 +12,16 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(
-    category = "Database/Provider",
-    id = "org.jreserve.persistence.databaseexplorer.actions.CreateDatabaseAction"
+    category = "JReserve/Database/Provider",
+    id = "org.jreserve.database.actions.CreateDatabaseAction"
 )
 @ActionRegistration(
     iconBase = "resources/database_add.png",
     displayName = "#CTL_CreateDatabaseAction"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Database", position = 3333)
+    @ActionReference(path = "Menu/Database", position = 3333),
+    @ActionReference(path = "JReserve/Popup/DatabaseRoot-Providers-Provider", position = 200)
 })
 @Messages(
     "CTL_CreateDatabaseAction=New Database"

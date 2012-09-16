@@ -13,9 +13,11 @@ import org.openide.util.ImageUtilities;
 class ClaimTypeNode extends DefaultProjectNode {
 
     private final static ImageIcon CLAIM_TYPE_ICON = ImageUtilities.loadImageIcon("resources/claim_type.png", false);
+    private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-ClaimTypeNode";
     
     ClaimTypeNode(ClaimTypeElement element) {
         super(element);
+        super.addActionPath(ACTION_PATH);
     }
     
     @Override

@@ -19,12 +19,18 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Database/Database/Root",
-id = "org.jreserve.persistence.databaseexplorer.actions.OpenDatabaseAction")
-@ActionRegistration(iconBase = "resources/database_open.png",
-displayName = "#CTL_OpenDatabaseAction")
+@ActionID(
+    category = "JReserve/Database/Database",
+    id = "org.jreserve.database.actions.OpenDatabaseAction"
+)
+@ActionRegistration(
+    iconBase = "resources/database_open.png",
+    displayName = "#CTL_OpenDatabaseAction"
+)
 @ActionReferences({
-    @ActionReference(path = "Menu/Database", position = 3233)
+    @ActionReference(path = "Menu/Database", position = 3233),
+    @ActionReference(path = "JReserve/Popup/DatabaseRoot-Databases", position = 100),
+    @ActionReference(path = "JReserve/Popup/DatabaseRoot-Databases-Database", position = 100)
 })
 @Messages({
     "CTL_OpenDatabaseAction=Open Database",

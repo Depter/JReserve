@@ -10,7 +10,6 @@ import org.jreserve.logging.view.LogviewTopComponent;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
-import org.openide.windows.WindowManager;
 
 public class Installer extends ModuleInstall {
 

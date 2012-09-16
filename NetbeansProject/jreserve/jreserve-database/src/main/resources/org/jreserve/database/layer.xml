@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    
-    <folder name="Actions">
-        <folder name="Database">
-            <folder name="Database">
-                <file name="org-jreserve-database-actions-ConnnectAction.instance_hidden"/>
-            </folder>
-        </folder>
-    </folder>
     <folder name="Loaders">
         <folder name="jreserve">
             <folder name="database">

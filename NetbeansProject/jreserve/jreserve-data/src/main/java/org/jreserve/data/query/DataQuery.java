@@ -1,5 +1,6 @@
-package org.jreserve.data;
+package org.jreserve.data.query;
 
+import org.jreserve.data.Criteria;
 import org.jreserve.persistence.Session;
 
 /**
@@ -7,8 +8,7 @@ import org.jreserve.persistence.Session;
  * @author Peter Decsi
  * @version 1.0
  */
-interface DataQuery<T> {
-    
+public interface DataQuery<T> {
     
     public T query(Session session, Criteria criteria);
 }

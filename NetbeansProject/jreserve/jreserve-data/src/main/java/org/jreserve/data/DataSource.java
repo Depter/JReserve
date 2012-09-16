@@ -1,6 +1,7 @@
 package org.jreserve.data;
 
 import java.util.List;
+import org.jreserve.data.query.*;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;

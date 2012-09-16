@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jreserve.project.system.newdialog;
 
 import java.awt.Dialog;
@@ -17,14 +13,18 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(
-    category = "jreserve",
+    category = "JReserve/ProjectSystem",
     id = "org.jreserve.project.system.newdialog.NewProjectElementAction"
 )
 @ActionRegistration(displayName = "#CTL_NewProjectElementAction")
 @ActionReferences({
-    @ActionReference(path = "Menu/Project", position = 1300, separatorAfter = 1350)
+    @ActionReference(path = "Menu/Project", position = 1300, separatorAfter = 1350),
+    @ActionReference(path= "JReserve/Popup/ProjectRoot-DefaultNode", position = 100)
 })
-@Messages("CTL_NewProjectElementAction=New...")
+@Messages({
+    "CTL_NewProjectElementAction=New...",
+    "LBL_NewProjectElementAction.title=New Element..."
+})
 public final class NewProjectElementAction implements ActionListener {
 
     @Override
@@ -34,7 +34,7 @@ public final class NewProjectElementAction implements ActionListener {
         iterator.setWizardDescriptor(descriptor);
         
         descriptor.setTitleFormat(new MessageFormat("{0} ({1})"));
-        descriptor.setTitle("New Element...");
+        descriptor.setTitle(Bundle.LBL_NewProjectElementAction_title());
         
         Dialog dialog = DialogDisplayer.getDefault().createDialog(descriptor);
         dialog.setVisible(true);

@@ -18,12 +18,17 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Database/Database",
-id = "org.jreserve.persistence.databaseexplorer.actions.DeleteDatabaseAction")
-@ActionRegistration(iconBase = "resources/database_delete.png",
-displayName = "#CTL_DeleteDatabaseAction")
+@ActionID(
+    category = "JReserve/Database/Database",
+    id = "org.jreserve.database.actions.DeleteDatabaseAction"
+)
+@ActionRegistration(
+    iconBase = "resources/database_delete.png",
+    displayName = "#CTL_DeleteDatabaseAction"
+)
 @ActionReferences({
-    @ActionReference(path = "Menu/Database", position = 3533)
+    @ActionReference(path = "Menu/Database", position = 3533),
+    @ActionReference(path = "JReserve/Popup/DatabaseRoot-Databases-Database", position = 300, separatorBefore=290)
 })
 @Messages({
     "CTL_DeleteDatabaseAction=Delete Database",

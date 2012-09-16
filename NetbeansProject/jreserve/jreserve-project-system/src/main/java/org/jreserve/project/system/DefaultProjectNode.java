@@ -6,16 +6,18 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.jreserve.project.system.management.Renameable;
+import org.jreserve.resources.ActionUtil;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.actions.Savable;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.nodes.AbstractNode;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
@@ -30,15 +32,26 @@ import org.openide.util.lookup.Lookups;
 })
 public class DefaultProjectNode extends AbstractNode implements PropertyChangeListener {
     
-    private final static String ACTION_PATH = "Menu/Project";
+    //private final static String ACTION_PATH = "Menu/Project";
+    private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-DefaultNode";
+    
+    private Set<String> actionPathes = new TreeSet<String>();
     
     public DefaultProjectNode(ProjectElement element) {
         super(new ProjectElementChildren(element), Lookups.proxy(element));
         element.addPropertyChangeListener(WeakListeners.propertyChange(this, element));
         Object name = element.getProperty(ProjectElement.NAME_PROPERTY);
         setDisplayName(name==null? "null" : name.toString());
+        actionPathes.add(ACTION_PATH);
     }
 
+    protected void addActionPath(String path) {
+        actionPathes.add(path);
+    }
+    
+    protected void removeActionPath(String path) {
+        actionPathes.remove(path);
+    }
     @Override
     public Image getOpenedIcon(int type) {
         return getIcon(type);
@@ -46,7 +59,7 @@ public class DefaultProjectNode extends AbstractNode implements PropertyChangeLi
 
     @Override
     public Action[] getActions(boolean context) {
-        List<? extends Action> actions = Utilities.actionsForPath(ACTION_PATH);
+        List<? extends Action> actions = ActionUtil.actionsForPath(actionPathes);
         return actions.toArray(new Action[actions.size()]);
     }
     

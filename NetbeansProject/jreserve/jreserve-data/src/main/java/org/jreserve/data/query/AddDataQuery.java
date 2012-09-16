@@ -1,6 +1,7 @@
-package org.jreserve.data;
+package org.jreserve.data.query;
 
 import java.util.List;
+import org.jreserve.data.Data;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.data.entities.ClaimValuePk;
 import org.jreserve.persistence.Session;
@@ -11,15 +12,15 @@ import org.jreserve.project.entities.ClaimType;
  * @author Peter Decsi
  * @version 1.0
  */
-class AddDataQuery {
+public class AddDataQuery {
     
     private boolean overwrite = false;
     
-    AddDataQuery(boolean overwrite) {
+    public AddDataQuery(boolean overwrite) {
         this.overwrite = overwrite;
     }
     
-    void add(Session session, ClaimType ct, List<Data> datas) {
+    public void add(Session session, ClaimType ct, List<Data> datas) {
         for(Data data : datas)
             add(session, ct, data);
     }

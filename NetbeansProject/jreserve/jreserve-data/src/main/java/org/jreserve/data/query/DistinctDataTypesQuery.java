@@ -1,7 +1,9 @@
-package org.jreserve.data;
+package org.jreserve.data.query;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jreserve.data.Criteria;
+import org.jreserve.data.DataType;
 import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 
@@ -10,7 +12,7 @@ import org.jreserve.persistence.Session;
  * @author Peter Decsi
  * @version 1.0
  */
-class DistinctDataTypesQuery implements DataQuery<List<DataType>> {
+public class DistinctDataTypesQuery implements DataQuery<List<DataType>> {
     
     private final static String DATA_TYPES = 
         "SELECT DISTINCT c.dataTypeId FROM ClaimValue c WHERE c.claimType.id = :claimTypeId ORDER BY c.dataTypeId";

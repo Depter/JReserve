@@ -15,7 +15,7 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  */
 @ActionID(
-    category = "jreserve",
+    category = "JReserve/ProjectSystem",
     id = "org.jreserve.project.system.util.DeleteAction"
 )
 @ActionRegistration(
@@ -23,7 +23,9 @@ import org.openide.util.NbBundle.Messages;
     displayName = "#CTL_DeleteAction.name"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Project", position = 1400)
+    @ActionReference(path = "Menu/Project", position = 1400),
+    @ActionReference(path= "JReserve/Popup/ProjectRoot-DefaultNode", 
+        position = 300, separatorBefore = 290)
 })
 @Messages({
     "CTL_DeleteAction.name=Delete"

@@ -29,22 +29,22 @@ public class ElementCategoryUtil {
     public final static String CATEGORY_ELEMENT_ICON = "iconBase";
     public final static String CATEGORY_ELEMENT_POSITION = "position";
     
-    private final static String CATEGORY_ROOT = "jreserve/new-wizard/";
+    private final static String CATEGORY_ROOT = "JReserve/NewWizard/";
     
     private static final Map<Category, String> roots = new EnumMap<Category, String>(Category.class);
     private static final Map<Category, String> names = new EnumMap<Category, String>(Category.class);
     
     static {
-        roots.put(Category.PROJECT, CATEGORY_ROOT+"project");
+        roots.put(Category.PROJECT, CATEGORY_ROOT+"Project");
         names.put(Category.PROJECT, Bundle.LBL_ElementCategory_project());
         
-        roots.put(Category.DATA, CATEGORY_ROOT+"data");
+        roots.put(Category.DATA, CATEGORY_ROOT+"Data");
         names.put(Category.DATA, Bundle.LBL_ElementCategory_data());
         
-        roots.put(Category.ESTIMATE, CATEGORY_ROOT+"estimate");
+        roots.put(Category.ESTIMATE, CATEGORY_ROOT+"Estimate");
         names.put(Category.ESTIMATE, Bundle.LBL_ElementCategory_estimate());
         
-        roots.put(Category.BOOTSTRAP, CATEGORY_ROOT+"bootstrap");
+        roots.put(Category.BOOTSTRAP, CATEGORY_ROOT+"Bootstrap");
         names.put(Category.BOOTSTRAP, Bundle.LBL_ElementCategory_bootstrap());
     }
     

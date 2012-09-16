@@ -16,7 +16,7 @@ import org.openide.util.NbBundle;
  * @version 1.0
  */
 @ActionID(
-    category = "Database/Database",
+    category = "JReserve/Database/Database",
     id = "org.jreserve.persistence.action.ConnectDatabaseAction"
 )
 @ActionRegistration(
@@ -24,7 +24,8 @@ import org.openide.util.NbBundle;
     displayName = "#CTL_ConnectDatabaseAction"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Database", position = 3633)
+    @ActionReference(path = "Menu/Database", position = 3633),
+    @ActionReference(path = "JReserve/Popup/DatabaseRoot-Databases-Database", position = 210)
 })
 @NbBundle.Messages({
     "CTL_ConnectDatabaseAction=Connect Database"

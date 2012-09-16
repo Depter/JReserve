@@ -8,18 +8,18 @@
         </folder>
     </folder>    
 
-    <folder name="jreserve">
-        <folder name="project">
+    <folder name="JReserve">
+        <folder name="Project">
             <folder name="ElementFactories"/>
         </folder>
-        <folder name="new-wizard">
-            <folder name="project">
+        <folder name="NewWizard">
+            <folder name="Project">
             </folder>
-            <folder name="data">
+            <folder name="Data">
             </folder>
-            <folder name="estimate">
+            <folder name="Estimate">
             </folder>
-            <folder name="bootstrap">
+            <folder name="Bootstrap">
             </folder>
         </folder>
     </folder>

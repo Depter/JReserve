@@ -32,7 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class EntityRegistrationProcessor extends LayerGeneratingProcessor {
     
-    final static String ENTITY_DIRECTORY = "jreserve/entities";
+    final static String ENTITY_DIRECTORY = "JReserve/Entities";
     final static String CLASS_ATRIBUTE = "className";
     final static String GENERATED_ID_ATTRIBUTE = "generatedId";
     private final static String LOCATION = ENTITY_DIRECTORY + "/%s.entity";

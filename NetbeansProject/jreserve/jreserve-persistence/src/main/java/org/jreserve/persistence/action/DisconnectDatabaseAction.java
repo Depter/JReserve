@@ -16,7 +16,7 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @ActionID(
-    category = "Database/Database",
+    category = "JReserve/Database/Database",
     id = "org.jreserve.persistence.action.DisconnectDatabaseAction"
 )
 @ActionRegistration(
@@ -24,7 +24,8 @@ import org.openide.util.NbBundle.Messages;
     displayName = "#CTL_DisconnectDatabaseAction"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Database", position = 3634)
+    @ActionReference(path = "Menu/Database", position = 3634),
+    @ActionReference(path = "JReserve/Popup/DatabaseRoot-Databases-Database", position = 220)
 })
 @Messages({
     "CTL_DisconnectDatabaseAction=Disconnect database"

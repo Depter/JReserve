@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jreserve.database.actions;
 
 import java.awt.event.ActionEvent;
@@ -23,15 +19,16 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(
-    category = "Database/Database",
-    id = "org.jreserve.persistence.databaseexplorer.actions.CloseDatabaseAction"
+    category = "JReserve/Database/Database",
+    id = "org.jreserve.database.actions.CloseDatabaseAction"
 )
 @ActionRegistration(
     iconBase = "resources/database_close.png",
     displayName = "#CTL_CloseDatabaseAction"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Database", position = 3433)
+    @ActionReference(path = "Menu/Database", position = 3433),
+    @ActionReference(path = "JReserve/Popup/DatabaseRoot-Databases-Database", position = 200)
 })
 @Messages({
     "CTL_CloseDatabaseAction=Close Database",

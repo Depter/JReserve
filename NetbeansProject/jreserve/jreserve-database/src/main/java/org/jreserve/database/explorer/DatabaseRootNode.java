@@ -14,6 +14,7 @@ import org.openide.util.Utilities;
  */
 class DatabaseRootNode extends AbstractNode {
 
+    private final static String ACTION_PATH = "JReserve/Popup/DatabaseRoot-Databases";
     private final static String OPENED_IMG = "resources/database_folder_opened.png";
     private final static String CLOSED_IMG = "resources/database_folder_closed.png";
     
@@ -34,7 +35,7 @@ class DatabaseRootNode extends AbstractNode {
     
     @Override
     public Action[] getActions(boolean context) {
-        List<? extends Action> actions = Utilities.actionsForPath("Actions/Database/Database/Root");
+        List<? extends Action> actions = Utilities.actionsForPath(ACTION_PATH);
         Action[] result = new Action[actions.size()];
         return actions.toArray(result);
     }

@@ -24,7 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedAnnotationTypes("org.jreserve.project.system.ProjectElementFactory.Registration")
 public class ProjectElementFactoryRegistrationProcessor extends LayerGeneratingProcessor {
-    final static String ENTITY_DIRECTORY = "jreserve/project/ElementFactories";
+    final static String ENTITY_DIRECTORY = "JReserve/Project/ElementFactories";
     final static String PRIORITY = "priority";
     private final static String LOCATION = ENTITY_DIRECTORY + "/%s.instance";
     

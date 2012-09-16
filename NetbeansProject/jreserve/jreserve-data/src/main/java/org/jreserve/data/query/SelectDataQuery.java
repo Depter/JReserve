@@ -1,8 +1,11 @@
-package org.jreserve.data;
+package org.jreserve.data.query;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.jreserve.data.Criteria;
+import org.jreserve.data.Data;
+import org.jreserve.data.DataType;
 import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 
@@ -11,7 +14,7 @@ import org.jreserve.persistence.Session;
  * @author Peter Decsi
  * @version 1.0
  */
-class SelectDataQuery extends AbstractQuery implements DataQuery<List<Data>> {
+public class SelectDataQuery extends AbstractQuery implements DataQuery<List<Data>> {
     
     private final static int COL_DT = 0;
     private final static int COL_ACCIDENT = 1;
