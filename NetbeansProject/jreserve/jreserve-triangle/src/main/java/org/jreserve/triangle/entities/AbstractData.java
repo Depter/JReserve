@@ -2,6 +2,7 @@ package org.jreserve.triangle.entities;
 
 import javax.persistence.*;
 import org.jreserve.data.DataType;
+import org.jreserve.data.DataTypeUtil;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.project.entities.Project;
 
@@ -57,7 +58,7 @@ public abstract class AbstractData {
     }
 
     public DataType getDataType() {
-        return DataType.parse(dataTypeId);
+        return DataTypeUtil.parse(dataTypeId);
     }
 
     public String getName() {

@@ -6,6 +6,7 @@ import java.util.List;
 import org.jreserve.data.Criteria;
 import org.jreserve.data.Data;
 import org.jreserve.data.DataType;
+import org.jreserve.data.DataTypeUtil;
 import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 
@@ -49,7 +50,7 @@ public class SelectDataQuery extends AbstractQuery implements DataQuery<List<Dat
     
     private DataType getDataType(Object[] record) {
         Number id = (Number) record[COL_DT];
-        return DataType.parse(id.intValue());
+        return DataTypeUtil.parse(id.intValue());
     }
     
     private double getValue(Object[] record) {

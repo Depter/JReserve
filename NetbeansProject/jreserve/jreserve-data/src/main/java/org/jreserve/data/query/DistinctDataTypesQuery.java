@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.data.Criteria;
 import org.jreserve.data.DataType;
+import org.jreserve.data.DataTypeUtil;
 import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 
@@ -28,7 +29,7 @@ public class DistinctDataTypesQuery implements DataQuery<List<DataType>> {
     private List<DataType> getDataTypes(List<Number> ids) {
         List<DataType> dts = new ArrayList<DataType>(ids.size());
         for(Number n : ids)
-            dts.add(DataType.parse(n.intValue()));
+            dts.add(DataTypeUtil.parse(n.intValue()));
         return dts;
     }
 }

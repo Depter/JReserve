@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 import org.jreserve.data.DataType;
+import org.jreserve.data.DataTypeUtil;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.ClaimType;
 
@@ -92,7 +93,7 @@ public class ClaimValue implements Serializable {
     }
 
     public DataType getDataType() {
-        return DataType.parse(dataTypeId);
+        return DataTypeUtil.parse(dataTypeId);
     }
 
     public Date getAccidentDate() {
@@ -137,7 +138,7 @@ public class ClaimValue implements Serializable {
     public String toString() {
         return String.format(
             "ClaimData [%s; %s; %tF; %tF; %f]",
-            claimType.getName(), DataType.parse(dataTypeId),
+            claimType.getName(), DataTypeUtil.parse(dataTypeId),
             accidentDate, developmentDate, claimValue);
     }
 }

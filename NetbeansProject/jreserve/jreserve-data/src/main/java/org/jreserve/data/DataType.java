@@ -1,49 +1,84 @@
 package org.jreserve.data;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public enum DataType {
-
-    CLAIM_INCURRED(10),
-    CLAIM_PAID(20),
-    CLAIM_RESERVE(30),
-    CLAIM_COUNT(40),
-    PREMIUM(50),
-    POLICIES(60),
-    OTHER(100);
+@XmlRootElement(name="data-type")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class DataType implements Comparable<DataType> {
     
-    private final static Map<Integer, DataType> dbMap = new HashMap<Integer, DataType>();
-    static {
-        for(DataType dt : values()) {
-            DataType old = dbMap.put(dt.dbId, dt);
-            if(old != null) {
-                throw new IllegalStateException(
-                        String.format("Db id %d is used by two datatypes: %s and %s", 
-                        dt.dbId, old, dt));
-            }
-        }
+    @XmlAttribute(name="dbId", required=true)
+    private int dbId;
+    @XmlAttribute(name="name", required=true)
+    private String name;
+    @XmlAttribute(name="isTrinagle", required=true)
+    private boolean isTrinagle;
+        
+    DataType() {}
+    
+    DataType(int dbId, String name, boolean isTriangle) {
+        checkName(name);
+        this.dbId = dbId;
+        this.name = name;
+        this.isTrinagle = isTriangle;
     }
     
-    private final int dbId;
-    
-    private DataType(int dbId) {
-        this.dbId = dbId;
+    private void checkName(String userName) {
+        if(userName == null)
+            throw new NullPointerException("Name can not be null!");
+        if(userName.trim().length() == 0)
+            throw new IllegalArgumentException("Name can not be an empty string!");
     }
     
     public int getDbId() {
         return dbId;
     }
     
-    public static DataType parse(int dbId) {
-        DataType dt = dbMap.get(dbId);
-        if(dt != null)
-            return dt;
-        throw new IllegalArgumentException("Unknown database id: "+dbId);
+    public String getName() {
+        return name;
+    }
+    
+    void setName(String name) {
+        checkName(name);
+        this.name = name;
+    }
+    
+    public boolean isTriangle() {
+        return isTrinagle;
+    }
+
+    void setTriangle(boolean isTriangle) {
+        this.isTrinagle = isTriangle;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof DataType)
+            return dbId == ((DataType)o).dbId;
+        return false;
+    }
+    
+    @Override
+    public int compareTo(DataType o) {
+        if(o == null)
+            return -1;
+        return dbId - o.dbId;
+    }
+    
+    @Override
+    public int hashCode() {
+        return dbId;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("DataType [%d; %s; %s]", dbId, name, isTrinagle);
     }
 }
