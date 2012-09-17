@@ -11,17 +11,23 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(location = "Advanced",
-displayName = "#AdvancedOption_DisplayName_DataTypes",
-keywords = "#AdvancedOption_Keywords_DataTypes",
-keywordsCategory = "Advanced/DataTypes")
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_DataTypes=Data types", "AdvancedOption_Keywords_DataTypes=Data Types; data types"})
+@OptionsPanelController.SubRegistration(
+    location = "Advanced",
+    displayName = "#AdvancedOption_DisplayName_DataTypes",
+    keywords = "#AdvancedOption_Keywords_DataTypes",
+    keywordsCategory = "Advanced/DataTypes"
+)
+@org.openide.util.NbBundle.Messages({
+    "AdvancedOption_DisplayName_DataTypes=Data types", 
+    "AdvancedOption_Keywords_DataTypes=Data Types; data types"
+})
 public final class DataTypesOptionsPanelController extends OptionsPanelController {
 
     private DataTypesPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
-
+    private boolean valid = false;
+    
     @Override
     public void update() {
         getPanel().load();
@@ -42,7 +48,7 @@ public final class DataTypesOptionsPanelController extends OptionsPanelControlle
     public boolean isValid() {
         return getPanel().valid();
     }
-
+    
     @Override
     public boolean isChanged() {
         return changed;
