@@ -4,6 +4,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.util.ProjectElementUtil;
 import org.openide.nodes.Node;
 
 /**
@@ -87,7 +88,11 @@ public class AbstractProjectElementDeletable implements Deletable {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                boolean attached = element.isAttached();
+                ProjectElement parent = element.getParent();
                 element.removeFromParent();
+                if(attached)
+                    ProjectElementUtil.deleted(parent, element);
             }
         });
     }

@@ -113,7 +113,7 @@ public class DataTypeUtil {
     }
     
     private static void loadXML() {
-        if(XML != null) {
+        if(isXmlExists()) {
             readFile();
         } else {
             if(initXmlFile()) {
@@ -121,6 +121,14 @@ public class DataTypeUtil {
                 save(ROOT);
             }
         }
+    }
+    
+    private static boolean isXmlExists() {
+        if(XML != null)
+            return true;
+        FileObject configHome = FileUtil.getConfigRoot();
+        XML = configHome.getFileObject(PATH);
+        return XML != null;
     }
     
     private static void readFile() {
@@ -131,6 +139,19 @@ public class DataTypeUtil {
         } catch (JAXBException ex) {
             logger.error(ex, "Unable tu unmarshall xml document!", XML.getPath());
             Exceptions.printStackTrace(ex);
+        }
+    }
+    
+    private static boolean initXmlFile() {
+        try {
+            FileObject configHome = FileUtil.getConfigRoot();
+            XML = FileUtil.createData(configHome, PATH);
+            logger.info("DataType settings home set to '%s'.", XML.getPath());
+            return true;
+        } catch (IOException ex) {
+            logger.error(ex, "Unable to create file '%s' in user dir!", PATH);
+            Exceptions.printStackTrace(ex);
+            return false;
         }
     }
     
@@ -178,19 +199,6 @@ public class DataTypeUtil {
         root.createDataType(id, name, isTriangle);
         
         return root;
-    }
-    
-    private static boolean initXmlFile() {
-        try {
-            FileObject configHome = FileUtil.getConfigRoot();
-            XML = FileUtil.createData(configHome, PATH);
-            logger.info("DataType settings home set to '%s'.", XML.getPath());
-            return true;
-        } catch (IOException ex) {
-            logger.error(ex, "Unable to create file '%s' in user dir!", PATH);
-            Exceptions.printStackTrace(ex);
-            return false;
-        }
     }
     
     public synchronized static void save() {

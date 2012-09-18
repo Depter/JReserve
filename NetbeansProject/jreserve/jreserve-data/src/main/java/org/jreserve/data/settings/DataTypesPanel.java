@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -120,6 +122,7 @@ public class DataTypesPanel extends JPanel implements ActionListener, ListSelect
         table.setColumnSelectionAllowed(false);
         table.getSelectionModel().addListSelectionListener(this);
         table.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
+        table.addMouseListener(new PopUpListener());
         tableModel.addTableModelListener(this);
         JScrollPane scroll = new JScrollPane(table);
         scroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
@@ -177,6 +180,8 @@ public class DataTypesPanel extends JPanel implements ActionListener, ListSelect
             deleteRows();
         } else if (source == resetButton) {
             tableModel.reloadDefaults();
+        } else if (source instanceof JMenuItem) {
+            deleteRows();
         }
     }
 
@@ -235,5 +240,41 @@ public class DataTypesPanel extends JPanel implements ActionListener, ListSelect
     private void showError(String msg) {
         msgLabel.setText(msg);
         msgLabel.setVisible(true);
+    }
+    
+    private class PopUpListener extends MouseAdapter {
+
+        private JPopupMenu popUp;
+        
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if(e.isPopupTrigger())
+                popUp(e);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if(e.isPopupTrigger())
+                popUp(e);
+        }
+        
+        private void popUp(MouseEvent evt) {
+            int x = evt.getX();
+            int y = evt.getY();
+            getPopUp().show(table, x, y);
+        }
+        
+        private JPopupMenu getPopUp() {
+            if(popUp == null)
+                createPopUp();
+            return popUp;
+        }
+        
+        private void createPopUp() {
+            popUp = new JPopupMenu();
+            JMenuItem delete = new JMenuItem(Bundle.LBL_DataTypesPanel_delete());
+            delete.addActionListener(DataTypesPanel.this);
+            popUp.add(delete);
+        }
     }
 }

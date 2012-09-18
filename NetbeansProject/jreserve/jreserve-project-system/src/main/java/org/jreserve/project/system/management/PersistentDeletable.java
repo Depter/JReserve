@@ -25,14 +25,13 @@ public class PersistentDeletable extends AbstractProjectElementDeletable {
     protected void handleSave(Session session) {
         session = initSession(session);
         try {
-            super.deleteChildren(session);
+            super.handleSave(session);
             deleteEntity(session);
             commit(session);
         } catch (RuntimeException ex) {
             rollBack(session);
             throw ex;
         }
-        super.deleteProjectElement();
     }
     
     private Session initSession(Session session) {

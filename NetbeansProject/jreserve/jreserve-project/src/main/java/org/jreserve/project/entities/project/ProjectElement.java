@@ -1,7 +1,6 @@
 package org.jreserve.project.entities.project;
 
 import javax.swing.SwingUtilities;
-import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ChangeLog.Type;
 import org.jreserve.project.entities.ChangeLogUtil;
@@ -74,11 +73,11 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         
         @Override
         protected void cleanUpBeforeEntity(Session session) {
-            String sql = "delete from ChangeLog c " + 
-                         "where c.project.id= :projectId";
-            Query query = session.createQuery(sql);
-            query.setParameter("projectId", project.getId());
-            logger.debug("Deleted %d change logs for project '%s'.", query.executeUpdate(), project.getName());
+//            String sql = "delete from ChangeLog c " + 
+//                         "where c.project.id= :projectId";
+//            Query query = session.createQuery(sql);
+//            query.setParameter("projectId", project.getId());
+//            logger.debug("Deleted %d change logs for project '%s'.", query.executeUpdate(), project.getName());
         }
         
         @Override

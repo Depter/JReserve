@@ -3,6 +3,7 @@ package org.jreserve.project.system;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import org.jreserve.project.system.util.ProjectElementUtil;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
@@ -255,6 +256,16 @@ public class ProjectElement<T> implements Lookup.Provider {
     private void fireChildAdded(ProjectElement child) {
         for(ProjectElementListener listener : new ArrayList<ProjectElementListener>(listeners))
             listener.childAdded(child);
+        if(isAttached())
+            ProjectElementUtil.created(child);
+    }
+    
+    public boolean isAttached() {
+        if(parent == null)
+            return false;
+        if(parent instanceof RootElement)
+            return true;
+        return parent.isAttached();
     }
     
     /**
