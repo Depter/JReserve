@@ -89,6 +89,12 @@
             <artifactId>jreserve-logging</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-resources</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

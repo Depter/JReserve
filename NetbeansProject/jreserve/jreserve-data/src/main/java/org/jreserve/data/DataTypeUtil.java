@@ -66,10 +66,24 @@ public class DataTypeUtil {
         throw new IllegalArgumentException("Unkwon DataType id: "+dbId);
     }
     
+    public synchronized static DataType getDataType(int dbId) {
+        DataTypeRoot root = getRoot();
+        DataType dt = root==null? null : root.getDataType(dbId);
+        if(dt != null)
+            return dt;
+        return null;
+    }
+    
     private static DataTypeRoot getRoot() {
         if(ROOT == null)
             loadXML();
         return ROOT;
+    }
+    
+    public synchronized static void deleteDataType(DataType dt) {
+        DataTypeRoot root = getRoot();
+        if(root != null)
+            root.deleteDataType(dt);
     }
     
     public synchronized static DataType createDataType(int dbId, String name, boolean isTriangle) {
@@ -85,6 +99,12 @@ public class DataTypeUtil {
             root.setName(dt, name);
     }
     
+    public synchronized static void setTriangle(DataType dt, boolean isTriangle) {
+        DataTypeRoot root = getRoot();
+        if(root != null)
+            root.setTriangle(dt, isTriangle);
+    }
+    
     public synchronized static List<DataType> getDataTypes() {
         DataTypeRoot root = getRoot();
         if(root == null)
@@ -97,7 +117,7 @@ public class DataTypeUtil {
             readFile();
         } else {
             if(initXmlFile()) {
-                createDataTypRoot();
+                ROOT = createDataTypRoot();
                 save(ROOT);
             }
         }
@@ -114,48 +134,50 @@ public class DataTypeUtil {
         }
     }
     
-    private static void createDataTypRoot() {
-        ROOT = new DataTypeRoot();
+    private static DataTypeRoot createDataTypRoot() {
+        DataTypeRoot root = new DataTypeRoot();
         
         int id = Integer.parseInt(Bundle.DataTypeUtil_DataType_incurred_dbId());
         String name = Bundle.DataTypeUtil_DataType_incurred_name();
         boolean isTriangle = Bundle.DataTypeUtil_DataType_incurred_istriangle().equalsIgnoreCase("true");
-        ROOT.createDataType(id, name, isTriangle);
+        root.createDataType(id, name, isTriangle);
         
         id = Integer.parseInt(Bundle.DataTypeUtil_DataType_paid_dbId());
         name = Bundle.DataTypeUtil_DataType_paid_name();
         isTriangle = Bundle.DataTypeUtil_DataType_paid_istriangle().equalsIgnoreCase("true");
-        ROOT.createDataType(id, name, isTriangle);
+        root.createDataType(id, name, isTriangle);
         
         id = Integer.parseInt(Bundle.DataTypeUtil_DataType_reserve_dbId());
         name = Bundle.DataTypeUtil_DataType_reserve_name();
         isTriangle = Bundle.DataTypeUtil_DataType_reserve_istriangle().equalsIgnoreCase("true");
-        ROOT.createDataType(id, name, isTriangle);
+        root.createDataType(id, name, isTriangle);
         
         id = Integer.parseInt(Bundle.DataTypeUtil_DataType_claimcount_dbId());
         name = Bundle.DataTypeUtil_DataType_claimcount_name();
         isTriangle = Bundle.DataTypeUtil_DataType_claimcount_istriangle().equalsIgnoreCase("true");
-        ROOT.createDataType(id, name, isTriangle);
+        root.createDataType(id, name, isTriangle);
         
         id = Integer.parseInt(Bundle.DataTypeUtil_DataType_premium_dbId());
         name = Bundle.DataTypeUtil_DataType_premium_name();
         isTriangle = Bundle.DataTypeUtil_DataType_premium_istriangle().equalsIgnoreCase("true");
-        ROOT.createDataType(id, name, isTriangle);
+        root.createDataType(id, name, isTriangle);
         
         id = Integer.parseInt(Bundle.DataTypeUtil_DataType_policies_dbId());
         name = Bundle.DataTypeUtil_DataType_policies_name();
         isTriangle = Bundle.DataTypeUtil_DataType_policies_istriangle().equalsIgnoreCase("true");
-        ROOT.createDataType(id, name, isTriangle);
+        root.createDataType(id, name, isTriangle);
            
         id = Integer.parseInt(Bundle.DataTypeUtil_DataType_othertriangle_dbId());
         name = Bundle.DataTypeUtil_DataType_othertriangle_name();
         isTriangle = Bundle.DataTypeUtil_DataType_othertriangle_istriangle().equalsIgnoreCase("true");
-        ROOT.createDataType(id, name, isTriangle);
+        root.createDataType(id, name, isTriangle);
            
         id = Integer.parseInt(Bundle.DataTypeUtil_DataType_othervector_dbId());
         name = Bundle.DataTypeUtil_DataType_othervector_name();
         isTriangle = Bundle.DataTypeUtil_DataType_othervector_istriangle().equalsIgnoreCase("true");
-        ROOT.createDataType(id, name, isTriangle);
+        root.createDataType(id, name, isTriangle);
+        
+        return root;
     }
     
     private static boolean initXmlFile() {
@@ -184,10 +206,17 @@ public class DataTypeUtil {
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             m.marshal(root, FileUtil.toFile(XML));
             logger.debug("DataTypes saved: "+XML.getPath());
+            for(DataType dt : root.dataTypes)
+                logger.trace("Saved: %s", dt);
         } catch (JAXBException ex) {
             logger.error(ex, "Unable to save file '%s' in user dir!", PATH);
             Exceptions.printStackTrace(ex);
         }
+    }
+    
+    public static List<DataType> getDefaultDataTypes() {
+        DataTypeRoot root = createDataTypRoot();
+        return root.dataTypes;
     }
     
     @XmlRootElement(name="data-types")
@@ -215,6 +244,20 @@ public class DataTypeUtil {
             for(DataType dt : dataTypes)
                 if(dt.getDbId()!=dbId && dt.getName().equalsIgnoreCase(name))
                     throw new IllegalArgumentException("Name laredy used by: "+dt);
+        }
+        
+        private void setTriangle(DataType dt, boolean isTriangle) {
+            dt = getDataType(dt.getDbId());
+            if(dt == null)
+                throw new IllegalArgumentException("DataType not found! "+dt);
+            dt.setTriangle(isTriangle);
+        }
+        
+        private void deleteDataType(DataType dt) {
+            dt = getDataType(dt.getDbId());
+            if(dt == null)
+                throw new IllegalArgumentException("DataType not found! "+dt);
+            dataTypes.remove(dt);
         }
         
         private DataType createDataType(int dbId, String name, boolean isTriangle) {

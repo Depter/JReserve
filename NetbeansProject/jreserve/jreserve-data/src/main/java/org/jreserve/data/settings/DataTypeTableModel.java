@@ -3,6 +3,7 @@ package org.jreserve.data.settings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import org.jreserve.data.DataType;
 import org.jreserve.data.DataTypeUtil;
@@ -31,9 +32,18 @@ class DataTypeTableModel extends DefaultTableModel {
     }
 
     void load() {
-        for(DataType dt : DataTypeUtil.getDataTypes())
+        load(DataTypeUtil.getDataTypes());
+    }
+    
+    private void load(List<DataType> dataTypes) {
+        dummies.clear();
+        for(DataType dt : dataTypes)
             dummies.add(new DTDummy(dt));
         super.fireTableDataChanged();
+    }
+    
+    void reloadDefaults() {
+        load(DataTypeUtil.getDefaultDataTypes());
     }
     
     @Override
@@ -96,20 +106,20 @@ class DataTypeTableModel extends DefaultTableModel {
 
     @Override
     public void setValueAt(Object value, int row, int column) {
-        if(column == ID_COLUMN)
-            throw new IllegalArgumentException("Id column is not editable!");
         DTDummy dummy = dummies.get(row);
         switch(column) {
             case NAME_COLUMN:
                 dummy.name = (String) value;
-                return;
+                break;
             case TRIANGLE_COLUMN:
                 Boolean isTriangle = (Boolean) value;
                 dummy.isTriangle = isTriangle==null? false : isTriangle;
-                return;
+                break;
             default: 
                 throw new IllegalArgumentException("Column not editable: "+column);
         }
+        TableModelEvent evt = new TableModelEvent(this, row, row, column);
+        super.fireTableChanged(evt);
     }
 
     @Override
@@ -120,11 +130,28 @@ class DataTypeTableModel extends DefaultTableModel {
         super.fireTableRowsInserted(index, index);
     }
     
+    DTDummy getDummyAtRow(int row) {
+        return dummies.get(row);
+    }
+    
     DTDummy getDummy(int id) {
         for(DTDummy dummy : dummies) 
             if(dummy.id == id)
                 return dummy;
         return null;
+    }
+    
+    DTDummy getDummy(String name) {
+        for(DTDummy dummy : dummies) 
+            if(dummy.name.equalsIgnoreCase(name))
+                return dummy;
+        return null;
+    }
+    
+    void removeDummies(DTDummy[] removes) {
+        for(DTDummy dummy : removes)
+            dummies.remove(dummy);
+        super.fireTableDataChanged();
     }
     
     class DTDummy implements Comparable<DTDummy> {
@@ -153,6 +180,18 @@ class DataTypeTableModel extends DefaultTableModel {
             if(o == null)
                 return -1;
             return id - o.id;
+        }
+        
+        int getId() {
+            return id;
+        }
+        
+        String getName() {
+            return name;
+        }
+        
+        boolean isTriangle() {
+            return isTriangle;
         }
     }
     
