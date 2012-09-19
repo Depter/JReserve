@@ -14,6 +14,8 @@ import org.openide.WizardDescriptor;
  */
 public interface ElementCreatorWizard {
 
+    public final static String PROP_ELEMENT_LOOKUP = "project_element_lookup";
+    
     public static enum Category {
         PROJECT,
         DATA,

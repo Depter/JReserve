@@ -12,11 +12,16 @@ import org.jreserve.logging.Logging;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
-import org.jreserve.project.entities.*;
 import org.jreserve.project.entities.ChangeLog.Type;
+import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.project.entities.ClaimType;
+import org.jreserve.project.entities.LoB;
+import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -74,7 +79,28 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
     @Override
     public void readSettings(WizardDescriptor wizard) {
         this.wizard = wizard;
+        setSelections((Lookup) wizard.getProperty(ElementCreatorWizard.PROP_ELEMENT_LOOKUP));
         validatePanel();
+    }
+    
+    private void setSelections(Lookup lookup) {
+        if(!setClaimType(lookup))
+            setLoB(lookup);
+    }
+    
+    private boolean setClaimType(Lookup lookup) {
+        ClaimType ct = lookup.lookup(ClaimType.class);
+        if(ct != null) {
+            panel.setClaimType(ct);
+            return true;
+        }
+        return false;
+    }
+    
+    private void setLoB(Lookup lookup) {
+        LoB lob = lookup.lookup(LoB.class);
+        if(lob != null)
+            panel.setLoB(lob);
     }
 
     @Override
@@ -211,7 +237,7 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
     private void createLog(Project project) {
         ChangeLogUtil util = ChangeLogUtil.getDefault();
         util.addChange(project, Type.PROJECT, Bundle.MSG_ProjectCreatorWizardPanel_projectcreated());
-        util.saveLogs(project);
+        util.saveValues(project);
     }
     
     private void setDescription(Project project) {

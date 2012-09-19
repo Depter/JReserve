@@ -14,9 +14,11 @@ import org.openide.util.ImageUtilities;
 class ProjectNode extends DefaultProjectNode {
     
     private final static ImageIcon PROJECT_ICON = ImageUtilities.loadImageIcon("resources/project.png", false);
+    private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-ProjectNode";
     
     ProjectNode(ProjectElement element) {
         super(element);
+        super.addActionPath(ACTION_PATH);
         initToolTip(element.getValue().getDescription());
     }
     

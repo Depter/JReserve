@@ -15,9 +15,11 @@ import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -65,7 +67,14 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
     @Override
     public void readSettings(WizardDescriptor wizard) {
         this.wizard = wizard;
+        setLoB((Lookup) wizard.getProperty(ElementCreatorWizard.PROP_ELEMENT_LOOKUP));
         validatePanel();
+    }
+    
+    private void setLoB(Lookup lookup) {
+        LoB lob = lookup.lookup(LoB.class);
+        if(lob != null)
+            panel.setLoB(lob);
     }
 
     @Override

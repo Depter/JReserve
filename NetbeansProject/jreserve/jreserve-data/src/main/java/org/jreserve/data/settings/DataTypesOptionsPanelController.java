@@ -23,7 +23,7 @@ import org.openide.util.Lookup;
 })
 public final class DataTypesOptionsPanelController extends OptionsPanelController {
 
-    private DataTypesPanel panel;
+    private DataTypeSettingPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
     private boolean valid = false;
@@ -74,9 +74,9 @@ public final class DataTypesOptionsPanelController extends OptionsPanelControlle
         pcs.removePropertyChangeListener(l);
     }
 
-    private DataTypesPanel getPanel() {
+    private DataTypeSettingPanel getPanel() {
         if(panel == null)
-            panel = new DataTypesPanel(this);
+            panel = new DataTypeSettingPanel(this);
         return panel;
     }
 

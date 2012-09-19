@@ -1,8 +1,6 @@
 package org.jreserve.project.entities.project;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -13,6 +11,10 @@ import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.RootElement;
 import org.jreserve.project.system.visual.ProjectElementComboBox;
+import org.openide.util.Lookup;
+import org.openide.util.Lookup.Result;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -30,7 +32,9 @@ import org.openide.util.NbBundle.Messages;
 class ProjectCreatorVisualPanel extends JPanel {
 
     private ProjectElementComboBox lobCombo;
+    private Result<org.jreserve.project.system.ProjectElement> lobResult;
     private ProjectElementComboBox claimTypeCombo;
+    private Result<org.jreserve.project.system.ProjectElement> ctResult;
     private JTextField nameText;
     private JTextArea descriptionText;
     
@@ -108,10 +112,22 @@ class ProjectCreatorVisualPanel extends JPanel {
     }
     
     private void addListeners() {
-        lobCombo.addActionListener(new LoBListener());
-        claimTypeCombo.addActionListener(new ClaimTypeListener());
+        addLoBListener();
+        addClaimTypeListener();
         new NameListener(nameText, ProjectCreatorWizardPanel.NAME_VALUE);
         new NameListener(descriptionText, ProjectCreatorWizardPanel.DESCRIPTION_VALUE);
+    }
+
+    private void addLoBListener() {
+        Lookup lkp = lobCombo.getLookup();
+        lobResult = lkp.lookupResult(org.jreserve.project.system.ProjectElement.class);
+        lobResult.addLookupListener(new LoBListener());
+    }
+
+    private void addClaimTypeListener() {
+        Lookup lkp = claimTypeCombo.getLookup();
+        ctResult = lkp.lookupResult(org.jreserve.project.system.ProjectElement.class);
+        ctResult.addLookupListener(new ClaimTypeListener());
     }
     
     @Override
@@ -119,11 +135,27 @@ class ProjectCreatorVisualPanel extends JPanel {
         return Bundle.LBL_ProjectCreatorVisualPanel_title();
     }
     
-    private class LoBListener implements ActionListener {
+    void setClaimType(ClaimType ct) {
+        setLoB(ct.getLoB());
+        claimTypeCombo.setSelectedItem(ct);
+    }
+    
+    void setLoB(LoB lob) {
+        lobCombo.setSelectedItem(lob);
+    }
+    
+    private <T> T getResult(Result<T> result) {
+        Object[] elements = result.allInstances().toArray();
+        if(elements.length == 0)
+            return null;
+        return (T) elements[0];
+    }
+    
+    private class LoBListener implements LookupListener {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            org.jreserve.project.system.ProjectElement element = lobCombo.getSelectedItem();
+        public void resultChanged(LookupEvent le) {
+            org.jreserve.project.system.ProjectElement element = getResult(lobResult);
             setClaimTypes(element);
             putClientProperty(ProjectCreatorWizardPanel.LOB_VALUE, element.getValue());
         }
@@ -138,11 +170,11 @@ class ProjectCreatorVisualPanel extends JPanel {
         }
     }
     
-    private class ClaimTypeListener implements ActionListener {
+    private class ClaimTypeListener implements LookupListener {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            org.jreserve.project.system.ProjectElement element = claimTypeCombo.getSelectedItem();
+        public void resultChanged(LookupEvent le) {
+            org.jreserve.project.system.ProjectElement element = getResult(ctResult);
             if(element == null)
                 removeClaimTypeProperties();
             else

@@ -21,29 +21,27 @@ import org.openide.util.NbBundle.Messages;
 })
 class DataTypeTableModel extends DefaultTableModel {
 
-    private final static int COLUMN_COUNT = 3;
-    private final static int ID_COLUMN = 0;
-    private final static int NAME_COLUMN = 1;
-    private final static int TRIANGLE_COLUMN = 2;
+    final static int COLUMN_COUNT = 3;
+    final static int ID_COLUMN = 0;
+    final static int NAME_COLUMN = 1;
+    final static int TRIANGLE_COLUMN = 2;
     
     private List<DTDummy> dummies = new ArrayList<DTDummy>();
     
     DataTypeTableModel() {
     }
-
-    void load() {
-        load(DataTypeUtil.getDataTypes());
-    }
     
-    private void load(List<DataType> dataTypes) {
+    void reloadDefaults() {
         dummies.clear();
-        for(DataType dt : dataTypes)
+        for(DataType dt : DataTypeUtil.getDefaultDataTypes())
             dummies.add(new DTDummy(dt));
         super.fireTableDataChanged();
     }
     
-    void reloadDefaults() {
-        load(DataTypeUtil.getDefaultDataTypes());
+    public void setDTDummies(List<DTDummy> newDummies) {
+        dummies.clear();
+        dummies.addAll(newDummies);
+        super.fireTableDataChanged();
     }
     
     @Override
@@ -89,11 +87,11 @@ class DataTypeTableModel extends DefaultTableModel {
         DTDummy dummy = dummies.get(row);
         switch(column) {
             case ID_COLUMN:
-                return dummy.id;
+                return dummy.getId();
             case NAME_COLUMN:
-                return dummy.name;
+                return dummy.getName();
             case TRIANGLE_COLUMN:
-                return dummy.isTriangle;
+                return dummy.isTriangle();
             default: 
                 throw new IllegalArgumentException("Unknown column id: "+column);
         }
@@ -109,11 +107,11 @@ class DataTypeTableModel extends DefaultTableModel {
         DTDummy dummy = dummies.get(row);
         switch(column) {
             case NAME_COLUMN:
-                dummy.name = (String) value;
+                dummy.setName((String) value);
                 break;
             case TRIANGLE_COLUMN:
                 Boolean isTriangle = (Boolean) value;
-                dummy.isTriangle = isTriangle==null? false : isTriangle;
+                dummy.setTriangle(isTriangle==null? false : isTriangle);
                 break;
             default: 
                 throw new IllegalArgumentException("Column not editable: "+column);
@@ -136,14 +134,14 @@ class DataTypeTableModel extends DefaultTableModel {
     
     DTDummy getDummy(int id) {
         for(DTDummy dummy : dummies) 
-            if(dummy.id == id)
+            if(dummy.getId() == id)
                 return dummy;
         return null;
     }
     
     DTDummy getDummy(String name) {
         for(DTDummy dummy : dummies) 
-            if(dummy.name.equalsIgnoreCase(name))
+            if(dummy.getName().equalsIgnoreCase(name))
                 return dummy;
         return null;
     }
@@ -152,47 +150,5 @@ class DataTypeTableModel extends DefaultTableModel {
         for(DTDummy dummy : removes)
             dummies.remove(dummy);
         super.fireTableDataChanged();
-    }
-    
-    class DTDummy implements Comparable<DTDummy> {
-        private int id;
-        private String name;
-        private boolean isTriangle;
-        
-        private DTDummy() {
-        }
-        
-        
-        private DTDummy(DataType dt) {
-            this.id = dt.getDbId();
-            this.name = dt.getName();
-            this.isTriangle = dt.isTriangle();
-        }
-        
-        private DTDummy(Object[] row) {
-            this.id = (Integer) row[ID_COLUMN];
-            this.name = (String) row[NAME_COLUMN];
-            this.isTriangle = (Boolean) row[TRIANGLE_COLUMN];
-        }
-        
-        @Override
-        public int compareTo(DTDummy o) {
-            if(o == null)
-                return -1;
-            return id - o.id;
-        }
-        
-        int getId() {
-            return id;
-        }
-        
-        String getName() {
-            return name;
-        }
-        
-        boolean isTriangle() {
-            return isTriangle;
-        }
-    }
-    
+    }    
 }

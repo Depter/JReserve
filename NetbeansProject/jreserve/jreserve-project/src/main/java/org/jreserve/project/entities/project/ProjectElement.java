@@ -72,15 +72,6 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         }
         
         @Override
-        protected void cleanUpBeforeEntity(Session session) {
-//            String sql = "delete from ChangeLog c " + 
-//                         "where c.project.id= :projectId";
-//            Query query = session.createQuery(sql);
-//            query.setParameter("projectId", project.getId());
-//            logger.debug("Deleted %d change logs for project '%s'.", query.executeUpdate(), project.getName());
-        }
-        
-        @Override
         protected void cleanUpAfterEntity(Session session) {
             closeEditor();
             ClaimType ct = project.getClaimType();
@@ -121,7 +112,7 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
             String msg = Bundle.LOG_ProjectElement_rename(oldName, newName);
             ChangeLogUtil util = ChangeLogUtil.getDefault();
             util.addChange(getValue(), Type.PROJECT, msg);
-            util.saveLogs(getValue());
+            util.saveValues(getValue());
         }
     
         private void addSavableToLookup() {

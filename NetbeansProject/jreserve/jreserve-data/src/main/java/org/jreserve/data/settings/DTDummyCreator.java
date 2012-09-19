@@ -27,7 +27,7 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - the name",
     "MSG.DTDummyCreator.name.exists=Name \"{0}\" is already exists!"
 })
-class DTDummyCreator extends JPanel implements DocumentListener {
+public class DTDummyCreator extends JPanel implements DocumentListener {
 
     static void showDialog(DataTypeTableModel model) {
         DTDummyCreator creator = new DTDummyCreator(model);

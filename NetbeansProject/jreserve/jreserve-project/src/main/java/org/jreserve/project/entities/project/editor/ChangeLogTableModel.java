@@ -39,7 +39,7 @@ class ChangeLogTableModel extends AbstractTableModel implements ChangeLogListene
     private void loadChanges() {
         Project project = element.getValue();
         ChangeLogUtil util = ChangeLogUtil.getDefault();
-        changes.addAll(util.getChanges(project));
+        changes.addAll(util.getValues(project));
         util.addChangeLogListener(project, this);
     }
     

@@ -341,7 +341,7 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
         protected void saveEntity() {
             if(makeLog()) {
                 super.saveEntity();
-                ChangeLogUtil.getDefault().saveLogs(getProject());
+                ChangeLogUtil.getDefault().saveValues(getProject());
             }
             unregisterSavable();
         }

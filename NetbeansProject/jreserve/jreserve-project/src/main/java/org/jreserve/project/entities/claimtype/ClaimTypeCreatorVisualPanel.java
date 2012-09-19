@@ -102,6 +102,26 @@ class ClaimTypeCreatorVisualPanel extends JPanel implements ExplorerManager.Prov
         return em;
     }
     
+    void setLoB(LoB lob) {
+        Node node = getNodeForLoB(lob);
+        try {
+            if(node != null)
+                em.setSelectedNodes(new Node[]{node});
+        } catch (Exception ex) {}
+    }
+    
+    private Node getNodeForLoB(LoB lob) {
+        for(Node node : em.getRootContext().getChildren().getNodes())
+            if(containsLoB(node, lob))
+                return node;
+        return null;
+    }
+    
+    private boolean containsLoB(Node node, LoB lob) {
+        LoB n = node.getLookup().lookup(LoB.class);
+        return n!=null && lob.equals(n);
+    }
+    
     private class LoBChildren extends Children.Keys<ProjectElement> {
         
         LoBChildren() {

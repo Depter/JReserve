@@ -65,18 +65,39 @@ public class ProjectElementComboBox extends JPanel implements ExplorerManager.Pr
         return lookup.lookup(ProjectElement.class);
     }
     
-    public void addActionListener(ActionListener listener) {
-        comboBox.addActionListener(listener);
+//    public void addActionListener(ActionListener listener) {
+//        comboBox.addActionListener(listener);
+//    }
+//    
+//    public void removeActionListener(ActionListener listener) {
+//        comboBox.removeActionListener(listener);
+//    }
+    
+    public void setSelectedItem(Object o) {
+        Node[] nodes = getNodeFor(o);
+        try {
+            em.setSelectedNodes(nodes);
+        } catch (Exception ex) {}
     }
     
-    public void removeActionListener(ActionListener listener) {
-        comboBox.removeActionListener(listener);
+    private Node[] getNodeFor(Object o) {
+        if(o == null)
+            return new Node[0];
+        Node[] children = em.getRootContext().getChildren().getNodes();
+        for(Node node : em.getRootContext().getChildren().getNodes())
+            if(containsObject(node, o))
+                return new Node[]{node};
+        return new Node[0];
+    }
+    
+    private boolean containsObject(Node node, Object o) {
+        Object n = node.getLookup().lookup(o.getClass());
+        return n!=null && o.equals(n);
     }
     
     private class ProjectElementChildren extends Children.Keys<ProjectElement> {
         
-        @Override
-        protected void addNotify() {
+        private ProjectElementChildren() {
             setKeys(elements);
         }
         
