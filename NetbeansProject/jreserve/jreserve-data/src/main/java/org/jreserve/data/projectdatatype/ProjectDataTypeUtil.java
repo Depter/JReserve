@@ -99,4 +99,9 @@ public class ProjectDataTypeUtil extends AbstractElementCache<Project, ProjectDa
     public synchronized void addValue(Project project, ProjectDataType dt) {
         super.addValue(project, dt);
     }
+    
+    @Override
+    public synchronized void deleteValue(Project project, ProjectDataType dt) {
+        super.deleteValue(project, dt);
+    }
 }

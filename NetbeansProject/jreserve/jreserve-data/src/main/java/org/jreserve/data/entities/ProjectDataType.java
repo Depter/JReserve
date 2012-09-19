@@ -55,31 +55,68 @@ public class ProjectDataType implements Serializable {
         this.isTriangle = dt.isTriangle();
     }
     
-    public String getName() {
-        return name;
-    }
-    
-    public int getDbId() {
-        return dbId;
-    }
-    
-    public Project getProject() {
-        return project;
+    public ProjectDataType(Project project, int dbId, String name, boolean isTriangle) {
+        setProject(project);
+        this.dbId = dbId;
+        checkName(name);
+        this.name = name;
+        this.isTriangle = isTriangle;
     }
     
     public long getId() {
         return id;
     }
     
-    public boolean isTrinagle() {
+    private void setProject(Project project) {
+        if(project == null)
+            throw new NullPointerException("Project is null!");
+        this.project = project;
+    }
+    
+    public Project getProject() {
+        return project;
+    }
+    
+    public int getDbId() {
+        return dbId;
+    }
+    
+    public void setName(String name) {
+        checkName(name);
+        this.name = name;
+    }
+    
+    private void checkName(String name) {
+        if(name == null)
+            throw new NullPointerException("Name is null!");
+        if(name.trim().length() == 0)
+            throw new IllegalArgumentException("Name is empty!");
+        if(name.length() > MAX_NAME_LENGTH)
+            throw new IllegalArgumentException("Name is longer than: "+MAX_NAME_LENGTH);
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public boolean isTriangle() {
         return isTriangle;
+    }
+    
+    public void setTriangle(boolean isTriangle) {
+        this.isTriangle = isTriangle;
     }
     
     @Override
     public boolean equals(Object o) {
         if(o instanceof ProjectDataType)
-            return id == ((ProjectDataType)o).id;
+            return equals((ProjectDataType)o);
         return false;
+    }
+    
+    public boolean equals(ProjectDataType dt) {
+        return project.equals(dt.project) &&
+               dbId == dt.dbId;
     }
     
     @Override

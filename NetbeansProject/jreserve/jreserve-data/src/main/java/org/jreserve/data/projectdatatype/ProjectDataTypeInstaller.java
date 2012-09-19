@@ -13,7 +13,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Peter Decsi
  * @version 1.0
  */
-@ServiceProvider(service=ProjectDataTypeInstaller.class, position=10)
+@ServiceProvider(service=ProjectSystemCreationListener.class, position=10)
 public class ProjectDataTypeInstaller implements ProjectSystemCreationListener {
 
     @Override

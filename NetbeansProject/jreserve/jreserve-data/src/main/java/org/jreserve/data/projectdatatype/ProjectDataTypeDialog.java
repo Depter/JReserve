@@ -53,6 +53,8 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
     private JButton okButton = new JButton("Ok");
     private JButton cancelButton = new JButton("Cancel");
     
+    private List<ProjectDataType> originalTypes;
+    
     private ProjectDataTypeDialog(Project project) {
         this.project = project;
         initComponents();
@@ -110,12 +112,13 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
     }
     
     private List<ProjectDataType> getDataTypes() {
-        return ProjectDataTypeUtil.getDefault().getValues(project);
+        originalTypes = ProjectDataTypeUtil.getDefault().getValues(project);
+        return originalTypes;
     }
     
     private DTDummy getDummy(ProjectDataType dt) {
         return new DTDummy(
-                dt.getDbId(), dt.getName(), dt.isTrinagle()
+                dt.getDbId(), dt.getName(), dt.isTriangle()
                 );
     }
 
@@ -133,8 +136,74 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
         if(cancelButton == source) {
             dialog.dispose();
         } else {
-            //save
-            //dialog.dispose();
+            store();
+            dialog.dispose();
         }
     }
+
+    
+    void store() {
+        if(removeDeleted() | updateList())
+            ProjectDataTypeUtil.getDefault().saveValues(project);
+    }
+    
+    private boolean removeDeleted() {
+        boolean deleted = false;
+        for(ProjectDataType dt : originalTypes)
+            if(dtPanel.getDummy(dt.getDbId()) == null) {
+                deleted = true;
+                ProjectDataTypeUtil.getDefault().deleteValue(project, dt);
+            }
+        return deleted;
+    }
+    
+    private boolean updateList() {
+        boolean updated = false;
+        int rowCount = dtPanel.getDummyCount();
+        for(int r=0; r<rowCount; r++) {
+            if(updateRow(r))
+                updated = true;
+        }
+        return updated;
+    }
+    
+    private boolean updateRow(int row) {
+        DTDummy dummy = dtPanel.getDummyAtRow(row);
+        ProjectDataType dt = getOriginalProjectDataType(dummy.getId());
+        if(dt == null) {
+            createDataType(dummy);
+            return true;
+        } else {
+            return updateDataType(dt, dummy);
+        }
+    }
+    
+    private ProjectDataType getOriginalProjectDataType(int dbId) {
+        for(ProjectDataType dt : originalTypes)
+            if(dt.getDbId() == dbId)
+                return dt;
+        return null;
+    }
+    
+    private void createDataType(DTDummy dummy) {
+        int id = dummy.getId();
+        String name = dummy.getName();
+        boolean isTriangle = dummy.isTriangle();
+        ProjectDataType dt = new ProjectDataType(project, id, name, isTriangle);
+        ProjectDataTypeUtil.getDefault().addValue(project, dt);
+    }
+    
+    private boolean updateDataType(ProjectDataType dt, DTDummy dummy) {
+        boolean updated = false;
+        if(!dt.getName().equals(dummy.getName())) {
+            updated = true;
+            dt.setName(dummy.getName());
+        }
+        if(dt.isTriangle() != dummy.isTriangle()) {
+            updated = true;
+            dt.setTriangle(dummy.isTriangle());
+        }
+        return updated;
+    }
+
 }

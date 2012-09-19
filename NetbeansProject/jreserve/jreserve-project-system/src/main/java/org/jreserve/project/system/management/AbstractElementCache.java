@@ -54,6 +54,7 @@ public abstract class AbstractElementCache<T, E> {
         Session session = null;
         try {
             session = openSession(true);
+            session.update(key);
             saveLogs(getId(key), session);
             session.comitTransaction();
         } catch (RuntimeException ex) {
@@ -105,6 +106,7 @@ public abstract class AbstractElementCache<T, E> {
         Session session = null;
         try {
             session = openSession(false);
+            session.update(key);
             Query query = createQuery(session, key);
             return query.getResultList();
         } catch (RuntimeException ex) {
@@ -140,5 +142,10 @@ public abstract class AbstractElementCache<T, E> {
     protected void addValue(T key, E entry) {
         checkKey(key);
         getCache(key).add(entry);
+    }
+    
+    protected void deleteValue(T key, E entry) {
+        checkKey(key);
+        getCache(key).remove(entry);
     }
 }
