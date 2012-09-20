@@ -1,8 +1,8 @@
 package org.jreserve.database.derby;
 
 import java.io.File;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle.Messages;
@@ -22,7 +22,7 @@ import org.openide.util.NbBundle.Messages;
 })
 class DerbyDatabaseDeleter {
     
-    private final static Logger logger = Logging.getLogger(DerbyDatabaseDeleter.class.getName());
+    private final static Logger logger = Logger.getLogger(DerbyDatabaseDeleter.class.getName());
     
     private File dbHome;
 
@@ -32,7 +32,7 @@ class DerbyDatabaseDeleter {
     
     void deleteDatabase() {
         if(dbHome.exists() && shouldDeleteDatabase()) {
-            logger.debug("Deleting database at: %s", dbHome.getAbsolutePath());
+            logger.log(Level.INFO, "Deleting database at: %s", dbHome.getAbsolutePath());
             if(!deleteFile(dbHome))
                 showWarning();
         }
@@ -63,10 +63,10 @@ class DerbyDatabaseDeleter {
     private boolean deleteSingleFile(File file) {
         file.delete();
         if(file.exists()) {
-            logger.warn("Unable to delete file: %s", file.getAbsolutePath());
+            logger.log(Level.WARNING, "Unable to delete file: %s", file.getAbsolutePath());
             return false;
         } else {
-            logger.trace("Deleting file: %s", file.getAbsolutePath());
+            logger.log(Level.FINER, "Deleting file: %s", file.getAbsolutePath());
             return true;
         }
     }

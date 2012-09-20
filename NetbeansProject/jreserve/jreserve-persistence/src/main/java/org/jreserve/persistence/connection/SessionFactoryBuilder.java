@@ -1,12 +1,12 @@
 package org.jreserve.persistence.connection;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 
 /**
  *
@@ -43,7 +43,7 @@ public class SessionFactoryBuilder {
         }
     }
     
-    private final static Logger logger = Logging.getLogger(SessionFactoryBuilder.class.getName());
+    private final static Logger logger = Logger.getLogger(SessionFactoryBuilder.class.getName());
     
     private final static String DRIVER_CLASS = ProxyDriver.class.getName();
     
@@ -91,7 +91,7 @@ public class SessionFactoryBuilder {
         } else {
             config.setProperty(propName, value);
         }
-        logger.debug("Hibernate property set: %s => %s", propName, value);
+        logger.log(Level.FINE, "Hibernate property set: %s => %s", new Object[]{propName, value});
     }
     
     private void setProperty(Properties property, boolean value) {
@@ -105,14 +105,14 @@ public class SessionFactoryBuilder {
             if(dialect!=null)
                 setProperty(Properties.DIALECT, dialect);
         } catch (IllegalArgumentException ex) {
-            logger.error(ex, "Unable to initialize configuration!");
+            logger.log(Level.SEVERE, "Unable to initialize configuration!", ex);
         }
     }
     
     private void addEntities() {
         EntityFactory entityFactory = new EntityFactory();
         for(Class<?> clazz : entityFactory.getEntityClasses()) {
-            logger.debug("Entity class '%s' added to configuration!", clazz.getName());
+            logger.log(Level.FINE, "Entity class '%s' added to configuration!", clazz.getName());
             config.addAnnotatedClass(clazz);
         }
     }
@@ -136,7 +136,7 @@ public class SessionFactoryBuilder {
         } else {
             config.setProperty(propName, password);
         }
-        logger.debug("Hibernate property set: %s => ****", propName);
+        logger.log(Level.FINE, "Hibernate property set: %s => ****", propName);
     }
     
     private String escapePassword(char[] password) {

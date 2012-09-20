@@ -14,13 +14,13 @@ import org.openide.nodes.Node;
  *
  * @author Peter Decsi
  */
-public abstract class AbstractProjectElementSavable extends AbstractSavable implements Icon {
+public abstract class AbstractProjectElementSavable<T> extends AbstractSavable implements Icon {
 
-    protected ProjectElement element;
+    protected ProjectElement<T> element;
     private Node elementNode;
     private Icon icon;
     
-    protected AbstractProjectElementSavable(ProjectElement element) {
+    protected AbstractProjectElementSavable(ProjectElement<T> element) {
         this.element = element;
         this.elementNode = element.createNodeDelegate();
         initIcon();

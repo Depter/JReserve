@@ -4,14 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.database.AbstractDatabase;
 import org.jreserve.database.DatabaseUtil;
 import org.jreserve.database.explorer.DatabaseRootChildren;
 import org.jreserve.database.util.DatabaseChildren;
 import org.jreserve.database.util.SelectDatabaseDialog;
 import org.jreserve.database.util.SelectDatabaseDialog.SelectionMode;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -38,7 +38,7 @@ import org.openide.util.NbBundle.Messages;
 })
 public final class OpenDatabaseAction implements ActionListener {
 
-    private final static Logger logger = Logging.getLogger(OpenDatabaseAction.class.getName());
+    private final static Logger logger = Logger.getLogger(OpenDatabaseAction.class.getName());
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -62,13 +62,13 @@ public final class OpenDatabaseAction implements ActionListener {
     }
     
     private boolean openDatabase(AbstractDatabase database) {
-        logger.info("Opening database: %s", database.getShortName());
+        logger.log(Level.INFO, "Opening database: %s", database.getShortName());
         database.setOpened(true);
         try {
             database.save();
             return true;
         } catch (IOException ex) {
-            logger.error(ex, "Unable to save database '%s'!", database.getShortName());
+            logger.log(Level.SEVERE, String.format("Unable to save database '%s'!", database.getShortName()), ex);
             Exceptions.printStackTrace(ex);
             return false;
         }

@@ -15,7 +15,7 @@ import org.openide.util.NbBundle;
  */
 
 @NbBundle.Messages({
-    "CTL_DialogTitle=Create MS Access database"
+    "CTL_DialogTitle=Create Derby database"
 })
 public class CreateDatabaseWizard {
     

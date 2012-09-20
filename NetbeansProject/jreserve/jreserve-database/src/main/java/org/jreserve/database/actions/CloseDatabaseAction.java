@@ -4,11 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.database.AbstractDatabase;
 import org.jreserve.database.DatabaseUtil;
 import org.jreserve.database.explorer.DatabaseRootChildren;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -37,7 +37,7 @@ import org.openide.util.NbBundle.Messages;
 })
 public final class CloseDatabaseAction implements ActionListener {
 
-    private final static Logger logger = Logging.getLogger(CloseDatabaseAction.class.getName());
+    private final static Logger logger = Logger.getLogger(CloseDatabaseAction.class.getName());
     
     private final List<AbstractDatabase> databases;
 
@@ -75,12 +75,12 @@ public final class CloseDatabaseAction implements ActionListener {
     }
     
     private boolean saveDatabase(AbstractDatabase database) {
-        logger.info("Closing database: %s", database.getShortName());
+        logger.log(Level.INFO, "Closing database: %s", database.getShortName());
         try {
             closeDatabase(database);
             return true;
         } catch (IOException ex) {
-            logger.error(ex, "Unable to save database '%s'!", database.getShortName());
+            logger.log(Level.SEVERE, String.format("Unable to save database '%s'!", database.getShortName()), ex);
             Exceptions.printStackTrace(ex);
             return false;
         }

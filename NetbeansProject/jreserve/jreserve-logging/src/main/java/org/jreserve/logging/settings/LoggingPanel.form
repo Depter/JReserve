@@ -60,7 +60,7 @@
     <Component class="javax.swing.JComboBox" name="levelCombo">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new javax.swing.DefaultComboBoxModel(Logger.Level.values())" type="code"/>
+          <Connection code="new javax.swing.DefaultComboBoxModel(levels)" type="code"/>
         </Property>
         <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="new LevelRenderer()" type="code"/>
@@ -68,6 +68,7 @@
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JComboBox()"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="Level[] levels = new Level[]{Level.SEVERE, Level.WARNING, Level.INFO,&#xa;    Level.FINE, Level.FINER, Level.FINEST, Level.ALL};"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="showLogLabel">

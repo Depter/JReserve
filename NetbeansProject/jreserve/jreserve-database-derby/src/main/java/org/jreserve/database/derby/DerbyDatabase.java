@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.database.AbstractDatabase;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObjectExistsException;
 
@@ -17,7 +17,7 @@ import org.openide.loaders.DataObjectExistsException;
  */
 public class DerbyDatabase extends AbstractDatabase {
     
-    private final static Logger logger = Logging.getLogger(DerbyDatabase.class.getName());
+    private final static Logger logger = Logger.getLogger(DerbyDatabase.class.getName());
     
     public final static String URL = "jdbc:derby:%s";
     public final static String DB_FOLDER  = "db.location";
@@ -66,11 +66,11 @@ public class DerbyDatabase extends AbstractDatabase {
     
     private void shutDownDerby() {
         try {
-            logger.debug("Shutting down derby database: %s", getDatabaseFolder());
+            logger.log(Level.FINE, "Shutting down derby database: %s", getDatabaseFolder());
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
         } catch (SQLException ex) {
             if(!ex.getSQLState().equalsIgnoreCase("XJ015"))
-                logger.error(ex, "Unable to shut down derby database: %s", getDatabaseFolder());
+                logger.log(Level.SEVERE, String.format("Unable to shut down derby database: %s", getDatabaseFolder()), ex);
         }
     }
 }

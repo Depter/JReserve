@@ -22,6 +22,8 @@ import org.jreserve.persistence.PersistenceUtil;
     table=EntityRegistration.TABLE,
     pkColumnName=EntityRegistration.ID_COLUMN,
     valueColumnName=EntityRegistration.VALUE_COLUMN,
+    allocationSize=EntityRegistration.ALLOCATION_SIZE,
+    initialValue=EntityRegistration.INITIAL_VALUE,
     pkColumnValue="org.jreserve.project.entities.LoB"
 )
 public class LoB implements Serializable {

@@ -5,10 +5,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
@@ -29,7 +29,7 @@ import org.openide.util.NbBundle.Messages;
 })
 class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDescriptor> {
     
-    private final static Logger logger = Logging.getLogger(LoBCreatorWizardPanel.class.getName());
+    private final static Logger logger = Logger.getLogger(LoBCreatorWizardPanel.class.getName());
     
     final static String LOB_NAME = "LoBCreatorWizardPanel_LOB_NAME";
     
@@ -186,12 +186,12 @@ class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDe
         try {
             session = persistenceUnit.getSession();
             LoB lob = createPersistedLoB(session);
-            logger.info("LoB created: %s", lob.getName());
+            logger.log(Level.INFO, "LoB created: %s", lob.getName());
             return lob;
         } catch (Exception ex) {
             if(session != null)
                 session.rollBackTransaction();
-            logger.error(ex, "Unable to create LoB with name '%s'!", getLoBName());
+            logger.log(Level.SEVERE, String.format("Unable to create LoB with name '%s'!", getLoBName()), ex);
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
         }
     }

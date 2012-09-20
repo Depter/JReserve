@@ -2,8 +2,8 @@ package org.jreserve.persistence.connection;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
@@ -24,7 +24,7 @@ import org.openide.util.NbBundle;
 )
 class EntityFactory {
     
-    private final static Logger logger = Logging.getLogger(EntityFactory.class.getName());
+    private final static Logger logger = Logger.getLogger(EntityFactory.class.getName());
     private final static String MIME_TYPE = "jreserve/entity";
     
     private Set<Class<?>> entities = new HashSet<Class<?>>();
@@ -40,7 +40,7 @@ class EntityFactory {
         if(dir != null && dir.isFolder()) {
             processFiles(dir.getChildren());
         } else {
-            logger.warn("Entity directory '%s' not found!", 
+            logger.log(Level.WARNING, "Entity directory '%s' not found!", 
                     EntityRegistrationProcessor.ENTITY_DIRECTORY);
         }
     }
@@ -57,13 +57,13 @@ class EntityFactory {
     }
     
     private void addEntity(FileObject file) {
-        logger.debug("Processing entity file '%s'.", file.getPath());
+        logger.log(Level.FINE, "Processing entity file '%s'.", file.getPath());
         String className = (String) file.getAttribute(EntityRegistrationProcessor.CLASS_ATRIBUTE);
         try {
             entities.add(classLoader.loadClass(className));
         } catch (ClassNotFoundException ex) {
-            logger.error(ex, "Unable to load entity class '%s' from file '%s'!", 
-                className, file.getPath());
+            logger.log(Level.SEVERE, String.format("Unable to load entity class '%s' from file '%s'!", 
+                className, file.getPath()), ex);
         }
     }
 }

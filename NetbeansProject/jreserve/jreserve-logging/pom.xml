@@ -101,6 +101,15 @@
                     <publicPackages>
                         <publicPackage>org.jreserve.logging</publicPackage>
                     </publicPackages>
+                    <nbmResources>
+                        <nbmResource>
+                            <directory>src/main/lib</directory>
+                            <targetPath>logging</targetPath>
+                            <includes>
+                                <include>*.properties</include>
+                            </includes>
+                        </nbmResource>
+                    </nbmResources>
                 </configuration>
             </plugin>
 

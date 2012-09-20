@@ -3,8 +3,8 @@ package org.jreserve.database;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -18,7 +18,7 @@ import org.openide.util.Exceptions;
  */
 public class DatabaseUtil {
     
-    private final static Logger logger = Logging.getLogger(DatabaseUtil.class.getName());
+    private final static Logger logger = Logger.getLogger(DatabaseUtil.class.getName());
     
     private final static String DB_EXTENSION = "database";
     private final static String HOME_DIR = "Databases";
@@ -76,9 +76,9 @@ public class DatabaseUtil {
         try {
             FileObject configHome = FileUtil.getConfigRoot();
             HOME = FileUtil.createFolder(configHome, HOME_DIR);
-            logger.info("Database home directory set to '%s'.", HOME.getPath());
+            logger.log(Level.INFO, "Database home directory set to '%s'.", HOME.getPath());
         } catch (IOException ex) {
-            logger.error(ex, "Unable to create directory '%s' in user dir!", HOME_DIR);
+            logger.log(Level.SEVERE, String.format("Unable to create directory '%s' in user dir!", HOME_DIR), ex);
             Exceptions.printStackTrace(ex);
         }
     }
@@ -92,13 +92,13 @@ public class DatabaseUtil {
     
     private static void addFileToList(FileObject file) {
         try {
-            logger.info(String.format("Loading database file '%s'.", file.getPath()));
+            logger.log(Level.INFO, "Loading database file '%s'.", file.getPath());
             DataObject obj = DataObject.find(file);
             if(!(obj instanceof AbstractDatabase))
                 return;
             databases.add((AbstractDatabase) obj);
         } catch (DataObjectNotFoundException ex) {
-            logger.error("Unable to load file!", ex);
+            logger.log(Level.SEVERE, "Unable to load file!", ex);
         }
     }
     
@@ -129,8 +129,9 @@ public class DatabaseUtil {
         try {
             return HOME.createData(name, DB_EXTENSION);
         } catch (IOException ex) {
-            logger.error(ex, "Unable to create file '%s.%s' in '%s'", 
+            String msg = String.format("Unable to create file '%s.%s' in '%s'", 
                 name, DB_EXTENSION, HOME.getPath());
+            logger.log(Level.SEVERE, msg, ex);
             return null;
         }
     }

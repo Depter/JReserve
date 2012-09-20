@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -12,8 +14,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -52,7 +52,7 @@ import org.openide.util.NbBundle.Messages;
 })
 public class DataTypeUtil {
     
-    private final static Logger logger = Logging.getLogger(DataTypeUtil.class.getName());
+    private final static Logger logger = Logger.getLogger(DataTypeUtil.class.getName());
     
     private final static String PATH = "Data/data-type.xml";
     private static FileObject XML = null;
@@ -137,7 +137,7 @@ public class DataTypeUtil {
             Unmarshaller um = context.createUnmarshaller();
             ROOT = (DataTypeRoot) um.unmarshal(FileUtil.toFile(XML));
         } catch (JAXBException ex) {
-            logger.error(ex, "Unable tu unmarshall xml document!", XML.getPath());
+            logger.log(Level.SEVERE, String.format("Unable tu unmarshall xml document!", XML.getPath()), ex);
             Exceptions.printStackTrace(ex);
         }
     }
@@ -146,10 +146,10 @@ public class DataTypeUtil {
         try {
             FileObject configHome = FileUtil.getConfigRoot();
             XML = FileUtil.createData(configHome, PATH);
-            logger.info("DataType settings home set to '%s'.", XML.getPath());
+            logger.log(Level.INFO, "DataType settings home set to '%s'.", XML.getPath());
             return true;
         } catch (IOException ex) {
-            logger.error(ex, "Unable to create file '%s' in user dir!", PATH);
+            logger.log(Level.SEVERE, String.format("Unable to create file '%s' in user dir!", PATH), ex);
             Exceptions.printStackTrace(ex);
             return false;
         }
@@ -213,11 +213,9 @@ public class DataTypeUtil {
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             m.marshal(root, FileUtil.toFile(XML));
-            logger.debug("DataTypes saved: "+XML.getPath());
-            for(DataType dt : root.dataTypes)
-                logger.trace("Saved: %s", dt);
+            logger.log(Level.FINE, "DataTypes saved: %s", XML.getPath());
         } catch (JAXBException ex) {
-            logger.error(ex, "Unable to save file '%s' in user dir!", PATH);
+            logger.log(Level.SEVERE, String.format("Unable to save file '%s' in user dir!", PATH), ex);
             Exceptions.printStackTrace(ex);
         }
     }

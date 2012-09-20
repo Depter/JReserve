@@ -2,8 +2,8 @@ package org.jreserve.database;
 
 import java.io.IOException;
 import java.util.Properties;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -13,7 +13,7 @@ import org.openide.filesystems.FileObject;
  */
 public class DatabaseFactory {
     
-    private final static Logger logger = Logging.getLogger(DatabaseFactory.class.getName());
+    private final static Logger logger = Logger.getLogger(DatabaseFactory.class.getName());
     
     protected Properties properties = new Properties();
     private String dbName;
@@ -57,7 +57,7 @@ public class DatabaseFactory {
             properties.remove(property);
         else
             properties.put(property, value);
-        logger.trace("Database [%s]: %s => %s", getShortName(), property, value);
+        logger.log(Level.FINER, "Database [%s]: %s => %s", new Object[]{getShortName(), property, value});
     }
     
     private String getShortName() {
@@ -73,7 +73,7 @@ public class DatabaseFactory {
         FileObject file = DatabaseUtil.getFileForName(dbName);
         PropertyWriter writer = new PropertyWriter(file);
         writer.writeProperties(properties);
-        logger.debug("Database '%s' created in file '%s'.", 
-                getShortName(), file.getPath());
+        logger.log(Level.FINE, "Database '%s' created in file '%s'.",
+                new Object[]{getShortName(), file.getPath()});
     }
 }

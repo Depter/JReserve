@@ -4,11 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.database.AbstractDatabase;
 import org.jreserve.database.DatabaseUtil;
 import org.jreserve.database.explorer.DatabaseRootChildren;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -42,7 +42,7 @@ import org.openide.util.NbBundle.Messages;
 })
 public final class DeleteDatabaseAction implements ActionListener {
 
-    private final static Logger logger = Logging.getLogger(DeleteDatabaseAction.class.getName());
+    private final static Logger logger = Logger.getLogger(DeleteDatabaseAction.class.getName());
     
     private final List<AbstractDatabase> databases;
 
@@ -96,10 +96,10 @@ public final class DeleteDatabaseAction implements ActionListener {
     private void deleteDatabases() {
         for(AbstractDatabase database : databases) {
             try {
-                logger.info("Deleting database: %s", database.getShortName());
+                logger.log(Level.INFO, "Deleting database: %s", database.getShortName());
                 database.deleteDatabase();
             } catch (IOException ex) {
-                logger.error(ex, "Unable to delete database '%s'!", database.getShortName());
+                logger.log(Level.SEVERE, String.format("Unable to delete database '%s'!", database.getShortName()), ex);
                 Exceptions.printStackTrace(ex);
                 return;
             }

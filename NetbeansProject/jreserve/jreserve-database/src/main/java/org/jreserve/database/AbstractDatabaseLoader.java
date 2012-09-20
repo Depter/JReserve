@@ -2,8 +2,8 @@ package org.jreserve.database;
 
 import java.io.IOException;
 import java.util.Properties;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.UniFileLoader;
 
@@ -14,10 +14,10 @@ import org.openide.loaders.UniFileLoader;
  */
 public abstract class AbstractDatabaseLoader extends UniFileLoader {
     
+    private final static Logger logger = Logger.getLogger(AbstractDatabaseLoader.class.getName());
     private final static String DRIVER_NAME_ERROR = 
         "Unable to load property '%s' from file '%s'! "
       + "File will not be recognized as a database file!";
-    private final static Logger logger = Logging.getLogger(AbstractDatabaseLoader.class.getName());
     
     private final static String MIME_TYPE = "jreserve/database";
     private final Class<?> driverClass;
@@ -47,7 +47,7 @@ public abstract class AbstractDatabaseLoader extends UniFileLoader {
             Properties properties = reader.readProperties();
             return properties.getProperty(AbstractDatabase.DRIVER_CLASS);
         } catch (IOException ex) {
-            logger.warn(ex, DRIVER_NAME_ERROR, AbstractDatabase.DRIVER_CLASS, fo.getPath());
+            logger.log(Level.WARNING, String.format(DRIVER_NAME_ERROR, AbstractDatabase.DRIVER_CLASS, fo.getPath()), ex);
             return null;
         }
     }

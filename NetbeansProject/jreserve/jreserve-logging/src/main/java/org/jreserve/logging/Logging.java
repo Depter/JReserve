@@ -7,7 +7,7 @@ package org.jreserve.logging;
  */
 public class Logging {
     
-    public static synchronized Logger getLogger(String name) {
+    private static synchronized Logger getLogger(String name) {
         return new Log4jLogger(getLog4jLogger(name));
     }
     

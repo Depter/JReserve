@@ -1,8 +1,8 @@
 package org.jreserve.logging.settings;
 
+import java.util.logging.Level;
 import java.util.prefs.Preferences;
 import javax.swing.JComboBox;
-import org.jreserve.logging.Logger;
 import org.jreserve.logging.view.LogviewTopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
@@ -15,7 +15,7 @@ final class LoggingPanel extends javax.swing.JPanel {
 
     private final static String LEVEL_KEY = "logging.level";
     final static String SHOW_LOG_KEY = "logging.showlog";
-    private final static Logger.Level DEFAULT_LEVEL = Logger.Level.ERROR;
+    final static Level DEFAULT_LEVEL = Level.SEVERE;
     
     private final LoggingOptionsPanelController controller;
 
@@ -40,7 +40,9 @@ final class LoggingPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(levelLabel, Bundle.LBL_level());
 
-        levelCombo.setModel(new javax.swing.DefaultComboBoxModel(Logger.Level.values()));
+        Level[] levels = new Level[]{Level.SEVERE, Level.WARNING, Level.INFO,
+            Level.FINE, Level.FINER, Level.FINEST, Level.ALL};
+        levelCombo.setModel(new javax.swing.DefaultComboBoxModel(levels));
         levelCombo.setRenderer(new LevelRenderer());
 
         org.openide.awt.Mnemonics.setLocalizedText(showLogLabel, Bundle.LBL_showLog());
@@ -83,12 +85,13 @@ final class LoggingPanel extends javax.swing.JPanel {
         showLogCheck.setSelected(prefs.getBoolean(SHOW_LOG_KEY, false));
     }
 
-    static Logger.Level getLevel(Preferences prefs) {
-        String name = prefs.get(LEVEL_KEY, DEFAULT_LEVEL.name());
-        for(Logger.Level level : Logger.Level.values())
-            if(level.name().equals(name))
-                return level;
-        return null;
+    static Level getLevel(Preferences prefs) {
+        String level = prefs.get(LEVEL_KEY, DEFAULT_LEVEL.getName());
+        try {
+            return Level.parse(level);
+        } catch (IllegalArgumentException ex) {
+            return DEFAULT_LEVEL;
+        }
     }
     
     void store() {
@@ -98,13 +101,13 @@ final class LoggingPanel extends javax.swing.JPanel {
     }
 
     private void storeLevel(Preferences prefs) {
-        Logger.Level level = getSelectedLevel();
+        Level level = getSelectedLevel();
         LoggingSetting.setLevel(level);
-        prefs.put(LEVEL_KEY, level.name());
+        prefs.put(LEVEL_KEY, level.getName());
     }
     
-    private Logger.Level getSelectedLevel() {
-        Logger.Level level = (Logger.Level) levelCombo.getSelectedItem();
+    private Level getSelectedLevel() {
+        Level level = (Level) levelCombo.getSelectedItem();
         return level != null? level : DEFAULT_LEVEL;
     }
     

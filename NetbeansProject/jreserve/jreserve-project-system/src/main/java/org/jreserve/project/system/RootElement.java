@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Query;
@@ -33,7 +33,7 @@ import org.openide.util.RequestProcessor;
 })
 public class RootElement extends ProjectElement {
     
-    private final static Logger logger = Logging.getLogger(RootElement.class.getName());
+    private final static Logger logger = Logger.getLogger(RootElement.class.getName());
     private final static LoadingElement LOADING_CHILD = new LoadingElement();
     private final static RootValue VALUE = new RootValue();
     
@@ -144,7 +144,7 @@ public class RootElement extends ProjectElement {
                 this.ex = lex;
             } finally {
                 try {closeSession();} catch (Exception cex) {
-                logger.error(cex, "Unable to close session!");}
+                logger.log(Level.SEVERE, "Unable to close session!", cex);}
                 progress.finish();
                 finnish();
             }

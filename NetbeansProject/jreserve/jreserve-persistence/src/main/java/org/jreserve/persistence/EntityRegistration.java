@@ -46,6 +46,10 @@ public @interface EntityRegistration {
      */
     public final static String VALUE_COLUMN = "NEXT_ID";
     
+    public final static int ALLOCATION_SIZE = 1;
+    
+    public final static int INITIAL_VALUE = 0;
+    
     /**
      * If true, a record will be created for the annotated class in the id 
      * table.

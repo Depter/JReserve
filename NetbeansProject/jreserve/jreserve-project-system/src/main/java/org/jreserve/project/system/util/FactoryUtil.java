@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.project.system.ProjectElementFactory;
 import static org.jreserve.project.system.util.ProjectElementFactoryRegistrationProcessor.ENTITY_DIRECTORY;
 import static org.jreserve.project.system.util.ProjectElementFactoryRegistrationProcessor.PRIORITY;
@@ -21,7 +21,7 @@ import org.openide.loaders.DataObject;
  */
 public class FactoryUtil {
     
-    private final static Logger logger = Logging.getLogger(FactoryUtil.class.getName());
+    private final static Logger logger = Logger.getLogger(FactoryUtil.class.getName());
     
     private final static Comparator<FileObject> FACTORY_FILE_COMPARATOR = new Comparator<FileObject>() {
         @Override
@@ -46,7 +46,7 @@ public class FactoryUtil {
     }
     
     private static void initializeFactories() {
-        logger.debug("Loading ProjectElementFactories from '%s'...", ENTITY_DIRECTORY);
+        logger.log(Level.FINE, "Loading ProjectElementFactories from '%s'...", ENTITY_DIRECTORY);
         factories = new ArrayList<ProjectElementFactory>();
         for(FileObject file : getFactoryFiles())
             loadFactory(file);
@@ -64,10 +64,10 @@ public class FactoryUtil {
             DataObject data = DataObject.find(file);
             InstanceCookie cookie = data.getLookup().lookup(InstanceCookie.class);
             ProjectElementFactory factory = (ProjectElementFactory) cookie.instanceCreate();
-            logger.debug("Loaded ProjectElementFactory: %s", factory.getClass().getName());
+            logger.log(Level.FINE, "Loaded ProjectElementFactory: %s", factory.getClass().getName());
             factories.add(factory);
         } catch (Exception ex) {
-            logger.warn(ex, "Unable to load ProjectElementFactory from file: %s", file.getPath());
+            logger.log(Level.WARNING, String.format("Unable to load ProjectElementFactory from file: %s", file.getPath()), ex);
         } 
     }
     

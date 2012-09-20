@@ -1,10 +1,10 @@
 package org.jreserve.persistence.connection;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.SessionFactory;
 import org.jreserve.database.DatabaseUtil;
 import org.jreserve.database.PersistenceDatabase;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -16,7 +16,7 @@ import org.openide.util.lookup.InstanceContent;
  */
 public class HibernateUtil {
     
-    private final static Logger logger = Logging.getLogger(HibernateUtil.class.getName());
+    private final static Logger logger = Logger.getLogger(HibernateUtil.class.getName());
     
     private final static InstanceContent ic = new InstanceContent();
     private final static Lookup lookup = new AbstractLookup(ic);
@@ -36,21 +36,21 @@ public class HibernateUtil {
     }
     
     private static SessionFactory loginToDb(PersistenceDatabase db) {
-        logger.info("Logging into database '%s'.", db.getShortName());
+        logger.log(Level.INFO, "Logging into database '%s'.", db.getShortName());
         LoginDialog dialog = new LoginDialog(db);
         dialog.setVisible(true);
         return dialog.isCancelled()? null : dialog.getSessionFactory();
     }
     
     private static void setSessionFactory(SessionFactory factory) {
-        logger.debug("SessionFactory initialized.");
+        logger.log(Level.FINE, "SessionFactory initialized.");
         pu = new HibernatePersistenceUnit(factory);
         ic.add(pu);
     }
     
     private static void setUsedDb(PersistenceDatabase db) {
         HibernateUtil.database = db;
-        logger.info("Database '%s' is marked as used.", db.getShortName());
+        logger.log(Level.INFO, "Database '%s' is marked as used.", db.getShortName());
         DatabaseUtil.setUsed(db, true);
     }
     
@@ -86,7 +86,7 @@ public class HibernateUtil {
     
     private static void closePersistenceDatabase(boolean appClosing) {
         if(appClosing || database == null) return;
-        logger.info("Database '%s' is marked as unused.", database.getShortName());
+        logger.log(Level.INFO, "Database '%s' is marked as unused.", database.getShortName());
         DatabaseUtil.setUsed(database, false);
         HibernateUtil.database = null;
     }

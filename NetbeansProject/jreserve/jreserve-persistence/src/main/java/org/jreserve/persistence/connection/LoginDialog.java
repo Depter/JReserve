@@ -2,11 +2,11 @@ package org.jreserve.persistence.connection;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import org.hibernate.SessionFactory;
 import org.jreserve.database.PersistenceDatabase;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.jreserve.resources.images.ImageResources;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.WindowManager;
@@ -27,7 +27,7 @@ import org.openide.windows.WindowManager;
 })
 class LoginDialog extends javax.swing.JDialog {
     
-    private final static Logger logger = Logging.getLogger(LoginDialog.class.getName());
+    private final static Logger logger = Logger.getLogger(LoginDialog.class.getName());
     
     private final static boolean MODAL = true;
     private static Frame getParentWindow() {
@@ -147,7 +147,7 @@ class LoginDialog extends javax.swing.JDialog {
     }
     
     private void showException(Exception ex) {
-        logger.error(ex, "Unable to connect to database '%s'!", database.getShortName());
+        logger.log(Level.SEVERE, String.format("Unable to connect to database '%s'!", database.getShortName()), ex);
         msgLabel.setIcon(ImageResources.error());
         msgLabel.setText(Bundle.CTL_msgConnectionFailed());
         msgLabel.setVisible(true);
@@ -279,7 +279,7 @@ class LoginDialog extends javax.swing.JDialog {
         
         @Override
         protected SessionFactory doInBackground() throws Exception {
-            logger.info("Checking connection to '%s' with driver '%s'.", url, driver);
+            logger.log(Level.INFO, "Checking connection to '%s' with driver '%s'.", new Object[]{url, driver});
             ProxyDriver.registerDriver(driver);
             return createFactory();
         }

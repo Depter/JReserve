@@ -1,7 +1,7 @@
 package org.jreserve.project.changelog;
 
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Query;
@@ -21,7 +21,7 @@ public class ChangeLogDeleter implements ProjectSystemDeletionListener {
     private final static String SQL = 
             "delete from ChangeLog c where c.project.id= :projectId";
     
-    private final static Logger logger = Logging.getLogger(ChangeLogDeleter.class.getName());
+    private final static Logger logger = Logger.getLogger(ChangeLogDeleter.class.getName());
     
     private Session session;
     
@@ -37,7 +37,7 @@ public class ChangeLogDeleter implements ProjectSystemDeletionListener {
             deleteChangeLogs((Project) child.getValue());
             session.comitTransaction();
         } catch(RuntimeException ex) {
-            logger.error(ex, "Unable to delete change logs for: %s", child.getValue());
+            logger.log(Level.SEVERE, String.format("Unable to delete change logs for: %s", child.getValue()), ex);
             session.rollBackTransaction();
         } finally {
             session = null;
@@ -53,6 +53,7 @@ public class ChangeLogDeleter implements ProjectSystemDeletionListener {
     private void deleteChangeLogs(Project project) {
         Query query = session.createQuery(SQL);
         query.setParameter("projectId", project.getId());
-        logger.debug("Deleted %d change logs for project '%s'.", query.executeUpdate(), project.getName());
+        logger.log(Level.FINE, "Deleted change logs from project '%s'.", project.getName());
+        query.executeUpdate();
     }
 }

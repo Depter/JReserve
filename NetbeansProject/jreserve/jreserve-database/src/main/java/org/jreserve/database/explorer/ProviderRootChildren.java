@@ -1,9 +1,9 @@
 package org.jreserve.database.explorer;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.database.DatabaseProvider;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
@@ -15,7 +15,7 @@ import org.openide.util.Lookup;
  */
 class ProviderRootChildren extends Children.Keys<DatabaseProvider>{
 
-    private final static Logger logger = Logging.getLogger(ProviderRootChildren.class.getName());
+    private final static Logger logger = Logger.getLogger(ProviderRootChildren.class.getName());
     
     private final static Comparator<DatabaseProvider> PROVIDER_COMPARATOR = new Comparator<DatabaseProvider>() {
 
@@ -47,7 +47,7 @@ class ProviderRootChildren extends Children.Keys<DatabaseProvider>{
     
     private void logProviders(List<DatabaseProvider> providers) {
         for(DatabaseProvider provider : providers)
-            logger.info("DatabseProvider found: %s", provider.getName());
+            logger.log(Level.INFO, "DatabseProvider found: %s", provider.getName());
     }
     
     @Override

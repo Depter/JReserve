@@ -1,7 +1,7 @@
 package org.jreserve.project.system.management;
 
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
@@ -13,7 +13,7 @@ import org.jreserve.project.system.ProjectElement;
  */
 public class PersistentDeletable extends AbstractProjectElementDeletable {
     
-    protected final static Logger logger = Logging.getLogger(PersistentDeletable.class.getName());
+    protected final static Logger logger = Logger.getLogger(PersistentDeletable.class.getName());
 
     private boolean managesSession = false;
 
@@ -30,6 +30,8 @@ public class PersistentDeletable extends AbstractProjectElementDeletable {
             commit(session);
         } catch (RuntimeException ex) {
             rollBack(session);
+            if(managesSession)
+                logger.log(Level.SEVERE, String.format("Unable to delete: ", element.getValue()), ex);
             throw ex;
         }
     }
@@ -50,13 +52,13 @@ public class PersistentDeletable extends AbstractProjectElementDeletable {
     
     private void deleteEntity(Session session) {
         Object entity = element.getValue();
-        logger.info("Deleting entity: %s.", entity);
+        logger.log(Level.INFO, "Deleting entity: %s.", entity);
         try {
             cleanUpBeforeEntity(session);
             session.delete(element.getValue());
             cleanUpAfterEntity(session);
         } catch (RuntimeException ex) {
-            logger.error(ex, "Unable to delete entity '%s'!", entity);
+            logger.log(Level.SEVERE, String.format("Unable to delete entity '%s'!", entity), ex);
             throw ex;
         }
     }

@@ -1,8 +1,8 @@
 package org.jreserve.project.system.management;
 
 import java.io.IOException;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
@@ -13,13 +13,13 @@ import org.jreserve.project.system.ProjectElement;
  * @author Peter Decsi
  * @version 1.0
  */
-public class PersistentSavable extends AbstractProjectElementSavable {
+public class PersistentSavable<T> extends AbstractProjectElementSavable<T> {
     
     protected Session session;
     
-    protected final static Logger logger = Logging.getLogger(PersistentSavable.class.getName());
+    protected final static Logger logger = Logger.getLogger(PersistentSavable.class.getName());
 
-    public PersistentSavable(ProjectElement element) {
+    public PersistentSavable(ProjectElement<T> element) {
         super(element);
     }
     
@@ -31,7 +31,7 @@ public class PersistentSavable extends AbstractProjectElementSavable {
             session.comitTransaction();
         } catch (Exception ex) {
             session.rollBackTransaction();
-            logger.error(ex, "Unable to save entities, transaction is rolled back.");
+            logger.log(Level.SEVERE, "Unable to save entities, transaction is rolled back.", ex);
             throw new IOException(ex);
         } finally {
             element.removeFromLookup(this);
@@ -46,6 +46,7 @@ public class PersistentSavable extends AbstractProjectElementSavable {
     }
 
     protected void saveEntity() {
-        session.persist(element.getValue());
+        session.update(element.getValue());
+        //session.persist(element.getValue());
     }
 }

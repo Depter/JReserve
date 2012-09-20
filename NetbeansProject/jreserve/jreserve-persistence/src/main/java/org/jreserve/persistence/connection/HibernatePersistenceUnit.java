@@ -3,9 +3,9 @@ package org.jreserve.persistence.connection;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.SessionFactory;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.Session;
 
@@ -16,7 +16,7 @@ import org.jreserve.persistence.Session;
  */
 class HibernatePersistenceUnit implements PersistenceUnit {
     
-    private final static Logger logger = Logging.getLogger(HibernatePersistenceUnit.class.getName());
+    private final static Logger logger = Logger.getLogger(HibernatePersistenceUnit.class.getName());
     
     private int nextSessionId = 0;
     private final SessionFactory factory;
@@ -30,7 +30,7 @@ class HibernatePersistenceUnit implements PersistenceUnit {
     public synchronized Session getSession() {
         HibernateSession session = createNewSession();
         openSessions.add(session);
-        logger.debug("Session [%d] created.", session.getId());
+        logger.log(Level.FINE, "Session [%d] created.", session.getId());
         return session;
     }
 
@@ -42,7 +42,7 @@ class HibernatePersistenceUnit implements PersistenceUnit {
     
     void sessionClosed(HibernateSession session) {
         openSessions.remove(session);
-        logger.debug("Session [%d] closed.", session.getId());
+        logger.log(Level.FINE, "Session [%d] closed.", session.getId());
     }
     
     void close() {

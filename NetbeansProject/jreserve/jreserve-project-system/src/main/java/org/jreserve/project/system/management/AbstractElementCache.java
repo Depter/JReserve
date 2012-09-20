@@ -1,8 +1,8 @@
 package org.jreserve.project.system.management;
 
 import java.util.*;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Query;
@@ -15,7 +15,7 @@ import org.jreserve.persistence.Session;
  */
 public abstract class AbstractElementCache<T, E> {
 
-    protected final static Logger logger = Logging.getLogger(AbstractElementCache.class.getName());
+    protected final static Logger logger = Logger.getLogger(AbstractElementCache.class.getName());
     
     private Map<Long, Set<E>> saveCache = new HashMap<Long, Set<E>>();
     
@@ -44,7 +44,7 @@ public abstract class AbstractElementCache<T, E> {
             session.comitTransaction();
         } catch (RuntimeException ex) {
             session.rollBackTransaction();
-            logger.error(ex, "%s unable to save values!", getName());
+            logger.log(Level.SEVERE, String.format("%s unable to save values!", getName()), ex);
             throw ex;
         }
     }
@@ -59,7 +59,7 @@ public abstract class AbstractElementCache<T, E> {
             session.comitTransaction();
         } catch (RuntimeException ex) {
             session.rollBackTransaction();
-            logger.error(ex, "%s unable to save values for '%s'!", getName(), keyToString(key));
+            logger.log(Level.SEVERE, String.format("%s unable to save values for '%s'!", getName(), keyToString(key)), ex);
             throw ex;
         }
     }
@@ -84,7 +84,7 @@ public abstract class AbstractElementCache<T, E> {
     private void saveLogs(Set<E> entities, Session session) {
         for(E entity : entities) {
             session.persist(entity);
-            logger.trace("%s saving value: %s", getName(), entryToString(entity));
+            logger.log(Level.FINER, "%s saving value: %s", new Object[]{getName(), entryToString(entity)});
         }
     }
     
@@ -110,7 +110,7 @@ public abstract class AbstractElementCache<T, E> {
             Query query = createQuery(session, key);
             return query.getResultList();
         } catch (RuntimeException ex) {
-            logger.error(ex, "%s unable to load elements for '%s'!", getName(), keyToString(key));
+            logger.log(Level.SEVERE, String.format("%s unable to load elements for '%s'!", getName(), keyToString(key)), ex);
             throw ex;
         } finally {
             session.close();

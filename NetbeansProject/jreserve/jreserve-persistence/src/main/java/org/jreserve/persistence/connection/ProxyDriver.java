@@ -3,8 +3,8 @@ package org.jreserve.persistence.connection;
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Properties;
-import org.jreserve.logging.Logger;
-import org.jreserve.logging.Logging;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.Lookup;
 
 /**
@@ -14,7 +14,7 @@ import org.openide.util.Lookup;
  */
 public class ProxyDriver implements Driver {
     
-    private final static Logger logger = Logging.getLogger(ProxyDriver.class.getName());
+    private final static Logger logger = Logger.getLogger(ProxyDriver.class.getName());
     
     private static boolean initialized = false;
     private static ProxyDriver INSTANCE = null;
@@ -42,10 +42,10 @@ public class ProxyDriver implements Driver {
     
     private static void deregisterDriver(Driver driver) throws SQLException {
         try {
-            logger.debug("Deregistering driver: %s", driver.toString());
+            logger.log(Level.FINE, "Deregistering driver: %s", driver.toString());
             DriverManager.deregisterDriver(driver);
         } catch (SQLException ex) {
-            logger.error(ex, "Unable to deregister driver: %s", driver.toString());
+            logger.log(Level.SEVERE, String.format("Unable to deregister driver: %s", driver.toString()), ex);
             throw ex;
         }
     }
