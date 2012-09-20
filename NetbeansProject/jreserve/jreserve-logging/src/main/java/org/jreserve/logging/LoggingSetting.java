@@ -1,15 +1,14 @@
-package org.jreserve.logging.settings;
+package org.jreserve.logging;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import org.jreserve.logging.LoggerProperties;
 import java.util.Properties;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import org.jreserve.logging.view.Log4jGuiAppender;
+import javax.swing.SwingUtilities;
+import org.jreserve.logging.view.GuiHandler;
+import org.jreserve.logging.view.LogviewTopComponent;
 
 /**
  *
@@ -19,43 +18,54 @@ public class LoggingSetting {
     
     private final static Logger logger = Logger.getLogger(LoggingSetting.class.getName());
     
-    private final static String PACKAGE = "org.jreserve.logging";
-    private final static String CONFIG_FILE_PATH = "logging/logging.properties";
-    private final static String CONFIG_FILE_PROP = "java.util.logging.config.file";
+    private static transient GuiHandler guiHandler;
     
-    private final static String LAYOUT = "%d %-5p %m%n";
-    private static Log4jGuiAppender guiAppender;
-    
-    static void initialize() {
-        Logger.getLogger("org.jreserve").setLevel(Level.ALL);
-//        Properties props = LoggerProperties.getProperties();
-        Logger l = logger;
-        while(l.getParent() != null)
-            l = l.getParent();
+    public static void initialize() {
+        Properties props = LoggerProperties.getProperties();
+        configureGui(props);
+        configureHandlers();
+        applyLevels(props);
     }
     
-    private static String toString(Handler handler) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Handler: ").append(handler.toString())
-          .append("\n\tErrorManager: ").append(handler.getErrorManager())
-          .append("\n\tFormatter: ").append(handler.getFormatter())
-          .append("\n\tFilter: ").append(handler.getFilter())
-          .append("\n\tLevel: ").append(handler.getLevel().getName());
-        return sb.toString();
+    private static void configureGui(Properties props) {
+        if(showGui(props))
+           deleteGuiAppender();
+        else
+            appendGuiAppender();
     }
     
-    private static void logProperties(Properties props) {
-        logger.warning("Logging properties:");
-        for(String prop : props.stringPropertyNames())
-            logger.warning(String.format("Loggin: %s => %s", prop, props.getProperty(prop)));
+    private static boolean showGui(Properties props) {
+        String strShow = props.getProperty("gui.show", "false");
+        return "true".equalsIgnoreCase(strShow);
     }
     
-
-    private static InputStream getPropsAsStream(Properties props) {
-        StringWriter writer = new StringWriter();
-        try {props.store(writer, null);} catch (IOException ex) {}
-        String str = writer.toString();
-        return new ByteArrayInputStream(str.getBytes());
+    private static void configureHandlers() {
+        Logger root = Logger.getLogger("");
+        for(Handler handler : root.getHandlers())
+            handler.setLevel(Level.ALL);
+    }
+    
+    private static void applyLevels(Properties properties) {
+        for(String prop : properties.stringPropertyNames())
+            if(isLevelProperty(prop))
+                setLevel(prop, properties.getProperty(prop));
+    }
+    
+    private static boolean isLevelProperty(String property) {
+        return property.toLowerCase().endsWith(".level");
+    }
+    
+    private static void setLevel(String property, String value) {
+        Logger l = getLogger(property);
+        Level level = Level.parse(value);
+        logger.warning(String.format("Logger level: '%s' => %s", l.getName(), level.getName()));
+        l.setLevel(level);
+    }
+    
+    private static Logger getLogger(String property) {
+        int index = property.lastIndexOf('.');
+        String loggerName = property.substring(0, index);
+        return Logger.getLogger(loggerName);
     }
     
     static void setLevel(Level level) {
@@ -66,9 +76,29 @@ public class LoggingSetting {
     }
     
     static void appendGuiAppender() {
+        if(guiHandler != null)
+            return;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                guiHandler = GuiHandler.getInstance();
+                Logger.getLogger("").addHandler(guiHandler);
+                LogviewTopComponent.openView();
+            }
+        });
     }
     
     static void deleteGuiAppender() {
+        if(guiHandler != null) {
+            Logger.getLogger("").removeHandler(guiHandler);
+            guiHandler = null;
+        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                LogviewTopComponent.closeView();
+            }
+        });
     }
     
 //    private static void appendFileLogger() {

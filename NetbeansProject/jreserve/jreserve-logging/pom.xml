@@ -78,6 +78,11 @@
             <artifactId>org-netbeans-modules-options-api</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-dialogs</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -98,9 +103,6 @@
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <publicPackages>
-                        <publicPackage>org.jreserve.logging</publicPackage>
-                    </publicPackages>
                     <nbmResources>
                         <nbmResource>
                             <directory>src/main/lib</directory>

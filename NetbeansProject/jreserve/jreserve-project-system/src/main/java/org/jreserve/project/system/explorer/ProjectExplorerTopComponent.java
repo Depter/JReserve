@@ -32,9 +32,9 @@ import org.openide.windows.TopComponent;
     id = "org.jreserve.project.system.explorer.ProjectExplorerTopComponent"
 )
 @ActionReference(
-    path = "Menu/Window" /*
- * , position = 333
- */)
+    path = "Menu/Window",
+    position = 200
+)
 @TopComponent.OpenActionRegistration(
     displayName = "#CTL_ProjectExplorerAction",
     preferredID = "ProjectExplorerTopComponent"

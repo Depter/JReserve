@@ -16,18 +16,31 @@ import org.openide.windows.TopComponent;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//org.jreserve.resources.layerexplorer//LayerExplorer//EN",
-autostore = false)
-@TopComponent.Description(preferredID = "LayerExplorerTopComponent",
-//iconBase="SET/PATH/TO/ICON/HERE", 
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "rightSlidingSide", openAtStartup = true)
-@ActionID(category = "Window", id = "org.jreserve.resources.layerexplorer.LayerExplorerTopComponent")
-@ActionReference(path = "Menu/Window" /*
- * , position = 333
- */)
-@TopComponent.OpenActionRegistration(displayName = "#CTL_LayerExplorerAction",
-preferredID = "LayerExplorerTopComponent")
+@ConvertAsProperties(
+    dtd = "-//org.jreserve.resources.layerexplorer//LayerExplorer//EN",
+    autostore = false
+)
+@TopComponent.Description(
+    preferredID = "LayerExplorerTopComponent",
+    //iconBase="SET/PATH/TO/ICON/HERE", 
+    persistenceType = TopComponent.PERSISTENCE_ALWAYS
+)
+@TopComponent.Registration(
+    mode = "rightSlidingSide", 
+    openAtStartup = true
+)
+@ActionID(
+    category = "Window", 
+    id = "org.jreserve.resources.layerexplorer.LayerExplorerTopComponent"
+)
+@ActionReference(
+    path = "Menu/Window",
+    position = 500
+)
+@TopComponent.OpenActionRegistration(
+    displayName = "#CTL_LayerExplorerAction",
+    preferredID = "LayerExplorerTopComponent"
+)
 @Messages({
     "CTL_LayerExplorerAction=Layer Explorer",
     "CTL_LayerExplorerTopComponent=Layer Explorer"

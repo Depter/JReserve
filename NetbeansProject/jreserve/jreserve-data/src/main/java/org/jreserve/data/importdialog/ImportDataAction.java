@@ -19,7 +19,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @ActionRegistration(displayName = "#CTL_ImportDataAction")
 @ActionReferences({
-    @ActionReference(path = "Menu/Project", position = 1400),
+    @ActionReference(path = "Menu/Project", position = 1250),
     @ActionReference(path= "JReserve/Popup/ProjectRoot-ClaimTypeNode", position = 250)
 })
 @Messages({

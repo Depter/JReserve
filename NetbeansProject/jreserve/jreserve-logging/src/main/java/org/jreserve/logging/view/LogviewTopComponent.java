@@ -43,9 +43,9 @@ import org.openide.windows.TopComponent;
     id = "org.jreserve.logging.view.LogviewTopComponent"
 )
 @ActionReference(
-    path = "Menu/Window" /*
- * , position = 333
- */)
+    path = "Menu/Window", 
+    position = 400
+)
 @TopComponent.OpenActionRegistration (
     displayName = "#CTL_LogviewAction",
     preferredID = "LogviewTopComponent"

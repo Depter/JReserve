@@ -36,9 +36,9 @@ import org.openide.windows.TopComponent;
     id = "org.jreserve.persistence.databaseexplorer.DatabaseExplorerTopComponent"
 )
 @ActionReference(
-    path = "Menu/Window" /*
- * , position = 333
- */)
+    path = "Menu/Window",
+    position = 300
+)
 @TopComponent.OpenActionRegistration(
     displayName = "#CTL_DatabaseExplorerAction",
     preferredID = "DatabaseExplorerTopComponent"

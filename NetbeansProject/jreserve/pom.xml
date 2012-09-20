@@ -70,6 +70,7 @@
 
     <properties>
         <netbeans.version>RELEASE72</netbeans.version>
+        <nbn.maven.version>3.8</nbn.maven.version>
         <brandingToken>jreserve</brandingToken>
     </properties>
 </project>

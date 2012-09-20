@@ -19,7 +19,6 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 @ActionID(
@@ -28,7 +27,7 @@ import org.openide.util.lookup.ProxyLookup;
 )
 @ActionRegistration(displayName = "#CTL_NewProjectElementAction")
 @ActionReferences({
-    @ActionReference(path = "Menu/Project", position = 1300, separatorAfter = 1350),
+    @ActionReference(path = "Menu/Project", position = 1100),
     @ActionReference(path= "JReserve/Popup/ProjectRoot-DefaultNode", position = 100)
 })
 @Messages({

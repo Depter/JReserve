@@ -23,7 +23,7 @@ import org.openide.util.NbBundle.Messages;
     displayName = "#CTL_DeleteAction.name"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Project", position = 1400),
+    @ActionReference(path = "Menu/Project", position = 1400, separatorBefore=1300),
     @ActionReference(path= "JReserve/Popup/ProjectRoot-DefaultNode", 
         position = 300, separatorBefore = 290)
 })

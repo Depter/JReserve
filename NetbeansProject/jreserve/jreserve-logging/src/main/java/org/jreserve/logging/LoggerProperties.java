@@ -1,11 +1,9 @@
-package org.jreserve.logging.settings;
+package org.jreserve.logging;
 
 import java.io.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Exceptions;
 
@@ -14,13 +12,16 @@ import org.openide.util.Exceptions;
  * @author Peter Decsi
  * @version 1.0
  */
-class LoggerProperties {
+public class LoggerProperties {
+    
+    public final static String SHOW_GUI = "gui.show";
+    public final static String MAIN_LEVEL = ".level";
     
     private final static Logger logger = Logger.getLogger(LoggerProperties.class.getName());
     private final static String PACKAGE = "org.jreserve.logging";
     private static Properties PROPERTIES = null;
     
-    static Properties getProperties() {
+    public static Properties getProperties() {
         if(PROPERTIES == null)
             readProperties();
         return PROPERTIES;
@@ -42,15 +43,12 @@ class LoggerProperties {
                 }
             }
         }
-        PROPERTIES.put("java.util.logging.FileHandler.pattern", getLogFileName());
     }
     
     private static File getPropertiesFile() {
         File child = new File(getConfigRoot(), "logging.properties");
         if(!child.exists())
-            createPropertiesFile(child);
-        else
-            logger.warning("File already exists! "+child);
+            return null;
         return child;
     }
     
@@ -59,44 +57,6 @@ class LoggerProperties {
         File root = locator.locate("logging", PACKAGE, true);
         logger.warning("Logging setting root: "+root);
         return root;
-    }
-    
-    private static void createPropertiesFile(File file) {
-        logger.warning("Creating file: "+file);
-        Properties props = createDefaultProperties();
-        save(props);
-    }
-    
-    private static Properties createDefaultProperties() {
-        Properties props = new Properties();
-        props.put(".level", LoggingPanel.DEFAULT_LEVEL.getName());
-        props.put("handlers", "java.util.logging.FileHandler");
-        props.put("java.util.logging.FileHandler.pattern", getLogFileName());
-        props.put("java.util.logging.FileHandler.limit", "50000");
-        props.put("java.util.logging.FileHandler.count", "1");
-        props.put("java.util.logging.FileHandler.formatter", "java.util.logging.SimpleFormatter");
-        return props;
-    }
-    
-    private static String getLogFileName() {
-        FileObject file = FileUtil.getConfigRoot();
-        try {
-            file = FileUtil.createFolder(file, "Logging");
-            return getPath(file);
-            //return FileUtil.toFile(file).getPath()+"/jreserve_%u.log";
-            //return FileUtil.toFile(file).getAbsolutePath()+"/jreserve_%u.log";
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-            return "%h/jreserve%u.log";
-        }
-    }
-    
-    private static String getPath(FileObject fo) {
-        File file = FileUtil.toFile(fo);
-        String path = file.getAbsolutePath();
-        if(File.separatorChar == '\\')
-            path = path.replace('\\', '/');
-        return path + "/jreserve_%u.log";
     }
     
     private static void save(Properties properties) {
@@ -118,7 +78,7 @@ class LoggerProperties {
         }
     }
     
-    static void save() {
+    public static void save() {
         save(getProperties());
     }
     

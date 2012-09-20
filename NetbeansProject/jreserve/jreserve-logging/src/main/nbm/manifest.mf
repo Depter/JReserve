@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-OpenIDE-Module-Install: org/jreserve/logging/settings/Installer.class
+OpenIDE-Module-Install: org/jreserve/logging/Installer.class
 OpenIDE-Module-Localizing-Bundle: org/jreserve/logging/Bundle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager

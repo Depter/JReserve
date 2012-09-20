@@ -1,24 +1,37 @@
 package org.jreserve.logging.settings;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Properties;
+import org.jreserve.logging.LoggingSetting;
 import java.util.logging.Level;
 import java.util.prefs.Preferences;
 import javax.swing.JComboBox;
-import org.jreserve.logging.view.LogviewTopComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import org.jreserve.logging.LoggerProperties;
+import org.jreserve.logging.LoggingUtil;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.NbPreferences;
 
 @Messages({
-    "LBL_level=Level:",
-    "LBL_showLog=Show log:"
+    "LBL.LoggingPanel.level=Level:",
+    "LBL.LoggingPanel.showLog=Show log:",
+    "CTL.LoggingPanel.add=Add",
+    "CTL.LoggingPanel.delete=Delete"
 })
-final class LoggingPanel extends javax.swing.JPanel {
+public final class LoggingPanel extends javax.swing.JPanel implements ActionListener {
 
     private final static String LEVEL_KEY = "logging.level";
     final static String SHOW_LOG_KEY = "logging.showlog";
     final static Level DEFAULT_LEVEL = Level.SEVERE;
     
     private final LoggingOptionsPanelController controller;
-
+    private LogLevelTableModel levelModel;
+    private int selectedRow;
+    
     LoggingPanel(LoggingOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
@@ -37,17 +50,32 @@ final class LoggingPanel extends javax.swing.JPanel {
         levelCombo = new JComboBox();
         showLogLabel = new javax.swing.JLabel();
         showLogCheck = new javax.swing.JCheckBox();
+        levelScroll = new javax.swing.JScrollPane();
+        levelTable = new javax.swing.JTable();
+        addButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
 
-        org.openide.awt.Mnemonics.setLocalizedText(levelLabel, Bundle.LBL_level());
+        org.openide.awt.Mnemonics.setLocalizedText(levelLabel, Bundle.LBL_LoggingPanel_level());
 
         Level[] levels = new Level[]{Level.SEVERE, Level.WARNING, Level.INFO,
             Level.FINE, Level.FINER, Level.FINEST, Level.ALL};
         levelCombo.setModel(new javax.swing.DefaultComboBoxModel(levels));
         levelCombo.setRenderer(new LevelRenderer());
 
-        org.openide.awt.Mnemonics.setLocalizedText(showLogLabel, Bundle.LBL_showLog());
+        org.openide.awt.Mnemonics.setLocalizedText(showLogLabel, Bundle.LBL_LoggingPanel_showLog());
 
         org.openide.awt.Mnemonics.setLocalizedText(showLogCheck, org.openide.util.NbBundle.getMessage(LoggingPanel.class, "LoggingPanel.showLogCheck.text")); // NOI18N
+
+        levelModel = new LogLevelTableModel();
+        levelTable.setModel(levelModel);
+        levelTable.addMouseListener(new LoggerPopUp());
+        levelScroll.setViewportView(levelTable);
+
+        org.openide.awt.Mnemonics.setLocalizedText(addButton, Bundle.CTL_LoggingPanel_add());
+        addButton.addActionListener(this);
+
+        org.openide.awt.Mnemonics.setLocalizedText(deleteButton, Bundle.CTL_LoggingPanel_delete());
+        deleteButton.addActionListener(this);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -55,14 +83,24 @@ final class LoggingPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(showLogLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(levelLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(levelCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(showLogCheck))
-                .addContainerGap(148, Short.MAX_VALUE))
+                    .addComponent(levelScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(showLogLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(levelLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(levelCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(showLogCheck)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(addButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(deleteButton)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -75,16 +113,32 @@ final class LoggingPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(showLogCheck)
                     .addComponent(showLogLabel))
-                .addContainerGap(159, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(levelScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addButton)
+                    .addComponent(deleteButton))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
-        Preferences prefs = NbPreferences.forModule(LoggingPanel.class);
-        levelCombo.setSelectedItem(getLevel(prefs));
-        showLogCheck.setSelected(prefs.getBoolean(SHOW_LOG_KEY, false));
+        Properties props = LoggerProperties.getProperties();
+        setLevelCombo(props.getProperty(LoggerProperties.MAIN_LEVEL));
+        setShowGui(props.getProperty(LoggerProperties.SHOW_GUI));
+    }
+    
+    private void setLevelCombo(String strLevel) {
+        Level level = strLevel==null? null : Level.parse(strLevel);
+        levelCombo.setSelectedItem(level);
     }
 
+    private void setShowGui(String show) {
+        boolean checked = show==null? false : "true".equalsIgnoreCase(show);
+        showLogCheck.setSelected(checked);
+    }
+    
     static Level getLevel(Preferences prefs) {
         String level = prefs.get(LEVEL_KEY, DEFAULT_LEVEL.getName());
         try {
@@ -95,15 +149,13 @@ final class LoggingPanel extends javax.swing.JPanel {
     }
     
     void store() {
-        Preferences prefs = NbPreferences.forModule(LoggingPanel.class);
-        storeLevel(prefs);
-        storeShowLog(prefs);
-    }
-
-    private void storeLevel(Preferences prefs) {
-        Level level = getSelectedLevel();
-        LoggingSetting.setLevel(level);
-        prefs.put(LEVEL_KEY, level.getName());
+        Properties props = LoggerProperties.getProperties();
+        props.clear();
+        props.put(LoggerProperties.SHOW_GUI, showLogCheck.isSelected()? "true" : "false");
+        props.put(LoggerProperties.MAIN_LEVEL, getSelectedLevel().getName());
+        levelModel.storeLevels(props);
+        LoggerProperties.save();
+        LoggingSetting.initialize();
     }
     
     private Level getSelectedLevel() {
@@ -111,28 +163,96 @@ final class LoggingPanel extends javax.swing.JPanel {
         return level != null? level : DEFAULT_LEVEL;
     }
     
-    private void storeShowLog(Preferences prefs) {
-        boolean show = showLogCheck.isSelected();
-        setGuiAppender(show);
-        LogviewTopComponent.setViewVisible(show);
-        prefs.putBoolean(SHOW_LOG_KEY, show);
-    }
-    
-    private void setGuiAppender(boolean show) {
-        if(show)
-            LoggingSetting.appendGuiAppender();
-        else
-            LoggingSetting.deleteGuiAppender();
-    }
-    
     boolean valid() {
         // TODO check whether form is consistent and complete
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JComboBox levelCombo;
     private javax.swing.JLabel levelLabel;
+    private javax.swing.JScrollPane levelScroll;
+    private javax.swing.JTable levelTable;
     private javax.swing.JCheckBox showLogCheck;
     private javax.swing.JLabel showLogLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if(addButton == source) {
+            AddLoggerDialog.showDialog(levelModel);
+        } else if(deleteButton == source) {
+            int row = levelTable.getSelectedRow();
+            if(row >= 0)
+                delete(row);
+        } else if (source instanceof JMenuItem) {
+            actionPerformed(((JMenuItem)source));
+        }
+    }
+    
+    private void actionPerformed(JMenuItem item) {
+        String text = item.getText();
+        if(text.equals(Bundle.CTL_LoggingPanel_delete())) {
+            delete(selectedRow);
+        } else {
+            levelModel.setValueAt(item.getActionCommand(), selectedRow, LogLevelTableModel.COLUMN_LEVEL);
+        }
+    }
+    
+    private void delete(int row) {
+        levelModel.deleteRow(row);
+    }
+    
+    private class LoggerPopUp extends MouseAdapter {
+
+        private JPopupMenu popUp;
+        
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if(e.isPopupTrigger())
+                popUp(e);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if(e.isPopupTrigger())
+                popUp(e);
+        }
+        
+        private void popUp(MouseEvent e) {
+            selectedRow = levelTable.rowAtPoint(e.getPoint());
+            if(selectedRow < 0)
+                return;
+            if(popUp == null)
+                popUp = createPopUp();
+            popUp.show(levelTable, e.getX(), e.getY());
+        }
+        
+        private JPopupMenu createPopUp() {
+            JPopupMenu popUp = new JPopupMenu();
+            JMenuItem delete = new JMenuItem(Bundle.CTL_LoggingPanel_delete());
+            delete.addActionListener(LoggingPanel.this);
+            popUp.add(delete);
+            popUp.add(new JSeparator());
+            popUp.add(getMenuItem(Level.OFF));
+            popUp.add(getMenuItem(Level.SEVERE));
+            popUp.add(getMenuItem(Level.WARNING));
+            popUp.add(getMenuItem(Level.INFO));
+            popUp.add(getMenuItem(Level.CONFIG));
+            popUp.add(getMenuItem(Level.FINE));
+            popUp.add(getMenuItem(Level.FINER));
+            popUp.add(getMenuItem(Level.ALL));
+            return popUp;
+        }
+        
+        private JMenuItem getMenuItem(Level level) {
+            String text = LoggingUtil.getUserName(level);
+            JMenuItem item = new JMenuItem(text);
+            item.addActionListener(LoggingPanel.this);
+            item.setActionCommand(level.getName());
+            return item;
+        }
+    }
 }

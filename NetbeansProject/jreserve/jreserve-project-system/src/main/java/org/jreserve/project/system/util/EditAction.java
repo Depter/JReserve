@@ -18,7 +18,7 @@ import org.openide.util.NbBundle.Messages;
     displayName = "#CTL_EditAction"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Project", position = 1325),
+    @ActionReference(path = "Menu/Project", position = 1200),
     @ActionReference(path= "JReserve/Popup/ProjectRoot-DefaultNode", position = 200)
 })
 @Messages("CTL_EditAction=Edit")
