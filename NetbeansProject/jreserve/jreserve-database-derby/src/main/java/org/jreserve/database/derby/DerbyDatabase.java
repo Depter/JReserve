@@ -66,7 +66,7 @@ public class DerbyDatabase extends AbstractDatabase {
     
     private void shutDownDerby() {
         try {
-            logger.log(Level.FINE, "Shutting down derby database: %s", getDatabaseFolder());
+            logger.log(Level.FINE, "Shutting down derby database: \"{0}\"", getDatabaseFolder());
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
         } catch (SQLException ex) {
             if(!ex.getSQLState().equalsIgnoreCase("XJ015"))

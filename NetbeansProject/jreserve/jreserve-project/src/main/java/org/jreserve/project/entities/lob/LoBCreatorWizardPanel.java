@@ -186,7 +186,7 @@ class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDe
         try {
             session = persistenceUnit.getSession();
             LoB lob = createPersistedLoB(session);
-            logger.log(Level.INFO, "LoB created: %s", lob.getName());
+            logger.log(Level.INFO, "LoB created: \"{0}\"", lob.getName());
             return lob;
         } catch (Exception ex) {
             if(session != null)

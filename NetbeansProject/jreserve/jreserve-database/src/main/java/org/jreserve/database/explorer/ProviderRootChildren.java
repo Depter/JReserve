@@ -47,7 +47,7 @@ class ProviderRootChildren extends Children.Keys<DatabaseProvider>{
     
     private void logProviders(List<DatabaseProvider> providers) {
         for(DatabaseProvider provider : providers)
-            logger.log(Level.INFO, "DatabseProvider found: %s", provider.getName());
+            logger.log(Level.INFO, "DatabseProvider found: \"{0}\"", provider.getName());
     }
     
     @Override

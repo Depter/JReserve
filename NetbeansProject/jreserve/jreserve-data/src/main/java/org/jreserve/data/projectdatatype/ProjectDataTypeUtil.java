@@ -84,16 +84,6 @@ public class ProjectDataTypeUtil extends AbstractElementCache<Project, ProjectDa
     protected long getId(Project project) {
         return project.getId();
     }
-
-    @Override
-    protected String keyToString(Project project) {
-        return project==null? "null" : project.getPath();
-    }
-
-    @Override
-    protected String entryToString(ProjectDataType dt) {
-        return dt==null? "null" : dt.getPath();
-    }
     
     @Override
     public synchronized void addValue(Project project, ProjectDataType dt) {
@@ -103,5 +93,10 @@ public class ProjectDataTypeUtil extends AbstractElementCache<Project, ProjectDa
     @Override
     public synchronized void deleteValue(Project project, ProjectDataType dt) {
         super.deleteValue(project, dt);
+    }
+
+    @Override
+    protected boolean isNew(ProjectDataType entity) {
+        return entity.getId() == 0;
     }
 }

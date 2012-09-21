@@ -57,7 +57,7 @@ public class DatabaseFactory {
             properties.remove(property);
         else
             properties.put(property, value);
-        logger.log(Level.FINER, "Database [%s]: %s => %s", new Object[]{getShortName(), property, value});
+        logger.log(Level.FINER, "Database [{0}]: {1} => {2}", new Object[]{getShortName(), property, value});
     }
     
     private String getShortName() {
@@ -73,7 +73,7 @@ public class DatabaseFactory {
         FileObject file = DatabaseUtil.getFileForName(dbName);
         PropertyWriter writer = new PropertyWriter(file);
         writer.writeProperties(properties);
-        logger.log(Level.FINE, "Database '%s' created in file '%s'.",
+        logger.log(Level.INFO, "Database \"{0}\" created in file \"{1}\".",
                 new Object[]{getShortName(), file.getPath()});
     }
 }

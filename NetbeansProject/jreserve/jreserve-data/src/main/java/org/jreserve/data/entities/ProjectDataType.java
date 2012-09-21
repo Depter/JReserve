@@ -21,6 +21,8 @@ import org.jreserve.project.entities.Project;
     table=EntityRegistration.TABLE,
     pkColumnName=EntityRegistration.ID_COLUMN,
     valueColumnName=EntityRegistration.VALUE_COLUMN,
+    initialValue=EntityRegistration.INITIAL_VALUE,
+    allocationSize=EntityRegistration.ALLOCATION_SIZE,
     pkColumnValue="org.jreserve.data.entities.ProjectDataType"
 )
 public class ProjectDataType implements Serializable {
@@ -121,7 +123,8 @@ public class ProjectDataType implements Serializable {
     
     @Override
     public int hashCode() {
-        return (int) id;
+        int hash = 31 + (project==null? 0 : project.hashCode());
+        return 17 * hash + dbId;
     }
     
     @Override

@@ -62,7 +62,7 @@ public final class OpenDatabaseAction implements ActionListener {
     }
     
     private boolean openDatabase(AbstractDatabase database) {
-        logger.log(Level.INFO, "Opening database: %s", database.getShortName());
+        logger.log(Level.INFO, "Opening database: \"{0}\"", database.getShortName());
         database.setOpened(true);
         try {
             database.save();

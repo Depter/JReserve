@@ -44,6 +44,7 @@ public class ProjectDataTypeDeleter implements ProjectSystemDeletionListener {
         }
     }
     
+    
     private void initSession() {
         PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
         session = pu.getSession();
@@ -51,9 +52,11 @@ public class ProjectDataTypeDeleter implements ProjectSystemDeletionListener {
     }
     
     private void deleteProjectDataTypes(Project project) {
+        ProjectDataTypeUtil.getDefault().clearCache(project);
+        
         Query query = session.createQuery(SQL);
         query.setParameter("projectId", project.getId());
-        logger.log(Level.FINE, "Deleting data types from project '%s'.", project.getName());
+        logger.log(Level.FINE, "Deleting data types from project \"{0}\".", project.getName());
         query.executeUpdate();
     }
 }

@@ -40,7 +40,7 @@ class EntityFactory {
         if(dir != null && dir.isFolder()) {
             processFiles(dir.getChildren());
         } else {
-            logger.log(Level.WARNING, "Entity directory '%s' not found!", 
+            logger.log(Level.WARNING, "Entity directory \"{0}\" not found!", 
                     EntityRegistrationProcessor.ENTITY_DIRECTORY);
         }
     }
@@ -57,7 +57,7 @@ class EntityFactory {
     }
     
     private void addEntity(FileObject file) {
-        logger.log(Level.FINE, "Processing entity file '%s'.", file.getPath());
+        logger.log(Level.FINE, "Processing entity file \"{0}\".", file.getPath());
         String className = (String) file.getAttribute(EntityRegistrationProcessor.CLASS_ATRIBUTE);
         try {
             entities.add(classLoader.loadClass(className));

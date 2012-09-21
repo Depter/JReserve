@@ -37,6 +37,8 @@
                               <Component id="addButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="deleteButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="defaultButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -65,6 +67,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="addButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="deleteButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="defaultButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -118,7 +121,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="levelTable.addMouseListener(new LoggerPopUp());"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="levelTable.addMouseListener(new LoggerPopUp());&#xa;levelTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);&#xa;levelTable.setColumnSelectionAllowed(false);&#xa;levelTable.getSelectionModel().addListSelectionListener(this);"/>
             <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="levelModel = new LogLevelTableModel();"/>
           </AuxValues>
         </Component>
@@ -139,9 +142,20 @@
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Bundle.CTL_LoggingPanel_delete()" type="code"/>
         </Property>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="deleteButton.addActionListener(this);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="defaultButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="Bundle.CTL_LoggingPanel_default()" type="code"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="defaultButton.addActionListener(this);"/>
       </AuxValues>
     </Component>
   </SubComponents>

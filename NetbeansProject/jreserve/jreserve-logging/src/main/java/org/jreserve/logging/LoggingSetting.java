@@ -1,6 +1,5 @@
 package org.jreserve.logging;
 
-import org.jreserve.logging.LoggerProperties;
 import java.util.Properties;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -29,9 +28,9 @@ public class LoggingSetting {
     
     private static void configureGui(Properties props) {
         if(showGui(props))
-           deleteGuiAppender();
-        else
             appendGuiAppender();
+        else
+            deleteGuiAppender();
     }
     
     private static boolean showGui(Properties props) {
@@ -46,9 +45,10 @@ public class LoggingSetting {
     }
     
     private static void applyLevels(Properties properties) {
-        for(String prop : properties.stringPropertyNames())
+        for(String prop : properties.stringPropertyNames()) {
             if(isLevelProperty(prop))
                 setLevel(prop, properties.getProperty(prop));
+        }
     }
     
     private static boolean isLevelProperty(String property) {
@@ -58,7 +58,7 @@ public class LoggingSetting {
     private static void setLevel(String property, String value) {
         Logger l = getLogger(property);
         Level level = Level.parse(value);
-        logger.warning(String.format("Logger level: '%s' => %s", l.getName(), level.getName()));
+        logger.warning(String.format("Logger level: \"%s\" => %s", l.getName(), level.getName()));
         l.setLevel(level);
     }
     

@@ -53,7 +53,7 @@ public class ChangeLogDeleter implements ProjectSystemDeletionListener {
     private void deleteChangeLogs(Project project) {
         Query query = session.createQuery(SQL);
         query.setParameter("projectId", project.getId());
-        logger.log(Level.FINE, "Deleted change logs from project '%s'.", project.getName());
+        logger.log(Level.FINE, "Deleted change logs from project \"{0}\".", project.getName());
         query.executeUpdate();
     }
 }

@@ -5,14 +5,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Properties;
-import org.jreserve.logging.LoggingSetting;
 import java.util.logging.Level;
 import java.util.prefs.Preferences;
-import javax.swing.JComboBox;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import org.jreserve.logging.LoggerProperties;
+import org.jreserve.logging.LoggingSetting;
 import org.jreserve.logging.LoggingUtil;
 import org.openide.util.NbBundle.Messages;
 
@@ -20,9 +21,10 @@ import org.openide.util.NbBundle.Messages;
     "LBL.LoggingPanel.level=Level:",
     "LBL.LoggingPanel.showLog=Show log:",
     "CTL.LoggingPanel.add=Add",
-    "CTL.LoggingPanel.delete=Delete"
+    "CTL.LoggingPanel.delete=Delete",
+    "CTL.LoggingPanel.default=Reset default"
 })
-public final class LoggingPanel extends javax.swing.JPanel implements ActionListener {
+public final class LoggingPanel extends javax.swing.JPanel implements ActionListener, ListSelectionListener, TableModelListener {
 
     private final static String LEVEL_KEY = "logging.level";
     final static String SHOW_LOG_KEY = "logging.showlog";
@@ -54,6 +56,7 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
         levelTable = new javax.swing.JTable();
         addButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
+        defaultButton = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(levelLabel, Bundle.LBL_LoggingPanel_level());
 
@@ -69,13 +72,20 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
         levelModel = new LogLevelTableModel();
         levelTable.setModel(levelModel);
         levelTable.addMouseListener(new LoggerPopUp());
+        levelTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        levelTable.setColumnSelectionAllowed(false);
+        levelTable.getSelectionModel().addListSelectionListener(this);
         levelScroll.setViewportView(levelTable);
 
         org.openide.awt.Mnemonics.setLocalizedText(addButton, Bundle.CTL_LoggingPanel_add());
         addButton.addActionListener(this);
 
         org.openide.awt.Mnemonics.setLocalizedText(deleteButton, Bundle.CTL_LoggingPanel_delete());
+        deleteButton.setEnabled(false);
         deleteButton.addActionListener(this);
+
+        org.openide.awt.Mnemonics.setLocalizedText(defaultButton, Bundle.CTL_LoggingPanel_default());
+        defaultButton.addActionListener(this);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -98,7 +108,9 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(addButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(deleteButton)))
+                                .addComponent(deleteButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(defaultButton)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -118,7 +130,8 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addButton)
-                    .addComponent(deleteButton))
+                    .addComponent(deleteButton)
+                    .addComponent(defaultButton))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -127,6 +140,7 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
         Properties props = LoggerProperties.getProperties();
         setLevelCombo(props.getProperty(LoggerProperties.MAIN_LEVEL));
         setShowGui(props.getProperty(LoggerProperties.SHOW_GUI));
+        levelModel.loadProperties(props);
     }
     
     private void setLevelCombo(String strLevel) {
@@ -169,6 +183,7 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
+    private javax.swing.JButton defaultButton;
     private javax.swing.JButton deleteButton;
     private javax.swing.JComboBox levelCombo;
     private javax.swing.JLabel levelLabel;
@@ -183,6 +198,8 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
         Object source = e.getSource();
         if(addButton == source) {
             AddLoggerDialog.showDialog(levelModel);
+        } else if(defaultButton == source) {
+            resetDefault();
         } else if(deleteButton == source) {
             int row = levelTable.getSelectedRow();
             if(row >= 0)
@@ -190,6 +207,17 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
         } else if (source instanceof JMenuItem) {
             actionPerformed(((JMenuItem)source));
         }
+    }
+    
+    private void resetDefault() {
+        Properties props = LoggerProperties.getProperties();
+        props.setProperty(LoggerProperties.SHOW_GUI, "false");
+        props.setProperty(LoggerProperties.MAIN_LEVEL, Level.SEVERE.getName());
+        props.setProperty("org.netbeans.level", Level.WARNING.getName());
+        props.setProperty("org.openide.level", Level.WARNING.getName());
+        props.setProperty("org.jreserve.level", Level.WARNING.getName());
+        LoggerProperties.save();
+        load();
     }
     
     private void actionPerformed(JMenuItem item) {
@@ -203,6 +231,17 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
     
     private void delete(int row) {
         levelModel.deleteRow(row);
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        int row = levelTable.getSelectedRow();
+        deleteButton.setEnabled(row >= 0);
+    }
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        controller.changed();
     }
     
     private class LoggerPopUp extends MouseAdapter {
@@ -226,12 +265,12 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
             if(selectedRow < 0)
                 return;
             if(popUp == null)
-                popUp = createPopUp();
+                createPopUp();
             popUp.show(levelTable, e.getX(), e.getY());
         }
         
-        private JPopupMenu createPopUp() {
-            JPopupMenu popUp = new JPopupMenu();
+        private void createPopUp() {
+            popUp = new JPopupMenu();
             JMenuItem delete = new JMenuItem(Bundle.CTL_LoggingPanel_delete());
             delete.addActionListener(LoggingPanel.this);
             popUp.add(delete);
@@ -244,7 +283,6 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
             popUp.add(getMenuItem(Level.FINE));
             popUp.add(getMenuItem(Level.FINER));
             popUp.add(getMenuItem(Level.ALL));
-            return popUp;
         }
         
         private JMenuItem getMenuItem(Level level) {

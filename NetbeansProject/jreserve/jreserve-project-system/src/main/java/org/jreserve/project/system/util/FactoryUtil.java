@@ -46,7 +46,7 @@ public class FactoryUtil {
     }
     
     private static void initializeFactories() {
-        logger.log(Level.FINE, "Loading ProjectElementFactories from '%s'...", ENTITY_DIRECTORY);
+        logger.log(Level.FINE, "Loading ProjectElementFactories from \"{0}\"...", ENTITY_DIRECTORY);
         factories = new ArrayList<ProjectElementFactory>();
         for(FileObject file : getFactoryFiles())
             loadFactory(file);
@@ -64,7 +64,7 @@ public class FactoryUtil {
             DataObject data = DataObject.find(file);
             InstanceCookie cookie = data.getLookup().lookup(InstanceCookie.class);
             ProjectElementFactory factory = (ProjectElementFactory) cookie.instanceCreate();
-            logger.log(Level.FINE, "Loaded ProjectElementFactory: %s", factory.getClass().getName());
+            logger.log(Level.FINE, "Loaded ProjectElementFactory: {0}", factory.getClass().getName());
             factories.add(factory);
         } catch (Exception ex) {
             logger.log(Level.WARNING, String.format("Unable to load ProjectElementFactory from file: %s", file.getPath()), ex);

@@ -137,7 +137,7 @@ public class DataTypeUtil {
             Unmarshaller um = context.createUnmarshaller();
             ROOT = (DataTypeRoot) um.unmarshal(FileUtil.toFile(XML));
         } catch (JAXBException ex) {
-            logger.log(Level.SEVERE, String.format("Unable tu unmarshall xml document!", XML.getPath()), ex);
+            logger.log(Level.SEVERE, String.format("Unable to unmarshall xml document! %s", XML.getPath()), ex);
             Exceptions.printStackTrace(ex);
         }
     }
@@ -213,7 +213,7 @@ public class DataTypeUtil {
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             m.marshal(root, FileUtil.toFile(XML));
-            logger.log(Level.FINE, "DataTypes saved: %s", XML.getPath());
+            logger.log(Level.FINE, "DataTypes saved: \"{0}\"", XML.getPath());
         } catch (JAXBException ex) {
             logger.log(Level.SEVERE, String.format("Unable to save file '%s' in user dir!", PATH), ex);
             Exceptions.printStackTrace(ex);

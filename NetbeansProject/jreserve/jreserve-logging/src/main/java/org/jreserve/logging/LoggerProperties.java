@@ -55,7 +55,7 @@ public class LoggerProperties {
     private static File getConfigRoot() {
         InstalledFileLocator locator = InstalledFileLocator.getDefault();
         File root = locator.locate("logging", PACKAGE, true);
-        logger.warning("Logging setting root: "+root);
+        logger.log(Level.FINER, "Logging setting root: \"{0}\"", root);
         return root;
     }
     

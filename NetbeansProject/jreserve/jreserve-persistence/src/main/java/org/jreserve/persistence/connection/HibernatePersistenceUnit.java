@@ -30,7 +30,7 @@ class HibernatePersistenceUnit implements PersistenceUnit {
     public synchronized Session getSession() {
         HibernateSession session = createNewSession();
         openSessions.add(session);
-        logger.log(Level.FINE, "Session [%d] created.", session.getId());
+        logger.log(Level.FINE, "Session [{0}] created.", session.getId());
         return session;
     }
 
@@ -42,7 +42,7 @@ class HibernatePersistenceUnit implements PersistenceUnit {
     
     void sessionClosed(HibernateSession session) {
         openSessions.remove(session);
-        logger.log(Level.FINE, "Session [%d] closed.", session.getId());
+        logger.log(Level.FINE, "Session [{0}] closed.", session.getId());
     }
     
     void close() {

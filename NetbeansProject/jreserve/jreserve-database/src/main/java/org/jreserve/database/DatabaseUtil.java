@@ -76,9 +76,9 @@ public class DatabaseUtil {
         try {
             FileObject configHome = FileUtil.getConfigRoot();
             HOME = FileUtil.createFolder(configHome, HOME_DIR);
-            logger.log(Level.INFO, "Database home directory set to '%s'.", HOME.getPath());
+            logger.log(Level.INFO, "Database home directory set to \"{0}\".", HOME.getPath());
         } catch (IOException ex) {
-            logger.log(Level.SEVERE, String.format("Unable to create directory '%s' in user dir!", HOME_DIR), ex);
+            logger.log(Level.SEVERE, String.format("Unable to create directory \"{0}\" in user dir!", HOME_DIR), ex);
             Exceptions.printStackTrace(ex);
         }
     }
@@ -92,7 +92,7 @@ public class DatabaseUtil {
     
     private static void addFileToList(FileObject file) {
         try {
-            logger.log(Level.INFO, "Loading database file '%s'.", file.getPath());
+            logger.log(Level.INFO, "Loading database file \"{0}\".", file.getPath());
             DataObject obj = DataObject.find(file);
             if(!(obj instanceof AbstractDatabase))
                 return;
@@ -129,7 +129,7 @@ public class DatabaseUtil {
         try {
             return HOME.createData(name, DB_EXTENSION);
         } catch (IOException ex) {
-            String msg = String.format("Unable to create file '%s.%s' in '%s'", 
+            String msg = String.format("Unable to create file \"{0}.{1}\" in \"{2}\"", 
                 name, DB_EXTENSION, HOME.getPath());
             logger.log(Level.SEVERE, msg, ex);
             return null;

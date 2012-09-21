@@ -22,6 +22,8 @@ import org.jreserve.persistence.PersistenceUtil;
     table=EntityRegistration.TABLE,
     pkColumnName=EntityRegistration.ID_COLUMN,
     valueColumnName=EntityRegistration.VALUE_COLUMN,
+    initialValue=EntityRegistration.INITIAL_VALUE,
+    allocationSize=EntityRegistration.ALLOCATION_SIZE,
     pkColumnValue="org.jreserve.triangle.entities.VectorComment"
 )
 public class VectorComment implements Serializable {

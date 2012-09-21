@@ -42,7 +42,7 @@ public class ProxyDriver implements Driver {
     
     private static void deregisterDriver(Driver driver) throws SQLException {
         try {
-            logger.log(Level.FINE, "Deregistering driver: %s", driver.toString());
+            logger.log(Level.FINE, "Deregistering driver: \"{0}\"", driver.toString());
             DriverManager.deregisterDriver(driver);
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, String.format("Unable to deregister driver: %s", driver.toString()), ex);

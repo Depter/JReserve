@@ -61,6 +61,16 @@ public class GuiHandler extends Handler {
         StyleConstants.setForeground(trace, Color.gray);
         StyleConstants.setItalic(trace, true);
         styles.put(Level.FINER, trace);
+        
+        Style verbose = document.addStyle("verbose", base);
+        StyleConstants.setForeground(verbose, Color.gray);
+        StyleConstants.setItalic(verbose, true);
+        styles.put(Level.FINEST, verbose);
+        
+        Style all = document.addStyle("all", base);
+        StyleConstants.setForeground(all, Color.gray);
+        StyleConstants.setItalic(all, true);
+        styles.put(Level.ALL, all);
     }
 
     @Override

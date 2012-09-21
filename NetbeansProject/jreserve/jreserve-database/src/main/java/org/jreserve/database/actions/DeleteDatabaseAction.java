@@ -96,7 +96,7 @@ public final class DeleteDatabaseAction implements ActionListener {
     private void deleteDatabases() {
         for(AbstractDatabase database : databases) {
             try {
-                logger.log(Level.INFO, "Deleting database: %s", database.getShortName());
+                logger.log(Level.INFO, "Deleting database: \"{0}\"", database.getShortName());
                 database.deleteDatabase();
             } catch (IOException ex) {
                 logger.log(Level.SEVERE, String.format("Unable to delete database '%s'!", database.getShortName()), ex);

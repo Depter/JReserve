@@ -117,6 +117,7 @@ public class ChangeLog implements Serializable, Comparable<ChangeLog> {
     public int compareTo(ChangeLog o) {
         if(o == null)
             return -1;
+        
         int dif = creationTime.compareTo(o.creationTime);
         return dif!=0? dif : compareId(o);
     }
@@ -129,9 +130,11 @@ public class ChangeLog implements Serializable, Comparable<ChangeLog> {
     
     @Override
     public boolean equals(Object o) {
-        if(o instanceof ChangeLog)
-            return compareTo((ChangeLog)o) == 0;
-        return false;
+        if(!(o instanceof ChangeLog))
+            return false;
+        if(compareTo((ChangeLog)o) != 0)
+            return false;
+        return id!=0? true : super.equals(o);
     }
     
     @Override

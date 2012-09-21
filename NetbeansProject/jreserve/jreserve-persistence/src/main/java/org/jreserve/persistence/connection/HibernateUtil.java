@@ -36,7 +36,7 @@ public class HibernateUtil {
     }
     
     private static SessionFactory loginToDb(PersistenceDatabase db) {
-        logger.log(Level.INFO, "Logging into database '%s'.", db.getShortName());
+        logger.log(Level.INFO, "Logging into database \"{0}\".", db.getShortName());
         LoginDialog dialog = new LoginDialog(db);
         dialog.setVisible(true);
         return dialog.isCancelled()? null : dialog.getSessionFactory();
@@ -50,7 +50,7 @@ public class HibernateUtil {
     
     private static void setUsedDb(PersistenceDatabase db) {
         HibernateUtil.database = db;
-        logger.log(Level.INFO, "Database '%s' is marked as used.", db.getShortName());
+        logger.log(Level.INFO, "Database \"{0}\" is marked as used.", db.getShortName());
         DatabaseUtil.setUsed(db, true);
     }
     
@@ -86,7 +86,7 @@ public class HibernateUtil {
     
     private static void closePersistenceDatabase(boolean appClosing) {
         if(appClosing || database == null) return;
-        logger.log(Level.INFO, "Database '%s' is marked as unused.", database.getShortName());
+        logger.log(Level.INFO, "Database \"{0}\" is marked as unused.", database.getShortName());
         DatabaseUtil.setUsed(database, false);
         HibernateUtil.database = null;
     }

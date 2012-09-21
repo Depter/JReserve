@@ -75,7 +75,7 @@ public final class CloseDatabaseAction implements ActionListener {
     }
     
     private boolean saveDatabase(AbstractDatabase database) {
-        logger.log(Level.INFO, "Closing database: %s", database.getShortName());
+        logger.log(Level.INFO, "Closing database: \"{0}\"", database.getShortName());
         try {
             closeDatabase(database);
             return true;

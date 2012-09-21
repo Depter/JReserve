@@ -30,10 +30,23 @@ class LogLevelTableModel extends DefaultTableModel {
     
     LogLevelTableModel() {
         Properties props = LoggerProperties.getProperties();
-        initProperties(props);
     }
     
-    private void initProperties(Properties props) {
+    void loadProperties(Properties props) {
+        deleteRows();
+        addLoggerLevels(props);
+        int size = loggers.size();
+        super.fireTableRowsInserted(0, size);
+    }
+    
+    private void deleteRows() {
+        int size = loggers.size();
+        loggers.clear();
+        levels.clear();
+        super.fireTableRowsDeleted(size, size);
+    }
+    
+    private void addLoggerLevels(Properties props) {
         for(String key : props.stringPropertyNames())
             if(isLevelProperty(key))
                 addLevelProperty(key, props.getProperty(key));
@@ -150,6 +163,6 @@ class LogLevelTableModel extends DefaultTableModel {
     
     void storeLevels(Properties props) {
         for(String logger : loggers)
-            props.put(logger, levels.get(logger).getName());
+            props.put(logger+LEVEL_END, levels.get(logger).getName());
     }
 }

@@ -48,6 +48,7 @@ public class DataTypePanel extends JPanel implements TableModelListener, ListSel
     private JButton resetButton;
     private JLabel msgLabel;
     private boolean isValid = true;
+    private int clickedRow = -1;
     
     public DataTypePanel() {
         this.addButtons = true;
@@ -81,6 +82,7 @@ public class DataTypePanel extends JPanel implements TableModelListener, ListSel
         table.getSelectionModel().addListSelectionListener(this);
         table.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
         table.addMouseListener(new PopUpListener());
+        table.setFillsViewportHeight(true);
     }
     
     private JPanel getSouthPanel() {
@@ -135,13 +137,20 @@ public class DataTypePanel extends JPanel implements TableModelListener, ListSel
         } else if (source == resetButton) {
             tableModel.reloadDefaults();
         } else if (source instanceof JMenuItem) {
-            deleteRows();
+            deleteClickedRows();
         }
     }
 
     private void deleteRows() {
         DTDummy[] dummies = getDummies(table.getSelectedRows());
         tableModel.removeDummies(dummies);
+    }
+    
+    private void deleteClickedRows() {
+        if(table.getSelectedRows().length > 0)
+            deleteRows();
+        else if(clickedRow >= 0)
+            tableModel.removeDummies(getDummies(new int[]{clickedRow}));
     }
     
     private DTDummy[] getDummies(int[] rows) {
@@ -250,6 +259,7 @@ public class DataTypePanel extends JPanel implements TableModelListener, ListSel
         private void popUp(MouseEvent evt) {
             int x = evt.getX();
             int y = evt.getY();
+            clickedRow = table.rowAtPoint(evt.getPoint());
             getPopUp().show(table, x, y);
         }
         

@@ -93,7 +93,6 @@ public class RootElement extends ProjectElement {
         
     private void loadingFinnished(RootLoader loader) {
         try {
-            LOADING_CHILD.stop();
             setChildren(loader.get());
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
@@ -127,7 +126,6 @@ public class RootElement extends ProjectElement {
         private void initialize() {
             task = RequestProcessor.getDefault().create(this);
             progress = ProgressHandleFactory.createHandle(Bundle.LBL_RootElement_loadingmsg());
-            progress.switchToIndeterminate();
         }
         
         void start() {
@@ -138,6 +136,7 @@ public class RootElement extends ProjectElement {
         public void run() {
             try {
                 progress.start();
+                progress.switchToIndeterminate();
                 openSession();
                 elements = loadElements();
             } catch(Exception lex) {

@@ -18,53 +18,41 @@ public abstract class AbstractElementCache<T, E> {
     protected final static Logger logger = Logger.getLogger(AbstractElementCache.class.getName());
     
     private Map<Long, Set<E>> saveCache = new HashMap<Long, Set<E>>();
+    private Map<Long, Set<E>> deleteCache = new HashMap<Long, Set<E>>();
+    
+    public synchronized List<E> getValues(T key) {
+        Set<E> cache = getCache(key);
+        List<E> result = new ArrayList<E>(cache);
+        Collections.sort(result, getComparator());
+        return result;
+    }
     
     protected Set<E> getCache(T key) {
-        long id = getId(key);
-        return getCache(id);
-    }
-    
-    protected Set<E> getCache(long id) {
-        Set<E> cache = saveCache.get(id);
-        if(cache == null) {
-            cache = new HashSet<E>();
-            saveCache.put(id, cache);
-        }
-        return cache;
-    }
-    
-    public synchronized void saveValues() {
-        Session session = null;
-        try {
-            session = openSession(true);
-            
-            for(Long keyId : saveCache.keySet())
-                saveLogs(keyId, session);
-            
-            session.comitTransaction();
-        } catch (RuntimeException ex) {
-            session.rollBackTransaction();
-            logger.log(Level.SEVERE, String.format("%s unable to save values!", getName()), ex);
-            throw ex;
-        }
-    }
-    
-    public synchronized void saveValues(T key) {
         checkKey(key);
-        Session session = null;
-        try {
-            session = openSession(true);
-            session.update(key);
-            saveLogs(getId(key), session);
-            session.comitTransaction();
-        } catch (RuntimeException ex) {
-            session.rollBackTransaction();
-            logger.log(Level.SEVERE, String.format("%s unable to save values for '%s'!", getName(), keyToString(key)), ex);
-            throw ex;
-        }
+        Set<E> cache = saveCache.get(getId(key));
+        return cache!=null? cache : initCache(key);
     }
     
-    protected abstract String getName();
+    protected abstract void checkKey(T key);
+    
+    protected abstract long getId(T key);
+    
+    private Set<E> initCache(T key) {
+        Session session = null;
+        try {
+            session = openSession(false);
+            session.update(key);
+            Query query = createQuery(session, key);
+            Set<E> cache = new HashSet<E>(query.getResultList());
+            saveCache.put(getId(key), cache);
+            return cache;
+        } catch (RuntimeException ex) {
+            logger.log(Level.SEVERE, String.format("%s unable to load elements for '%s'!", getName(), keyToString(key)), ex);
+            throw ex;
+        } finally {
+            session.close();
+        }
+    }
     
     protected Session openSession(boolean isTransaction) {
         PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
@@ -74,69 +62,98 @@ public abstract class AbstractElementCache<T, E> {
         return session;
     }
     
-    protected void saveLogs(long projectId, Session session) {
-        Set<E> cache = saveCache.get(projectId);
-        if(cache != null && !cache.isEmpty())
-            saveLogs(cache, session);
-        saveCache.remove(projectId);
-    }
-    
-    private void saveLogs(Set<E> entities, Session session) {
-        for(E entity : entities) {
-            session.persist(entity);
-            logger.log(Level.FINER, "%s saving value: %s", new Object[]{getName(), entryToString(entity)});
-        }
-    }
-    
-    protected String entryToString(E entity) {
-        return entity==null? "null" : entity.toString();
-    }
-    
-    public synchronized List<E> getValues(T key) {
-        checkKey(key);
-        List<E> result = queryChanges(key);
-        result.addAll(getCachedChanges(key));
-        Collections.sort(result, getComparator());
-        return result;
-    }
-    
-    protected abstract void checkKey(T key);
-    
-    private List<E> queryChanges(T key) {
-        Session session = null;
-        try {
-            session = openSession(false);
-            session.update(key);
-            Query query = createQuery(session, key);
-            return query.getResultList();
-        } catch (RuntimeException ex) {
-            logger.log(Level.SEVERE, String.format("%s unable to load elements for '%s'!", getName(), keyToString(key)), ex);
-            throw ex;
-        } finally {
-            session.close();
-        }
-    }
-    
     protected abstract Query createQuery(Session session, T key);
     
-    protected String keyToString(T key) {
-        return key==null? "null" : key.toString();
-    }
+    protected abstract String getName();
     
     protected abstract Comparator<E> getComparator();
     
-    protected List<E> getCachedChanges(T key) {
-        long id = getId(key);
-        return getCachedChanges(id);
+    private String keyToString(T key) {
+        return key==null? "null" : key.toString();
     }
     
-    protected abstract long getId(T key);
+    public synchronized void saveValues() {
+        Session session = null;
+        try {
+            session = openSession(true);
+            
+            for(Long keyId : getIds())
+                updateDatabase(keyId, session);
+            
+            session.comitTransaction();
+        } catch (RuntimeException ex) {
+            session.rollBackTransaction();
+            throw ex;
+        }
+    }
     
-    private List<E> getCachedChanges(long id) {
+    protected Set<Long> getIds() {
+        Set<Long> ids = new HashSet<Long>(saveCache.keySet());
+        ids.addAll(deleteCache.keySet());
+        return ids;
+    }
+    
+    protected void updateDatabase(Long id, Session session) {
+        deleteValues(id, session);
+        saveValues(id, session);
+    }
+    
+    protected void deleteValues(Long id, Session session) {
+        Set<E> cache = deleteCache.remove(id);
+        if(cache != null && !cache.isEmpty())
+            deleteValues(cache, session);
+    }
+    
+    private void deleteValues(Set<E> cache, Session session) {
+        for(E entity : cache)
+            if(!isNew(entity))
+                session.delete(entity);
+    }
+    
+    protected void saveValues(Long id, Session session) {
         Set<E> cache = saveCache.get(id);
-        if(cache == null || cache.isEmpty())
-            return new ArrayList<E>();
-        return new ArrayList<E>(cache);
+        if(cache != null && !cache.isEmpty())
+            saveValues(cache, session);
+    }
+    
+    private void saveValues(Set<E> entities, Session session) {
+        for(E entity : entities) {
+            persists(session, entity);
+            logger.log(Level.FINER, "{0} saving value: \"{1}\"", new Object[]{getName(), entryToString(entity)});
+        }
+    }
+    
+    protected void persists(Session session, E entity) {
+        try {
+            if(isNew(entity))
+                session.persist(entity);
+            else
+                session.update(entity);
+        } catch (RuntimeException ex) {
+            logger.log(Level.SEVERE, String.format("%s unable to save value: %s", getName(), entity.toString()), ex);
+            throw ex;
+        }
+    }
+    
+    protected abstract boolean isNew(E entity);
+    
+    private String entryToString(E entity) {
+        return entity==null? "null" : entity.toString();
+    }
+    
+    public synchronized void saveValues(T key) {
+        checkKey(key);
+        Session session = null;
+        try {
+            session = openSession(true);
+            session.update(key);
+            updateDatabase(getId(key), session);
+            session.comitTransaction();
+        } catch (RuntimeException ex) {
+            session.rollBackTransaction();
+            logger.log(Level.SEVERE, String.format("%s unable to save values for '%s'!", getName(), keyToString(key)), ex);
+            throw ex;
+        }
     }
     
     protected void addValue(T key, E entry) {
@@ -146,6 +163,29 @@ public abstract class AbstractElementCache<T, E> {
     
     protected void deleteValue(T key, E entry) {
         checkKey(key);
-        getCache(key).remove(entry);
+        if(getCache(key).remove(entry))
+            getDeleteCache(key).add(entry);
+    }
+    
+    private Set<E> getDeleteCache(T key) {
+        Long id = getId(key);
+        Set<E> cache = deleteCache.get(id);
+        if(cache == null) {
+            cache = new HashSet<E>();
+            deleteCache.put(id, cache);
+        }
+        return cache;
+    }
+    
+    public synchronized void clearCache() {
+        saveCache.clear();
+        deleteCache.clear();
+    }
+    
+    public synchronized void clearCache(T key) {
+        checkKey(key);
+        Long id = getId(key);
+        saveCache.remove(id);
+        deleteCache.remove(id);
     }
 }

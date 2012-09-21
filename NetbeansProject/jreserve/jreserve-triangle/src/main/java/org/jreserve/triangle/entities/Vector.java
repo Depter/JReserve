@@ -23,6 +23,8 @@ import org.jreserve.project.entities.Project;
     table=EntityRegistration.TABLE,
     pkColumnName=EntityRegistration.ID_COLUMN,
     valueColumnName=EntityRegistration.VALUE_COLUMN,
+    initialValue=EntityRegistration.INITIAL_VALUE,
+    allocationSize=EntityRegistration.ALLOCATION_SIZE,
     pkColumnValue="org.jreserve.triangle.entities.Vector"
 )
 public class Vector extends AbstractData implements Serializable {

@@ -74,11 +74,6 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog> {
     protected long getId(Project project) {
         return project.getId();
     }
-
-    @Override
-    protected String keyToString(Project project) {
-        return project==null? "null" : project.getPath();
-    }
     
     public synchronized void addChange(Project project, ChangeLog.Type type, String log) {
         ChangeLog change = new ChangeLog(project, type, log);
@@ -116,5 +111,10 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog> {
             return;
         for(ChangeLogListener l : new ArrayList<ChangeLogListener>(pl))
             l.changeLogAdded(log);
+    }
+
+    @Override
+    protected boolean isNew(ChangeLog entity) {
+        return entity.getId() == 0;
     }
 }

@@ -1,6 +1,7 @@
 package org.jreserve.project.system.management;
 
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.system.ProjectElement;
@@ -18,6 +19,8 @@ import org.openide.nodes.Node;
  */
 public class AbstractProjectElementDeletable implements Deletable {
 
+    private final static Logger logger = Logger.getLogger(AbstractProjectElementDeletable.class.getName());
+    
     protected ProjectElement element;
     
     public AbstractProjectElementDeletable(ProjectElement element) {
@@ -81,18 +84,29 @@ public class AbstractProjectElementDeletable implements Deletable {
     
     /**
      * Removes the representing {@link ProjectElement ProjectElement}
-     * from it's parent. It is guaranteed that this operation will
-     * be executed on the event dispatcher thread.
+     * from it's parent. At first, if this element is 
+     * {@link ProjectElement#isAttached() attached}, the registered 
+     * {@link ProjectSystemDeletionListener ProjectSystemDeletionListeners} will
+     * be called from the current thread. After this the element will be removed
+     * from the project tree on the event dispatcher thread.
      */
     protected void deleteProjectElement() {
+        notifyDeleteListeners();
+        deleteElementFromParent();
+    }
+    
+    private void notifyDeleteListeners() {
+            boolean attached = element.isAttached();
+            ProjectElement parent = element.getParent();
+            if(attached)
+                ProjectElementUtil.deleted(parent, element);
+    }
+    
+    private void deleteElementFromParent() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                boolean attached = element.isAttached();
-                ProjectElement parent = element.getParent();
                 element.removeFromParent();
-                if(attached)
-                    ProjectElementUtil.deleted(parent, element);
             }
         });
     }

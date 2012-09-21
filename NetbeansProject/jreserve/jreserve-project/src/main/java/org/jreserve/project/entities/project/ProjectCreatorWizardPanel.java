@@ -210,7 +210,7 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
         try {
             session = persistenceUnit.getSession();
             project = createPersistedProject(session, ct);
-            logger.log(Level.INFO, "Project '%s' created.", project.getPath());
+            logger.log(Level.INFO, "Project \"{0}\" created.", project.getPath());
         } catch (Exception ex) {
             if(session != null)
                 session.rollBackTransaction();

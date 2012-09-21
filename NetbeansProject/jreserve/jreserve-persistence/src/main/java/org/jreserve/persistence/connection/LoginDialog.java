@@ -279,7 +279,7 @@ class LoginDialog extends javax.swing.JDialog {
         
         @Override
         protected SessionFactory doInBackground() throws Exception {
-            logger.log(Level.INFO, "Checking connection to '%s' with driver '%s'.", new Object[]{url, driver});
+            logger.log(Level.INFO, "Checking connection to \"{0}\" with driver \"{1}\".", new Object[]{url, driver});
             ProxyDriver.registerDriver(driver);
             return createFactory();
         }

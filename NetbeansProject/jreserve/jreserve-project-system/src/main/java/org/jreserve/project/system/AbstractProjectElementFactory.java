@@ -46,7 +46,7 @@ public abstract class AbstractProjectElementFactory<T> implements ProjectElement
      * </p>
      */
     protected ProjectElement getChildElement(T value, Session session) {
-        logger.log(Level.FINE, "Loaded project element: %s", value);
+        logger.log(Level.FINE, "Loaded project element: {0}", value);
         ProjectElement element = createProjectElement(value);
         for(ProjectElement child : getChildren(value, session))
             element.addChild(child);

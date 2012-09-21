@@ -32,7 +32,7 @@ class DerbyDatabaseDeleter {
     
     void deleteDatabase() {
         if(dbHome.exists() && shouldDeleteDatabase()) {
-            logger.log(Level.INFO, "Deleting database at: %s", dbHome.getAbsolutePath());
+            logger.log(Level.INFO, "Deleting database at: \"{0}\"", dbHome.getAbsolutePath());
             if(!deleteFile(dbHome))
                 showWarning();
         }
@@ -63,10 +63,10 @@ class DerbyDatabaseDeleter {
     private boolean deleteSingleFile(File file) {
         file.delete();
         if(file.exists()) {
-            logger.log(Level.WARNING, "Unable to delete file: %s", file.getAbsolutePath());
+            logger.log(Level.WARNING, "Unable to delete file: \"{0}\"", file.getAbsolutePath());
             return false;
         } else {
-            logger.log(Level.FINER, "Deleting file: %s", file.getAbsolutePath());
+            logger.log(Level.FINER, "Deleting file: \"{0}\"", file.getAbsolutePath());
             return true;
         }
     }

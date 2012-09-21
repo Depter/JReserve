@@ -172,7 +172,7 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
         try {
             session = persistenceUnit.getSession();
             ClaimType ct = createPersistedClaimType(session, lob);
-            logger.log(Level.INFO, "ClaimType '%s' created.", ct.getPath());
+            logger.log(Level.INFO, "ClaimType \"{0}\" created.", ct.getPath());
             return ct;
         } catch (Exception ex) {
             if(session != null)
