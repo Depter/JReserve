@@ -1,7 +1,8 @@
 package org.jreserve.data;
 
 import java.util.Date;
-import org.jreserve.project.entities.ClaimType;
+import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.project.entities.Project;
 
 /**
  *
@@ -10,38 +11,40 @@ import org.jreserve.project.entities.ClaimType;
  */
 public class Criteria {
     
-    private ClaimType ct;
-    private DataType dataType = null;
-    private Date fromDate;
-    private Date toDate;
+    private Project project;
+    private ProjectDataType dataType = null;
+    private Date fromAccidentDate;
+    private Date toAccidentDate;
+    private Date fromDevelopmentDate;
+    private Date toDevelopmentDate;
 
-    public Criteria(ClaimType ct) {
-        if(ct == null)
-            throw new NullPointerException("ClaimType can not be null!");
-        this.ct = ct;
+    public Criteria(Project project) {
+        if(project == null)
+            throw new NullPointerException("Project can not be null!");
+        this.project = project;
     }
 
-    public ClaimType getClaimType() {
-        return ct;
+    public Project getProject() {
+        return project;
     }
 
-    public DataType getDataType() {
+    public ProjectDataType getDataType() {
         return dataType;
     }
 
-    public Criteria setDataType(DataType dataType) {
+    public Criteria setDataType(ProjectDataType dataType) {
         this.dataType = dataType;
         return this;
     }
 
-    public Date getFromDate() {
-        return fromDate;
+    public Date getFromAccidentDate() {
+        return fromAccidentDate;
     }
     
-    public Criteria setFromDate(Date fromDate) {
-        if(fromDate != null && toDate != null && fromDate.after(toDate))
-            throw getDateException(fromDate, toDate);
-        this.fromDate = fromDate;
+    public Criteria setFromAccidentDate(Date fromDate) {
+        if(fromDate != null && toAccidentDate != null && fromDate.after(toAccidentDate))
+            throw getDateException(fromDate, toAccidentDate);
+        this.fromAccidentDate = fromDate;
         return this;
     }
 
@@ -51,20 +54,46 @@ public class Criteria {
         return new IllegalArgumentException(msg);
     }
 
-    public Date getToDate() {
-        return toDate;
+    public Date getToAccidentDate() {
+        return toAccidentDate;
     }
 
-    public Criteria setToDate(Date toDate) {
-        if(fromDate != null && toDate != null && fromDate.after(toDate))
-            throw getDateException(fromDate, toDate);
-        this.toDate = toDate;
+    public Criteria setToAccidentDate(Date toDate) {
+        if(fromAccidentDate != null && toDate != null && fromAccidentDate.after(toDate))
+            throw getDateException(fromAccidentDate, toDate);
+        this.toAccidentDate = toDate;
+        return this;
+    }
+
+    public Date getFromDevelopmentDate() {
+        return fromDevelopmentDate;
+    }
+    
+    public Criteria setFromDevelopmentDate(Date fromDate) {
+        if(fromDate != null && toDevelopmentDate != null && fromDate.after(toDevelopmentDate))
+            throw getDateException(fromDate, toDevelopmentDate);
+        this.fromDevelopmentDate = fromDate;
+        return this;
+    }
+
+    public Date getToDevelopmentDate() {
+        return toDevelopmentDate;
+    }
+
+    public Criteria setToDevelopmentDate(Date toDate) {
+        if(fromDevelopmentDate != null && toDate != null && fromDevelopmentDate.after(toDate))
+            throw getDateException(fromDevelopmentDate, toDate);
+        this.toDevelopmentDate = toDate;
         return this;
     }
 
     @Override
     public String toString() {
-        String msg = "Criteria: claim = %s; type = %s; from = %tF; to = %tF";
-        return String.format(msg, ct, dataType, fromDate, toDate);
+        String msg = "Criteria: project = %s; type = %s; "+
+                "fromAccident = %tF; toAccidnet = %tF; "+
+                "fromDevelopment = %tF; toDevelopment = %tF";
+        return String.format(msg, project, dataType, 
+                fromAccidentDate, toAccidentDate,
+                fromDevelopmentDate, toDevelopmentDate);
     }
 }

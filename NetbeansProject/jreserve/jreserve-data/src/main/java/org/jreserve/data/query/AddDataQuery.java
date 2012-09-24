@@ -1,11 +1,12 @@
 package org.jreserve.data.query;
 
+import java.util.Date;
 import java.util.List;
 import org.jreserve.data.Data;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.data.entities.ClaimValuePk;
 import org.jreserve.persistence.Session;
-import org.jreserve.project.entities.ClaimType;
+import org.jreserve.project.entities.Project;
 
 /**
  *
@@ -14,48 +15,43 @@ import org.jreserve.project.entities.ClaimType;
  */
 public class AddDataQuery {
     
-    private boolean overwrite = false;
-    
-    public AddDataQuery(boolean overwrite) {
-        this.overwrite = overwrite;
+    public AddDataQuery() {
     }
     
-    public void add(Session session, ClaimType ct, List<Data> datas) {
+    public void add(Session session, Project project, List<Data> datas) {
+        session.merge(project);
         for(Data data : datas)
-            add(session, ct, data);
+            add(session, project, data);
     }
     
-    private void add(Session session, ClaimType ct, Data data) {
-        if(overwrite)
-            overwrite(session, ct, data);
-        else
-            createIfNew(session, ct, data);
-    }
-    
-    private ClaimValue getExisting(Session session, ClaimType ct, Data data) {
-        ClaimValuePk pk = new ClaimValuePk(ct, data);
-        return session.find(ClaimValue.class, pk);
-    }
-    
-    private void overwrite(Session session, ClaimType ct, Data data) {
-        ClaimValue existing = getExisting(session, ct, data);
-        if(existing == null) {
-            create(session, ct, data);
-        } else {
-            existing.setClaimValue(data.getValue());
-            session.update(existing);
+    private void add(Session session, Project project, Data data) {
+        boolean update = true;
+        ClaimValue cv = getPersistedClaimValue(session, project, data);
+        if(cv == null) {
+            cv = createClaimValue(project, data);
+            update = false;
         }
-    }
-    
-    private void create(Session session, ClaimType ct, Data data) {
-        ClaimValue cv = new ClaimValue(ct, data.getDataType(), data.getAccidentDate(), data.getDevelopmentDate());
         cv.setClaimValue(data.getValue());
-        session.persist(cv);    
+        saveClaimValue(update, session, cv);
     }
     
-    private void createIfNew(Session session, ClaimType ct, Data data) {
-        ClaimValue existing = getExisting(session, ct, data);
-        if(existing == null)
-            create(session, ct, data);
+    private ClaimValue getPersistedClaimValue(Session session, Project project, Data data) {
+        ClaimValuePk id = new ClaimValuePk(project, data);
+        return session.find(ClaimValue.class, id);
+    }
+    
+    private ClaimValue createClaimValue(Project project, Data data) {
+        Date accident = data.getAccidentDate();
+        Date development = data.getDevelopmentDate();
+        ClaimValue cv = new ClaimValue(project, data.getDataType(), accident, development);
+        return cv;
+    }
+    
+    private void saveClaimValue(boolean update, Session session, ClaimValue cv) {
+        if(update) {
+            session.update(cv);
+        } else {
+            session.persist(cv);
+        }
     }
 }

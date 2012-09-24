@@ -3,7 +3,7 @@ package org.jreserve.data.entities;
 import java.io.Serializable;
 import java.util.Date;
 import org.jreserve.data.Data;
-import org.jreserve.project.entities.ClaimType;
+import org.jreserve.project.entities.Project;
 
 /**
  *
@@ -13,8 +13,8 @@ import org.jreserve.project.entities.ClaimType;
 public class ClaimValuePk implements Serializable {
     private final static long serialVersionUID = 1L;
     
-    private int dataTypeId;
-    private long claimType;
+    private long project;
+    private long dataType;
     
     private Date accidentDate;
     private Date developmentDate;
@@ -22,9 +22,9 @@ public class ClaimValuePk implements Serializable {
     public ClaimValuePk() {
     }
     
-    public ClaimValuePk(ClaimType ct, Data data) {
-        this.claimType = ct.getId();
-        this.dataTypeId = data.getDataType().getDbId();
+    public ClaimValuePk(Project project, Data data) {
+        this.project = project.getId();
+        this.dataType = data.getDataType().getDbId();
         this.accidentDate = data.getAccidentDate();
         this.developmentDate = data.getDevelopmentDate();
     }
@@ -33,12 +33,12 @@ public class ClaimValuePk implements Serializable {
         return accidentDate;
     }
 
-    public long getClaimType() {
-        return claimType;
+    public long getProject() {
+        return project;
     }
 
-    public int getDataTypeId() {
-        return dataTypeId;
+    public long getProjectDataType() {
+        return dataType;
     }
 
     public Date getDevelopmentDate() {
@@ -53,16 +53,16 @@ public class ClaimValuePk implements Serializable {
     }
     
     private boolean equals(ClaimValuePk o) {
-        return claimType == o.claimType &&
-               dataTypeId == o.dataTypeId &&
+        return project == o.project &&
+               dataType == o.dataType &&
                accidentDate.equals(o.accidentDate) &&
                developmentDate.equals(o.developmentDate);
     }
     
     @Override
     public int hashCode() {
-        int hash = 31 + dataTypeId;
-        hash = 17 * hash + (int) claimType;
+        int hash = 31 + (int) dataType;
+        hash = 17 * hash + (int) project;
         hash = 17 * hash + accidentDate.hashCode();
         return 17 * hash + developmentDate.hashCode();
     }
@@ -70,6 +70,6 @@ public class ClaimValuePk implements Serializable {
     @Override
     public String toString() {
         return String.format("ClaimValuePk [%d; %d; %tF; %tF]",
-              dataTypeId, claimType, accidentDate, developmentDate);
+              dataType, project, accidentDate, developmentDate);
     }
 }

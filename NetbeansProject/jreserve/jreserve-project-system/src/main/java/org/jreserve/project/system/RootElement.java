@@ -238,6 +238,16 @@ public class RootElement extends ProjectElement {
         }
 
         @Override
+        public Object merge(Object entity) {
+            throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
+        }
+
+        @Override
+        public Object[] merge(Object... entity) {
+            throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
+        }
+
+        @Override
         public void update(Object entity) {
             throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
         }

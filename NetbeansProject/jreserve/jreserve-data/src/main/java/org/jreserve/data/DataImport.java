@@ -1,0 +1,125 @@
+package org.jreserve.data;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import org.jreserve.project.entities.Project;
+
+/**
+ *
+ * @author Peter Decsi
+ * @version 1.0
+ */
+public abstract class DataImport {
+    
+    public static void importTable(DataTable table, ImportType type) {
+        DataImport impl = getImplementation(table, type);
+        impl.importTable();
+    }
+    
+    private static DataImport getImplementation(DataTable table, ImportType type) {
+        switch(type) {
+            case DELETE_OLD:
+                return new DeleteOldDataImport(table);
+            case ADD_NEW:
+                return new AddNewDataImport(table);
+            default:
+                throw new IllegalArgumentException("Unknown import type: "+type);
+        }
+    }
+    
+    protected DataSource ds;
+    protected DataTable table;
+    
+    private DataImport(DataTable table) {
+        ds = new DataSource();
+        this.table = table;
+    }
+    
+    private void importTable() {
+        ds.open();
+        try {
+            processTable();
+            ds.commit();
+        } catch (RuntimeException ex) {
+            ds.rollBack();
+        }
+    }
+    
+    protected abstract void processTable();
+        
+    protected List<Data> getTableAsList() {
+        List<Data> result = new ArrayList<Data>();
+        for(Date accidentDate : table.getAccidentDates())
+            result.addAll(table.getDatas(accidentDate));
+        return result;
+    }
+    
+    public static enum ImportType {
+        ADD_NEW,
+        DELETE_OLD
+    }
+    
+    private static class DeleteOldDataImport extends DataImport {
+        
+        private DeleteOldDataImport(DataTable table) {
+            super(table);
+        }
+
+        @Override
+        protected void processTable() {
+            deleteOldValues();
+            Project project = table.getProject();
+            List<Data> datas = super.getTableAsList();
+            ds.saveData(project, datas);
+        }
+        
+        private void deleteOldValues() {
+            Criteria delete = createDeleteCriteria();
+            ds.clearData(delete);
+        }
+        
+        private Criteria createDeleteCriteria() {
+            return new Criteria(table.getProject())
+                    .setDataType(table.getDataType())
+                    .setFromAccidentDate(table.getFirstAccidnetDate())
+                    .setToAccidentDate(table.getLastAccidentDate());
+        }
+    }
+    
+    private static class AddNewDataImport extends DataImport {
+    
+        private AddNewDataImport(DataTable table) {
+            super(table);
+        }
+
+        @Override
+        protected void processTable() {
+            List<Data> persisted = getPersistedData();
+            List<Data> newData = getNewData(persisted);
+            Project project = table.getProject();
+            ds.saveData(project, newData);
+        }
+        
+        private List<Data> getPersistedData() {
+            Criteria c = createCriteria();
+            return ds.getData(c);
+        }
+        
+        private Criteria createCriteria() {
+            return new Criteria(table.getProject())
+                    .setDataType(table.getDataType())
+                    .setFromAccidentDate(table.getFirstAccidnetDate())
+                    .setToAccidentDate(table.getLastAccidentDate());
+        }
+        
+        private List<Data> getNewData(List<Data> persisted) {
+            List<Data> newData = getTableAsList();
+            for(Iterator<Data> it = newData.iterator(); it.hasNext();)
+                if(persisted.contains(it.next()))
+                    it.remove();
+            return newData;
+        }
+    }
+}

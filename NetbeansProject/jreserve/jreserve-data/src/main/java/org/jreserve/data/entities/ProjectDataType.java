@@ -112,13 +112,21 @@ public class ProjectDataType implements Serializable {
     @Override
     public boolean equals(Object o) {
         if(o instanceof ProjectDataType)
-            return equals((ProjectDataType)o);
+            return compareTo((ProjectDataType)o) == 0;
         return false;
     }
     
-    public boolean equals(ProjectDataType dt) {
-        return project.equals(dt.project) &&
-               dbId == dt.dbId;
+    public int compareTo(ProjectDataType o) {
+        if(o == null) return -1;
+        int dif = compareProject(project);
+        if(dif != 0) return dif;
+        return dbId - o.dbId;
+    }
+    
+    private int compareProject(Project o) {
+        if(project == null)
+            return o==null? 0 : 1;
+        return o==null? -1 : (int) (project.getId() - o.getId());
     }
     
     @Override

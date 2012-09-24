@@ -41,7 +41,7 @@ public abstract class AbstractElementCache<T, E> {
         Session session = null;
         try {
             session = openSession(false);
-            session.update(key);
+            session.merge(key);
             Query query = createQuery(session, key);
             Set<E> cache = new HashSet<E>(query.getResultList());
             saveCache.put(getId(key), cache);
@@ -128,7 +128,7 @@ public abstract class AbstractElementCache<T, E> {
             if(isNew(entity))
                 session.persist(entity);
             else
-                session.update(entity);
+                session.merge(entity);
         } catch (RuntimeException ex) {
             logger.log(Level.SEVERE, String.format("%s unable to save value: %s", getName(), entity.toString()), ex);
             throw ex;
@@ -146,7 +146,7 @@ public abstract class AbstractElementCache<T, E> {
         Session session = null;
         try {
             session = openSession(true);
-            session.update(key);
+            session.merge(key);
             updateDatabase(getId(key), session);
             session.comitTransaction();
         } catch (RuntimeException ex) {

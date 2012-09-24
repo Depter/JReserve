@@ -1,11 +1,12 @@
 package org.jreserve.data;
 
 import java.util.List;
+import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.data.query.*;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
-import org.jreserve.project.entities.ClaimType;
+import org.jreserve.project.entities.Project;
 
 /**
  *
@@ -36,12 +37,12 @@ public class DataSource {
     }
     
     /**
-     * Returns the existing {@link DataType DataTypes} for the give
-     * {@link ClaimType ClaimType}.
+     * Returns the existing {@link ProjectDataType ProjectDataTypes} for the 
+     * given {@link Project project}.
      */
-    public List<DataType> getDataTypes(ClaimType ct) {
-        DataQuery<List<DataType>> query = new DistinctDataTypesQuery();
-        return query.query(session, new Criteria(ct));
+    public List<ProjectDataType> getDataTypes(Project project) {
+        DataQuery<List<ProjectDataType>> query = new DistinctDataTypesQuery();
+        return query.query(session, new Criteria(project));
     }
     
     /**
@@ -61,21 +62,11 @@ public class DataSource {
     }
     
     /**
-     * Saves the given datas. If a datapoint for the given dates and
-     * data type is already exists, the old value is preserved.
+     * Saves the given data. If a datapoint for the given dates and
+     * data type is already exists, the old value is overwritten.
      */
-    public void addIfNotExists(ClaimType ct, List<Data> data) {
-        AddDataQuery query = new AddDataQuery(false);
-        query.add(session, ct, data);
-    }
-    
-    /**
-     * Saves the given datas. If a datapoint for the given dates and
-     * data type is already exists it will be overwritten with the
-     * new value.
-     */
-    public void overwriteIfExists(ClaimType ct, List<Data> data) {
-        AddDataQuery query = new AddDataQuery(true);
-        query.add(session, ct, data);
+    public void saveData(Project project, List<Data> data) {
+        AddDataQuery query = new AddDataQuery();
+        query.add(session, project, data);
     }
 }

@@ -3,10 +3,8 @@ package org.jreserve.data.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
-import org.jreserve.data.DataType;
-import org.jreserve.data.DataTypeUtil;
 import org.jreserve.persistence.EntityRegistration;
-import org.jreserve.project.entities.ClaimType;
+import org.jreserve.project.entities.Project;
 
 /**
  *
@@ -25,12 +23,13 @@ public class ClaimValue implements Serializable {
     
     @Id
     @ManyToOne
-    @JoinColumn(name="CLAIM_TYPE_ID", referencedColumnName="ID", nullable=false)
-    private ClaimType claimType;
+    @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
+    private Project project;
     
     @Id
-    @Column(name="DATA_TYPE_ID", nullable=false)
-    private int dataTypeId;
+    @ManyToOne
+    @JoinColumn(name="DATA_TYPE_ID", referencedColumnName="ID", nullable=false)
+    private ProjectDataType dataType;
     
     @Id
     @Column(name="ACCIDENT_DATE", nullable=false)
@@ -48,24 +47,24 @@ public class ClaimValue implements Serializable {
     protected ClaimValue() {
     }
     
-    public ClaimValue(ClaimType claimType, DataType dataType, 
+    public ClaimValue(Project project, ProjectDataType dataType, 
             Date accidentDate, Date developmentDate) {
-        initClaimType(claimType);
+        initProject(project);
         initDataType(dataType);
         initAccidentDate(accidentDate);
         initDevelopmentDate(developmentDate);
     }
     
-    private void initClaimType(ClaimType claimType) {
-        if(claimType == null)
-            throw new NullPointerException("ClaimType is null!");
-        this.claimType = claimType;
+    private void initProject(Project project) {
+        if(project == null)
+            throw new NullPointerException("Project is null!");
+        this.project = project;
     }
     
-    private void initDataType(DataType dataType) {
+    private void initDataType(ProjectDataType dataType) {
         if(dataType == null)
             throw new NullPointerException("DataType is null!");
-        this.dataTypeId = dataType.getDbId();
+        this.dataType = dataType;
     }
     
     private void initAccidentDate(Date date) {
@@ -88,12 +87,12 @@ public class ClaimValue implements Serializable {
         throw new IllegalArgumentException(msg);
     }
 
-    public ClaimType getClaimType() {
-        return claimType;
+    public Project getProject() {
+        return project;
     }
 
-    public DataType getDataType() {
-        return DataTypeUtil.parse(dataTypeId);
+    public ProjectDataType getDataType() {
+        return dataType;
     }
 
     public Date getAccidentDate() {
@@ -120,16 +119,16 @@ public class ClaimValue implements Serializable {
     }
     
     private boolean equals(ClaimValue o) {
-        return claimType.equals(o.claimType) &&
-               dataTypeId == o.dataTypeId &&
+        return project.equals(o.project) &&
+               dataType.equals(o.dataType) &&
                accidentDate.equals(o.accidentDate) &&
                developmentDate.equals(o.developmentDate);
     }
     
     @Override
     public int hashCode() {
-        int hash = 31 + claimType.hashCode();
-        hash = 17 * hash + dataTypeId;
+        int hash = 31 + project.hashCode();
+        hash = 17 * hash + dataType.hashCode();
         hash = 17 * hash + accidentDate.hashCode();
         return 17 * hash + developmentDate.hashCode();
     }
@@ -138,7 +137,7 @@ public class ClaimValue implements Serializable {
     public String toString() {
         return String.format(
             "ClaimData [%s; %s; %tF; %tF; %f]",
-            claimType.getName(), DataTypeUtil.parse(dataTypeId),
+            project.getName(), dataType.getName(),
             accidentDate, developmentDate, claimValue);
     }
 }

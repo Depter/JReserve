@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="JReserve">
+        <folder name="ImportWizard">
+            <file name="org-jreserve-data-importdialog-clipboardtable-ClipboardTableDataImportWizard.instance">
+                <!-- org.jreserve.data.importdialog.clipboardtable.ClipboardTableDataImportWizard -->
+                <attr name="displayName"
+                    bundlevalue="org.jreserve.data.importdialog.clipboardtable.Bundle#LBL.ClipboardTableDataImportWizard.displayName"/>
+                <attr name="iconBase" stringvalue="resources/table_add.png"/>
+                <attr intvalue="10" name="position"/>
+            </file>
+        </folder>
+    </folder>
+    
+</filesystem>

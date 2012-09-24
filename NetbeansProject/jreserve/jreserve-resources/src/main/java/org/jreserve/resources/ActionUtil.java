@@ -51,14 +51,14 @@ public class ActionUtil {
         return files;
     }
     
-    private static List<FileObject> addFiles(List<FileObject> files, FileObject root) {
-        if(root.isFolder()) {
+    private static void addFiles(List<FileObject> files, FileObject root) {
+        if(root == null) {
+        } else if(root.isFolder()) {
             for(FileObject file : root.getChildren())
                 addFiles(files, file);
         } else {
             files.add(root);
         }
-        return files;
     }
     
     private static List<DataObject> getDataObjects(List<FileObject> files) {

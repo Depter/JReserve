@@ -223,7 +223,7 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
     
     private Project createPersistedProject(Session session, ClaimType ct) {
         session.beginTransaction();
-        session.update(ct);
+        session.merge(ct);
         
         Project project = new Project(getName());
         setDescription(project);

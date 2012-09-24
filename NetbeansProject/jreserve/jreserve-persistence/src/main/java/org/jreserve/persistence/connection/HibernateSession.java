@@ -88,11 +88,24 @@ class HibernateSession implements org.jreserve.persistence.Session {
     }
 
     @Override
-    public void update(Object entity) {
-        session.merge(entity);
-        //session.update(entity);
+    public Object merge(Object entity) {
+        return session.merge(entity);
     }
 
+    @Override
+    public Object[] merge(Object... entities) {
+        int size = entities.length;
+        Object[] result = new Object[size];
+        for(int i=0; i<size; i++)
+            result[i] = merge(entities[i]);
+        return result;
+    }
+    
+    @Override
+    public void update(Object entity) {
+        session.update(entity);
+    }
+    
     @Override
     public void update(Object... entities) {
         for(Object entity : entities)

@@ -2,7 +2,7 @@ package org.jreserve.data.query;
 
 import java.util.Date;
 import org.jreserve.data.Criteria;
-import org.jreserve.data.DataType;
+import org.jreserve.data.entities.ProjectDataType;
 
 /**
  *
@@ -15,35 +15,48 @@ class AbstractQuery {
     
     protected String buildCriteria(String begin, Criteria criteria) {
         StringBuilder sb = new StringBuilder(begin);
-        sb.append(" WHERE c.claimTypeId = ").append(criteria.getClaimType().getId());
+        sb.append(" WHERE c.projectId = ").append(criteria.getProject().getId());
         addDataType(sb, criteria.getDataType());
-        addFromDate(sb, criteria.getFromDate());
-        addToDate(sb, criteria.getToDate());
+        addFromAccidentDate(sb, criteria.getFromAccidentDate());
+        addToAccidentDate(sb, criteria.getToAccidentDate());
+        addFromDevelopmentDate(sb, criteria.getFromDevelopmentDate());
+        addToDevelopmentDate(sb, criteria.getToDevelopmentDate());
         return sb.toString();
     }
     
-    private void addDataType(StringBuilder sb, DataType dt) {
+    private void addDataType(StringBuilder sb, ProjectDataType dt) {
         if(dt == null)
             return;
-        sb.append(" AND c.dataTypeId = ").append(dt.getDbId());
+        sb.append(" AND c.dataType.id = ").append(dt.getId());
     }
 
-    private void addFromDate(StringBuilder sb, Date from) {
+    private void addFromAccidentDate(StringBuilder sb, Date from) {
         if(from == null)
             return;
         sb.append(" AND c.accidentDate >= ").append(getDateLiteral(from));
-    }
-
-    private void addToDate(StringBuilder sb, Date to) {
-        if(to == null)
-            return;
-        sb.append(" AND c.developmentDate >= ").append(getDateLiteral(to));
     }
     
     private String getDateLiteral(Date date) {
         if(date == null)
             return null;
         return String.format(DATE_LITERAL, date);
+    }    
+
+    private void addToAccidentDate(StringBuilder sb, Date to) {
+        if(to == null)
+            return;
+        sb.append(" AND c.accidentDate >= ").append(getDateLiteral(to));
     }
-    
+
+    private void addFromDevelopmentDate(StringBuilder sb, Date from) {
+        if(from == null)
+            return;
+        sb.append(" AND c.developmentDate >= ").append(getDateLiteral(from));
+    }
+
+    private void addToDevelopmentDate(StringBuilder sb, Date to) {
+        if(to == null)
+            return;
+        sb.append(" AND c.developmentDate >= ").append(getDateLiteral(to));
+    }
 }

@@ -47,6 +47,5 @@ public class PersistentSavable<T> extends AbstractProjectElementSavable<T> {
 
     protected void saveEntity() {
         session.update(element.getValue());
-        //session.persist(element.getValue());
     }
 }

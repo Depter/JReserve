@@ -2,19 +2,12 @@ package org.jreserve.project.system.newdialog;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.beans.PropertyVetoException;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.jreserve.project.system.management.ElementCreatorWizard.Category;
 import org.jreserve.project.system.util.ElementCategoryUtil;
-import org.openide.explorer.ExplorerManager;
-import org.openide.explorer.ExplorerUtils;
-import org.openide.explorer.view.ListView;
-import org.openide.nodes.AbstractNode;
+import org.jreserve.resources.LabeledListPanel;
 import org.openide.nodes.Children;
-import org.openide.nodes.Node;
-import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -159,67 +152,4 @@ class ElementSelectVisualPanel extends JPanel {
     public String getName() {
         return Bundle.LBL_ElementSelectVisualPanel_name();
     }
-    
-    private static class LabeledListPanel extends JPanel implements ExplorerManager.Provider {
-        
-        private final ExplorerManager em = new ExplorerManager();
-        private Lookup lookup;
-        
-        private JLabel label;
-        private ListView list;
-
-        LabeledListPanel(String title) {
-            initComponents(title);
-            em.setRootContext(new AbstractNode(Children.LEAF));
-        }
-        
-        private void initComponents(String title) {
-            setLayout(new BorderLayout());
-            initLabel(title);
-            initList();
-        }
-        
-        private void initLabel(String title) {
-            label = new JLabel(title);
-            add(label, BorderLayout.PAGE_START);
-        }
-        
-        private void initList() {
-            list = new ListView();
-            list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            list.setBorder(new LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-            add(list, BorderLayout.CENTER);
-            lookup = ExplorerUtils.createLookup(em, new ActionMap());
-        }
-        
-        void setChilden(Children children) {
-            em.setRootContext(new AbstractNode(children));
-        }
-        
-        void selectNode(String name) {
-            Node node = em.getRootContext().getChildren().findChild(name);
-            if(node != null)
-                selectNodes(node);
-            else
-                selectNodes();
-        }
-        
-        private void selectNodes(Node... nodes) {
-            try {
-                em.setSelectedNodes(nodes);
-            } catch (PropertyVetoException ex) {
-            }
-        }
-        
-        Lookup getLookup() {
-            return lookup;
-        }
-        
-        @Override
-        public ExplorerManager getExplorerManager() {
-            return em;
-        }
-    
-    }
-
 }

@@ -28,6 +28,10 @@ public interface Session {
     
     public void delete(Object... entity);
     
+    public Object merge(Object entity);
+    
+    public Object[] merge(Object... entity);
+    
     public void update(Object entity);
     
     public void update(Object... entity);

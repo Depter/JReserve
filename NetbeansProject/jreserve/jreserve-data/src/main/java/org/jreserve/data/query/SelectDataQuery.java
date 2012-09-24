@@ -5,8 +5,7 @@ import java.util.Date;
 import java.util.List;
 import org.jreserve.data.Criteria;
 import org.jreserve.data.Data;
-import org.jreserve.data.DataType;
-import org.jreserve.data.DataTypeUtil;
+import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 
@@ -22,9 +21,9 @@ public class SelectDataQuery extends AbstractQuery implements DataQuery<List<Dat
     private final static int COL_DEVELOPMENT = 2;
     private final static int COL_VALÜE = 3;
     
-    private final static String SQL = "SELECT "+
-            "c.dataTypeId, c.accidentDate, c.developmentDate, c.claimValue "+
-            "FROM ClaimValue c";
+    private final static String SQL = 
+        "SELECT c.dataType, c.accidentDate, c.developmentDate, c.claimValue " +
+        "FROM ClaimValue c";
     
     @Override
     public List<Data> query(Session session, Criteria criteria) {
@@ -48,9 +47,8 @@ public class SelectDataQuery extends AbstractQuery implements DataQuery<List<Dat
             .setValue(getValue(record));
     }
     
-    private DataType getDataType(Object[] record) {
-        Number id = (Number) record[COL_DT];
-        return DataTypeUtil.parse(id.intValue());
+    private ProjectDataType getDataType(Object[] record) {
+        return (ProjectDataType) record[COL_DT];
     }
     
     private double getValue(Object[] record) {

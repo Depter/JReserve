@@ -1,24 +1,25 @@
 package org.jreserve.data;
 
 import java.util.Date;
+import org.jreserve.data.entities.ProjectDataType;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class Data {
+public class Data implements Comparable<Data> {
 
-    private DataType dataType;
+    private ProjectDataType dataType;
     private Date accidentDate;
     private Date developmentDate;
     private double value = Double.NaN;
     
-    public DataType getDataType() {
+    public ProjectDataType getDataType() {
         return dataType;
     }
     
-    public Data setDataType(DataType dt) {
+    public Data setDataType(ProjectDataType dt) {
         this.dataType = dt;
         return this;
     }
@@ -57,6 +58,7 @@ public class Data {
         return false;
     }
     
+    @Override
     public int compareTo(Data d) {
         if(d == null) return -1;
         
