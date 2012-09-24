@@ -23,6 +23,10 @@ class DataTableModel extends DefaultTableModel {
     private ProjectDataType dataType;
     private List<DataDummy> dummies = new ArrayList<DataDummy>();
     
+    void rerenderData() {
+        fireTableDataChanged();
+    }
+    
     void setDataType(ProjectDataType dataType) {
         this.dataType = dataType;
         dummies.clear();
@@ -45,9 +49,9 @@ class DataTableModel extends DefaultTableModel {
             case 1:
                 return dataType.isTriangle()?
                        Bundle.LBL_DataTableModel_Development() :
-                       Bundle.LBL_DataTableModel_Value();
+                       dataType.getName();
             case 2:
-                return Bundle.LBL_DataTableModel_Value();
+                return dataType.getName();
             default:
                 throw new IllegalArgumentException("Unknown column index: "+column);
         }

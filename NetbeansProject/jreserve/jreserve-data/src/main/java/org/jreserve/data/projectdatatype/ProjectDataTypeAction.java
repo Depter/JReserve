@@ -20,7 +20,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @ActionRegistration(displayName = "#CTL_ProjectDataTypeAction")
 @ActionReferences({
-    @ActionReference(path= "JReserve/Popup/ProjectRoot-ProjectNode", position = 250)
+    @ActionReference(path= "JReserve/Popup/ProjectRoot-ProjectNode", position = 230)
 })
 @Messages({
     "CTL_ProjectDataTypeAction=Data types"
