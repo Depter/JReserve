@@ -1,6 +1,7 @@
 package org.jreserve.data.importdialog.clipboardtable;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,10 @@ import org.openide.util.WeakListeners;
 @Messages({
     "MSG.WizardPanel.Error.EmptyDataType=Field 'Date type' is empty!",
     "MSG.WizardPanel.Error.EmptyDateFormat=Field 'Date format' is empty!",
-    "MSG.WizardPanel.Error.IllegalDateFormat=Value of field 'Date format' is invalid!"
+    "MSG.WizardPanel.Error.IllegalDateFormat=Value of field 'Date format' is invalid!",
+    "MSG.WizardPanel.Error.EmptyImportMethod=Field 'Import method' is empty!",
+    "# {0} - row number",
+    "MSG.WizardPanel.Error.InvalidDataRow=Invalid value at row {0}!"
 })
 class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
 
@@ -88,7 +92,8 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     }
     
     private void validatePanel() {
-        isValid = checkDataTypeSet() && checkDateFormat();
+        isValid = checkDataTypeSet() && checkDateFormat() && 
+                checkImportMethod() && checkInputData();
         if(isValid)
             clearErrorMsg();
         fireChangeEvent();
@@ -128,6 +133,31 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
             showError(Bundle.MSG_WizardPanel_Error_IllegalDateFormat());
             return false;
         }
+    }
+    
+    private boolean checkImportMethod() {
+        if(panel.getImportType() == null) {
+            showError(Bundle.MSG_WizardPanel_Error_EmptyImportMethod());
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean checkInputData() {
+        List<DataDummy> dummies = panel.getDummies();
+        boolean isTriangle = panel.getDataType().isTriangle();
+        DataDummyValidator validator = new DataDummyValidator(dummies, isTriangle);
+        validator.setDateFormat(new SimpleDateFormat(panel.getDateFormat()));
+        validator.setNumberFormat(NumberFormat.getNumberInstance());
+        return checkInputData(validator);
+    }
+    
+    private boolean checkInputData(DataDummyValidator validator) {
+        if(validator.checkDummies())
+            return true;
+        int firstRow = validator.getErrorRows()[0];
+        showError(Bundle.MSG_WizardPanel_Error_InvalidDataRow(firstRow));
+        return false;
     }
     
     private void clearErrorMsg() {

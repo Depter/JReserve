@@ -69,13 +69,13 @@ class DataTableModel extends DefaultTableModel {
         DataDummy dummy = dummies.get(row);
         switch(column) {
             case 0:
-                return dummy.accident;
+                return dummy.getAccident();
             case 1:
                 return dataType.isTriangle()?
-                       dummy.development :
-                       dummy.value;
+                       dummy.getDevelopment() :
+                       dummy.getValue();
             case 2:
-                return dummy.value;
+                return dummy.getValue();
             default:
                 throw new IllegalArgumentException("Unknown column index: "+column);
         }
@@ -87,8 +87,25 @@ class DataTableModel extends DefaultTableModel {
     }
 
     @Override
-    public void setValueAt(Object aValue, int row, int column) {
-        
+    public void setValueAt(Object vale, int row, int column) {
+        DataDummy dummy = dummies.get(row);
+        String str = (String) vale;
+        switch(column) {
+            case 0:
+                dummy.setAccident(str);
+                break;
+            case 1:
+                if(dataType.isTriangle())
+                       dummy.setDevelopment(str);
+                else
+                       dummy.setValue(str);
+                break;
+            case 2:
+                dummy.setValue(str);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown column index: "+column);
+        }
     }
 
     @Override
@@ -125,52 +142,30 @@ class DataTableModel extends DefaultTableModel {
     private DataDummy createDummy(String line) {
         String[] columns = line.split(COLUMN_SEPARATOR);
         DataDummy dummy = new DataDummy();
-        dummy.initialize(columns);
+        initDummy(dummy, columns);
         return dummy;
     }
+        
+    private void initDummy(DataDummy dummy, String[] columns) {
+        if(columns.length < 3)
+            initAsVector(dummy, columns);
+        else
+            initAsTriangle(dummy, columns);
+    }
+
+    private void initAsVector(DataDummy dummy, String[] columns) {
+        dummy.setAccident(columns[0]);
+        dummy.setDevelopment(columns[0]);
+        dummy.setValue(columns[1]);
+    }
+
+    private void initAsTriangle(DataDummy dummy, String[] columns) {
+        dummy.setAccident(columns[0]);
+        dummy.setDevelopment(columns[1]);
+        dummy.setValue(columns[2]);
+    }
     
-    private static class DataDummy implements Comparable<DataDummy>{
-        private String accident;
-        private String development;
-        private String value;
-        
-        private void initialize(String[] columns) {
-            if(columns.length < 3) {
-                initAsVector(columns);
-            } else {
-                initAsTriangle(columns);
-            }
-        }
-        
-        private void initAsVector(String[] columns) {
-            accident = columns[0];
-            development = columns[0];
-            value = columns[1];
-        }
-        
-        private void initAsTriangle(String[] columns) {
-            accident = columns[0];
-            development = columns[1];
-            value = columns[2];
-        }
-        
-        @Override
-        public boolean equals(Object o) {
-            if(o instanceof DataDummy)
-                return compareTo((DataDummy)o) == 0;
-            return false;
-        }
-        
-        @Override
-        public int compareTo(DataDummy o) {
-            int dif = accident.compareTo(o.accident);
-            return dif!=0? dif : development.compareTo(o.development);
-        }
-        
-        @Override
-        public int hashCode() {
-            int hash = 31 + accident.hashCode();
-            return 17 * hash + development.hashCode();
-        }
+    List<DataDummy> getDummies() {
+        return new ArrayList<DataDummy>(dummies);
     }
 }
