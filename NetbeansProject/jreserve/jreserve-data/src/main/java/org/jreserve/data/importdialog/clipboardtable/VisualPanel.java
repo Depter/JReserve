@@ -38,11 +38,12 @@ class VisualPanel extends JPanel implements ActionListener {
     
     private InputPanel inputPanel;
     private DataTableModel tableModel = new DataTableModel();
-    private DataValueRenderer valueRenderer = new DataValueRenderer();
+    private DataValueRenderer valueRenderer;
     private DateRenderer dateRenderer = new DateRenderer(DataImportSettings.getDateFormat());
     private JTable dataTable;
     
     VisualPanel() {
+        valueRenderer = new DataValueRenderer(DataImportSettings.getDecimalFormatter());
         initComponents();
         setName(Bundle.LBL_VisualPanel_name());
     }
@@ -122,6 +123,12 @@ class VisualPanel extends JPanel implements ActionListener {
         String action = e.getActionCommand();
         if(InputPanel.DATA_TYPE_SELECT_ACTION.equals(action)) {
             setDataType();
+        } else if(InputPanel.DATE_FORMAT_ACTION.equals(action)) {
+            dateRenderer = new DateRenderer(inputPanel.getDateFormatString());
+            setTableRenderers(tableModel.getDataType());
+        } else if(InputPanel.NUMBER_FORMAT_ACTION.equals(action)) {
+            valueRenderer.setFormat(inputPanel.getDecimalFormat());
+            setTableRenderers(tableModel.getDataType());
         } else if(PASTE_ACTION.equals(action)) {
             pasteFromClipboard();
         }
@@ -142,17 +149,18 @@ class VisualPanel extends JPanel implements ActionListener {
             setTriangleRenderers(columnModel);
         else
             setVectorRenderers(columnModel);
+        tableModel.rerenderData();
     }
     
     private void setTriangleRenderers(TableColumnModel columnModel) {
-        columnModel.getColumn(0).setCellRenderer(dateRenderer);
         columnModel.getColumn(1).setCellRenderer(dateRenderer);
-        columnModel.getColumn(2).setCellRenderer(valueRenderer);
+        columnModel.getColumn(2).setCellRenderer(dateRenderer);
+        columnModel.getColumn(3).setCellRenderer(valueRenderer);
     }
     
     private void setVectorRenderers(TableColumnModel columnModel) {
-        columnModel.getColumn(0).setCellRenderer(dateRenderer);
-        columnModel.getColumn(1).setCellRenderer(valueRenderer);
+        columnModel.getColumn(1).setCellRenderer(dateRenderer);
+        columnModel.getColumn(2).setCellRenderer(valueRenderer);
     }
     
     private void pasteFromClipboard() {

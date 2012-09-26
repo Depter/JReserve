@@ -2,8 +2,8 @@ package org.jreserve.data.importdialog.clipboardtable;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.text.NumberFormat;
-import java.text.ParseException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -13,7 +13,19 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 class DataValueRenderer extends DefaultTableCellRenderer {
 
-    private final NumberFormat nf = NumberFormat.getNumberInstance();
+    private char grouping;
+    private char decimal;
+    private StringBuilder sb = new StringBuilder();
+    
+    DataValueRenderer(DecimalFormat format) {
+        setFormat(format);
+    }
+    
+    void setFormat(DecimalFormat format) {
+        DecimalFormatSymbols symbols = format.getDecimalFormatSymbols();
+        grouping = symbols.getGroupingSeparator();
+        decimal = symbols.getDecimalSeparator();
+    }
     
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -25,15 +37,26 @@ class DataValueRenderer extends DefaultTableCellRenderer {
     private boolean isValid(Object value) {
         if(value instanceof String) {
             try {
-                Number d = nf.parse((String) value);
-                if(d.doubleValue() >= 0)
+                double d = Double.parseDouble(escapeSymbols((String) value));
+                if(d >= 0)
                     setText(" "+d);
                 return true;
-            } catch (ParseException ex) {
+            } catch (NumberFormatException ex) {
                 return false;
             }
         } else {
             return false;
         }
+    }
+    
+    private String escapeSymbols(String str) {
+        sb.setLength(0);
+        for(char c : str.toCharArray())
+            if(decimal == c) {
+                sb.append('.');
+            } else if(grouping != c) {
+                sb.append(c);
+            }
+        return sb.toString();
     }
 }

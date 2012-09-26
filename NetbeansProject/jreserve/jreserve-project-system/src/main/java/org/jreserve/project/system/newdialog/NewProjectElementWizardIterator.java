@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.project.system.management.ElementCreatorWizard;
+import org.jreserve.project.system.management.NewElementWizard;
 import org.openide.WizardDescriptor;
 import org.openide.WizardDescriptor.Panel;
 
@@ -22,7 +23,7 @@ public class NewProjectElementWizardIterator implements WizardDescriptor.Iterato
     private List<WizardDescriptor.Panel> currentPanels;
     private int index;
     
-    void setWizardDescriptor(WizardDescriptor descriptor) {
+    public void setWizardDescriptor(WizardDescriptor descriptor) {
         this.descriptor = descriptor;
     }
     
@@ -97,7 +98,7 @@ public class NewProjectElementWizardIterator implements WizardDescriptor.Iterato
     }
     
     private ElementCreatorWizard getCreatorWizard() {
-        Object creator = descriptor.getProperty(ElementSelectWizardPanel.ELEMENT_CREATOR_WIZARD);
+        Object creator = descriptor.getProperty(NewElementWizard.ELEMENT_CREATOR_WIZARD);
         return (ElementCreatorWizard) creator;
     }
     

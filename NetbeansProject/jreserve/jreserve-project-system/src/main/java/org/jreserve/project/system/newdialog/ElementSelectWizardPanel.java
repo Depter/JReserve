@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.project.system.management.NewElementWizard;
 import org.openide.NotificationLineSupport;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
@@ -16,14 +17,12 @@ import org.openide.util.NbBundle.Messages;
     "LBL_ElementSelectWizardPanel.err.select=Select 'Category' and 'Element'."
 })
 class ElementSelectWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
-
-    final static String ELEMENT_CREATOR_WIZARD = "ELEMENT_CREATOR_WIZARD";
     
     private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     private final PropertyChangeListener elementWizardListenr = new PropertyChangeListener() {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if(ELEMENT_CREATOR_WIZARD.equals(evt.getPropertyName()))
+            if(NewElementWizard.ELEMENT_CREATOR_WIZARD.equals(evt.getPropertyName()))
                 validateSelection();
         }
     };
@@ -41,7 +40,7 @@ class ElementSelectWizardPanel implements WizardDescriptor.Panel<WizardDescripto
     }
     
     private void validateSelection() {
-        isValid = (component.getClientProperty(ELEMENT_CREATOR_WIZARD) != null);
+        isValid = (component.getClientProperty(NewElementWizard.ELEMENT_CREATOR_WIZARD) != null);
         if(isValid) {
             clearErrorMessage();
         } else {
@@ -90,6 +89,7 @@ class ElementSelectWizardPanel implements WizardDescriptor.Panel<WizardDescripto
     @Override
     public void readSettings(WizardDescriptor wiz) {
         this.wizard = wiz;
+        getComponent().readSettings(wiz);
         setInitialErrorMessage();
         // use wiz.getProperty to retrieve previous panel state
     }
@@ -99,14 +99,13 @@ class ElementSelectWizardPanel implements WizardDescriptor.Panel<WizardDescripto
             @Override
             public void run() {
                 validateSelection();
-                //setErrorMessage(Bundle.LBL_ElementSelectWizardPanel_err_select());
             }
         });
     }
     
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        Object value = component.getClientProperty(ELEMENT_CREATOR_WIZARD);
-        wiz.putProperty(ELEMENT_CREATOR_WIZARD, value);
+        Object value = component.getClientProperty(NewElementWizard.ELEMENT_CREATOR_WIZARD);
+        wiz.putProperty(NewElementWizard.ELEMENT_CREATOR_WIZARD, value);
     }
 }

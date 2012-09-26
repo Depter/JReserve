@@ -1,6 +1,8 @@
 package org.jreserve.resources;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JSeparator;
 import org.openide.cookies.InstanceCookie;
@@ -25,6 +27,7 @@ import org.openide.util.Lookup;
  */
 public class ActionUtil {
 
+    private final static Logger logger = Logger.getLogger(ActionUtil.class.getName());
     private final static Comparator<FileObject> FILE_COMPARATOR = new FileComparator();
     
     public static List<? extends Action> actionsForPath(String... pathes) {
@@ -78,13 +81,19 @@ public class ActionUtil {
     }
     
     private static void addAction(List<Action> actions, InstanceCookie cookie) {
+        String name = cookie.instanceName();
+        logger.log(Level.FINER, "Loading action {0}", name);
         try {
-            if(cookie.instanceClass().isAssignableFrom(Action.class)) {
-                actions.add((Action) cookie.instanceCreate());
-            } else if (cookie.instanceClass().isAssignableFrom(JSeparator.class)) {
+            Object o = cookie.instanceCreate();
+            if(o instanceof Action) { 
+                actions.add((Action) o);
+            } else if (o instanceof JSeparator) {
                 actions.add(null);
             }
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+            String msg = String.format("Unable to instantiate '%s'!", cookie.instanceName());
+            logger.log(Level.WARNING, msg, ex);
+        }
     }
     
     private static class FileComparator implements Comparator<FileObject> {

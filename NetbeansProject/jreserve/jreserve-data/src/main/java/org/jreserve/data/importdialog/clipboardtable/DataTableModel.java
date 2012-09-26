@@ -12,6 +12,7 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
+    "LBL.DataTableModel.Row=Row",
     "LBL.DataTableModel.Accident=Accident",
     "LBL.DataTableModel.Development=Development",
     "LBL.DataTableModel.Value=Value"
@@ -29,28 +30,32 @@ class DataTableModel extends DefaultTableModel {
     
     void setDataType(ProjectDataType dataType) {
         this.dataType = dataType;
-        dummies.clear();
         fireTableStructureChanged();
-        fireTableDataChanged();
+    }
+
+    ProjectDataType getDataType() {
+        return dataType;
     }
     
     @Override
     public int getColumnCount() {
         if(dataType == null)
             return 0;
-        return dataType.isTriangle()? 3 : 2;
+        return dataType.isTriangle()? 4 : 3;
     }
 
     @Override
     public String getColumnName(int column) {
         switch(column) {
             case 0:
-                return Bundle.LBL_DataTableModel_Accident();
+                return Bundle.LBL_DataTableModel_Row();
             case 1:
+                return Bundle.LBL_DataTableModel_Accident();
+            case 2:
                 return dataType.isTriangle()?
                        Bundle.LBL_DataTableModel_Development() :
                        dataType.getName();
-            case 2:
+            case 3:
                 return dataType.getName();
             default:
                 throw new IllegalArgumentException("Unknown column index: "+column);
@@ -69,12 +74,14 @@ class DataTableModel extends DefaultTableModel {
         DataDummy dummy = dummies.get(row);
         switch(column) {
             case 0:
-                return dummy.getAccident();
+                return row+1;
             case 1:
+                return dummy.getAccident();
+            case 2:
                 return dataType.isTriangle()?
                        dummy.getDevelopment() :
                        dummy.getValue();
-            case 2:
+            case 3:
                 return dummy.getValue();
             default:
                 throw new IllegalArgumentException("Unknown column index: "+column);
@@ -83,7 +90,7 @@ class DataTableModel extends DefaultTableModel {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        return true;
+        return column > 0;
     }
 
     @Override
@@ -91,16 +98,16 @@ class DataTableModel extends DefaultTableModel {
         DataDummy dummy = dummies.get(row);
         String str = (String) vale;
         switch(column) {
-            case 0:
+            case 1:
                 dummy.setAccident(str);
                 break;
-            case 1:
+            case 2:
                 if(dataType.isTriangle())
                        dummy.setDevelopment(str);
                 else
                        dummy.setValue(str);
                 break;
-            case 2:
+            case 3:
                 dummy.setValue(str);
                 break;
             default:
@@ -110,7 +117,7 @@ class DataTableModel extends DefaultTableModel {
 
     @Override
     public Class<?> getColumnClass(int column) {
-        return String.class;
+        return column==0? Integer.class : String.class;
     }
     
     void setClipboardData(String data) {

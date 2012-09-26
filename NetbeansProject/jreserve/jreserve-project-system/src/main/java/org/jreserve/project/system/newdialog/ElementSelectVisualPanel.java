@@ -5,8 +5,10 @@ import java.awt.Dimension;
 import javax.swing.*;
 import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.jreserve.project.system.management.ElementCreatorWizard.Category;
+import org.jreserve.project.system.management.NewElementWizard;
 import org.jreserve.project.system.util.ElementCategoryUtil;
 import org.jreserve.resources.LabeledListPanel;
+import org.openide.WizardDescriptor;
 import org.openide.nodes.Children;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
@@ -40,7 +42,7 @@ class ElementSelectVisualPanel extends JPanel {
         initComponents();
         bindPanels();
         categoryPanel.setChilden(ElementCategoryUtil.getChildren());
-        initSelectedElementCategory();
+        initSelectedElementCategory(lastCategory, lastWizard);
     }
     
     private void initComponents() {
@@ -121,7 +123,7 @@ class ElementSelectVisualPanel extends JPanel {
     
     private void elementCreatorWizardSelected(ElementCreatorWizard wizard) {
         lastWizard = wizard;
-        putClientProperty(ElementSelectWizardPanel.ELEMENT_CREATOR_WIZARD, wizard);
+        putClientProperty(NewElementWizard.ELEMENT_CREATOR_WIZARD, wizard);
         setDescription(wizard);
     }
     
@@ -134,18 +136,24 @@ class ElementSelectVisualPanel extends JPanel {
         descriptionText.setText(description);
     }
     
-    private void initSelectedElementCategory() {
-        if(lastCategory == null)
-            return;
-        categoryPanel.selectNode(lastCategory.name());
-        initSelectedWizard();
+    void readSettings(WizardDescriptor wiz) {
+        Category category = (Category) wiz.getProperty(NewElementWizard.LAST_CATEGORY);
+        ElementCreatorWizard wizard = (ElementCreatorWizard) wiz.getProperty(NewElementWizard.LAST_ELEMENT_CREATOR);
+        initSelectedElementCategory(category, wizard);
     }
     
-    private void initSelectedWizard() {
-        if(lastWizard == null)
+    private void initSelectedElementCategory(Category category, ElementCreatorWizard wizard) {
+        if(category == null)
             return;
-        elementPanel.selectNode(lastWizard.getClass().getName());
-        elementCreatorWizardSelected(lastWizard);
+        categoryPanel.selectNode(category.name());
+        initSelectedWizard(wizard);
+    }
+    
+    private void initSelectedWizard(ElementCreatorWizard wizard) {
+        if(wizard == null)
+            return;
+        elementPanel.selectNode(wizard.getClass().getName());
+        elementCreatorWizardSelected(wizard);
     }
     
     @Override

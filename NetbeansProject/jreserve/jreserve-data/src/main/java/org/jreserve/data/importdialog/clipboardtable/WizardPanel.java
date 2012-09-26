@@ -26,7 +26,8 @@ import org.openide.util.WeakListeners;
     "MSG.WizardPanel.Error.IllegalDateFormat=Value of field 'Date format' is invalid!",
     "MSG.WizardPanel.Error.EmptyImportMethod=Field 'Import method' is empty!",
     "# {0} - row number",
-    "MSG.WizardPanel.Error.InvalidDataRow=Invalid value at row {0}!"
+    "MSG.WizardPanel.Error.InvalidDataRow=Invalid value at row {0}!",
+    "MSG.WizardPanel.Error.NoData=There is data selected to import."
 })
 class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
 
@@ -145,6 +146,14 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     
     private boolean checkInputData() {
         List<DataDummy> dummies = panel.getDummies();
+        if(dummies.isEmpty()) {
+            showError(Bundle.MSG_WizardPanel_Error_NoData());
+            return false;
+        }
+        return checkDummies(dummies);
+    }
+    
+    private boolean checkDummies(List<DataDummy> dummies) {
         boolean isTriangle = panel.getDataType().isTriangle();
         DataDummyValidator validator = new DataDummyValidator(dummies, isTriangle);
         validator.setDateFormat(new SimpleDateFormat(panel.getDateFormat()));
@@ -155,7 +164,7 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     private boolean checkInputData(DataDummyValidator validator) {
         if(validator.checkDummies())
             return true;
-        int firstRow = validator.getErrorRows()[0];
+        int firstRow = validator.getErrorRows()[0]+1;
         showError(Bundle.MSG_WizardPanel_Error_InvalidDataRow(firstRow));
         return false;
     }
