@@ -17,6 +17,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.TableColumnModel;
 import org.jreserve.data.DataImport.ImportType;
 import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.data.util.DataImportSettings;
 import org.jreserve.project.entities.Project;
 import org.openide.util.NbBundle;
 
@@ -38,7 +39,7 @@ class VisualPanel extends JPanel implements ActionListener {
     private InputPanel inputPanel;
     private DataTableModel tableModel = new DataTableModel();
     private DataValueRenderer valueRenderer = new DataValueRenderer();
-    private DateRenderer dateRenderer = new DateRenderer(InputPanel.DEFAULT_DATE_FORMAT);
+    private DateRenderer dateRenderer = new DateRenderer(DataImportSettings.getDateFormat());
     private JTable dataTable;
     
     VisualPanel() {
@@ -78,7 +79,7 @@ class VisualPanel extends JPanel implements ActionListener {
     }
     
     String getDateFormat() {
-        return inputPanel.getDateFormat();
+        return inputPanel.getDateFormatString();
     }
     
     boolean isCummulated() {

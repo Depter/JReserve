@@ -63,4 +63,17 @@ public interface PersistenceDatabase {
      * @throws IOException 
      */
     public void save() throws IOException;
+    
+    /**
+     * Called before connecting to the database.
+     * This method should not validate the connection self,
+     * but for example if evry data set, needed for the connection
+     * or simply check if the database file is still exists on
+     * the disk.
+     * 
+     * <p>Do not do timeconsuming tasks here, because it is called
+     * form the event dispatcher thread.
+     * </p>
+     */
+    public boolean isValidDatabase();
 }

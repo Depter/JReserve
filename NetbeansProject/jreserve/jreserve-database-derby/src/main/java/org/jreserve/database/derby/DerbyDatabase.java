@@ -7,14 +7,21 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.database.AbstractDatabase;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObjectExistsException;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "# {0} - db dile",
+    "MSG.DerbyDatabase.FileNotFound=Database \"{0}\" does not exists!"
+})
 public class DerbyDatabase extends AbstractDatabase {
     
     private final static Logger logger = Logger.getLogger(DerbyDatabase.class.getName());
@@ -72,5 +79,20 @@ public class DerbyDatabase extends AbstractDatabase {
             if(!ex.getSQLState().equalsIgnoreCase("XJ015"))
                 logger.log(Level.SEVERE, String.format("Unable to shut down derby database: %s", getDatabaseFolder()), ex);
         }
+    }
+    
+    @Override
+    public boolean isValidDatabase() {
+        File file = new File(getDatabaseFolder());
+        if(file.exists() && file.isDirectory())
+            return true;
+        showFileNotFoundDialog(file);
+        return false;
+    }
+    
+    private void showFileNotFoundDialog(File file) {
+        String msg = Bundle.MSG_DerbyDatabase_FileNotFound(file.getAbsolutePath());
+        NotifyDescriptor nd = new NotifyDescriptor.Message(msg, NotifyDescriptor.ERROR_MESSAGE);
+        DialogDisplayer.getDefault().notify(nd);
     }
 }

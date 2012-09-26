@@ -109,6 +109,8 @@ class LoginDialog extends javax.swing.JDialog {
     }
     
     private void ok() {
+        if(!database.isValidDatabase())
+            return;
         setCheckState(true);
         checker = new ConnectionChecker();
         checker.execute();

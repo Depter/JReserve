@@ -26,7 +26,6 @@ public final class DataTypesOptionsPanelController extends OptionsPanelControlle
     private DataTypeSettingPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
-    private boolean valid = false;
     
     @Override
     public void update() {

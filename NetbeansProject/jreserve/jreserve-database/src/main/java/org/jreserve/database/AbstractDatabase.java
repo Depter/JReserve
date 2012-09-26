@@ -263,6 +263,11 @@ public abstract class AbstractDatabase extends MultiDataObject implements Persis
     }
     
     @Override
+    public boolean isValidDatabase() {
+        return true;
+    }
+    
+    @Override
     public Lookup getLookup() {
         return getCookieSet().getLookup();
     }
