@@ -73,8 +73,8 @@ public class DataSource {
      * Saves the given data. If a datapoint for the given dates and
      * data type is already exists, the old value is overwritten.
      */
-    public void saveData(Project project, List<Data> data) {
+    public void saveData(List<Data> data) {
         AddDataQuery query = new AddDataQuery();
-        query.add(session, project, data);
+        query.add(session, data);
     }
 }

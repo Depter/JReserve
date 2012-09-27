@@ -13,7 +13,7 @@ import org.jreserve.project.entities.Project;
 public class DataTable {
 
     private ProjectDataType dataType;
-    private Map<Date, Set<Data>> datas = new TreeMap<Date, Set<Data>>();
+    private Map<Date, TreeSet<Data>> datas = new TreeMap<Date, TreeSet<Data>>();
     private Date firstAccidentDate;
     private Date lastAccidentDate;
     
@@ -89,8 +89,8 @@ public class DataTable {
             lastAccidentDate = date;
     }
     
-    private Set<Data> getCachedDatas(Date accidentDate) {
-        Set<Data> data = datas.get(accidentDate);
+    private TreeSet<Data> getCachedDatas(Date accidentDate) {
+        TreeSet<Data> data = datas.get(accidentDate);
         if(data == null) {
             data = new TreeSet<Data>();
             datas.put(accidentDate, data);
@@ -103,6 +103,34 @@ public class DataTable {
         for(Set<Data> set : datas.values())
             count += set.size();
         return count;
+    }
+    
+    public void cummulate() {
+        for(Date accident : datas.keySet())
+            cummulate(datas.get(accident));
+    }
+    
+    private void cummulate(Set<Data> dataSet) {
+        double sum = 0d;
+        for(Data data : dataSet) {
+            sum += data.getValue();
+            data.setValue(sum);
+        }
+    }
+    
+    public void deCummulate() {
+        for(Date accident : datas.keySet())
+            deCummulate(datas.get(accident));
+    }
+    
+    private void deCummulate(TreeSet<Data> dataSet) {
+        Data prev = null;
+        for(Iterator<Data> it = dataSet.descendingIterator(); it.hasNext();) {
+            Data current = it.next();
+            if(prev != null)
+                prev.setValue(prev.getValue()-current.getValue());
+            prev = current;
+        }
     }
     
     @Override

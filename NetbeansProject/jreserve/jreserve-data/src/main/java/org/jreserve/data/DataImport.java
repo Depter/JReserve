@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jreserve.project.entities.Project;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -96,9 +95,8 @@ public abstract class DataImport {
         @Override
         protected void processTable() {
             deleteOldValues();
-            Project project = table.getProject();
             List<Data> datas = super.getTableAsList();
-            ds.saveData(project, datas);
+            ds.saveData(datas);
         }
         
         private void deleteOldValues() {
@@ -124,8 +122,7 @@ public abstract class DataImport {
         protected void processTable() {
             List<Data> persisted = getPersistedData();
             List<Data> newData = getNewData(persisted);
-            Project project = table.getProject();
-            ds.saveData(project, newData);
+            ds.saveData(newData);
         }
         
         private List<Data> getPersistedData() {

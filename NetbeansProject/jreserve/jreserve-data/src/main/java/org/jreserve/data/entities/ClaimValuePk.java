@@ -22,11 +22,11 @@ public class ClaimValuePk implements Serializable {
     public ClaimValuePk() {
     }
     
-    public ClaimValuePk(Project project, Data data) {
-        this.project = project.getId();
-        this.dataType = data.getDataType().getDbId();
-        this.accidentDate = data.getAccidentDate();
-        this.developmentDate = data.getDevelopmentDate();
+    public ClaimValuePk(ProjectDataType pdt, Date accident, Date development) {
+        this.project = pdt.getProject().getId();
+        this.dataType = pdt.getId();
+        this.accidentDate = accident;
+        this.developmentDate = development;
     }
 
     public Date getAccidentDate() {

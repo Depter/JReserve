@@ -9,6 +9,10 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.data.DataImport;
 import org.jreserve.data.DataImportWizard;
 import org.jreserve.data.DataTable;
+import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.project.entities.ChangeLog;
+import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.project.entities.Project;
 import org.openide.NotificationLineSupport;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -24,7 +28,11 @@ import org.openide.util.NbBundle.Messages;
     "MSG.ConfirmWizardPanel.NoProject=Project not selected!",
     "MSG.ConfirmWizardPanel.NoImportMethod=Import method not selected!",
     "MSG.ConfirmWizardPanel.NoDate=There is no data specified to import!",
-    "MSG.ConfirmWizardPanel.ImportError=Unable to import values!"
+    "MSG.ConfirmWizardPanel.ImportError=Unable to import values!",
+    "# {0} - the dbId of the data type",
+    "# {1} - the name of the data type",
+    "# {2} - the name of the import method",
+    "MSG.ConfirmWizardPanel.ChangeLog=Imported values to \"{0} - {1}\", using method \"{2}\"."
 })
 class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
     
@@ -32,6 +40,9 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
     private ConfirmVisualPanel panel;
     private boolean isValid = false;
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    
+    private Project project;
+    private boolean cummulated;
     private DataTable table;
     private DataImport.ImportType importType;
     private ImportData importData;
@@ -56,10 +67,29 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
     public void readSettings(WizardDescriptor data) {
         this.wizard = data;
         panel.readSettings(wizard);
+        readData();
         validateData();
         fireChangeEvent();
     }
+    
+    private void readData() {
+        project = (Project) wizard.getProperty(DataImportWizard.PROJECT_PROPERTY);        
+        importType = (DataImport.ImportType) wizard.getProperty(DataImportWizard.IMPORT_METHOD_PROPERTY);
+        readCummulated();
+        readTable();
+    }
+    
+    private void readCummulated() {
+        Boolean c = (Boolean) wizard.getProperty(DataImportWizard.CUMMULATED_PROPERTY);
+        cummulated = c==null? false : c;
+    }
 
+    private void readTable() {
+        table = (DataTable) wizard.getProperty(DataImportWizard.DATA_TABLE_PROPERTY);
+        if(cummulated && table != null)
+            table.deCummulate();
+    }
+    
     private void validateData() {
         isValid = checkProject() && checkImportType() && checkDataTable();
         if(isValid)
@@ -67,7 +97,7 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
     }
     
     private boolean checkProject() {
-        if(wizard.getProperty(DataImportWizard.PROJECT_PROPERTY) != null)
+        if(project != null)
             return true;
         showError(Bundle.MSG_ConfirmWizardPanel_NoProject());
         return false;
@@ -83,7 +113,6 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
     }
     
     private boolean checkImportType() {
-        importType = (DataImport.ImportType) wizard.getProperty(DataImportWizard.IMPORT_METHOD_PROPERTY);
         if(importType != null)
             return true;
         showError(Bundle.MSG_ConfirmWizardPanel_NoImportMethod());
@@ -91,7 +120,6 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
     }
     
     private boolean checkDataTable() {
-        table = (DataTable) wizard.getProperty(DataImportWizard.DATA_TABLE_PROPERTY);
         if(table != null && table.getDataCount() > 0)
             return true;
         showError(Bundle.MSG_ConfirmWizardPanel_NoImportMethod());
@@ -137,6 +165,7 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
         boolean success = true;
         try {
             DataImport.importTable(importData.table, importData.importType);
+            makeLog();
         } catch (Exception ex) {
             success = false;
             String localized = Bundle.MSG_ConfirmWizardPanel_ImportError();
@@ -144,6 +173,21 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
         } finally {
             finnishedValidating(success);
         }
+    }
+    
+    private void makeLog() {
+        String msg = getLogMessage();
+        ChangeLogUtil util = ChangeLogUtil.getDefault();
+        util.addChange(project, ChangeLog.Type.PROJECT, msg);
+        util.saveValues(project);
+    }
+    
+    private String getLogMessage() {
+        ProjectDataType dt = importData.table.getDataType();
+        int dtId = dt.getDbId();
+        String dtName = dt.getName();
+        String method = importData.importType.getUserName();
+        return Bundle.MSG_ConfirmWizardPanel_ChangeLog(dtId, dtName, method);
     }
     
     private void finnishedValidating(final boolean success) {

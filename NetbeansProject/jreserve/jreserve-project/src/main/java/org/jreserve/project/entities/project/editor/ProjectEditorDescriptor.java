@@ -1,6 +1,7 @@
 package org.jreserve.project.entities.project.editor;
 
 import java.awt.Image;
+import java.io.Serializable;
 import org.jreserve.project.entities.project.ProjectElement;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -15,7 +16,7 @@ import org.openide.windows.TopComponent;
 @Messages({
     "LBL.ProjectEditorDescriptor.title=Settings"
 })
-class ProjectEditorDescriptor implements MultiViewDescription {
+class ProjectEditorDescriptor implements MultiViewDescription, Serializable {
 
     final static String PREFERRED_ID = "panel_1";
     private ProjectElement element;

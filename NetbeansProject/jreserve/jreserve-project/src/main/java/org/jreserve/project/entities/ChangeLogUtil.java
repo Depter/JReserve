@@ -1,6 +1,7 @@
 package org.jreserve.project.entities;
 
 import java.util.*;
+import javax.swing.SwingUtilities;
 import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.system.management.AbstractElementCache;
@@ -107,10 +108,18 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog> {
     
     private void fireAddChange(Project project, ChangeLog log) {
         Set<ChangeLogListener> pl = listeners.get(project.getId());
-        if(pl == null)
-            return;
-        for(ChangeLogListener l : new ArrayList<ChangeLogListener>(pl))
-            l.changeLogAdded(log);
+        if(pl != null)
+            fireAddChangeFromEDT(new ArrayList<ChangeLogListener>(pl), log);
+    }
+    
+    private void fireAddChangeFromEDT(final List<ChangeLogListener> listeners, final ChangeLog log) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                for(ChangeLogListener l : listeners)
+                    l.changeLogAdded(log);
+            }
+        });
     }
 
     @Override

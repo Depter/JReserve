@@ -1,6 +1,7 @@
 package org.jreserve.project.entities.project.editor;
 
 import java.awt.Image;
+import java.io.Serializable;
 import org.jreserve.project.entities.project.ProjectElement;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -15,7 +16,7 @@ import org.openide.windows.TopComponent;
 @Messages({
     "LBL.ProjectLogDescriptor.title=Log"
 })
-class ProjectLogDescriptor implements MultiViewDescription {
+class ProjectLogDescriptor implements MultiViewDescription, Serializable {
 
     final static String PREFERRED_ID = "panel_2";
     private ProjectElement element;
