@@ -21,6 +21,8 @@ public class DataSource {
      * Opens the datasource. Before executing any works, this method should be called
      */
     public void open() {
+        if(session != null)
+            return;
         PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
         session = pu.getSession();
         session.beginTransaction();
@@ -29,11 +31,17 @@ public class DataSource {
     public void commit() {
         if(session != null)
             session.comitTransaction();
+        session = null;
     }
     
     public void rollBack() {
         if(session != null)
             session.rollBackTransaction();
+        session = null;
+    }
+    
+    public Session getSession() {
+        return session;
     }
     
     /**

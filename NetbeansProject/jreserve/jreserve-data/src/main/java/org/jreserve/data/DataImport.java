@@ -4,14 +4,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.project.entities.Project;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "LBL.DataImport.AddNew=Add only new data",
+    "LBL.DataImport.DeleteOld=Overwrite old data"
+})
 public abstract class DataImport {
+    
+    private final static Logger logger = Logger.getLogger(DataImport.class.getName());
     
     public static void importTable(DataTable table, ImportType type) {
         DataImport impl = getImplementation(table, type);
@@ -38,13 +47,20 @@ public abstract class DataImport {
     }
     
     private void importTable() {
+        logger.log(Level.INFO, "Importing data table \"{0}\"", table);
         ds.open();
         try {
+            mergeValues();
             processTable();
             ds.commit();
         } catch (RuntimeException ex) {
+            logger.log(Level.SEVERE, String.format("Unable to import data table '%s'. Session is rolled back.", table), ex);
             ds.rollBack();
         }
+    }
+    
+    private void mergeValues() {
+        ds.getSession().merge(table.getProject(), table.getDataType());
     }
     
     protected abstract void processTable();
@@ -57,8 +73,18 @@ public abstract class DataImport {
     }
     
     public static enum ImportType {
-        ADD_NEW,
-        DELETE_OLD
+        ADD_NEW(Bundle.LBL_DataImport_AddNew()),
+        DELETE_OLD(Bundle.LBL_DataImport_DeleteOld());
+        
+        private final String userName;
+        
+        private ImportType(String userName) {
+            this.userName = userName;
+        }
+        
+        public String getUserName() {
+            return userName;
+        }
     }
     
     private static class DeleteOldDataImport extends DataImport {

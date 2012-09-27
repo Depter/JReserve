@@ -17,6 +17,10 @@ public class DataTable {
     private Date firstAccidentDate;
     private Date lastAccidentDate;
     
+    public DataTable(ProjectDataType dataType) {
+        this.dataType = dataType;
+    }
+    
     public ProjectDataType getDataType() {
         return dataType;
     }
@@ -92,5 +96,18 @@ public class DataTable {
             datas.put(accidentDate, data);
         }
         return data;
+    }
+    
+    public int getDataCount() {
+        int count = 0;
+        for(Set<Data> set : datas.values())
+            count += set.size();
+        return count;
+    }
+    
+    @Override
+    public String toString() {
+        String format = "DataTable [project=%s; dataType=%s]";
+        return String.format(format, dataType.getProject().getName(), dataType.getName());
     }
 }

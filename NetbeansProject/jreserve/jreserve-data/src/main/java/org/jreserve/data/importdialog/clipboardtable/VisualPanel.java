@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -17,7 +19,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.TableColumnModel;
 import org.jreserve.data.DataImport.ImportType;
 import org.jreserve.data.entities.ProjectDataType;
-import org.jreserve.data.util.DataImportSettings;
 import org.jreserve.project.entities.Project;
 import org.openide.util.NbBundle;
 
@@ -27,25 +28,26 @@ import org.openide.util.NbBundle;
  * @version 1.0
  */
 @NbBundle.Messages({
-    "LBL.VisualPanel.name=Import table",
+    "LBL.VisualPanel.name=Select data",
     "LBL.VisualPanel.Paste=Paste"
 })
 class VisualPanel extends JPanel implements ActionListener {
 
-    private final static String PASTE_ACTION = "PASTE";
+    private final static String PASTE_ACTION = "PASTE_ACTION";
  
     private final List<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
     
     private InputPanel inputPanel;
     private DataTableModel tableModel = new DataTableModel();
     private DataValueRenderer valueRenderer;
-    private DateRenderer dateRenderer = new DateRenderer(DataImportSettings.getDateFormat());
+    private DateRenderer dateRenderer;
     private JTable dataTable;
     
     VisualPanel() {
-        valueRenderer = new DataValueRenderer(DataImportSettings.getDecimalFormatter());
         initComponents();
         setName(Bundle.LBL_VisualPanel_name());
+        dateRenderer = new DateRenderer(inputPanel.getDateFormat());
+        valueRenderer = new DataValueRenderer(inputPanel.getDecimalFormat());
     }
     
     private void initComponents() {
@@ -79,8 +81,12 @@ class VisualPanel extends JPanel implements ActionListener {
         return inputPanel.getDataType();
     }
     
-    String getDateFormat() {
-        return inputPanel.getDateFormatString();
+    DateFormat getDateFormat() {
+        return inputPanel.getDateFormat();
+    }
+    
+    DecimalFormat getDecimalFormat() {
+        return inputPanel.getDecimalFormat();
     }
     
     boolean isCummulated() {
@@ -124,7 +130,7 @@ class VisualPanel extends JPanel implements ActionListener {
         if(InputPanel.DATA_TYPE_SELECT_ACTION.equals(action)) {
             setDataType();
         } else if(InputPanel.DATE_FORMAT_ACTION.equals(action)) {
-            dateRenderer = new DateRenderer(inputPanel.getDateFormatString());
+            dateRenderer.setFormat(inputPanel.getDateFormat());
             setTableRenderers(tableModel.getDataType());
         } else if(InputPanel.NUMBER_FORMAT_ACTION.equals(action)) {
             valueRenderer.setFormat(inputPanel.getDecimalFormat());
@@ -138,6 +144,8 @@ class VisualPanel extends JPanel implements ActionListener {
     private void setDataType() {
         ProjectDataType type = inputPanel.getDataType();
         tableModel.setDataType(type);
+        dateRenderer.setFormat(inputPanel.getDateFormat());
+        valueRenderer.setFormat(inputPanel.getDecimalFormat());
         setTableRenderers(type);
     }
     

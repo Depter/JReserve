@@ -19,7 +19,6 @@ public class AddDataQuery {
     }
     
     public void add(Session session, Project project, List<Data> datas) {
-        session.merge(project);
         for(Data data : datas)
             add(session, project, data);
     }

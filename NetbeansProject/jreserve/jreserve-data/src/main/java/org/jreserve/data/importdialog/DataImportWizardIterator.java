@@ -42,6 +42,7 @@ class DataImportWizardIterator implements WizardDescriptor.Iterator{
         basicPanels = new ArrayList<WizardDescriptor.Panel>();
         basicPanels.add(new ElementSelectWizardPanel());
         basicPanels.add(new DummyWizardPanel());
+        basicPanels.add(new ConfirmWizardPanel());
         currentPanels = new ArrayList<WizardDescriptor.Panel>(basicPanels);
     }
     
@@ -102,8 +103,9 @@ class DataImportWizardIterator implements WizardDescriptor.Iterator{
     }
     
     private void setCurrentPanels(DataImportWizard creator) {
+        int inserIndex = 1;
         for(WizardDescriptor.Panel panel : creator.getPanels())
-            currentPanels.add(panel);
+            currentPanels.add(inserIndex++, panel);
         initPanels(currentPanels);
     }
 

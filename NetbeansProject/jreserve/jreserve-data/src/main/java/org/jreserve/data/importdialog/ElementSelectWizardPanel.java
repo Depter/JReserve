@@ -22,7 +22,7 @@ import org.openide.util.WeakListeners;
 @Messages({
     "MSG.ElementSelectWizardPanel.noimporter=Select import method!"
 })
-class ElementSelectWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>{
+class ElementSelectWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     
     final static String DATA_IMPORT_WIZARD = "DATA_IMPORT_WIZARD";
     

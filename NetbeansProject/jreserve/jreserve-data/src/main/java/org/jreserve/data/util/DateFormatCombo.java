@@ -29,7 +29,9 @@ public class DateFormatCombo extends AbstractFormatCombo<DateFormat> {
     @Override
     protected DateFormat createFormat(String format) {
         try {
-            return new SimpleDateFormat(format);
+            SimpleDateFormat df = new SimpleDateFormat(format);
+            df.setLenient(false);
+            return df;
         } catch (IllegalArgumentException ex) {
             return null;
         }

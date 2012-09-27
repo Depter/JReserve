@@ -3,7 +3,6 @@ package org.jreserve.data.importdialog.clipboardtable;
 import java.awt.Color;
 import java.awt.Component;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -13,18 +12,14 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 class DataValueRenderer extends DefaultTableCellRenderer {
 
-    private char grouping;
-    private char decimal;
-    private StringBuilder sb = new StringBuilder();
+    private DoubleParser parser;
     
     DataValueRenderer(DecimalFormat format) {
-        setFormat(format);
+        parser = new DoubleParser(format);
     }
     
     void setFormat(DecimalFormat format) {
-        DecimalFormatSymbols symbols = format.getDecimalFormatSymbols();
-        grouping = symbols.getGroupingSeparator();
-        decimal = symbols.getDecimalSeparator();
+        parser = new DoubleParser(format);
     }
     
     @Override
@@ -36,27 +31,19 @@ class DataValueRenderer extends DefaultTableCellRenderer {
 
     private boolean isValid(Object value) {
         if(value instanceof String) {
-            try {
-                double d = Double.parseDouble(escapeSymbols((String) value));
-                if(d >= 0)
-                    setText(" "+d);
-                return true;
-            } catch (NumberFormatException ex) {
-                return false;
-            }
+            return isValid((String) value);
         } else {
             return false;
         }
     }
     
-    private String escapeSymbols(String str) {
-        sb.setLength(0);
-        for(char c : str.toCharArray())
-            if(decimal == c) {
-                sb.append('.');
-            } else if(grouping != c) {
-                sb.append(c);
-            }
-        return sb.toString();
+    private boolean isValid(String value) {
+        try {
+            if(parser.parse((String) value) >= 0)
+                setText(" " + value);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
     }
 }

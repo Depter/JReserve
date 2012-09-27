@@ -2,8 +2,8 @@ package org.jreserve.data.importdialog.clipboardtable;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -13,14 +13,14 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 class DateRenderer extends DefaultTableCellRenderer {
 
-    private SimpleDateFormat df;
+    private DateFormat df;
 
-    public DateRenderer(String dateFormat) {
-        df = new SimpleDateFormat(dateFormat);
+    public DateRenderer(DateFormat dateFormat) {
+        this.df = dateFormat;
     }
     
-    public void setDateFormat(String dateFormat) {
-        df = new SimpleDateFormat(dateFormat);
+    public void setFormat(DateFormat df) {
+        this.df = df;
     }
     
     @Override

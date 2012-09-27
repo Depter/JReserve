@@ -1,13 +1,8 @@
 package org.jreserve.data.importdialog.clipboardtable;
 
 import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  *
@@ -19,11 +14,10 @@ class DataDummyValidator {
     private List<DataDummy> dummies;
     private int size;
     private DateFormat df;
-    private NumberFormat nf;
+    private DoubleParser nf;
     private boolean isTriangle;
     
     private Set<Integer> errorRows;
-    private boolean valid = true;
     private Set<DateDummy> dateDummies = new HashSet<DateDummy>();
     
     DataDummyValidator(List<DataDummy> dummies, boolean isTriangle) {
@@ -37,8 +31,8 @@ class DataDummyValidator {
         return this;
     }
     
-    DataDummyValidator setNumberFormat(NumberFormat nf) {
-        this.nf = nf;
+    DataDummyValidator setNumberFormat(DecimalFormat nf) {
+        this.nf = new DoubleParser(nf);
         return this;
     }
     
@@ -74,9 +68,9 @@ class DataDummyValidator {
         try {
             Date accident = df.parse(dummy.getAccident());
             Date development = df.parse(dummy.getDevelopment());
-            double value = nf.parse(dummy.getValue()).doubleValue();
+            double value = nf.parse(dummy.getValue());
             return checkDates(accident, development);
-        } catch (ParseException ex) {
+        } catch (Exception ex) {
             return false;
         }
     }

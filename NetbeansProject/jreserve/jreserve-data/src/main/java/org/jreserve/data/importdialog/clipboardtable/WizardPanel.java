@@ -1,16 +1,18 @@
 package org.jreserve.data.importdialog.clipboardtable;
 
 import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.data.Data;
 import org.jreserve.data.DataImportWizard;
+import org.jreserve.data.DataTable;
 import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.project.entities.Project;
 import org.openide.WizardDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
@@ -21,13 +23,13 @@ import org.openide.util.WeakListeners;
  * @version 1.0
  */
 @Messages({
-    "MSG.WizardPanel.Error.EmptyDataType=Field 'Date type' is empty!",
+    "MSG.WizardPanel.Error.EmptyDataType=Field 'Data type' is empty!",
     "MSG.WizardPanel.Error.EmptyDateFormat=Field 'Date format' is empty!",
     "MSG.WizardPanel.Error.IllegalDateFormat=Value of field 'Date format' is invalid!",
     "MSG.WizardPanel.Error.EmptyImportMethod=Field 'Import method' is empty!",
     "# {0} - row number",
     "MSG.WizardPanel.Error.InvalidDataRow=Invalid value at row {0}!",
-    "MSG.WizardPanel.Error.NoData=There is data selected to import."
+    "MSG.WizardPanel.Error.NoData=There is no data selected to import."
 })
 class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
 
@@ -93,11 +95,16 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     }
     
     private void validatePanel() {
+        checkInput();
+        storeValues();
+        fireChangeEvent();
+    }
+    
+    private void checkInput() {
         isValid = checkDataTypeSet() && checkDateFormat() && 
                 checkImportMethod() && checkInputData();
         if(isValid)
             clearErrorMsg();
-        fireChangeEvent();
     }
     
     private boolean checkDataTypeSet() {
@@ -114,26 +121,10 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     }
     
     private boolean checkDateFormat() {
-        String format = panel.getDateFormat();
-        return checkDateFormatNotEmpty(format) && checkValidDateFormat(format);
-    }
-    
-    private boolean checkDateFormatNotEmpty(String format) {
-        if(format == null || format.trim().length()==0) {
-            showError(Bundle.MSG_WizardPanel_Error_EmptyDateFormat());
-            return false;
-        }
-        return true;
-    }
-    
-    private boolean checkValidDateFormat(String format) {
-        try {
-            DateFormat df = new SimpleDateFormat(format);
+        if(panel.getDateFormat() != null)
             return true;
-        } catch (RuntimeException ex) {
-            showError(Bundle.MSG_WizardPanel_Error_IllegalDateFormat());
-            return false;
-        }
+        showError(Bundle.MSG_WizardPanel_Error_IllegalDateFormat());
+        return false;
     }
     
     private boolean checkImportMethod() {
@@ -156,8 +147,8 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     private boolean checkDummies(List<DataDummy> dummies) {
         boolean isTriangle = panel.getDataType().isTriangle();
         DataDummyValidator validator = new DataDummyValidator(dummies, isTriangle);
-        validator.setDateFormat(new SimpleDateFormat(panel.getDateFormat()));
-        validator.setNumberFormat(NumberFormat.getNumberInstance());
+        validator.setDateFormat(panel.getDateFormat());
+        validator.setNumberFormat(panel.getDecimalFormat());
         return checkInputData(validator);
     }
     
@@ -181,5 +172,39 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
         ChangeEvent evt = new ChangeEvent(this);
         for(ChangeListener listener : ls)
             listener.stateChanged(evt);
+    }
+    
+    private void storeValues() {
+        if(isValid) {
+            wizard.putProperty(DataImportWizard.DATA_TABLE_PROPERTY, buildTable());
+            wizard.putProperty(DataImportWizard.IMPORT_METHOD_PROPERTY, panel.getImportType());
+            wizard.putProperty(DataImportWizard.CUMMULATED_PROPERTY, panel.isCummulated());
+        } else {
+            wizard.putProperty(DataImportWizard.DATA_TABLE_PROPERTY, null);
+            wizard.putProperty(DataImportWizard.IMPORT_METHOD_PROPERTY, null);
+            wizard.putProperty(DataImportWizard.CUMMULATED_PROPERTY, null);
+        }
+    }
+    
+    private DataTable buildTable() {
+        ProjectDataType dt = panel.getDataType();
+        DataTable table = new DataTable(dt);
+        DateFormat df = panel.getDateFormat();
+        DoubleParser dp = new DoubleParser(panel.getDecimalFormat());
+        for(DataDummy dummy : panel.getDummies())
+            table.addData(getData(dummy, dt, df, dp));
+        return table;
+    }
+    
+    private Data getData(DataDummy dummy, ProjectDataType dt, DateFormat df, DoubleParser dp) {
+        try {
+            return new Data().setDataType(dt)
+                 .setAccidentDate(df.parse(dummy.getAccident()))
+                .setDevelopmentDate(df.parse(dummy.getDevelopment()))
+                .setValue(dp.parse(dummy.getValue()));
+        } catch (ParseException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
     }
 }

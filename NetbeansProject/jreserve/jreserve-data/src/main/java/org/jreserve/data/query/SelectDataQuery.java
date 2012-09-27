@@ -3,6 +3,8 @@ package org.jreserve.data.query;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.data.Criteria;
 import org.jreserve.data.Data;
 import org.jreserve.data.entities.ProjectDataType;
@@ -16,6 +18,8 @@ import org.jreserve.persistence.Session;
  */
 public class SelectDataQuery extends AbstractQuery implements DataQuery<List<Data>> {
     
+    private final static Logger logger = Logger.getLogger(SelectDataQuery.class.getName());
+    
     private final static int COL_DT = 0;
     private final static int COL_ACCIDENT = 1;
     private final static int COL_DEVELOPMENT = 2;
@@ -28,6 +32,7 @@ public class SelectDataQuery extends AbstractQuery implements DataQuery<List<Dat
     @Override
     public List<Data> query(Session session, Criteria criteria) {
         String sql = buildCriteria(SQL, criteria);
+        logger.log(Level.FINER, "Query ClaimValues: {0}", sql);
         Query query = session.createQuery(sql);
         return getData(query.getResultList());
     }
