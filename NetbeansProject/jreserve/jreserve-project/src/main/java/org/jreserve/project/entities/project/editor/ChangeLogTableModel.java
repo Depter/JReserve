@@ -29,18 +29,28 @@ class ChangeLogTableModel extends AbstractTableModel implements ChangeLogListene
     final static int COLUMN_COUNT = 4;
     
     private ProjectElement element;
+    private List<ChangeLog> allChanges = new ArrayList<ChangeLog>();
     private List<ChangeLog> changes = new ArrayList<ChangeLog>();
     
     ChangeLogTableModel(ProjectElement element) {
         this.element = element;
         loadChanges();
+        setLogType(null);
     }
     
     private void loadChanges() {
         Project project = element.getValue();
         ChangeLogUtil util = ChangeLogUtil.getDefault();
-        changes.addAll(util.getValues(project));
+        allChanges.addAll(util.getValues(project));
         util.addChangeLogListener(project, this);
+    }
+    
+    void setLogType(ChangeLog.Type type) {
+        changes.clear();
+        for(ChangeLog log : allChanges)
+            if(type==null || type.equals(log.getType()))
+                changes.add(log);
+        fireTableDataChanged();
     }
     
     @Override
@@ -92,5 +102,9 @@ class ChangeLogTableModel extends AbstractTableModel implements ChangeLogListene
         changes.add(change);
         int row = changes.size() - 1;
         fireTableRowsInserted(row, row);
+    }
+    
+    public List<ChangeLog> getLogs() {
+        return new ArrayList<ChangeLog>(changes);
     }
 }

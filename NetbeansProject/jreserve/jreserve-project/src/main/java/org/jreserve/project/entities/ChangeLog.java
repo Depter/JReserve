@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 import org.jreserve.persistence.EntityRegistration;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -24,6 +25,9 @@ import org.jreserve.persistence.EntityRegistration;
     initialValue=EntityRegistration.INITIAL_VALUE,
     pkColumnValue="org.jreserve.project.entities.ChangeLog"
 )
+@Messages({
+    "LBL.LogType.Project=Project"
+})
 public class ChangeLog implements Serializable, Comparable<ChangeLog> {
     private final static long serialVersionUID = 1L;
     
@@ -150,16 +154,22 @@ public class ChangeLog implements Serializable, Comparable<ChangeLog> {
     }
     
     public static enum Type {
-        PROJECT(1);
+        PROJECT(1, Bundle.LBL_LogType_Project());
         
-        private int dbId;
+        private final int dbId;
+        private final String userName;
         
-        private Type(int dbId) {
+        private Type(int dbId, String userName) {
             this.dbId = dbId;
+            this.userName = userName;
         }
         
         public int getDbId() {
             return dbId;
+        }
+        
+        public String getUserName() {
+            return userName;
         }
     }
     
