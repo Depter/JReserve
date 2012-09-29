@@ -77,4 +77,12 @@ public class DataSource {
         AddDataQuery query = new AddDataQuery();
         query.add(session, data);
     }
+    
+    /**
+     * Deletes the given data.
+     */
+    public void deleteData(List<Data> data) {
+        DeleteDataQuery query = new DeleteDataQuery();
+        query.delete(session, data);
+    }
 }

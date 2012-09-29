@@ -49,6 +49,10 @@ public class ProjectElement<T> implements Lookup.Provider {
         if(value == null)
             throw new NullPointerException("Null value not allowed!");
         this.value = value;
+        initLookup();
+    }
+    
+    private void initLookup() {
         ic.add(value);
         ic.add(this);
     }
@@ -359,5 +363,9 @@ public class ProjectElement<T> implements Lookup.Provider {
             return "";
         String name = value==null? "null" : value.toString();
         return parent.getPath()+PATH_SEPARATOR+name;
+    }
+    
+    public boolean isVisible() {
+        return true;
     }
 }

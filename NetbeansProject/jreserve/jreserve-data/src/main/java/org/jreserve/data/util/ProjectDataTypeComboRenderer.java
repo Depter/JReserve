@@ -1,4 +1,4 @@
-package org.jreserve.data.importdialog.clipboardtable;
+package org.jreserve.data.util;
 
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
@@ -10,7 +10,7 @@ import org.jreserve.data.entities.ProjectDataType;
  * @author Peter Decsi
  * @version 1.0
  */
-class ProjectDataTypeComboRenderer extends DefaultListCellRenderer {
+public class ProjectDataTypeComboRenderer extends DefaultListCellRenderer {
 
     private final static String FORMAT = "%-4d - %s";
     

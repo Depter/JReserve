@@ -36,7 +36,7 @@ public class OpenDataExplorerAction implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        DataExplorerTopComponent explorer = DataExplorerTopComponent.getComponent(project);
+        DataExplorerTopComponent explorer = DataExplorerRegistry.getComponent(project);
         if(!explorer.isOpened())
             explorer.open();
         explorer.requestActive();

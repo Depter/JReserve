@@ -1,5 +1,6 @@
 package org.jreserve.data.importdialog.clipboardtable;
 
+import org.jreserve.data.util.ProjectDataTypeComboRenderer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
