@@ -6,7 +6,10 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -14,11 +17,17 @@ import javax.swing.JPanel;
 import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.data.settings.DTDummy;
 import org.jreserve.data.settings.DataTypePanel;
+import org.jreserve.data.util.ProjectDataTypeComparator;
+import org.jreserve.persistence.Session;
+import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.management.Deletable;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
@@ -28,6 +37,7 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
+    "LBL.ProjectDataTypeDialog.Title=Project Data Types",
     "# {0} - name of data type",
     "# {1} - dbId of data type",
     "MSG.ProjectDataTypeDialog.Changelog.Deleted=Data type \"{0} ({1})\" deleted.",
@@ -36,21 +46,16 @@ import org.openide.util.NbBundle.Messages;
     "MSG.ProjectDataTypeDialog.Changelog.Created=Data type \"{0} ({1})\" created.",
     "# {0} - old name of data type",
     "# {1} - dbId of data type",
-    "# {2} - new of data type",
-    "MSG.ProjectDataTypeDialog.Changelog.Renamed=Data type \"{0} ({1})\" renamed to \"{2}\".",
-    "# {0} - name of data type",
-    "# {1} - dbId of data type",
-    "MSG.ProjectDataTypeDialog.Changelog.IsTriangle=Data type \"{0} ({1})\" set to triangle.",
-    "# {0} - name of data type",
-    "# {1} - dbId of data type",
-    "MSG.ProjectDataTypeDialog.Changelog.IsVector=Data type \"{0} ({1})\" set to vector."
+    "MSG.ProjectDataTypeDialog.Changelog.Changed=Data type \"{0} ({1})\" was modified."
 })
 class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, ActionListener {
     
+    private final static Logger logger = Logger.getLogger(ProjectDataTypeDialog.class.getName());
+    
     private final static boolean IS_MODAL = true;
     
-    static void showDialog(Project project) {
-        ProjectDataTypeDialog content = new ProjectDataTypeDialog(project);
+    static void showDialog(ProjectElement<Project> element) {
+        ProjectDataTypeDialog content = new ProjectDataTypeDialog(element);
         DialogDescriptor dd = createDescriptor(content);
         dd.setOptions(new Object[0]);
         content.dialog = DialogDisplayer.getDefault().createDialog(dd);
@@ -61,7 +66,7 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
     private static DialogDescriptor createDescriptor(ProjectDataTypeDialog content) {
         return new DialogDescriptor(
             content,
-            "Title",
+            Bundle.LBL_ProjectDataTypeDialog_Title(),
             IS_MODAL,
             null, null,
             DialogDescriptor.DEFAULT_ALIGN,
@@ -70,6 +75,7 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
     
     private Dialog dialog;
     private Project project;
+    private ProjectElement<Project> element;
     private DataTypePanel dtPanel;
             
     private JButton okButton = new JButton("Ok");
@@ -77,8 +83,9 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
     
     private List<ProjectDataType> originalTypes;
     
-    private ProjectDataTypeDialog(Project project) {
-        this.project = project;
+    private ProjectDataTypeDialog(ProjectElement<Project> element) {
+        this.element = element;
+        this.project = element.getValue();
         initComponents();
         loadData();
     }
@@ -134,14 +141,16 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
     }
     
     private List<ProjectDataType> getDataTypes() {
-        originalTypes = ProjectDataTypeUtil.getDefault().getValues(project);
+        originalTypes = element.getChildValues(ProjectDataType.class);
+        Collections.sort(originalTypes, new ProjectDataTypeComparator());
         return originalTypes;
     }
     
     private DTDummy getDummy(ProjectDataType dt) {
-        return new DTDummy(
-                dt.getDbId(), dt.getName(), dt.isTriangle()
-                );
+        int dbId = dt.getDbId();
+        String name = dt.getName();
+        boolean isTriangle = dt.isTriangle();
+        return new DTDummy(dbId, name, isTriangle);
     }
 
     @Override
@@ -157,7 +166,7 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
         Object source = e.getSource();
         if(cancelButton == source) {
             dialog.dispose();
-        } else {
+        } else if(okButton == source) {
             store();
             dialog.dispose();
         }
@@ -165,49 +174,36 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
 
     
     void store() {
-        if(removeDeleted() | updateList()) {
-            ProjectDataTypeUtil.getDefault().saveValues(project);
-            ChangeLogUtil.getDefault().saveValues(project);
-        }
+        List<ProjectDataType> deleted = getDeleted();
+        List<ProjectDataType> updated = updateList();
+        if(!deleted.isEmpty() || !updated.isEmpty())
+            new Persister(deleted, updated).save();
     }
     
-    private boolean removeDeleted() {
-        boolean deleted = false;
+    private List<ProjectDataType> getDeleted() {
+        List<ProjectDataType> deleted = new ArrayList<ProjectDataType>();
         for(ProjectDataType dt : originalTypes)
-            if(dtPanel.getDummy(dt.getDbId()) == null) {
-                logDeletion(project, dt);
-                ProjectDataTypeUtil util = ProjectDataTypeUtil.getDefault();
-                util.deleteValue(project, dt);
-                deleted = true;
-            }
+            if(dtPanel.getDummy(dt.getDbId()) == null)
+                deleted.add(dt);
         return deleted;
     }
     
-    private void logDeletion(Project project, ProjectDataType dt) {
-        String name = dt.getName();
-        int dbId = dt.getDbId();
-        String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Deleted(name, dbId);
-        ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
-    }
-    
-    private boolean updateList() {
-        boolean updated = false;
+    private List<ProjectDataType> updateList() {
+        List<ProjectDataType> updated = new ArrayList<ProjectDataType>();
         int rowCount = dtPanel.getDummyCount();
-        for(int r=0; r<rowCount; r++) {
-            if(updateRow(r))
-                updated = true;
-        }
+        for(int r=0; r<rowCount; r++)
+            updateRow(updated, r);
         return updated;
     }
     
-    private boolean updateRow(int row) {
+    private void updateRow(List<ProjectDataType> updated, int row) {
         DTDummy dummy = dtPanel.getDummyAtRow(row);
         ProjectDataType dt = getOriginalProjectDataType(dummy.getId());
         if(dt == null) {
-            createDataType(dummy);
-            return true;
+            updated.add(createDataType(dummy));
         } else {
-            return updateDataType(dt, dummy);
+            if(updateDataType(dt, dummy))
+                updated.add(dt);
         }
     }
     
@@ -218,51 +214,113 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
         return null;
     }
     
-    private void createDataType(DTDummy dummy) {
+    private ProjectDataType createDataType(DTDummy dummy) {
         int id = dummy.getId();
         String name = dummy.getName();
         boolean isTriangle = dummy.isTriangle();
-        ProjectDataType dt = new ProjectDataType(project, id, name, isTriangle);
-        logCreation(dt);
-        ProjectDataTypeUtil.getDefault().addValue(project, dt);
-    }
-    
-    private void logCreation(ProjectDataType dt) {
-        String name = dt.getName();
-        int dbId = dt.getDbId();
-        String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Created(name, dbId);
-        ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
+        return new ProjectDataType(project, id, name, isTriangle);
     }
     
     private boolean updateDataType(ProjectDataType dt, DTDummy dummy) {
         boolean updated = false;
         if(!dt.getName().equals(dummy.getName())) {
             updated = true;
-            logNameChange(dt, dummy.getName());
             dt.setName(dummy.getName());
         }
         if(dt.isTriangle() != dummy.isTriangle()) {
             updated = true;
-            logTriangleChange(dt);
             dt.setTriangle(dummy.isTriangle());
         }
         return updated;
-    }
-
-    private void logNameChange(ProjectDataType dt, String newName) {
-        String oldName = dt.getName();
-        int dbId = dt.getDbId();
-        String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Renamed(oldName, dbId, newName);
-        ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
-    }
-
-    private void logTriangleChange(ProjectDataType dt) {
-        String name = dt.getName();
-        int dbId = dt.getDbId();
-        String msg = dt.isTriangle()?
-                Bundle.MSG_ProjectDataTypeDialog_Changelog_IsVector(name, dbId) :
-                Bundle.MSG_ProjectDataTypeDialog_Changelog_IsTriangle(name, dbId);
-        ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
-    }
+    }    
     
+    private class Persister {
+        
+        private List<ProjectDataType> deleted;
+        private List<ProjectDataType> updated;
+        private Session session;
+        
+        private Persister(List<ProjectDataType> deleted, List<ProjectDataType> updated) {
+            this.deleted = deleted;
+            this.updated = updated;
+        }
+        
+        private void save() {
+            try {
+                initialize();
+                delete();
+                update();
+                session.comitTransaction();
+            } catch (RuntimeException ex) {
+                rollBack(ex);
+                logger.log(Level.SEVERE, "Unable to update ProjectDataTypes for project: "+project.getName(), ex);
+            }
+        }
+        
+        private void initialize() {
+            session = SessionFactory.beginTransaction();
+            session.find(Project.class, project.getId());
+        }
+        
+        private void delete() {
+            for(ProjectDataType dt : deleted)
+                deleteDataType(dt);
+        }
+        
+        private void deleteDataType(ProjectDataType dt) {
+            ProjectElement e = element.getChild(dt);
+            Deletable d = e.getLookup().lookup(Deletable.class);
+            d.delete(session);
+            logDeletion(dt);
+        }
+        
+        private void logDeletion(ProjectDataType dt) {
+            String name = dt.getName();
+            int dbId = dt.getDbId();
+            String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Deleted(name, dbId);
+            ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
+        }
+        
+        private void update() {
+            for(ProjectDataType dt : updated) {
+                if(dt.getId() == 0) {
+                    create(dt);
+                } else {
+                    update(dt);
+                }
+            }
+        }
+        
+        private void create(ProjectDataType dt) {
+            session.persist(dt);
+            ProjectElement e = new ProjectDatTypeProjectElement(dt);
+            element.addChild(e);
+            logCreation(dt);
+        }
+
+        private void logCreation(ProjectDataType dt) {
+            String name = dt.getName();
+            int dbId = dt.getDbId();
+            String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Created(name, dbId);
+            ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
+        }
+        
+        private void update(ProjectDataType dt) {
+            session.update(dt);
+            logChange(dt);
+        }
+        
+        private void logChange(ProjectDataType dt) {
+            String oldName = dt.getName();
+            int dbId = dt.getDbId();
+            String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Changed(oldName, dbId);
+            ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
+        }
+        
+        private void rollBack(Exception ex) {
+            session.rollBackTransaction();
+            logger.log(Level.SEVERE, "Unable to update ProjectDataTypes in the database!", ex);
+            Exceptions.printStackTrace(ex);
+        }
+    }
 }

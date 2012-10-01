@@ -3,11 +3,14 @@ package org.jreserve.data.projectdatatype;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.ProjectElement;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -35,7 +38,13 @@ public class ProjectDataTypeAction implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        ProjectDataTypeDialog.showDialog(project);
+        ProjectElement<Project> element = getProjectElement();
+        ProjectDataTypeDialog.showDialog(element);
+    }
+    
+    private ProjectElement<Project> getProjectElement() {
+        Lookup lkp = Utilities.actionsGlobalContext();
+        return lkp.lookup(ProjectElement.class);
     }
 
 }

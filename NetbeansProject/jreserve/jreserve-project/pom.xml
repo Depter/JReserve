@@ -131,7 +131,7 @@
             <artifactId>jreserve-logging</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-project-system</artifactId>

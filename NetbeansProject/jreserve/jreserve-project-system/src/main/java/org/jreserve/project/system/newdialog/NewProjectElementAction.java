@@ -30,7 +30,8 @@ import org.openide.util.actions.Presenter;
 })
 public final class NewProjectElementAction extends AbstractAction implements Presenter.Menu, Presenter.Popup {
     
-    private JMenu menu = null;
+    private JMenu menuPresenter = null;
+    private JMenu popUpPresenter = null;
     
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -39,34 +40,35 @@ public final class NewProjectElementAction extends AbstractAction implements Pre
 
     @Override
     public JMenuItem getMenuPresenter() {
-        return getPresenter();
+        if(menuPresenter == null) {
+            menuPresenter = new JMenu(Bundle.CTL_NewProjectElementAction());
+            createMenu(menuPresenter);
+        }
+        return menuPresenter;
     }
 
     @Override
     public JMenuItem getPopupPresenter() {
-        return getPresenter();
+        if(popUpPresenter == null) {
+            popUpPresenter = new JMenu(Bundle.CTL_NewProjectElementAction());
+            createMenu(popUpPresenter);
+        }
+        return popUpPresenter;
     }
     
-    private JMenuItem getPresenter() {
-        if(menu == null)
-            createMenu();
-        return menu;
-    }
-    
-    private void createMenu() {
-        menu = new JMenu(Bundle.CTL_NewProjectElementAction());
-        addDirectActions();
+    private void createMenu(JMenu menu) {
+        addDirectActions(menu);
         menu.addSeparator();
         menu.add(getMyItem());
     }
     
-    private void addDirectActions() {
+    private void addDirectActions(JMenu menu) {
         for(Action action : Utilities.actionsForPath(NewElementWizard.DIRECT_ACTION_PATH))
             menu.add(action);
     }
     
     private JMenuItem getMyItem() {
-        JMenuItem item = new JMenuItem("Other");
+        JMenuItem item = new JMenuItem(Bundle.CTL_NewProjectElementAction_Other());
         item.addActionListener(this);
         return item;
     }

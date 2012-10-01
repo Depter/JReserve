@@ -5,6 +5,7 @@ import org.jreserve.data.DataImportWizard;
 import org.jreserve.data.DataTable;
 import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.ProjectElement;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
 
@@ -37,7 +38,8 @@ public class ConfirmVisualPanel extends javax.swing.JPanel {
     }
 
     private void readProject(WizardDescriptor wizard) {
-        Project project = (Project) wizard.getProperty(DataImportWizard.PROJECT_PROPERTY);
+        ProjectElement<Project> element = (ProjectElement<Project>) wizard.getProperty(DataImportWizard.PROJECT_PROPERTY);
+        Project project = element==null? null : element.getValue();
         String name = project==null? null : project.getName();
         projectText.setText(name);
     }

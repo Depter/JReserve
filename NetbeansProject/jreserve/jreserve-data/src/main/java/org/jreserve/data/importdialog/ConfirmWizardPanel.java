@@ -13,6 +13,7 @@ import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.ProjectElement;
 import org.openide.NotificationLineSupport;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -73,10 +74,16 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
     }
     
     private void readData() {
-        project = (Project) wizard.getProperty(DataImportWizard.PROJECT_PROPERTY);        
+        readProject();
         importType = (DataImport.ImportType) wizard.getProperty(DataImportWizard.IMPORT_METHOD_PROPERTY);
         readCummulated();
         readTable();
+    }
+    
+    private void readProject() {
+        ProjectElement<Project> element = (ProjectElement<Project>) wizard.getProperty(DataImportWizard.PROJECT_PROPERTY);
+        if(element != null)
+            project = element.getValue();
     }
     
     private void readCummulated() {

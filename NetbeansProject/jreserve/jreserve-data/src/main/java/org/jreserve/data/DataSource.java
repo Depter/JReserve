@@ -3,9 +3,8 @@ package org.jreserve.data;
 import java.util.List;
 import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.data.query.*;
-import org.jreserve.persistence.PersistenceUnit;
-import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
+import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.Project;
 
 /**
@@ -23,8 +22,7 @@ public class DataSource {
     public void open() {
         if(session != null)
             return;
-        PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
-        session = pu.getSession();
+        session = SessionFactory.createSession();
         session.beginTransaction();
     }
     

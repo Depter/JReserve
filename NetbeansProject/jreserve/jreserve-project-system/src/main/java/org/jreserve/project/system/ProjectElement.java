@@ -29,6 +29,13 @@ public class ProjectElement<T> implements Lookup.Provider {
     
     private final static String PATH_SEPARATOR = "/";
     
+    private final static Comparator<ProjectElement> CHILD_COMPARATOR = new Comparator<ProjectElement>() {
+        @Override
+        public int compare(ProjectElement o1, ProjectElement o2) {
+            return o1.getPosition() - o2.getPosition();
+        }
+    };
+    
     
     private InstanceContent ic = new InstanceContent();
     private Lookup lookup = new AbstractLookup(ic);
@@ -218,11 +225,20 @@ public class ProjectElement<T> implements Lookup.Provider {
         checkNewChild(child);
         child.setParent(this);
         children.add(index, child);
+        Collections.sort(children, CHILD_COMPARATOR);
         fireChildAdded(child);
     }
     
     void setParent(ProjectElement parent) {
+        ProjectElement oldParent = this.parent;
         this.parent = parent;
+        if(oldParent != null)
+            fireRemovedFromParent(oldParent);
+    }
+    
+    private void fireRemovedFromParent(ProjectElement oldParent) {
+        for(ProjectElementListener listener : new ArrayList<ProjectElementListener>(listeners))
+            listener.removedFromParent(oldParent);
     }
     
     private void checkNewChild(ProjectElement child) {
@@ -346,6 +362,7 @@ public class ProjectElement<T> implements Lookup.Provider {
             element.setParent(this);
             children.add(element);
         }
+        Collections.sort(children, CHILD_COMPARATOR);
     }
     
     private void fireChildrenChanged() {
@@ -365,7 +382,20 @@ public class ProjectElement<T> implements Lookup.Provider {
         return parent.getPath()+PATH_SEPARATOR+name;
     }
     
+    /**
+     * Marks wether this element should be a visible element 
+     * or not. Visible elements are shown in the GUI. An LoB
+     * is a visible element, but for example a ProjectDataType
+     * is not.
+     */
     public boolean isVisible() {
         return true;
+    }
+    
+    /**
+     * Index used for first ordering of child elements.
+     */
+    public int getPosition() {
+        return Integer.MAX_VALUE;
     }
 }

@@ -20,6 +20,7 @@ import javax.swing.table.TableColumnModel;
 import org.jreserve.data.DataImport.ImportType;
 import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.ProjectElement;
 import org.openide.util.NbBundle;
 
 /**
@@ -72,8 +73,8 @@ class VisualPanel extends JPanel implements ActionListener {
         return scroll;
     }
     
-    void setProject(Project project) {
-        inputPanel.setProject(project);
+    void setProject(ProjectElement<Project> element) {
+        inputPanel.setProject(element);
         fireChangeEvent();
     }
     

@@ -6,6 +6,7 @@ import javax.swing.SwingUtilities;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.ProjectElement;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -42,10 +43,11 @@ class DataExplorerRegistry {
     
     private static Map<Long, DataExplorerTopComponent> explorers = new HashMap<Long, DataExplorerTopComponent>();
     
-    public static DataExplorerTopComponent getComponent(Project project) {
+    public static DataExplorerTopComponent getComponent(ProjectElement<Project> element) {
+        Project project = element.getValue();
         DataExplorerTopComponent explorer = explorers.get(project.getId());
         if(explorer == null) {
-            explorer = new DataExplorerTopComponent(project);
+            explorer = new DataExplorerTopComponent(element);
             explorers.put(project.getId(), explorer);
         }
         return explorer;

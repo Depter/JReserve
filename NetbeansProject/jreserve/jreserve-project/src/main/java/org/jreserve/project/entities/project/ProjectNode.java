@@ -13,6 +13,7 @@ import org.openide.util.ImageUtilities;
  */
 class ProjectNode extends DefaultProjectNode {
     
+    private final static int MAX_TOOLTIP_LENGTH = 30;
     private final static ImageIcon PROJECT_ICON = ImageUtilities.loadImageIcon("resources/project.png", false);
     private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-ProjectNode";
     
@@ -23,8 +24,15 @@ class ProjectNode extends DefaultProjectNode {
     }
     
     private void initToolTip(String description) {
-        String tooltip = getFirstSentence(description);
+        String tooltip = getToolTippText(description);
         super.setShortDescription(tooltip);
+    }
+    
+    private String getToolTippText(String description) {
+        String str = getFirstSentence(description);
+        if(str != null && str.length() > MAX_TOOLTIP_LENGTH)
+            str = str.substring(0, MAX_TOOLTIP_LENGTH-3) + "...";
+        return str;
     }
     
     private String getFirstSentence(String description) {

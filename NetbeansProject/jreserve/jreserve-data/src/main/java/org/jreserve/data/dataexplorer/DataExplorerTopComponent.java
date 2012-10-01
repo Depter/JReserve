@@ -10,10 +10,9 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -24,13 +23,16 @@ import javax.swing.text.DefaultEditorKit;
 import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.entities.ProjectDataType;
-import org.jreserve.data.projectdatatype.ProjectDataTypeUtil;
 import org.jreserve.data.util.DateTableCellRenderer;
 import org.jreserve.data.util.DoubleTableCellRenderer;
 import org.jreserve.data.util.ProjectDataTypeComboRenderer;
+import org.jreserve.data.util.ProjectDataTypeComparator;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.ProjectElementAdapter;
+import org.jreserve.project.system.ProjectElementListener;
 import org.jreserve.resources.ToolBarButton;
 import org.jreserve.resources.textfieldfilters.IntegerFilter;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -38,8 +40,10 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.actions.CopyAction;
 import org.openide.actions.DeleteAction;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.WeakListeners;
 import org.openide.util.actions.SystemAction;
 import org.openide.windows.TopComponent;
 
@@ -90,26 +94,33 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     private final static String ROW_PER_PAGE_ACTION = "ROW_PER_PAGE_ACTION";
     
     private Project project;
+    private ProjectElement element;
     private DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
     private DataExplorerTabelModel tableModel;
     private DateTableCellRenderer dateRenderer;
     private DoubleTableCellRenderer doubleRenderer;
+    private ProjectElementListener projectListener;
     
     public DataExplorerTopComponent() {
     }
     
-    public DataExplorerTopComponent(Project project) {
-        this.project = project;
+    public DataExplorerTopComponent(ProjectElement<Project> element) {
+        this.element = element;
+        this.project = element.getValue();
         this.tableModel = new DataExplorerTabelModel(project, NUMBER_OF_ROWS);
         loadDataTypes();
         initComponents();
         setTableRenderers();
         setName(project.getName());
         registerActions();
+        initProjectListener();
     }
     
     private void loadDataTypes() {
-        for(ProjectDataType dt : ProjectDataTypeUtil.getDefault().getValues(project))
+        List<ProjectDataType> dts = element.getChildValues(ProjectDataType.class);
+        Collections.sort(dts, new ProjectDataTypeComparator());
+        comboModel.removeAllElements();
+        for(ProjectDataType dt : dts)
             comboModel.addElement(dt);
         comboModel.setSelectedItem(null);
     }
@@ -138,6 +149,13 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, DELETE_ACTION_KEY);
         table.getInputMap().put(stroke, DELETE_ACTION_KEY);
         getActionMap().put(DELETE_ACTION_KEY, new DeleteDataAction());
+    }
+    
+    private void initProjectListener() {
+        projectListener = new ProjectListener();
+        Class c = ProjectElementListener.class;
+        ProjectElementListener weak = WeakListeners.create(c, projectListener, element);
+        element.addProjectElementListener(weak);
     }
     
     /**
@@ -404,6 +422,42 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
             String msg = Bundle.MSG_DataExplorerTopComponent_DeleteLogMessage(count, dt.getDbId(), dt.getName());
             ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
             ChangeLogUtil.getDefault().saveValues(project);
+        }
+    }
+
+    private class ProjectListener extends ProjectElementAdapter {
+        @Override
+        public void removedFromParent(ProjectElement parent) {
+            DataExplorerTopComponent.this.close();
+        }
+
+        @Override
+        public void childRemoved(ProjectElement child) {
+            Object value = child.getValue();
+            if(value instanceof ProjectDataType) {
+                ProjectDataType dt = (ProjectDataType) child.getValue();
+                ProjectDataType selected = getSelectedDataType();
+                comboModel.removeElement(value);
+                if(dt == selected)
+                    comboModel.setSelectedItem(null);
+            }
+        }
+
+        private ProjectDataType getSelectedDataType() {
+            return (ProjectDataType) dataTypeCombo.getSelectedItem();
+        }
+        
+        @Override
+        public void childAdded(ProjectElement child) {
+            Object value = child.getValue();
+            if(value instanceof ProjectDataType)
+                reloadDataTypes();
+        }
+        
+        private void reloadDataTypes() {
+            ProjectDataType selected = (ProjectDataType) dataTypeCombo.getSelectedItem();
+            loadDataTypes();
+            dataTypeCombo.setSelectedItem(selected);
         }
     }
 }

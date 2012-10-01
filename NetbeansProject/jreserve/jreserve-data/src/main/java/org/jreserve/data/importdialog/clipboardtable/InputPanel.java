@@ -1,6 +1,5 @@
 package org.jreserve.data.importdialog.clipboardtable;
 
-import org.jreserve.data.util.ProjectDataTypeComboRenderer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
@@ -14,7 +13,9 @@ import javax.swing.event.DocumentListener;
 import org.jreserve.data.DataImport;
 import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.data.util.DataImportSettings;
+import org.jreserve.data.util.ProjectDataTypeComboRenderer;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.ProjectElement;
 import org.jreserve.resources.textfieldfilters.CharacterDocument;
 import org.openide.util.NbBundle.Messages;
 
@@ -147,10 +148,10 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         this.actionPerformed(evt);
     }
     
-    public void setProject(Project project) {
-        String name = project==null? null : project.getName();
+    public void setProject(ProjectElement<Project> element) {
+        String name = element==null? null : element.getValue().getName();
         this.projectNameText.setText(name);
-        comboModel.setProject(project);
+        comboModel.setProject(element);
     }
     
     public ProjectDataType getDataType() {

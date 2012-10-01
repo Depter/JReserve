@@ -259,12 +259,12 @@ public class RootElement extends ProjectElement {
 
         @Override
         public Query createQuery(String query) {
-            throw new UnsupportedOperationException("Do not use this session to query entities! this sesison is only for loading.");
+            return session.createQuery(query);
         }
 
         @Override
         public Query createNamedQuery(String name) {
-            throw new UnsupportedOperationException("Do not use this session to query entities! this sesison is only for loading.");
+            return session.createNamedQuery(name);
         }
 
         @Override

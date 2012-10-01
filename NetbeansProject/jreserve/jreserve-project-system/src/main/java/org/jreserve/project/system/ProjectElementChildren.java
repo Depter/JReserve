@@ -29,6 +29,10 @@ public class ProjectElementChildren extends Children.Keys<ProjectElement> {
         public void childrenChanged() {
             setKeys(getVisibleChildren());
         }
+
+        @Override
+        public void removedFromParent(ProjectElement parent) {
+        }
     };
     
     public ProjectElementChildren(ProjectElement element) {

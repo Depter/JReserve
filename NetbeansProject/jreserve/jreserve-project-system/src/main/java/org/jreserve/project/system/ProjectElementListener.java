@@ -1,11 +1,13 @@
 package org.jreserve.project.system;
 
+import java.util.EventListener;
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ProjectElementListener {
+public interface ProjectElementListener extends EventListener {
     
     /**
      * Called after a child added to the ProjectElement.
@@ -26,4 +28,10 @@ public interface ProjectElementListener {
      */
     public void childrenChanged();
 
+    /**
+     * Called when the ProjectElement is removed from it's parent.
+     * 
+     * @param parent The old parent element.
+     */
+    public void removedFromParent(ProjectElement parent);
 }
