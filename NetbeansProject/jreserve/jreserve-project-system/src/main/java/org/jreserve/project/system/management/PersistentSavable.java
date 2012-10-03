@@ -3,9 +3,8 @@ package org.jreserve.project.system.management;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jreserve.persistence.PersistenceUnit;
-import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
+import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.system.ProjectElement;
 
 /**
@@ -26,7 +25,7 @@ public class PersistentSavable<T> extends AbstractProjectElementSavable<T> {
     @Override
     protected void handleSave() throws IOException {
         try {
-            initSession();
+            session = SessionFactory.beginTransaction();
             saveEntity();
             session.comitTransaction();
         } catch (Exception ex) {
@@ -35,14 +34,7 @@ public class PersistentSavable<T> extends AbstractProjectElementSavable<T> {
             throw new IOException(ex);
         } finally {
             element.removeFromLookup(this);
-            unregister();
         }
-    }
-
-    private void initSession() {
-        PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
-        session = pu.getSession();
-        session.beginTransaction();
     }
 
     protected void saveEntity() {

@@ -22,7 +22,7 @@ import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
-import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.util.DateTableCellRenderer;
 import org.jreserve.data.util.DoubleTableCellRenderer;
 import org.jreserve.data.util.ProjectDataTypeComboRenderer;

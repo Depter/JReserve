@@ -3,10 +3,9 @@ package org.jreserve.project.system.management;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jreserve.persistence.PersistenceUnit;
-import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
+import org.jreserve.persistence.SessionFactory;
 
 /**
  *
@@ -55,11 +54,9 @@ public abstract class AbstractElementCache<T, E> {
     }
     
     protected Session openSession(boolean isTransaction) {
-        PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
-        Session session = pu.getSession();
         if(isTransaction)
-            session.beginTransaction();
-        return session;
+            return SessionFactory.beginTransaction();
+        return SessionFactory.createSession();
     }
     
     protected abstract Query createQuery(Session session, T key);

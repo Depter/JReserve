@@ -63,13 +63,13 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util</artifactId>
-            <version>RELEASE72</version>
+            <version>${netbeans.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup</artifactId>
-            <version>RELEASE72</version>
+            <version>${netbeans.version}</version>
         </dependency>
         
         <dependency>
@@ -81,12 +81,24 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-awt</artifactId>
-            <version>RELEASE72</version>
+            <version>${netbeans.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-filesystems</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-windows</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-settings</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
         
@@ -119,15 +131,11 @@
             <artifactId>jreserve-resources</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
         <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-windows</artifactId>
-            <version>RELEASE72</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-modules-settings</artifactId>
-            <version>RELEASE72</version>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-locale-settings</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -140,6 +148,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.data</publicPackage>
+                        <publicPackage>org.jreserve.data.util</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

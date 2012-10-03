@@ -1,5 +1,6 @@
 package org.jreserve.data.entities;
 
+import org.jreserve.data.ProjectDataType;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;

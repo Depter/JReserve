@@ -1,7 +1,6 @@
 package org.jreserve.data;
 
 import java.util.Date;
-import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.project.entities.Project;
 
 /**

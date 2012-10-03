@@ -1,8 +1,8 @@
 package org.jreserve.project.system.management;
 
-import org.jreserve.project.system.util.ProjectSystemListener;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.RootElement;
+import org.jreserve.project.system.util.ProjectSystemListener;
 
 /**
  * If someone is wishes to get notified about the creation of a 

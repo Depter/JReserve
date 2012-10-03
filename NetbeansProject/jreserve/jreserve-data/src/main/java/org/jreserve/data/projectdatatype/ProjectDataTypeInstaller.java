@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.data.DataType;
 import org.jreserve.data.DataTypeUtil;
-import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.Session;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.Project;

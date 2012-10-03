@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import org.jreserve.data.Criteria;
 import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
-import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.project.entities.Project;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;

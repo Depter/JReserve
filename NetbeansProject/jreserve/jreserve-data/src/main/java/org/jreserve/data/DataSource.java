@@ -1,7 +1,6 @@
 package org.jreserve.data;
 
 import java.util.List;
-import org.jreserve.data.entities.ProjectDataType;
 import org.jreserve.data.query.*;
 import org.jreserve.persistence.Session;
 import org.jreserve.persistence.SessionFactory;

@@ -3,7 +3,7 @@ package org.jreserve.data.util;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.data.ProjectDataType;
 
 /**
  *

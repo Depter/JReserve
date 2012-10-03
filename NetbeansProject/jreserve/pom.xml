@@ -66,6 +66,9 @@
         <module>jreserve-triangle</module>
         <module>jreserve-project-system</module>
         <module>jreserve-data</module>
+        <module>jreserve-dataimport</module>
+        <module>jreserve-dataimport-clipboardtable</module>
+        <module>jreserve-locale-settings</module>
   </modules>
 
     <properties>

@@ -33,6 +33,7 @@ public abstract class AbstractProjectElementSavable<T> extends AbstractSavable i
             icon = new ImageIcon(img);
     }
     
+    
     @Override
     protected String findDisplayName() {
         return elementNode.getDisplayName();

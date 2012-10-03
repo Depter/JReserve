@@ -7,7 +7,7 @@ import java.util.Map;
 import org.jreserve.data.Data;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.data.entities.ClaimValuePk;
-import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.Project;
 

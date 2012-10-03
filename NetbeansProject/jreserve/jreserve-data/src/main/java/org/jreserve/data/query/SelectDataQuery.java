@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.data.Criteria;
 import org.jreserve.data.Data;
-import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 

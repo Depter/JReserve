@@ -7,10 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import org.jreserve.persistence.PersistenceUnit;
-import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.persistence.Query;
-import org.jreserve.persistence.Session;
+import org.jreserve.persistence.*;
 import org.jreserve.project.system.util.FactoryUtil;
 import org.jreserve.project.system.util.LoadingElement;
 import org.netbeans.api.progress.ProgressHandle;
@@ -137,7 +134,7 @@ public class RootElement extends ProjectElement {
             try {
                 progress.start();
                 progress.switchToIndeterminate();
-                openSession();
+                session = SessionFactory.beginTransaction();
                 elements = loadElements();
             } catch(Exception lex) {
                 this.ex = lex;
@@ -147,11 +144,6 @@ public class RootElement extends ProjectElement {
                 progress.finish();
                 finnish();
             }
-        }
-        
-        private void openSession() {
-            session = pu.getSession();
-            session.beginTransaction();
         }
 
         private List<ProjectElement> loadElements() {

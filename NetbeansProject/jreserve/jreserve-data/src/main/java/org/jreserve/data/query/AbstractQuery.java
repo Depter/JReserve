@@ -2,7 +2,7 @@ package org.jreserve.data.query;
 
 import java.util.Date;
 import org.jreserve.data.Criteria;
-import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.data.ProjectDataType;
 
 /**
  *

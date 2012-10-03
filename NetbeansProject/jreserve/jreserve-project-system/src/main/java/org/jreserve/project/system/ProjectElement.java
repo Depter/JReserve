@@ -316,6 +316,8 @@ public class ProjectElement<T> implements Lookup.Provider {
     /**
      * Removes this element from it's parent if it has a parent, 
      * otherwise nothing happens.
+     * 
+     * <p>Calling this method fires the {@link ProjectElementListener#removedFromParent(org.jreserve.project.system.ProjectElement) 
      */
     public void removeFromParent() {
         if(parent != null)
@@ -394,6 +396,12 @@ public class ProjectElement<T> implements Lookup.Provider {
     
     /**
      * Index used for first ordering of child elements.
+     * 
+     * <p>This value can be used to influence the order of
+     * child elements within the parent element. For example,
+     * within a project, first comes the data node, then the
+     * estimates then the bootstrap.
+     * </p>
      */
     public int getPosition() {
         return Integer.MAX_VALUE;

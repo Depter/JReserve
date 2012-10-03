@@ -2,7 +2,7 @@ package org.jreserve.data.projectdatatype;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.system.ProjectElement;

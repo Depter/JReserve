@@ -92,7 +92,31 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-data</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-dataimport</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-dataimport-clipboardtable</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-triangle</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-locale-settings</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

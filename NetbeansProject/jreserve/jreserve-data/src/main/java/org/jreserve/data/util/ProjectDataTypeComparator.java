@@ -1,7 +1,7 @@
 package org.jreserve.data.util;
 
 import java.util.Comparator;
-import org.jreserve.data.entities.ProjectDataType;
+import org.jreserve.data.ProjectDataType;
 
 /**
  *

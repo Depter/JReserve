@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import org.jreserve.localesettings.util.LocaleSettings;
 
 /**
  *
@@ -13,11 +14,11 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class DateTableCellRenderer extends DefaultTableCellRenderer {
 
-    private DateFormat format = new SimpleDateFormat(DataImportSettings.getDateFormat());
+    private DateFormat format = new SimpleDateFormat(LocaleSettings.getDateFormat());
 
     public void setFormat(DateFormat format) {
         if(format == null)
-            this.format = new SimpleDateFormat(DataImportSettings.getDateFormat());
+            this.format = new SimpleDateFormat(LocaleSettings.getDateFormat());
         else
             this.format = format;
     }

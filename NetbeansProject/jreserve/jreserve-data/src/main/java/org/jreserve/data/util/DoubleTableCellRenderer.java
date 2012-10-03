@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.text.DecimalFormat;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import org.jreserve.localesettings.util.LocaleSettings;
 
 /**
  *
@@ -11,11 +12,11 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class DoubleTableCellRenderer extends DefaultTableCellRenderer {
 
-    private DecimalFormat format = DataImportSettings.getDecimalFormatter();
+    private DecimalFormat format = LocaleSettings.getDecimalFormatter();
 
     public void setFormat(DecimalFormat format) {
         if(format == null)
-            this.format = DataImportSettings.getDecimalFormatter();
+            this.format = LocaleSettings.getDecimalFormatter();
         else
             this.format = format;
     }
