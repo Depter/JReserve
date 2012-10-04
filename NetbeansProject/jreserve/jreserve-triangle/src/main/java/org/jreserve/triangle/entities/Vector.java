@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-import org.jreserve.data.DataType;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.Project;
 
@@ -39,13 +39,14 @@ public class Vector extends AbstractData implements Serializable {
     
     @OneToMany(mappedBy="vector")
     private List<VectorComment> comments = new ArrayList<VectorComment>();
+    
     @OneToMany(mappedBy="vector")
     private List<VectorCorrection> corrections = new ArrayList<VectorCorrection>();
     
     protected Vector() {
     }
     
-    public Vector(Project project, DataType dataType, String name) {
+    public Vector(Project project, ProjectDataType dataType, String name) {
         super(project, dataType, name);
     }
 

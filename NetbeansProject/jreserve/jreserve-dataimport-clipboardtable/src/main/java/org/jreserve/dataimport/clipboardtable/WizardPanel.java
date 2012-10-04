@@ -10,7 +10,7 @@ import org.jreserve.data.Data;
 import org.jreserve.data.DataTable;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.dataimport.DataImportWizard;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 import org.openide.WizardDescriptor;
 import org.openide.util.Exceptions;
@@ -72,8 +72,8 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     @Override
     public void readSettings(WizardDescriptor wiz) {
         this.wizard = wiz;
-        ProjectElement<Project> element = (ProjectElement<Project>) wiz.getProperty(DataImportWizard.PROJECT_PROPERTY);
-        getComponent().setProject(element);
+        ProjectElement<ClaimType> element = (ProjectElement<ClaimType>) wiz.getProperty(DataImportWizard.CLAIM_TYPE_PROPERTY);
+        getComponent().setClaimType(element);
     }
     
     @Override

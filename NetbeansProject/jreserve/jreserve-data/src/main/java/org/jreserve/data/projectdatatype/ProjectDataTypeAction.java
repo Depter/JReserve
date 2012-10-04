@@ -2,7 +2,7 @@ package org.jreserve.data.projectdatatype;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -23,26 +23,26 @@ import org.openide.util.Utilities;
 )
 @ActionRegistration(displayName = "#CTL_ProjectDataTypeAction")
 @ActionReferences({
-    @ActionReference(path= "JReserve/Popup/ProjectRoot-ProjectNode", position = 230)
+    @ActionReference(path= "JReserve/Popup/ProjectRoot-ClaimTypeNode", position = 230)
 })
 @Messages({
     "CTL_ProjectDataTypeAction=Data types"
 })
 public class ProjectDataTypeAction implements ActionListener {
 
-    private Project project;
+    private ClaimType claimType;
     
-    public ProjectDataTypeAction(Project project) {
-        this.project = project;
+    public ProjectDataTypeAction(ClaimType claimType) {
+        this.claimType = claimType;
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        ProjectElement<Project> element = getProjectElement();
+        ProjectElement<ClaimType> element = getProjectElement();
         ProjectDataTypeDialog.showDialog(element);
     }
     
-    private ProjectElement<Project> getProjectElement() {
+    private ProjectElement<ClaimType> getProjectElement() {
         Lookup lkp = Utilities.actionsGlobalContext();
         return lkp.lookup(ProjectElement.class);
     }

@@ -1,4 +1,4 @@
-package org.jreserve.project.system.util;
+package org.jreserve.project.system.deletedialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +16,7 @@ import org.openide.util.NbBundle.Messages;
  */
 @ActionID(
     category = "JReserve/ProjectSystem",
-    id = "org.jreserve.project.system.util.DeleteAction"
+    id = "org.jreserve.project.system.deletedialog.DeleteAction"
 )
 @ActionRegistration(
     iconBase = "resources/delete.png",

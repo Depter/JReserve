@@ -3,6 +3,7 @@ package org.jreserve.data.query;
 import java.util.Date;
 import org.jreserve.data.Criteria;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.project.entities.ClaimType;
 
 /**
  *
@@ -15,13 +16,19 @@ class AbstractQuery {
     
     protected String buildCriteria(String begin, Criteria criteria) {
         StringBuilder sb = new StringBuilder(begin);
-        sb.append(" WHERE c.project.id = ").append(criteria.getProject().getId());
+        addClaimType(sb, criteria.getClaimType());
         addDataType(sb, criteria.getDataType());
         addFromAccidentDate(sb, criteria.getFromAccidentDate());
         addToAccidentDate(sb, criteria.getToAccidentDate());
         addFromDevelopmentDate(sb, criteria.getFromDevelopmentDate());
         addToDevelopmentDate(sb, criteria.getToDevelopmentDate());
         return sb.toString();
+    }
+    
+    private void addClaimType(StringBuilder sb, ClaimType claimType) {
+        if(claimType == null)
+            throw new IllegalArgumentException("ClaimType not set!");
+        sb.append(" WHERE c.claimType.id =").append(claimType.getId());
     }
     
     private void addDataType(StringBuilder sb, ProjectDataType dt) {

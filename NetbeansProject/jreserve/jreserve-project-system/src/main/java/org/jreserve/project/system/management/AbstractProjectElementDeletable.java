@@ -1,7 +1,7 @@
 package org.jreserve.project.system.management;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.system.ProjectElement;
@@ -18,8 +18,6 @@ import org.openide.nodes.Node;
  * @version 1.0
  */
 public class AbstractProjectElementDeletable implements Deletable {
-
-    private final static Logger logger = Logger.getLogger(AbstractProjectElementDeletable.class.getName());
     
     protected ProjectElement element;
     
@@ -109,5 +107,25 @@ public class AbstractProjectElementDeletable implements Deletable {
                 element.removeFromParent();
             }
         });
+    }
+
+    @Override
+    public List<Deletable> getChildDeletables() {
+        List<Deletable> result = new ArrayList<Deletable>();
+        addChildDeletables(result, element);
+        return result;
+    }
+    
+    private void addChildDeletables(List<Deletable> deletables, ProjectElement<?> parent) {
+        for(ProjectElement child : parent.getChildren()) {
+            Deletable d = getDeletable(child);
+            if(d != null)
+                deletables.add(d);
+            addChildDeletables(deletables, child);
+        }
+    }
+    
+    private Deletable getDeletable(ProjectElement child) {
+        return child.getLookup().lookup(Deletable.class);
     }
 }

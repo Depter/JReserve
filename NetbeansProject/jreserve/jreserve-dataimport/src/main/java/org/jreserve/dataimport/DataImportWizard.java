@@ -14,7 +14,7 @@ import org.openide.WizardDescriptor;
  */
 public interface DataImportWizard {
 
-    public final static String PROJECT_PROPERTY = "SELECTED_PROJECT";
+    public final static String CLAIM_TYPE_PROPERTY = "SELECTED_CLAIM_TYPE";
     public final static String DATA_TABLE_PROPERTY = "DATA_TABLE";
     public final static String IMPORT_METHOD_PROPERTY = "IMPORT_METHOD";
     public final static String CUMMULATED_PROPERTY = "CUMMULATED";

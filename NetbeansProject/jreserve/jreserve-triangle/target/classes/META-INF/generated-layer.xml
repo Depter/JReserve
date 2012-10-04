@@ -35,5 +35,31 @@
                 <attr boolvalue="true" name="generatedId"/>
             </file>
         </folder>
+        <folder name="NewWizard">
+            <folder name="Data">
+                <file name="org-jreserve-triangle-entities-vectorimport-VectorImportWizard.instance">
+                    <!--org.jreserve.triangle.entities.vectorimport.VectorImportWizard-->
+                    <attr
+                        bundlevalue="org.jreserve.triangle.entities.vectorimport.Bundle#LBL.VectorImportWizard.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="resources/vector.png"/>
+                    <attr intvalue="100" name="position"/>
+                </file>
+                <file name="org-jreserve-triangle-triangleimport-TriangleImportWizard.instance">
+                    <!--org.jreserve.triangle.triangleimport.TriangleImportWizard-->
+                    <attr
+                        bundlevalue="org.jreserve.triangle.triangleimport.Bundle#LBL.TriangleImportWizard.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="resources/triangle.png"/>
+                    <attr intvalue="100" name="position"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="Project">
+            <folder name="ElementFactories">
+                <file name="org-jreserve-data-container-ProjectDataLoader.instance">
+                    <!--org.jreserve.data.container.ProjectDataLoader-->
+                    <attr intvalue="500" name="priority"/>
+                </file>
+            </folder>
+        </folder>
     </folder>
 </filesystem>

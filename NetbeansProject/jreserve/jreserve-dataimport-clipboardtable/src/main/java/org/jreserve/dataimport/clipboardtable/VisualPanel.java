@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.TableColumnModel;
 import org.jreserve.data.DataImport.ImportType;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 import org.openide.util.NbBundle;
 
@@ -73,8 +73,8 @@ class VisualPanel extends JPanel implements ActionListener {
         return scroll;
     }
     
-    void setProject(ProjectElement<Project> element) {
-        inputPanel.setProject(element);
+    void setClaimType(ProjectElement<ClaimType> element) {
+        inputPanel.setClaimType(element);
         fireChangeEvent();
     }
     

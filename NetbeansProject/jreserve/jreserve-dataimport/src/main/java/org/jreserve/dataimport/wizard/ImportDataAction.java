@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import org.jreserve.dataimport.DataImportWizard;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
@@ -28,7 +28,7 @@ import org.openide.util.Utilities;
 @ActionRegistration(displayName = "#CTL_ImportDataAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Project", position = 1250),
-    @ActionReference(path= "JReserve/Popup/ProjectRoot-ProjectNode", position = 250)
+    @ActionReference(path= "JReserve/Popup/ProjectRoot-ClaimTypeNode", position = 250)
 })
 @Messages({
     "CTL_ImportDataAction=Import data",
@@ -36,10 +36,10 @@ import org.openide.util.Utilities;
 })
 public class ImportDataAction implements ActionListener {
     
-    private Project project;
+    private ClaimType claimType;
     
-    public ImportDataAction(Project project) {
-        this.project = project;
+    public ImportDataAction(ClaimType claimType) {
+        this.claimType = claimType;
     }
     
     @Override
@@ -51,16 +51,16 @@ public class ImportDataAction implements ActionListener {
     
     private WizardDescriptor createDescriptor(DataImportWizardIterator iterator) {
         WizardDescriptor descriptor = new WizardDescriptor(iterator);
-        descriptor.putProperty(DataImportWizard.PROJECT_PROPERTY, getProjectElement());
+        descriptor.putProperty(DataImportWizard.CLAIM_TYPE_PROPERTY, getClaimTypeElement());
         descriptor.setTitleFormat(new MessageFormat("{0} ({1})"));
         descriptor.setTitle(Bundle.LBL_ImportDataAction_Dialog_Title());
         iterator.setWizardDescriptor(descriptor);
         return descriptor;
     }
     
-    private ProjectElement<Project> getProjectElement() {
+    private ProjectElement<ClaimType> getClaimTypeElement() {
         Lookup lkp = Utilities.actionsGlobalContext();
-        ProjectElement<Project> element = lkp.lookup(ProjectElement.class);
+        ProjectElement<ClaimType> element = lkp.lookup(ProjectElement.class);
         return element;
     }
 

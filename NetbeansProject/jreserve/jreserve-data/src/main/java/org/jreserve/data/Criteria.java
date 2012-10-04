@@ -1,7 +1,7 @@
 package org.jreserve.data;
 
 import java.util.Date;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 
 /**
  *
@@ -10,21 +10,21 @@ import org.jreserve.project.entities.Project;
  */
 public class Criteria {
     
-    private Project project;
+    private ClaimType claimType;
     private ProjectDataType dataType = null;
     private Date fromAccidentDate;
     private Date toAccidentDate;
     private Date fromDevelopmentDate;
     private Date toDevelopmentDate;
 
-    public Criteria(Project project) {
-        if(project == null)
-            throw new NullPointerException("Project can not be null!");
-        this.project = project;
+    public Criteria(ClaimType claimType) {
+        if(claimType == null)
+            throw new NullPointerException("ClaimType can not be null!");
+        this.claimType = claimType;
     }
 
-    public Project getProject() {
-        return project;
+    public ClaimType getClaimType() {
+        return claimType;
     }
 
     public ProjectDataType getDataType() {
@@ -88,10 +88,10 @@ public class Criteria {
 
     @Override
     public String toString() {
-        String msg = "Criteria: project = %s; type = %s; "+
+        String msg = "Criteria: ClaimType = %s; type = %s; "+
                 "fromAccident = %tF; toAccidnet = %tF; "+
                 "fromDevelopment = %tF; toDevelopment = %tF";
-        return String.format(msg, project, dataType, 
+        return String.format(msg, claimType, dataType, 
                 fromAccidentDate, toAccidentDate,
                 fromDevelopmentDate, toDevelopmentDate);
     }

@@ -9,7 +9,7 @@ import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.data.entities.ClaimValuePk;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.Session;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 
 /**
  *
@@ -18,7 +18,7 @@ import org.jreserve.project.entities.Project;
  */
 public class AddDataQuery {
     
-    private Map<Long, Project> projects = new HashMap<Long, Project>();
+    private Map<Long, ClaimType> claimTypes = new HashMap<Long, ClaimType>();
     private Map<Long, ProjectDataType> dataTypes = new HashMap<Long, ProjectDataType>();
     
     public AddDataQuery() {
@@ -34,15 +34,15 @@ public class AddDataQuery {
     
     private void loadPersistence(Session session, Data data) {
         ProjectDataType dataType = data.getDataType();
-        Project project = dataType.getProject();
-        loadPersistentProject(session, project);
+        ClaimType claimType = dataType.getClaimType();
+        loadPersistentClaimType(session, claimType);
         loadPersistentDataType(session, dataType);
     }
     
-    private void loadPersistentProject(Session session, Project project) {
-        Long id = project.getId();
-        if(!projects.containsKey(id))
-            projects.put(id, session.find(Project.class, id));
+    private void loadPersistentClaimType(Session session, ClaimType claimType) {
+        Long id = claimType.getId();
+        if(!claimTypes.containsKey(id))
+            claimTypes.put(id, session.find(ClaimType.class, id));
     }
     
     private void loadPersistentDataType(Session session, ProjectDataType dataType) {
@@ -72,14 +72,14 @@ public class AddDataQuery {
     private ClaimValue createClaimValue(Data data) {
         Date accident = data.getAccidentDate();
         Date development = data.getDevelopmentDate();
-        Project project = getPersistentProject(data);
+        ClaimType claimType = getPersistentClaimType(data);
         ProjectDataType dataType = getPersistentDataType(data);
-        return new ClaimValue(project, dataType, accident, development);
+        return new ClaimValue(claimType, dataType, accident, development);
     }
     
-    private Project getPersistentProject(Data data) {
-        long id = data.getDataType().getProject().getId();
-        return projects.get(id);
+    private ClaimType getPersistentClaimType(Data data) {
+        long id = data.getDataType().getClaimType().getId();
+        return claimTypes.get(id);
     }
     
     private ProjectDataType getPersistentDataType(Data data) {
@@ -96,7 +96,7 @@ public class AddDataQuery {
     }
     
     private void clearPersistence() {
-        projects.clear();
+        claimTypes.clear();
         dataTypes.clear();
     }
 }

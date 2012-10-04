@@ -62,9 +62,8 @@ class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
         private void logDeletion() {
             ProjectDataType dt = ProjectDatTypeProjectElement.this.getValue();
             String msg = "Deleted claim data from '%s'/'%d - %s.";
-            msg = String.format(msg, dt.getProject().getName(), dt.getDbId(), dt.getName());
+            msg = String.format(msg, dt.getClaimType().getName(), dt.getDbId(), dt.getName());
             logger.log(Level.FINE, msg);
-        }
-        
+        }        
     }
 }

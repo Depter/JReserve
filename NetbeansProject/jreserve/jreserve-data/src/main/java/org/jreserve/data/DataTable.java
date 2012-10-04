@@ -2,7 +2,6 @@ package org.jreserve.data;
 
 import java.util.*;
 import org.jreserve.project.entities.ClaimType;
-import org.jreserve.project.entities.Project;
 
 /**
  *
@@ -24,12 +23,8 @@ public class DataTable {
         return dataType;
     }
     
-    public Project getProject() {
-        return dataType.getProject();
-    }
-    
     public ClaimType getClaimType() {
-        return getProject().getClaimType();
+        return dataType.getClaimType();
     }
     
     public List<Date> getAccidentDates() {
@@ -135,6 +130,6 @@ public class DataTable {
     @Override
     public String toString() {
         String format = "DataTable [project=%s; dataType=%s]";
-        return String.format(format, dataType.getProject().getName(), dataType.getName());
+        return String.format(format, dataType.getClaimType().getName(), dataType.getName());
     }
 }

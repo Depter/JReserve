@@ -29,6 +29,7 @@ import org.jreserve.data.util.ProjectDataTypeComboRenderer;
 import org.jreserve.data.util.ProjectDataTypeComparator;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.ProjectElementAdapter;
@@ -40,7 +41,6 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.actions.CopyAction;
 import org.openide.actions.DeleteAction;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
@@ -93,7 +93,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     private final static String LAST_PAGE_ACTION = "LAST_PAGE_ACTION";
     private final static String ROW_PER_PAGE_ACTION = "ROW_PER_PAGE_ACTION";
     
-    private Project project;
+    private ClaimType claimType;
     private ProjectElement element;
     private DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
     private DataExplorerTabelModel tableModel;
@@ -104,14 +104,14 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     public DataExplorerTopComponent() {
     }
     
-    public DataExplorerTopComponent(ProjectElement<Project> element) {
+    public DataExplorerTopComponent(ProjectElement<ClaimType> element) {
         this.element = element;
-        this.project = element.getValue();
-        this.tableModel = new DataExplorerTabelModel(project, NUMBER_OF_ROWS);
+        this.claimType = element.getValue();
+        this.tableModel = new DataExplorerTabelModel(claimType, NUMBER_OF_ROWS);
         loadDataTypes();
         initComponents();
         setTableRenderers();
-        setName(project.getName());
+        setName(claimType.getName());
         registerActions();
         initProjectListener();
     }
@@ -295,7 +295,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
 
     @Override
     public void componentClosed() {
-        DataExplorerRegistry.removeComponent(project);
+        DataExplorerRegistry.removeComponent(claimType);
     }
 
     void writeProperties(java.util.Properties p) {
@@ -412,7 +412,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
                 logDelete(datas.size(), dt);
                 ds.commit();
             } catch (Exception ex) {
-                logger.log(Level.SEVERE, String.format("Unable to delete data for '%s'/'%s'", project, dt), ex);
+                logger.log(Level.SEVERE, String.format("Unable to delete data for '%s'/'%s'", claimType, dt), ex);
                 ds.rollBack();
             }
             tableModel.setDataType(dt);
@@ -420,6 +420,11 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         
         private void logDelete(int count, ProjectDataType dt) {
             String msg = Bundle.MSG_DataExplorerTopComponent_DeleteLogMessage(count, dt.getDbId(), dt.getName());
+            for(Project project : claimType.getProjects())
+                logDelete(msg, project);
+        }
+        
+        private void logDelete(String msg, Project project) {
             ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
             ChangeLogUtil.getDefault().saveValues(project);
         }

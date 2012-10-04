@@ -1,5 +1,6 @@
 package org.jreserve.project.system.management;
 
+import java.util.List;
 import org.jreserve.persistence.Session;
 import org.openide.nodes.Node;
 
@@ -47,4 +48,11 @@ public interface Deletable {
      * Returns the node representing this deletable.
      */
     public Node getNode();
+    
+    /**
+     * Returns the list of Deletable elements, that depend on this deletable.
+     * In the case of a project element, this is a list of all deletables from
+     * the tree under this project element.
+     */
+    public List<Deletable> getChildDeletables();
 }

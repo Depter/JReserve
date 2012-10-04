@@ -4,7 +4,7 @@ import org.jreserve.data.DataImport.ImportType;
 import org.jreserve.data.DataTable;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.dataimport.DataImportWizard;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
@@ -14,7 +14,7 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  */
 @Messages({
-    "LBL.ConfirmVisualPanel.Project=Project:",
+    "LBL.ConfirmVisualPanel.ClaimType=ClaimType:",
     "LBL.ConfirmVisualPanel.ImportMethod=Import method:",
     "LBL.ConfirmVisualPanel.DataType=Data type:",
     "LBL.ConfirmVisualPanel.ValueCount=Values:",
@@ -31,17 +31,17 @@ public class ConfirmVisualPanel extends javax.swing.JPanel {
     }
     
     void readSettings(WizardDescriptor wizard) {
-        readProject(wizard);
+        readClaimType(wizard);
         readImportMethod(wizard);
         readDataTable(wizard);
         readCummulated(wizard);
     }
 
-    private void readProject(WizardDescriptor wizard) {
-        ProjectElement<Project> element = (ProjectElement<Project>) wizard.getProperty(DataImportWizard.PROJECT_PROPERTY);
-        Project project = element==null? null : element.getValue();
-        String name = project==null? null : project.getName();
-        projectText.setText(name);
+    private void readClaimType(WizardDescriptor wizard) {
+        ProjectElement<ClaimType> element = (ProjectElement<ClaimType>) wizard.getProperty(DataImportWizard.CLAIM_TYPE_PROPERTY);
+        ClaimType claimType = element==null? null : element.getValue();
+        String name = claimType==null? null : claimType.getName();
+        claimTypeText.setText(name);
     }
     
     private void readImportMethod(WizardDescriptor wizard) {
@@ -104,7 +104,7 @@ public class ConfirmVisualPanel extends javax.swing.JPanel {
         dataTypeLabel = new javax.swing.JLabel();
         valueCountLabel = new javax.swing.JLabel();
         cummulatedLabel = new javax.swing.JLabel();
-        projectText = new javax.swing.JLabel();
+        claimTypeText = new javax.swing.JLabel();
         importMethodText = new javax.swing.JLabel();
         dataTypeText = new javax.swing.JLabel();
         valueCountText = new javax.swing.JLabel();
@@ -116,7 +116,7 @@ public class ConfirmVisualPanel extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setLayout(new java.awt.GridBagLayout());
 
-        projectLabel.setText(Bundle.LBL_ConfirmVisualPanel_Project());
+        projectLabel.setText(Bundle.LBL_ConfirmVisualPanel_ClaimType());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -160,14 +160,14 @@ public class ConfirmVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         add(cummulatedLabel, gridBagConstraints);
 
-        projectText.setText(null);
+        claimTypeText.setText(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        add(projectText, gridBagConstraints);
+        add(claimTypeText, gridBagConstraints);
 
         importMethodText.setText(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -226,6 +226,7 @@ public class ConfirmVisualPanel extends javax.swing.JPanel {
         add(pBarPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel claimTypeText;
     private javax.swing.JLabel cummulatedLabel;
     private javax.swing.JLabel cummulatedText;
     private javax.swing.JLabel dataTypeLabel;
@@ -236,7 +237,6 @@ public class ConfirmVisualPanel extends javax.swing.JPanel {
     private javax.swing.JProgressBar pBar;
     private javax.swing.JPanel pBarPanel;
     private javax.swing.JLabel projectLabel;
-    private javax.swing.JLabel projectText;
     private javax.swing.JLabel valueCountLabel;
     private javax.swing.JLabel valueCountText;
     // End of variables declaration//GEN-END:variables

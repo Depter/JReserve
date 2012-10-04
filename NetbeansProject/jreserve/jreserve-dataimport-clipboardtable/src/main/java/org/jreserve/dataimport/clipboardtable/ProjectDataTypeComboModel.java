@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 
 /**
@@ -29,7 +29,7 @@ class ProjectDataTypeComboModel extends DefaultComboBoxModel implements Comparat
         return types.size();
     }
     
-    void setProject(ProjectElement<Project> element) {
+    void setClaimType(ProjectElement<ClaimType> element) {
         int size = getSize();
         if(element == null)
             types = null;
@@ -38,7 +38,7 @@ class ProjectDataTypeComboModel extends DefaultComboBoxModel implements Comparat
         fireDataChanged(size);
     }
     
-    private void loadTypes(ProjectElement<Project> element) {
+    private void loadTypes(ProjectElement<ClaimType> element) {
         types = element.getChildValues(ProjectDataType.class);
         Collections.sort(types, this);
     }

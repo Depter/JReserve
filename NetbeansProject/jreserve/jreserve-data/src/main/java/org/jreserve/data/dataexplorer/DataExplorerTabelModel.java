@@ -11,7 +11,7 @@ import org.jreserve.data.Criteria;
 import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
@@ -29,14 +29,14 @@ class DataExplorerTabelModel extends DefaultTableModel {
     
     private final static Logger logger = Logger.getLogger(DataExplorerTabelModel.class.getName());
     
-    private Project project;
+    private ClaimType claimType;
     private ProjectDataType dataType;
     private List<Data> allData = new ArrayList<Data>();
     private int pageIndex;
     private int rowPerPage;
 
-    DataExplorerTabelModel(Project project, int rowPerPage) {
-        this.project = project;
+    DataExplorerTabelModel(ClaimType claimType, int rowPerPage) {
+        this.claimType = claimType;
         this.rowPerPage = rowPerPage;
     }
     
@@ -56,7 +56,7 @@ class DataExplorerTabelModel extends DefaultTableModel {
             allData.addAll(ds.getData(getCriteria()));
             Collections.sort(allData);
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, String.format("Unable to load data for %s/%s", project, dataType), ex);
+            logger.log(Level.SEVERE, String.format("Unable to load data for %s/%s", claimType, dataType), ex);
             Exceptions.printStackTrace(ex);
         } finally {
             ds.rollBack();
@@ -64,7 +64,7 @@ class DataExplorerTabelModel extends DefaultTableModel {
     }
     
     private Criteria getCriteria() {
-        return new Criteria(project).setDataType(dataType);
+        return new Criteria(claimType).setDataType(dataType);
     }
     
     int getTotalRowCount() {

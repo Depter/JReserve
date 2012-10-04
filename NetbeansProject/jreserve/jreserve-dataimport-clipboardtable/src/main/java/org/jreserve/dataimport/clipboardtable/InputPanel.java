@@ -14,7 +14,7 @@ import org.jreserve.data.DataImport;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.util.ProjectDataTypeComboRenderer;
 import org.jreserve.localesettings.util.LocaleSettings;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.resources.textfieldfilters.CharacterDocument;
 import org.openide.util.NbBundle.Messages;
@@ -24,7 +24,7 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  */
 @Messages({
-    "LBL.InputPanel.project=Project:",
+    "LBL.InputPanel.ClaimType=Claim type:",
     "LBL.InputPanel.DataType=Data type:",
     "LBL.InputPanel.DateFormat=Date format:",
     "LBL.InputPanel.Cummulated=Cummulated:",
@@ -148,10 +148,10 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         this.actionPerformed(evt);
     }
     
-    public void setProject(ProjectElement<Project> element) {
+    public void setClaimType(ProjectElement<ClaimType> element) {
         String name = element==null? null : element.getValue().getName();
-        this.projectNameText.setText(name);
-        comboModel.setProject(element);
+        this.claimTypeNameText.setText(name);
+        comboModel.setClaimType(element);
     }
     
     public ProjectDataType getDataType() {
@@ -203,7 +203,7 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         dateFormatLabel = new javax.swing.JLabel();
         decimalSeparatorLabel = new javax.swing.JLabel();
         thousandSeparatorLabel = new javax.swing.JLabel();
-        projectNameText = new javax.swing.JLabel();
+        claimTypeNameText = new javax.swing.JLabel();
         dataTypeCombo = new javax.swing.JComboBox();
         cummulatedCheck = new javax.swing.JCheckBox();
         dateFormatCombo = new org.jreserve.localesettings.util.DateFormatCombo();
@@ -217,7 +217,7 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
 
         setLayout(new java.awt.GridBagLayout());
 
-        projectNameLabel.setText(Bundle.LBL_InputPanel_project());
+        projectNameLabel.setText(Bundle.LBL_InputPanel_ClaimType());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -271,7 +271,7 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         add(thousandSeparatorLabel, gridBagConstraints);
 
-        projectNameText.setText(null);
+        claimTypeNameText.setText(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -279,7 +279,7 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        add(projectNameText, gridBagConstraints);
+        add(claimTypeNameText, gridBagConstraints);
 
         dataTypeCombo.setModel(comboModel);
         dataTypeCombo.setActionCommand(DATA_TYPE_SELECT_ACTION);
@@ -392,6 +392,7 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler bottomFiller;
+    private javax.swing.JLabel claimTypeNameText;
     private javax.swing.JCheckBox cummulatedCheck;
     private javax.swing.JLabel cummulatedLabel;
     private javax.swing.JComboBox dataTypeCombo;
@@ -405,7 +406,6 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
     private javax.swing.JLabel importMethodLabel;
     private javax.swing.JLabel numberExampleLabel;
     private javax.swing.JLabel projectNameLabel;
-    private javax.swing.JLabel projectNameText;
     private javax.swing.JLabel thousandSeparatorLabel;
     private javax.swing.JTextField thousandSeparatorText;
     // End of variables declaration//GEN-END:variables

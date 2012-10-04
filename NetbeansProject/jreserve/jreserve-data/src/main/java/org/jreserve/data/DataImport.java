@@ -59,7 +59,7 @@ public abstract class DataImport {
     }
     
     private void mergeValues() {
-        ds.getSession().merge(table.getProject(), table.getDataType());
+        ds.getSession().merge(table.getClaimType(), table.getDataType());
     }
     
     protected abstract void processTable();
@@ -105,7 +105,7 @@ public abstract class DataImport {
         }
         
         private Criteria createDeleteCriteria() {
-            return new Criteria(table.getProject())
+            return new Criteria(table.getClaimType())
                     .setDataType(table.getDataType())
                     .setFromAccidentDate(table.getFirstAccidnetDate())
                     .setToAccidentDate(table.getLastAccidentDate());
@@ -131,7 +131,7 @@ public abstract class DataImport {
         }
         
         private Criteria createCriteria() {
-            return new Criteria(table.getProject())
+            return new Criteria(table.getClaimType())
                     .setDataType(table.getDataType())
                     .setFromAccidentDate(table.getFirstAccidnetDate())
                     .setToAccidentDate(table.getLastAccidentDate());

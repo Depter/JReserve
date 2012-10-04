@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-import org.jreserve.data.DataType;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.Project;
 
@@ -46,7 +46,7 @@ public class Triangle extends AbstractData implements Serializable {
     protected Triangle() {
     }
     
-    public Triangle(Project project, DataType dataType, String name) {
+    public Triangle(Project project, ProjectDataType dataType, String name) {
         super(project, dataType, name);
     }
 

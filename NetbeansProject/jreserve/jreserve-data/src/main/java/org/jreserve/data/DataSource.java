@@ -4,7 +4,7 @@ import java.util.List;
 import org.jreserve.data.query.*;
 import org.jreserve.persistence.Session;
 import org.jreserve.persistence.SessionFactory;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 
 /**
  *
@@ -45,9 +45,9 @@ public class DataSource {
      * Returns the existing {@link ProjectDataType ProjectDataTypes} for the 
      * given {@link Project project}.
      */
-    public List<ProjectDataType> getDataTypes(Project project) {
+    public List<ProjectDataType> getDataTypes(ClaimType claimType) {
         DataQuery<List<ProjectDataType>> query = new DistinctDataTypesQuery();
-        return query.query(session, new Criteria(project));
+        return query.query(session, new Criteria(claimType));
     }
     
     /**

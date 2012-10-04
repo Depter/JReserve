@@ -1,8 +1,7 @@
 package org.jreserve.triangle.entities;
 
 import javax.persistence.*;
-import org.jreserve.data.DataType;
-import org.jreserve.data.DataTypeUtil;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.project.entities.Project;
 
@@ -16,12 +15,13 @@ public abstract class AbstractData {
     
     private final static int NAME_SIZE = 64;
     
-    @ManyToOne(cascade=CascadeType.REMOVE)
+    @ManyToOne(cascade=CascadeType.REMOVE, fetch=FetchType.LAZY)
     @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
     private Project project;
     
-    @Column(name="DATA_TYPE_ID", nullable=false)
-    private int dataTypeId;
+    @ManyToOne(cascade=CascadeType.REMOVE, fetch=FetchType.LAZY)
+    @JoinColumn(name="DATA_TYPE_ID", referencedColumnName="ID", nullable=false)
+    private ProjectDataType dataType;
     
     @Column(name="NAME", nullable=false, length=64)
     private String name;
@@ -30,7 +30,7 @@ public abstract class AbstractData {
     }
     
     public AbstractData(Project project,
-            DataType dataType, String name) {
+            ProjectDataType dataType, String name) {
         initProject(project);
         initDataType(dataType);
         initName(name);
@@ -42,10 +42,10 @@ public abstract class AbstractData {
         this.project = project;
     }
     
-    private void initDataType(DataType dataType) {
+    private void initDataType(ProjectDataType dataType) {
         if(dataType == null)
             throw new NullPointerException("DataType is null!");
-        this.dataTypeId = dataType.getDbId();
+        this.dataType = dataType;
     }
     
     private void initName(String name) {
@@ -57,8 +57,8 @@ public abstract class AbstractData {
         return project;
     }
 
-    public DataType getDataType() {
-        return DataTypeUtil.parse(dataTypeId);
+    public ProjectDataType getDataType() {
+        return dataType;
     }
 
     public String getName() {

@@ -12,6 +12,7 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.dataimport.DataImportWizard;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.openide.NotificationLineSupport;
@@ -26,7 +27,7 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "MSG.ConfirmWizardPanel.NoProject=Project not selected!",
+    "MSG.ConfirmWizardPanel.NoClaimType=ClaimType not selected!",
     "MSG.ConfirmWizardPanel.NoImportMethod=Import method not selected!",
     "MSG.ConfirmWizardPanel.NoDate=There is no data specified to import!",
     "MSG.ConfirmWizardPanel.ImportError=Unable to import values!",
@@ -42,7 +43,7 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
     private boolean isValid = false;
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
-    private Project project;
+    private ClaimType claimType;
     private boolean cummulated;
     private DataTable table;
     private DataImport.ImportType importType;
@@ -81,9 +82,9 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
     }
     
     private void readProject() {
-        ProjectElement<Project> element = (ProjectElement<Project>) wizard.getProperty(DataImportWizard.PROJECT_PROPERTY);
+        ProjectElement<ClaimType> element = (ProjectElement<ClaimType>) wizard.getProperty(DataImportWizard.CLAIM_TYPE_PROPERTY);
         if(element != null)
-            project = element.getValue();
+            claimType = element.getValue();
     }
     
     private void readCummulated() {
@@ -104,9 +105,9 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
     }
     
     private boolean checkProject() {
-        if(project != null)
+        if(claimType != null)
             return true;
-        showError(Bundle.MSG_ConfirmWizardPanel_NoProject());
+        showError(Bundle.MSG_ConfirmWizardPanel_NoClaimType());
         return false;
     }
     
@@ -185,6 +186,11 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
     private void makeLog() {
         String msg = getLogMessage();
         ChangeLogUtil util = ChangeLogUtil.getDefault();
+        for(Project project : claimType.getProjects())
+            makeLog(util, project, msg);
+    }
+    
+    private void makeLog(ChangeLogUtil util, Project project, String msg) {
         util.addChange(project, ChangeLog.Type.PROJECT, msg);
         util.saveValues(project);
     }

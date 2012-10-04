@@ -1,4 +1,4 @@
-package org.jreserve.project.system.util;
+package org.jreserve.project.system.deletedialog;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,6 +10,7 @@ import javax.swing.*;
 import org.jreserve.project.system.management.Deletable;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.explorer.view.BeanTreeView;
 import org.openide.explorer.view.ListView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -39,7 +40,8 @@ class DeleteDialog extends JDialog implements ExplorerManager.Provider {
     
     private final List<Deletable> context;
     private final DeleteChildren children;
-    private ListView listView;
+    private BeanTreeView treeView;
+    //private ListView listView;
     private JButton delete = new JButton(Bundle.LBL_DeleteDialog_button_delete());
     private JButton deleteAll = new JButton(Bundle.LBL_DeleteDialog_button_deleteall());
     private JButton cancel = new JButton(Bundle.LBL_DeleteDialog_button_cancel());
@@ -67,13 +69,14 @@ class DeleteDialog extends JDialog implements ExplorerManager.Provider {
         pack();
     }
     
-    private ListView createListView() {
-        listView = new ListView();
-        listView.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        listView.setPreferredSize(new Dimension(200, 120));
-        listView.setMinimumSize(new Dimension(200, 120));
+    private JScrollPane createListView() {
+        treeView = new BeanTreeView();
+        treeView.setRootVisible(false);
+        treeView.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        treeView.setPreferredSize(new Dimension(200, 120));
+        treeView.setMinimumSize(new Dimension(200, 120));
         initExplorerManager();
-        return listView;
+        return treeView;
     }
     
     private void initExplorerManager() {
@@ -168,31 +171,6 @@ class DeleteDialog extends JDialog implements ExplorerManager.Provider {
         @Override
         protected Node[] createNodes(Deletable t) {
             return new Node[]{new DeletableNode(t)};
-        }
-    }
-    
-    private static class DeletableNode extends AbstractNode {
-    
-        private Node nodeDelegate;
-        
-        private DeletableNode(Deletable deletable) {
-            super(Children.LEAF, Lookups.singleton(deletable));
-            nodeDelegate = deletable.getNode();
-        }
-
-        @Override
-        public Image getIcon(int type) {
-            return nodeDelegate.getIcon(type);
-        }
-
-        @Override
-        public Image getOpenedIcon(int type) {
-            return nodeDelegate.getOpenedIcon(type);
-        }
-
-        @Override
-        public String getDisplayName() {
-            return nodeDelegate.getDisplayName();
         }
     }
     

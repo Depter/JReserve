@@ -3,7 +3,7 @@ package org.jreserve.data;
 import java.io.Serializable;
 import javax.persistence.*;
 import org.jreserve.persistence.EntityRegistration;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 
 /**
  *
@@ -34,8 +34,8 @@ public class ProjectDataType implements Serializable {
     private long id;
     
     @ManyToOne(fetch=FetchType.LAZY, optional=false)
-    @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
-    private Project project;
+    @JoinColumn(name="CLAIM_TYPE_ID", referencedColumnName="ID", nullable=false)
+    private ClaimType claimType;
     
     @Column(name="DB_ID", nullable=false)
     private int dbId;
@@ -49,15 +49,15 @@ public class ProjectDataType implements Serializable {
     protected ProjectDataType() {
     }
     
-    public ProjectDataType(Project project, DataType dt) {
-        this.project = project;
+    public ProjectDataType(ClaimType claimType, DataType dt) {
+        this.claimType = claimType;
         this.dbId = dt.getDbId();
         this.name = dt.getName();
         this.isTriangle = dt.isTriangle();
     }
     
-    public ProjectDataType(Project project, int dbId, String name, boolean isTriangle) {
-        setProject(project);
+    public ProjectDataType(ClaimType claimType, int dbId, String name, boolean isTriangle) {
+        setClaimType(claimType);
         this.dbId = dbId;
         checkName(name);
         this.name = name;
@@ -68,14 +68,14 @@ public class ProjectDataType implements Serializable {
         return id;
     }
     
-    private void setProject(Project project) {
-        if(project == null)
-            throw new NullPointerException("Project is null!");
-        this.project = project;
+    private void setClaimType(ClaimType claimType) {
+        if(claimType == null)
+            throw new NullPointerException("ClaimType is null!");
+        this.claimType = claimType;
     }
     
-    public Project getProject() {
-        return project;
+    public ClaimType getClaimType() {
+        return claimType;
     }
     
     public int getDbId() {
@@ -117,31 +117,31 @@ public class ProjectDataType implements Serializable {
     
     public int compareTo(ProjectDataType o) {
         if(o == null) return -1;
-        int dif = compareProject(project);
+        int dif = compareClaimType(o.claimType);
         if(dif != 0) return dif;
         return dbId - o.dbId;
     }
     
-    private int compareProject(Project o) {
-        if(project == null)
+    private int compareClaimType(ClaimType o) {
+        if(claimType == null)
             return o==null? 0 : 1;
-        return o==null? -1 : (int) (project.getId() - o.getId());
+        return o==null? -1 : (int) (claimType.getId() - o.getId());
     }
     
     @Override
     public int hashCode() {
-        int hash = 31 + (project==null? 0 : project.hashCode());
+        int hash = 31 + (claimType==null? 0 : claimType.hashCode());
         return 17 * hash + dbId;
     }
     
     @Override
     public String toString() {
-        return String.format("ProjectDataType [%d; %s; %s]", dbId, name, project);
+        return String.format("ProjectDataType [%d; %s; %s]", dbId, name, claimType);
     }
     
     public String getPath() {
-        if(project == null)
+        if(claimType == null)
             return toString();
-        return String.format("%s/%s", project.getPath(), this);
+        return String.format("%s/%s", claimType.getPath(), this);
     }
 }

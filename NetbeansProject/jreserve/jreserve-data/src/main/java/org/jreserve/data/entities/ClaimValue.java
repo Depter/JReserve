@@ -1,11 +1,11 @@
 package org.jreserve.data.entities;
 
-import org.jreserve.data.ProjectDataType;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.EntityRegistration;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 
 /**
  *
@@ -24,8 +24,8 @@ public class ClaimValue implements Serializable {
     
     @Id
     @ManyToOne
-    @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
-    private Project project;
+    @JoinColumn(name="CLAIM_TYPE_ID", referencedColumnName="ID", nullable=false)
+    private ClaimType claimType;
     
     @Id
     @ManyToOne
@@ -48,18 +48,18 @@ public class ClaimValue implements Serializable {
     protected ClaimValue() {
     }
     
-    public ClaimValue(Project project, ProjectDataType dataType, 
+    public ClaimValue(ClaimType claimType, ProjectDataType dataType, 
             Date accidentDate, Date developmentDate) {
-        initProject(project);
+        initClaimType(claimType);
         initDataType(dataType);
         initAccidentDate(accidentDate);
         initDevelopmentDate(developmentDate);
     }
     
-    private void initProject(Project project) {
-        if(project == null)
-            throw new NullPointerException("Project is null!");
-        this.project = project;
+    private void initClaimType(ClaimType claimType) {
+        if(claimType == null)
+            throw new NullPointerException("ClaimType is null!");
+        this.claimType = claimType;
     }
     
     private void initDataType(ProjectDataType dataType) {
@@ -88,8 +88,8 @@ public class ClaimValue implements Serializable {
         throw new IllegalArgumentException(msg);
     }
 
-    public Project getProject() {
-        return project;
+    public ClaimType getClaimType() {
+        return claimType;
     }
 
     public ProjectDataType getDataType() {
@@ -120,7 +120,7 @@ public class ClaimValue implements Serializable {
     }
     
     private boolean equals(ClaimValue o) {
-        return project.equals(o.project) &&
+        return claimType.equals(o.claimType) &&
                dataType.equals(o.dataType) &&
                accidentDate.equals(o.accidentDate) &&
                developmentDate.equals(o.developmentDate);
@@ -128,7 +128,7 @@ public class ClaimValue implements Serializable {
     
     @Override
     public int hashCode() {
-        int hash = 31 + project.hashCode();
+        int hash = 31 + claimType.hashCode();
         hash = 17 * hash + dataType.hashCode();
         hash = 17 * hash + accidentDate.hashCode();
         return 17 * hash + developmentDate.hashCode();
@@ -138,7 +138,7 @@ public class ClaimValue implements Serializable {
     public String toString() {
         return String.format(
             "ClaimData [%s; %s; %tF; %tF; %f]",
-            project.getName(), dataType.getName(),
+            claimType.getName(), dataType.getName(),
             accidentDate, developmentDate, claimValue);
     }
 }

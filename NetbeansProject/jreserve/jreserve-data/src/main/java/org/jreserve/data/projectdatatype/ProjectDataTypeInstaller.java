@@ -9,7 +9,7 @@ import org.jreserve.data.DataTypeUtil;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.Session;
 import org.jreserve.persistence.SessionFactory;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.ProjectSystemCreationListener;
 import org.openide.util.lookup.ServiceProvider;
@@ -28,15 +28,15 @@ public class ProjectDataTypeInstaller implements ProjectSystemCreationListener {
     
     @Override
     public boolean isInterested(Object value) {
-        return (value instanceof Project);
+        return (value instanceof ClaimType);
     }
 
     @Override
     public void created(ProjectElement element) {
         try {
             session = SessionFactory.beginTransaction();
-            Project project = getProject(element);
-            saveValues(element, project);
+            ClaimType claimType = getClaimType(element);
+            saveValues(element, claimType);
             session.comitTransaction();
         } catch(RuntimeException ex) {
             session.rollBackTransaction();
@@ -47,24 +47,24 @@ public class ProjectDataTypeInstaller implements ProjectSystemCreationListener {
     }
     
     
-    private Project getProject(ProjectElement element) {
-        Project project = (Project) element.getValue();
-        long id = project.getId();
-        return session.find(Project.class, id);
+    private ClaimType getClaimType(ProjectElement element) {
+        ClaimType claimType = (ClaimType) element.getValue();
+        long id = claimType.getId();
+        return session.find(ClaimType.class, id);
     }
     
-    private void saveValues(ProjectElement element, Project project) {
-        List<ProjectDataType> types = createDefaultValues(project);
+    private void saveValues(ProjectElement element, ClaimType claimType) {
+        List<ProjectDataType> types = createDefaultValues(claimType);
         for(ProjectDataType type : types) {
             session.persist(type);
             element.addChild(new ProjectDatTypeProjectElement(type));
         }
     }
     
-    private List<ProjectDataType> createDefaultValues(Project project) {
+    private List<ProjectDataType> createDefaultValues(ClaimType claimType) {
         List<ProjectDataType> result = new ArrayList<ProjectDataType>();
         for(DataType dt : DataTypeUtil.getDataTypes())
-            result.add(new ProjectDataType(project, dt));
+            result.add(new ProjectDataType(claimType, dt));
         return result;
     }
 }

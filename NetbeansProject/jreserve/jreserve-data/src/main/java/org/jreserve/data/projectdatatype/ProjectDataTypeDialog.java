@@ -22,6 +22,7 @@ import org.jreserve.persistence.Session;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.Deletable;
@@ -37,7 +38,7 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "LBL.ProjectDataTypeDialog.Title=Project Data Types",
+    "LBL.ProjectDataTypeDialog.Title=Claim Data Types",
     "# {0} - name of data type",
     "# {1} - dbId of data type",
     "MSG.ProjectDataTypeDialog.Changelog.Deleted=Data type \"{0} ({1})\" deleted.",
@@ -54,7 +55,7 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
     
     private final static boolean IS_MODAL = true;
     
-    static void showDialog(ProjectElement<Project> element) {
+    static void showDialog(ProjectElement<ClaimType> element) {
         ProjectDataTypeDialog content = new ProjectDataTypeDialog(element);
         DialogDescriptor dd = createDescriptor(content);
         dd.setOptions(new Object[0]);
@@ -74,8 +75,8 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
     }
     
     private Dialog dialog;
-    private Project project;
-    private ProjectElement<Project> element;
+    private ClaimType claimType;
+    private ProjectElement<ClaimType> element;
     private DataTypePanel dtPanel;
             
     private JButton okButton = new JButton("Ok");
@@ -83,9 +84,9 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
     
     private List<ProjectDataType> originalTypes;
     
-    private ProjectDataTypeDialog(ProjectElement<Project> element) {
+    private ProjectDataTypeDialog(ProjectElement<ClaimType> element) {
         this.element = element;
-        this.project = element.getValue();
+        this.claimType = element.getValue();
         initComponents();
         loadData();
     }
@@ -218,7 +219,7 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
         int id = dummy.getId();
         String name = dummy.getName();
         boolean isTriangle = dummy.isTriangle();
-        return new ProjectDataType(project, id, name, isTriangle);
+        return new ProjectDataType(claimType, id, name, isTriangle);
     }
     
     private boolean updateDataType(ProjectDataType dt, DTDummy dummy) {
@@ -238,6 +239,7 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
         
         private List<ProjectDataType> deleted;
         private List<ProjectDataType> updated;
+        private List<Project> projects;
         private Session session;
         
         private Persister(List<ProjectDataType> deleted, List<ProjectDataType> updated) {
@@ -251,15 +253,17 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
                 delete();
                 update();
                 session.comitTransaction();
+                saveLogs();
             } catch (RuntimeException ex) {
                 rollBack(ex);
-                logger.log(Level.SEVERE, "Unable to update ProjectDataTypes for project: "+project.getName(), ex);
+                logger.log(Level.SEVERE, "Unable to update ProjectDataTypes for ClaimType: "+claimType.getName(), ex);
             }
         }
         
         private void initialize() {
             session = SessionFactory.beginTransaction();
-            session.find(Project.class, project.getId());
+            ClaimType ct = session.find(ClaimType.class, claimType.getId());
+            projects = ct.getProjects();
         }
         
         private void delete() {
@@ -278,7 +282,13 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
             String name = dt.getName();
             int dbId = dt.getDbId();
             String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Deleted(name, dbId);
-            ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
+            makeProjectLog(msg);
+        }
+        
+        private void makeProjectLog(String msg) {
+            ChangeLogUtil util = ChangeLogUtil.getDefault();
+            for(Project project : projects)
+                util.addChange(project, ChangeLog.Type.PROJECT, msg);
         }
         
         private void update() {
@@ -302,7 +312,7 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
             String name = dt.getName();
             int dbId = dt.getDbId();
             String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Created(name, dbId);
-            ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
+            makeProjectLog(msg);
         }
         
         private void update(ProjectDataType dt) {
@@ -314,7 +324,18 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
             String oldName = dt.getName();
             int dbId = dt.getDbId();
             String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Changed(oldName, dbId);
-            ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
+            makeProjectLog(msg);
+        }
+
+        private void saveLogs() {
+            try {
+                ChangeLogUtil util = ChangeLogUtil.getDefault();
+                for(Project project : projects)
+                    util.saveValues(project);
+            } catch (RuntimeException ex) {
+                logger.log(Level.SEVERE, "Unable to save project logs!", ex);
+                Exceptions.printStackTrace(ex);
+            }
         }
         
         private void rollBack(Exception ex) {

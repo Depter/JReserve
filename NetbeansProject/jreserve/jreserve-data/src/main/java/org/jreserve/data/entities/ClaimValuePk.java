@@ -1,10 +1,8 @@
 package org.jreserve.data.entities;
 
-import org.jreserve.data.ProjectDataType;
 import java.io.Serializable;
 import java.util.Date;
-import org.jreserve.data.Data;
-import org.jreserve.project.entities.Project;
+import org.jreserve.data.ProjectDataType;
 
 /**
  *
@@ -14,7 +12,7 @@ import org.jreserve.project.entities.Project;
 public class ClaimValuePk implements Serializable {
     private final static long serialVersionUID = 1L;
     
-    private long project;
+    private long claimType;
     private long dataType;
     
     private Date accidentDate;
@@ -24,7 +22,7 @@ public class ClaimValuePk implements Serializable {
     }
     
     public ClaimValuePk(ProjectDataType pdt, Date accident, Date development) {
-        this.project = pdt.getProject().getId();
+        this.claimType = pdt.getClaimType().getId();
         this.dataType = pdt.getId();
         this.accidentDate = accident;
         this.developmentDate = development;
@@ -35,7 +33,7 @@ public class ClaimValuePk implements Serializable {
     }
 
     public long getProject() {
-        return project;
+        return claimType;
     }
 
     public long getProjectDataType() {
@@ -54,7 +52,7 @@ public class ClaimValuePk implements Serializable {
     }
     
     private boolean equals(ClaimValuePk o) {
-        return project == o.project &&
+        return claimType == o.claimType &&
                dataType == o.dataType &&
                accidentDate.equals(o.accidentDate) &&
                developmentDate.equals(o.developmentDate);
@@ -63,7 +61,7 @@ public class ClaimValuePk implements Serializable {
     @Override
     public int hashCode() {
         int hash = 31 + (int) dataType;
-        hash = 17 * hash + (int) project;
+        hash = 17 * hash + (int) claimType;
         hash = 17 * hash + accidentDate.hashCode();
         return 17 * hash + developmentDate.hashCode();
     }
@@ -71,6 +69,6 @@ public class ClaimValuePk implements Serializable {
     @Override
     public String toString() {
         return String.format("ClaimValuePk [%d; %d; %tF; %tF]",
-              dataType, project, accidentDate, developmentDate);
+              dataType, claimType, accidentDate, developmentDate);
     }
 }

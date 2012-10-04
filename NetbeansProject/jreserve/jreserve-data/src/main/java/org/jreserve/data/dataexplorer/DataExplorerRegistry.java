@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.swing.SwingUtilities;
 import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.project.entities.Project;
+import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
@@ -43,25 +43,25 @@ class DataExplorerRegistry {
     
     private static Map<Long, DataExplorerTopComponent> explorers = new HashMap<Long, DataExplorerTopComponent>();
     
-    public static DataExplorerTopComponent getComponent(ProjectElement<Project> element) {
-        Project project = element.getValue();
-        DataExplorerTopComponent explorer = explorers.get(project.getId());
+    public static DataExplorerTopComponent getComponent(ProjectElement<ClaimType> element) {
+        ClaimType claimType = element.getValue();
+        DataExplorerTopComponent explorer = explorers.get(claimType.getId());
         if(explorer == null) {
             explorer = new DataExplorerTopComponent(element);
-            explorers.put(project.getId(), explorer);
+            explorers.put(claimType.getId(), explorer);
         }
         return explorer;
     }
     
-    static void removeComponent(Project project) {
-        explorers.remove(project.getId());
+    static void removeComponent(ClaimType claimType) {
+        explorers.remove(claimType.getId());
     }
     
-    static void closeIfExists(final Project project) {
+    static void closeIfExists(final ClaimType claimType) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                DataExplorerTopComponent component = explorers.get(project.getId());
+                DataExplorerTopComponent component = explorers.get(claimType.getId());
                 if(component != null)
                     component.close();
             }
