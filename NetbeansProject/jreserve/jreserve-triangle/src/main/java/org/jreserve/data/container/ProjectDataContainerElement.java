@@ -12,11 +12,11 @@ import org.openide.util.NbBundle;
 @NbBundle.Messages({
     "LBL.ProjectDataContainerNode.Name=Data"
 })
-public class ProjectDataContainerProjectElement extends ProjectElement<ProjectDataContainer> {
+public class ProjectDataContainerElement extends ProjectElement<ProjectDataContainer> {
 
     private final static int POSITION = 200;
     
-    public ProjectDataContainerProjectElement(ProjectDataContainer container) {
+    public ProjectDataContainerElement(ProjectDataContainer container) {
         super(container);
         properties.put(NAME_PROPERTY, Bundle.LBL_ProjectDataContainerNode_Name());
     }

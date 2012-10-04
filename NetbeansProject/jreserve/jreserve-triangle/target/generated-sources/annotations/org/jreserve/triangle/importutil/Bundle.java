@@ -38,11 +38,25 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.NameSelectVisualPanel.Project");
     }
     /**
+     * @return <i>Unable to load data!</i>
+     * @see NameSelectWizardPanel
+     */
+    static String MSG_NameSelectWizardPanel_LoadError() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.NameSelectWizardPanel.LoadError");
+    }
+    /**
      * @return <i>Name already exists!</i>
      * @see NameSelectWizardPanel
      */
     static String MSG_NameSelectWizardPanel_NameExists() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.NameSelectWizardPanel.NameExists");
+    }
+    /**
+     * @return <i>There is no avaiable data!</i>
+     * @see NameSelectWizardPanel
+     */
+    static String MSG_NameSelectWizardPanel_NoData() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.NameSelectWizardPanel.NoData");
     }
     /**
      * @return <i>Data type not selected!</i>

@@ -168,6 +168,9 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JProgressBar" name="pBar">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="pBar.setVisible(false);"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

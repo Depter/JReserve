@@ -195,6 +195,32 @@ public class ProjectElement<T> implements Lookup.Provider {
     }
     
     /**
+     * Returns the first ProjectElement, with the value of the given class. If
+     * there is no such child, null is returned.
+     */
+    public <T> ProjectElement<T> getFirstChild(Class<T> clazz) {
+        for(ProjectElement child : children) {
+            Object childValue = child.getValue();
+            if(clazz.isAssignableFrom(childValue.getClass()))
+                return child;
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the value of the first ProjectElement, with the value of the 
+     * given class. If there is no such child, null is returned.
+     */
+    public <T> T getFirstChildValue(Class<T> clazz) {
+        for(ProjectElement child : children) {
+            Object childValue = child.getValue();
+            if(clazz.isAssignableFrom(childValue.getClass()))
+                return (T) child.getValue();
+        }
+        return null;
+    }
+    
+    /**
      * Returns the child of this element, that contains the 
      * given value. If no such child exists, then <i>null</i>
      * will be returned.

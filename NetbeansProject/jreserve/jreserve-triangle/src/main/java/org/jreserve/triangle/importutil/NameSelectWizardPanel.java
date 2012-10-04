@@ -3,14 +3,23 @@ package org.jreserve.triangle.importutil;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.data.Criteria;
+import org.jreserve.data.Data;
+import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.data.container.ProjectDataContainer;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -24,13 +33,18 @@ import org.openide.util.NbBundle.Messages;
     "MSG.NameSelectWizardPanel.NoProject=Project not selected!",
     "MSG.NameSelectWizardPanel.NoDataType=Data type not selected!",
     "MSG.NameSelectWizardPanel.NoName=Field 'Name' is empty!",
-    "MSG.NameSelectWizardPanel.NameExists=Name already exists!"
+    "MSG.NameSelectWizardPanel.NameExists=Name already exists!",
+    "MSG.NameSelectWizardPanel.LoadError=Unable to load data!",
+    "MSG.NameSelectWizardPanel.NoData=There is no avaiable data!"
 })
-public class NameSelectWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, ChangeListener {
+public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor>, ChangeListener {
 
+    private final static Logger logger = Logger.getLogger(NameSelectWizardPanel.class.getName());
+    
     public final static String PROP_DATA_NAME = "DATA_NAME_PROPERTY";
     public final static String PROP_DATA_TYPE = "DATA_TYPE_PROPERTY";
     public final static String PROP_PROJECT = "PROJECT_PROPERTY";
+    public final static String PROP_DATA = "DATA_PROPERTY";
     
     private boolean isTrinagle;
     
@@ -38,6 +52,8 @@ public class NameSelectWizardPanel implements WizardDescriptor.Panel<WizardDescr
     private WizardDescriptor wizard;
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     private boolean isValid = false;
+    
+    private volatile Criteria criteria;
     
     public NameSelectWizardPanel(boolean isTriangle) {
         this.isTrinagle = isTriangle;
@@ -112,7 +128,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.Panel<WizardDescr
 
     @Override
     public boolean isValid() {
-        return false;
+        return isValid;
     }
 
     @Override
@@ -129,8 +145,9 @@ public class NameSelectWizardPanel implements WizardDescriptor.Panel<WizardDescr
     @Override
     public void stateChanged(ChangeEvent e) {
         validatePanel();
+        fireChange();
     }
-
+    
     private void validatePanel() {
         isValid = checkProject() && checkDataType() && checkName();
         if(isValid)
@@ -173,9 +190,75 @@ public class NameSelectWizardPanel implements WizardDescriptor.Panel<WizardDescr
     }
     
     private boolean checkNewName(String name) {
-        showError(Bundle.MSG_NameSelectWizardPanel_NameExists());
-        return false;
+        ProjectDataContainer container = getDataContainer();
+        if(container.containsName(name)) {
+            showError(Bundle.MSG_NameSelectWizardPanel_NameExists());
+            return false;
+        }
+        return true;
     }
     
-    //private void fireChangeEvent() {}
+    private ProjectDataContainer getDataContainer() {
+        ProjectElement element = component.getProjectElement();
+        element = element.getFirstChild(ProjectDataContainer.class);
+        return (ProjectDataContainer) element.getValue();
+    }
+
+    private void fireChange() {
+        ChangeEvent evt = new ChangeEvent(this);
+        for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
+            listener.stateChanged(evt);
+    }
+    
+    @Override
+    public void prepareValidation() {
+        wizard.putProperty(PROP_DATA_NAME, component.getDataName());
+        wizard.putProperty(PROP_DATA_TYPE, component.getDataType());
+        wizard.putProperty(PROP_PROJECT, component.getProject());
+        criteria = new Criteria(component.getClaimType());
+        criteria.setDataType(component.getDataType());
+        component.showProgressBar();
+    }
+
+    @Override
+    public void validate() throws WizardValidationException {
+        List<Data> datas = loadDatas();
+        stopProgressBar();
+        setDatas(datas);
+    }
+    
+    private List<Data> loadDatas() throws WizardValidationException {
+        DataSource ds = new DataSource();
+        try {
+            ds.open();
+            return ds.getData(criteria);
+        } catch (RuntimeException ex) {
+            String msg = String.format("Unable to load data for query: %s", criteria);
+            logger.log(Level.SEVERE, msg, ex);
+            stopProgressBar();
+            throw new WizardValidationException(component, msg, Bundle.MSG_NameSelectWizardPanel_LoadError());
+        } finally {
+            ds.rollBack();
+        }
+    }
+    
+    private void stopProgressBar() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                component.hideProgressBar();
+            }
+        });
+    }
+    
+    private void setDatas(List<Data> datas) throws WizardValidationException {
+        if(datas.isEmpty()) {
+            String msg = Bundle.MSG_NameSelectWizardPanel_NoData();
+            throw new WizardValidationException(component, msg, msg);
+        } else {
+            synchronized(wizard) {
+                wizard.putProperty(PROP_DATA, datas);
+            }
+        }
+    }
 }

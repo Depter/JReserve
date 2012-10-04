@@ -26,7 +26,7 @@ import org.openide.util.NbBundle.Messages;
 })
 public class VectorImportWizard implements ElementCreatorWizard {
     
-    private List<WizardDescriptor.Panel> panels = new ArrayList<WizardDescriptor.Panel>();
+    private List<WizardDescriptor.Panel> panels = null;
     
     @Override
     public String getDescription() {
@@ -35,9 +35,13 @@ public class VectorImportWizard implements ElementCreatorWizard {
 
     @Override
     public List<WizardDescriptor.Panel> getPanels() {
-        if(panels.isEmpty()) {
-            panels.add(new NameSelectWizardPanel(false));
-        }
+        if(panels == null)
+            createPanels();
         return panels;
+    }
+    
+    private void createPanels() {
+        panels = new ArrayList<WizardDescriptor.Panel>(2);
+        panels.add(new NameSelectWizardPanel(false));
     }
 }

@@ -68,6 +68,10 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
         return projectCombo.getSelectedItem(Project.class);
     }
     
+    ProjectElement<Project> getProjectElement() {
+        return projectCombo.getSelectedItem();
+    }
+    
     void setDataType(ProjectDataType dataType) {
         dataTypeCombo.setSelectedItem(dataType);
     }
@@ -116,6 +120,24 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
         ChangeEvent evt = new ChangeEvent(this);
         for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
             listener.stateChanged(evt);
+    }
+    
+    void showProgressBar() {
+        setWorkState(true);
+    }
+    
+    private void setWorkState(boolean working) {
+        lobCombo.setEnabled(!working);
+        claimTypeCombo.setEnabled(!working);
+        projectCombo.setEnabled(!working);
+        dataTypeCombo.setEnabled(!working);
+        nameText.setEnabled(!working);
+        pBar.setIndeterminate(working);
+        pBar.setVisible(working);
+    }
+    
+    void hideProgressBar() {
+        setWorkState(false);
     }
     
     /**
@@ -250,6 +272,8 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
         add(filler1, gridBagConstraints);
 
         pBarPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+
+        pBar.setVisible(false);
         pBarPanel.add(pBar);
 
         gridBagConstraints = new java.awt.GridBagConstraints();

@@ -19,7 +19,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Peter Decsi
  * @version 1.0
  */
-@ServiceProvider(service=ProjectSystemCreationListener.class, position=10)
+@ServiceProvider(service=ProjectSystemCreationListener.class, position=100)
 public class ProjectDataTypeInstaller implements ProjectSystemCreationListener {
     
     private final static Logger logger = Logger.getLogger(ProjectDataTypeInstaller.class.getName());

@@ -14,7 +14,7 @@ import org.jreserve.project.system.ProjectElementFactory;
  * @version 1.0
  */
 @ProjectElementFactory.Registration(500)
-public class ProjectDataLoader extends AbstractProjectElementFactory<ProjectDataContainer> {
+public class ProjectDataContainerLoader extends AbstractProjectElementFactory<ProjectDataContainer> {
 
     @Override
     public boolean isInterested(Object value) {
@@ -31,7 +31,7 @@ public class ProjectDataLoader extends AbstractProjectElementFactory<ProjectData
     
     @Override
     protected ProjectElement createProjectElement(ProjectDataContainer container) {
-        return new ProjectDataContainerProjectElement(container);
+        return new ProjectDataContainerElement(container);
     }
 
 }

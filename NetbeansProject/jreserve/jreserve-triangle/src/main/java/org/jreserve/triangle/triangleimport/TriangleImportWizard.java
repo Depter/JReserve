@@ -5,6 +5,7 @@ import java.util.List;
 import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.jreserve.project.system.management.ElementCreatorWizard.Category;
 import org.jreserve.project.system.management.ElementCreatorWizard.Registration;
+import org.jreserve.triangle.importutil.NameSelectWizardPanel;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
 
@@ -24,6 +25,8 @@ import org.openide.util.NbBundle.Messages;
     "LBL.TriangleImportWizard.Description=Create new triangle from existing data."
 })
 public class TriangleImportWizard implements ElementCreatorWizard {
+    
+    private List<WizardDescriptor.Panel> panels = null;
 
     @Override
     public String getDescription() {
@@ -32,7 +35,13 @@ public class TriangleImportWizard implements ElementCreatorWizard {
 
     @Override
     public List<WizardDescriptor.Panel> getPanels() {
-        return new ArrayList<WizardDescriptor.Panel>();
+        if(panels == null)
+            createPanels();
+        return panels;
     }
-
+    
+    private void createPanels() {
+        panels = new ArrayList<WizardDescriptor.Panel>(2);
+        panels.add(new NameSelectWizardPanel(true));
+    }
 }
