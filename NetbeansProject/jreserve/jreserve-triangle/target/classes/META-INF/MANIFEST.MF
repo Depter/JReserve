@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/triangle/Bundle.propert
  ies
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20121004
-OpenIDE-Module-Build-Version: 201210042026
+OpenIDE-Module-Implementation-Version: 1.0-20121007
+OpenIDE-Module-Build-Version: 201210071744
 OpenIDE-Module: org.jreserve.jreserve.triangle
 OpenIDE-Module-Public-Packages: -
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
@@ -16,5 +16,5 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
  15.1, org.openide.nodes > 7.28.1, org.openide.dialogs > 7.25.1, org.j
  reserve.jreserve.persistence > 1.0, org.jreserve.jreserve.project.sys
  tem > 1.0, org.jreserve.jreserve.project > 1.0, org.jreserve.jreserve
- .data > 1.0
+ .data > 1.0, org.jreserve.jreserve.resources > 1.0
 

@@ -43,5 +43,6 @@ public class VectorImportWizard implements ElementCreatorWizard {
     private void createPanels() {
         panels = new ArrayList<WizardDescriptor.Panel>(2);
         panels.add(new NameSelectWizardPanel(false));
+        panels.add(new VectorFormatWizardPanel());
     }
 }

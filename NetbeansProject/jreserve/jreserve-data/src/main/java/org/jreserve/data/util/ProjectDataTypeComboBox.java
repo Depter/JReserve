@@ -85,4 +85,8 @@ public class ProjectDataTypeComboBox extends JComboBox {
         types.addAll(dataTypes);
         filterTypes();
     }
+    
+    public ProjectDataType getDataType() {
+        return (ProjectDataType) getSelectedItem();
+    }
 }

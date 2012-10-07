@@ -24,6 +24,7 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  */
 @Messages({
+    "LBL.NameSelectVisualPanel.PanelName=Input",
     "LBL.NameSelectVisualPanel.LoB=LoB:",
     "LBL.NameSelectVisualPanel.ClaimType=Claim type:",
     "LBL.NameSelectVisualPanel.Project=Project:",
@@ -36,6 +37,7 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
     
     public NameSelectVisualPanel(boolean isTriangle) {
         initComponents();
+        setName(Bundle.LBL_NameSelectVisualPanel_PanelName());
         if(isTriangle)
             dataTypeCombo.setShowVector(false);
         else
@@ -99,9 +101,23 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(dataTypeCombo == e.getSource())
+            setDefaultName();
         fireChange();
     }
 
+    private void setDefaultName() {
+        ProjectDataType dt = dataTypeCombo.getDataType();
+        if(dt!=null && isNameEmpty())
+            nameText.setText(dt.getName());
+    }
+    
+    private boolean isNameEmpty() {
+        String str = nameText.getText();
+        if(str == null)
+           return true;
+       return str.trim().length() == 0;
+    }
     @Override
     public void insertUpdate(DocumentEvent e) {
         fireChange();

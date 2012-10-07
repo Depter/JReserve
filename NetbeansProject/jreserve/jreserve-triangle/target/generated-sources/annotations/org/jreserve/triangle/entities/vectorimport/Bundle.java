@@ -3,6 +3,13 @@ package org.jreserve.triangle.entities.vectorimport;
 @javax.annotation.Generated(value="org.netbeans.modules.openide.util.NbBundleProcessor")
 class Bundle {
     /**
+     * @return <i>Geometry</i>
+     * @see VectorFormatVisualPanel
+     */
+    static String LBL_VectorFormatVisualPanel_Geometry() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.VectorFormatVisualPanel.Geometry");
+    }
+    /**
      * @return <i>Create new vector from existing data.</i>
      * @see VectorImportWizard
      */

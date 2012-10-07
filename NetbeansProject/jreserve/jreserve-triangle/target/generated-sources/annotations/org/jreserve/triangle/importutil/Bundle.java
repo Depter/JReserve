@@ -3,6 +3,27 @@ package org.jreserve.triangle.importutil;
 @javax.annotation.Generated(value="org.netbeans.modules.openide.util.NbBundleProcessor")
 class Bundle {
     /**
+     * @return <i>Begin:</i>
+     * @see AxisGeometryPanel
+     */
+    static String LBL_AxisGeometryPanel_Begin() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.Begin");
+    }
+    /**
+     * @return <i>End:</i>
+     * @see AxisGeometryPanel
+     */
+    static String LBL_AxisGeometryPanel_End() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.End");
+    }
+    /**
+     * @return <i>Months per step:</i>
+     * @see AxisGeometryPanel
+     */
+    static String LBL_AxisGeometryPanel_Steps() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.Steps");
+    }
+    /**
      * @return <i>Claim type:</i>
      * @see NameSelectVisualPanel
      */
@@ -29,6 +50,13 @@ class Bundle {
      */
     static String LBL_NameSelectVisualPanel_Name() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.NameSelectVisualPanel.Name");
+    }
+    /**
+     * @return <i>Input</i>
+     * @see NameSelectVisualPanel
+     */
+    static String LBL_NameSelectVisualPanel_PanelName() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.NameSelectVisualPanel.PanelName");
     }
     /**
      * @return <i>Project:</i>
