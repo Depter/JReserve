@@ -42,6 +42,7 @@ public class DataCell implements Comparable<DataCell> {
     }
     
     void setValues(List<Data> datas) {
+        value = Double.NaN;
         for(Data data : datas)
             if(myData(data))
                 addData(data);

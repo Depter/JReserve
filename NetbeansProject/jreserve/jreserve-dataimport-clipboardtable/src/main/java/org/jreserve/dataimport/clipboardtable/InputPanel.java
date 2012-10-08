@@ -306,7 +306,7 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         add(cummulatedCheck, gridBagConstraints);
 
-        dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormat());
+        dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormatString());
         dateFormatCombo.addActionListener(this);
         dateFormatCombo.setActionCommand(DATE_FORMAT_ACTION);
         gridBagConstraints = new java.awt.GridBagConstraints();

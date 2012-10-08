@@ -31,7 +31,9 @@ public class ProjectDataContainerLoader extends AbstractProjectElementFactory<Pr
     
     @Override
     protected ProjectElement createProjectElement(ProjectDataContainer container) {
-        return new ProjectDataContainerElement(container);
+        ProjectElement element = new ProjectDataContainerElement(container);
+        container.setMyElement(element);
+        return element;
     }
 
 }

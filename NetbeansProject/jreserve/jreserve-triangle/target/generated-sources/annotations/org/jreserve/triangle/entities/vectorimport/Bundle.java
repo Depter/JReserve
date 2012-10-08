@@ -38,18 +38,18 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.VectorFormatVisualPanel.PanelName");
     }
     /**
-     * @return <i>Period</i>
-     * @see VectorTableModel
+     * @return <i>There is no data selected!</i>
+     * @see VectorFormatWizardPanel
      */
-    static String LBL_VectorTableModel_Period() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.VectorTableModel.Period");
+    static String LBL_VectorFormatWizardPanel_NoData() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.VectorFormatWizardPanel.NoData");
     }
     /**
-     * @return <i>Value</i>
-     * @see VectorTableModel
+     * @return <i>Unable to save vector!</i>
+     * @see VectorFormatWizardPanel
      */
-    static String LBL_VectorTableModel_Value() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.VectorTableModel.Value");
+    static String MSG_VectorFormatWizardPanel_SaveError() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorFormatWizardPanel.SaveError");
     }
     private void Bundle() {}
 }

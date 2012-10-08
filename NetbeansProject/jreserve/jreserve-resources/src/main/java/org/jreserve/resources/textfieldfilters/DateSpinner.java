@@ -34,22 +34,17 @@ public class DateSpinner extends JSpinner {
     }
     
     private static SpinnerDateModel getDateModel() {
-        Calendar c = getCalendar();
-        Date now = c.getTime();
-        c.add(Calendar.YEAR, -100);
-        Date start = c.getTime();
-        c.add(Calendar.YEAR, 200);
-        Date end = c.getTime();
-        return new SpinnerDateModel(now, start, end, Calendar.MONTH);
+        Date value = getBeginDate();
+        return new SpinnerDateModel(value, null, null, Calendar.MONTH);
     }
     
-    private static Calendar getCalendar() {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.DAY_OF_MONTH, 1);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        return c;
+    private static Date getBeginDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
     }
 }

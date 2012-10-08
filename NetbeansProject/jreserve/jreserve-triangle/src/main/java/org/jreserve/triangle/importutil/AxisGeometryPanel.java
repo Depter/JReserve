@@ -102,12 +102,20 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
     
     @Override
     public void insertUpdate(DocumentEvent e) {
-        fireChangeEvent();
+        if(getSource(e).isEnabled())
+            fireChangeEvent();
+    }
+    
+    private JTextField getSource(DocumentEvent evt) {
+        if(periodsText.getDocument() == evt.getDocument())
+            return periodsText;
+        return stepText;
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        fireChangeEvent();
+        if(getSource(e).isEnabled())
+            fireChangeEvent();
     }
 
     @Override
@@ -116,7 +124,8 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        fireChangeEvent();
+        if(fromSpinner.isEnabled())
+            fireChangeEvent();
     }
     
     /**

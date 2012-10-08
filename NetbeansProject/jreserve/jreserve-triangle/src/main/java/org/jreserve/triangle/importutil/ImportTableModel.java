@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import org.jreserve.data.Data;
+import org.jreserve.data.model.DataCell;
 import org.jreserve.data.model.DataRow;
 import org.jreserve.data.model.DataTable;
 import org.jreserve.data.model.DataTableFactory;
@@ -46,9 +47,16 @@ public class ImportTableModel extends DefaultTableModel {
     @Override
     public Object getValueAt(int row, int column) {
         DataRow dataRow = table.getRow(row);
+        if(dataRow == null)
+            return null;
+        return getValueAt(dataRow, column);
+    }
+    
+    private Object getValueAt(DataRow row, int column) {
         if(column == 0)
-            return dataRow.getAccidentBegin();
-        return dataRow.getCell(column-1).getValue();
+            return row.getAccidentBegin();
+        DataCell cell = row.getCell(column - 1);
+        return cell==null? null : cell.getValue();
     }
 
     @Override
@@ -103,5 +111,9 @@ public class ImportTableModel extends DefaultTableModel {
         int rows = getRowCount();
         if(rows > 0)
             fireTableRowsInserted(0, rows-1);
+    }
+    
+    public DataTable getTable() {
+        return table;
     }
 }

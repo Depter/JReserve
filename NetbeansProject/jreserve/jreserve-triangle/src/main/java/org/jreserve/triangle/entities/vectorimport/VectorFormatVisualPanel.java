@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
+import org.jreserve.data.model.DataTable;
 import org.jreserve.localesettings.util.DateRenderer;
 import org.jreserve.localesettings.util.DoubleRenderer;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -42,6 +44,8 @@ class VectorFormatVisualPanel extends JPanel implements ChangeListener {
     private Date developmentStart;
     private Date developmentEnd;
     
+    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    
     VectorFormatVisualPanel() {
         setName(Bundle.LBL_VectorFormatVisualPanel_PanelName());
         initComponents();
@@ -62,7 +66,7 @@ class VectorFormatVisualPanel extends JPanel implements ChangeListener {
         
         developmentGeometry = new AxisGeometryPanel();
         developmentGeometry.setBorder(createTitleBorder(Bundle.LBL_VectorFormatVisualPanel_DevelopmentGeometry()));
-        developmentGeometry.addChangeListener(this);
+        developmentGeometry.setEnabled(false);
         gc.gridx = 1;
         gc.insets = new Insets(0, 0, 5, 0);
         add(developmentGeometry, gc);
@@ -131,12 +135,12 @@ class VectorFormatVisualPanel extends JPanel implements ChangeListener {
         accidentGeometry.setFromDate(accidentStart);
         developmentGeometry.setFromDate(developmentStart);
         developmentGeometry.setPeriods(1);
-        developmentGeometry.setMonthPerStep(getDevelopmentMonthCount());
+        developmentGeometry.setMonthPerStep(getDevelopmentMonthCount(developmentStart));
     }
     
-    private int getDevelopmentMonthCount() {
+    private int getDevelopmentMonthCount(Date date) {
         Calendar c = Calendar.getInstance();
-        c.setTime(developmentStart);
+        c.setTime(date);
         int count = 1;
         while(c.getTime().before(developmentEnd)) {
             c.add(Calendar.MONTH, 1);
@@ -147,7 +151,10 @@ class VectorFormatVisualPanel extends JPanel implements ChangeListener {
     
     @Override
     public void stateChanged(ChangeEvent e) {
+        if(developmentGeometry.equals(e.getSource()))
+            developmentGeometry.setMonthPerStep(getDevelopmentMonthCount(developmentGeometry.getFromDate()));
         tableModel.setGeometry(getGeometry());
+        fireChange();
     }
     
     private TriangleGeometry getGeometry() {
@@ -163,5 +170,36 @@ class VectorFormatVisualPanel extends JPanel implements ChangeListener {
            aMonths < 1 || dMonths < 1)
             return null;
         return new TriangleGeometry(aStart, aPeriods, aMonths, dStart, dPeriods, dMonths);
+    }
+    
+    DataTable getTable() {
+        return tableModel.getTable();
+    }
+    
+    Date getStartDate() {
+        return accidentGeometry.getFromDate();
+    }
+    
+    int getPeriodCount() {
+        return accidentGeometry.getPeriods();
+    }
+    
+    int getMonthsPerStep() {
+        return accidentGeometry.getMonthPerStep();
+    }
+    
+    void addChangeListener(ChangeListener listener) {
+        if(!listeners.contains(listener))
+            listeners.add(listener);
+    }
+    
+    void removeChangeListener(ChangeListener listener) {
+        listeners.remove(listener);
+    }
+    
+    private void fireChange() {
+        ChangeEvent evt = new ChangeEvent(this);
+        for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
+            listener.stateChanged(evt);
     }
 }

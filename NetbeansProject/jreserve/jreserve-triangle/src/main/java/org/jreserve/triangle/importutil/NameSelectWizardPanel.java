@@ -44,6 +44,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
     public final static String PROP_DATA_NAME = "DATA_NAME_PROPERTY";
     public final static String PROP_DATA_TYPE = "DATA_TYPE_PROPERTY";
     public final static String PROP_PROJECT = "PROJECT_PROPERTY";
+    public final static String PROP_PROJECT_ELEMENT = "PROJECT_ELEMENT_PROPERTY";
     public final static String PROP_DATA = "DATA_PROPERTY";
     
     private boolean isTrinagle;
@@ -216,6 +217,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
         wizard.putProperty(PROP_DATA_NAME, component.getDataName());
         wizard.putProperty(PROP_DATA_TYPE, component.getDataType());
         wizard.putProperty(PROP_PROJECT, component.getProject());
+        wizard.putProperty(PROP_PROJECT_ELEMENT, component.getProjectElement());
         criteria = new Criteria(component.getClaimType());
         criteria.setDataType(component.getDataType());
         component.showProgressBar();

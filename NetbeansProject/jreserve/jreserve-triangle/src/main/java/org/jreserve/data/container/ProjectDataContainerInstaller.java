@@ -20,8 +20,14 @@ public class ProjectDataContainerInstaller implements ProjectSystemCreationListe
     @Override
     public void created(ProjectElement element) {
         Project project = (Project) element.getValue();
+        ProjectElement child = createChild(project);
+        element.addChild(child);
+    }
+    
+    private ProjectElement createChild(Project project) {
         ProjectDataContainer container = new ProjectDataContainer(project);
         ProjectDataContainerElement child = new ProjectDataContainerElement(container);
-        element.addChild(child);
+        container.setMyElement(child);
+        return child;
     }
 }
