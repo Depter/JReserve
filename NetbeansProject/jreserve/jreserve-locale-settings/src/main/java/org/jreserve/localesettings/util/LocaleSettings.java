@@ -30,9 +30,15 @@ public class LocaleSettings {
     
     public static Locale getLocale() {
         String language = getPreferences().get(LOCALE, null);
-        if(language != null)
-            return new Locale(language);
-        return Locale.getDefault();
+        Locale locale = getLocaleFromLanguage(language);
+        return locale==null? Locale.getDefault() : locale;
+    }
+    
+    private static Locale getLocaleFromLanguage(String language) {
+        for(Locale locale : Locale.getAvailableLocales())
+            if(locale.getISO3Language().equals(language))
+                return locale;
+        return null;
     }
     
     public static void setLocale(Locale locale) {
@@ -40,7 +46,11 @@ public class LocaleSettings {
         getPreferences().put(LOCALE, language);
     }
     
-    public static String getDateFormat() {
+    public static DateFormat getDateFormat() {
+        return new SimpleDateFormat(getDateFormatString());
+    }
+    
+    public static String getDateFormatString() {
         String format = getPreferences().get(DATE_FORMAT, null);
         if(format != null)
             return format;

@@ -10,11 +10,11 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.Begin");
     }
     /**
-     * @return <i>End:</i>
+     * @return <i>Periods:</i>
      * @see AxisGeometryPanel
      */
-    static String LBL_AxisGeometryPanel_End() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.End");
+    static String LBL_AxisGeometryPanel_Periods() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.Periods");
     }
     /**
      * @return <i>Months per step:</i>
@@ -22,6 +22,13 @@ class Bundle {
      */
     static String LBL_AxisGeometryPanel_Steps() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.Steps");
+    }
+    /**
+     * @return <i>Periods</i>
+     * @see ImportTableModel
+     */
+    static String LBL_ImportTableModel_Periods() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.ImportTableModel.Periods");
     }
     /**
      * @return <i>Claim type:</i>

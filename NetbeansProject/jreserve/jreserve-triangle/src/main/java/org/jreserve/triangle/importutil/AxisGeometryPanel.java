@@ -3,6 +3,7 @@ package org.jreserve.triangle.importutil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -16,22 +17,17 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "LBL.AxisGeometryPanel.Begin=Begin:",
-    "LBL.AxisGeometryPanel.End=End:",
+    "LBL.AxisGeometryPanel.Periods=Periods:",
     "LBL.AxisGeometryPanel.Steps=Months per step:"
 })
 public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentListener, ChangeListener {
 
+    private final static String DEFAULT_PERIODS = "1";
     private final static String DEFAULT_STEPS = "12";
     
-    private String title;
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
-    
-    public AxisGeometryPanel() {
-        this("Title");
-    }
 
-    public AxisGeometryPanel(String title) {
-        this.title = title;
+    public AxisGeometryPanel() {
         initComponents();
     }
     
@@ -50,6 +46,17 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
             listener.stateChanged(evt);
     }
     
+    @Override
+    public void setEnabled(boolean enabled) {
+        fromSpinner.setEnabled(enabled);
+        periodsText.setEnabled(enabled);
+        stepText.setEnabled(enabled);
+    }
+    
+    public void setFromDateEnabled(boolean enabled) {
+        fromSpinner.setEnabled(enabled);
+    }
+    
     public Date getFromDate() {
         return fromSpinner.getDate();
     }
@@ -58,19 +65,39 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
         return fromSpinner.getText();
     }
     
-    public Date getToDate() {
-        return toSpinner.getDate();
+    public void setFromDate(Date date) {
+        fromSpinner.setValue(date);
     }
     
-    public String getToDateAsString() {
-        return toSpinner.getText();
+    public void setPeriodsEnabled(boolean enabled) {
+        periodsText.setEnabled(enabled);
     }
     
-    public int getMonthPerStep() {
-        String str = stepText.getText();
+    public int getPeriods() {
+        return getIntFromField(periodsText);
+    }
+    
+    public void setPeriods(int periods) {
+        periodsText.setText(Integer.toString(periods));
+    }
+    
+    private int getIntFromField(JTextField textField) {
+        String str = textField.getText();
         if(str == null || str.trim().length()==0)
             return 0;
         return Integer.parseInt(str);
+    }
+    
+    public void setMonthsEnabled(boolean enabled) {
+        stepText.setEnabled(enabled);
+    }
+    
+    public int getMonthPerStep() {
+        return getIntFromField(stepText);
+    }
+    
+    public void setMonthPerStep(int months) {
+        stepText.setText(Integer.toString(months));
     }
     
     @Override
@@ -105,12 +132,11 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
         fromLabel = new javax.swing.JLabel();
         toLabel = new javax.swing.JLabel();
         stepLabel = new javax.swing.JLabel();
-        stepText = new javax.swing.JTextField();
         fromSpinner = new org.jreserve.resources.textfieldfilters.DateSpinner();
-        toSpinner = new org.jreserve.resources.textfieldfilters.DateSpinner();
+        periodsText = new javax.swing.JTextField();
+        stepText = new javax.swing.JTextField();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(null, title, javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         setLayout(new java.awt.GridBagLayout());
 
         fromLabel.setText(Bundle.LBL_AxisGeometryPanel_Begin());
@@ -122,7 +148,7 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         add(fromLabel, gridBagConstraints);
 
-        toLabel.setText(Bundle.LBL_AxisGeometryPanel_End());
+        toLabel.setText(Bundle.LBL_AxisGeometryPanel_Periods());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -140,15 +166,7 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         add(stepLabel, gridBagConstraints);
 
-        stepText.setDocument(new IntegerFilter());
-        stepText.setText(DEFAULT_STEPS);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.weightx = 1.0;
-        add(stepText, gridBagConstraints);
+        fromSpinner.addChangeListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -157,14 +175,27 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         add(fromSpinner, gridBagConstraints);
+
+        periodsText.setText(DEFAULT_PERIODS);
+        periodsText.getDocument().addDocumentListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        add(toSpinner, gridBagConstraints);
+        add(periodsText, gridBagConstraints);
+
+        stepText.setDocument(new IntegerFilter());
+        stepText.getDocument().addDocumentListener(this);
+        stepText.setText(DEFAULT_STEPS);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.weightx = 1.0;
+        add(stepText, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -179,9 +210,9 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
     private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel fromLabel;
     private org.jreserve.resources.textfieldfilters.DateSpinner fromSpinner;
+    private javax.swing.JTextField periodsText;
     private javax.swing.JLabel stepLabel;
     private javax.swing.JTextField stepText;
     private javax.swing.JLabel toLabel;
-    private org.jreserve.resources.textfieldfilters.DateSpinner toSpinner;
     // End of variables declaration//GEN-END:variables
 }

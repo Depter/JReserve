@@ -16,18 +16,17 @@ import javax.persistence.TemporalType;
 public class VectorGeometry implements Serializable  {
     private final static long serialVersionUID = 1L;
     
-    private final static String ERR_END_BEFORE_START = 
-         "End date '%tF' is before start date '%tF'!";
+    private final static String ERR_PERIODS = 
+         "There must be at least 1 accident period, but %d was found!";
     private final static String ERR_ACC_MONTH = 
          "There must be at least 1 month in an accident period, but %d was found!";
 
-    @Column(name="START_DATE", nullable=false)
+    @Column(name="ACCIDENT_START_DATE", nullable=false)
     @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private Date accidentStart;
     
-    @Column(name="END_DATE", nullable=false)
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+    @Column(name="ACCIDENT_PERIODS", nullable=false)
+    private int accidentPeriods;
     
     @Column(name="MONTH_IN_ACCIDENT", nullable=false)
     private int monthInAccident;
@@ -35,30 +34,22 @@ public class VectorGeometry implements Serializable  {
     protected VectorGeometry() {
     }
     
-    public VectorGeometry(Date start, Date end, int monthInAccident) {
+    public VectorGeometry(Date start, int accidentPeriods, int monthInAccident) {
         initStartDate(start);
-        initEndDate(end);
+        initAccidnetPeriods(accidentPeriods);
         initMonthInAccident(monthInAccident);
     }
     
     private void initStartDate(Date start) {
         if(start == null)
-            throw new NullPointerException("Start date is null!");
-        this.startDate = start;
+            throw new NullPointerException("Accident start date is null!");
+        this.accidentStart = start;
     }
     
-    private void initEndDate(Date end) {
-        if(end == null)
-            throw new NullPointerException("End date is null!");
-        checkAfterStart(end);
-        this.endDate = end;
-    }
-    
-    private void checkAfterStart(Date end) {
-        if(!end.before(startDate))
-            return;
-        String msg = String.format(ERR_END_BEFORE_START, end, startDate);
-        throw new IllegalArgumentException(msg);
+    private void initAccidnetPeriods(int periods) {
+        if(periods  < 1)
+            throw new IllegalArgumentException(String.format(ERR_PERIODS, periods));
+        this.accidentPeriods = periods;
     }
     
     private void initMonthInAccident(int month) {
@@ -67,21 +58,20 @@ public class VectorGeometry implements Serializable  {
         this.monthInAccident = month;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getAccidentStart() {
+        return accidentStart;
     }
 
-    public void setEndDate(Date endDate) {
-        initEndDate(endDate);
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
+    public void setAccidentStart(Date startDate) {
         initStartDate(startDate);
-        checkAfterStart(endDate);
+    }
+
+    public int getAccidentPeriods() {
+        return accidentPeriods;
+    }
+
+    public void setAccidentPeriods(int periods) {
+        initAccidnetPeriods(periods);
     }
 
     public int getMonthInAccident() {
@@ -94,7 +84,7 @@ public class VectorGeometry implements Serializable  {
     
     @Override
     public String toString() {
-        return String.format("Geometry [%tF - %tF]: %d",
-            startDate, endDate, monthInAccident);
+        return String.format("Geometry [%tF; %d; %d]",
+            accidentStart, accidentPeriods, monthInAccident);
     }
 }

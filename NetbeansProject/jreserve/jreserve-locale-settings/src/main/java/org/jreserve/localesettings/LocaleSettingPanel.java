@@ -255,7 +255,7 @@ public class LocaleSettingPanel extends JPanel implements ActionListener, Docume
         groupingSeparatorText.setText(""+decimalSymbols.getGroupingSeparator());
         nanText.setText(decimalSymbols.getNaN());
         
-        dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormat());
+        dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormatString());
         numberFormatCombo.setSelectedItem(LocaleSettings.getDecimalFormat());
         validateInput();
     }

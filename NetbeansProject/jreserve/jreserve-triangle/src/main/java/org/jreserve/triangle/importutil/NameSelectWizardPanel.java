@@ -212,6 +212,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
     
     @Override
     public void prepareValidation() {
+        System.out.println("PREPARE VALIDATION");
         wizard.putProperty(PROP_DATA_NAME, component.getDataName());
         wizard.putProperty(PROP_DATA_TYPE, component.getDataType());
         wizard.putProperty(PROP_PROJECT, component.getProject());
@@ -222,9 +223,10 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
 
     @Override
     public void validate() throws WizardValidationException {
+        System.out.println("VALIDATE");
         List<Data> datas = loadDatas();
-        stopProgressBar();
         setDatas(datas);
+        stopProgressBar();
     }
     
     private List<Data> loadDatas() throws WizardValidationException {
@@ -242,7 +244,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
         }
     }
     
-    private void stopProgressBar() {
+    private void stopProgressBar() throws WizardValidationException {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

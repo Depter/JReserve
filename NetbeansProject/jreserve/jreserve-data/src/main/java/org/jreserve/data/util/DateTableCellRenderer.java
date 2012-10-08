@@ -14,11 +14,11 @@ import org.jreserve.localesettings.util.LocaleSettings;
  */
 public class DateTableCellRenderer extends DefaultTableCellRenderer {
 
-    private DateFormat format = new SimpleDateFormat(LocaleSettings.getDateFormat());
+    private DateFormat format = new SimpleDateFormat(LocaleSettings.getDateFormatString());
 
     public void setFormat(DateFormat format) {
         if(format == null)
-            this.format = new SimpleDateFormat(LocaleSettings.getDateFormat());
+            this.format = new SimpleDateFormat(LocaleSettings.getDateFormatString());
         else
             this.format = format;
     }

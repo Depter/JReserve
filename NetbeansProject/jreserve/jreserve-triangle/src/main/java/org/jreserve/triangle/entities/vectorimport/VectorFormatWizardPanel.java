@@ -31,6 +31,7 @@ public class VectorFormatWizardPanel implements WizardDescriptor.Panel<WizardDes
 
     @Override
     public void readSettings(WizardDescriptor data) {
+        panel.readSettings(data);
     }
 
     @Override

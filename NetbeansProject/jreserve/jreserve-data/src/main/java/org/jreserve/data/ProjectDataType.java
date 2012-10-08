@@ -117,15 +117,7 @@ public class ProjectDataType implements Serializable {
     
     public int compareTo(ProjectDataType o) {
         if(o == null) return -1;
-        int dif = compareClaimType(o.claimType);
-        if(dif != 0) return dif;
         return dbId - o.dbId;
-    }
-    
-    private int compareClaimType(ClaimType o) {
-        if(claimType == null)
-            return o==null? 0 : 1;
-        return o==null? -1 : (int) (claimType.getId() - o.getId());
     }
     
     @Override

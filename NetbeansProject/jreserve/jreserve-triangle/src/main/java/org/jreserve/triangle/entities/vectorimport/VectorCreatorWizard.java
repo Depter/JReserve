@@ -16,21 +16,21 @@ import org.openide.util.NbBundle.Messages;
  */
 @Registration(
     category=Category.DATA, 
-    displayName="#LBL.VectorImportWizard.Name",
+    displayName="#LBL.VectorCreatorWizard.Name",
     iconBase="resources/vector.png",
     position=100
 )
 @Messages({
-    "LBL.VectorImportWizard.Name=Vector",
-    "LBL.VectorImportWizard.Description=Create new vector from existing data."
+    "LBL.VectorCreatorWizard.Name=Vector",
+    "LBL.VectorCreatorWizard.Description=Create new vector from existing data."
 })
-public class VectorImportWizard implements ElementCreatorWizard {
+public class VectorCreatorWizard implements ElementCreatorWizard {
     
     private List<WizardDescriptor.Panel> panels = null;
     
     @Override
     public String getDescription() {
-        return Bundle.LBL_VectorImportWizard_Description();
+        return Bundle.LBL_VectorCreatorWizard_Description();
     }
 
     @Override

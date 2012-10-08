@@ -34,6 +34,7 @@ import org.openide.util.NbBundle.Messages;
 public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionListener, DocumentListener {
     
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private boolean nameFilled = false;
     
     public NameSelectVisualPanel(boolean isTriangle) {
         initComponents();
@@ -107,24 +108,21 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
     }
 
     private void setDefaultName() {
+        if(nameFilled)
+            return;
         ProjectDataType dt = dataTypeCombo.getDataType();
-        if(dt!=null && isNameEmpty())
-            nameText.setText(dt.getName());
+        nameText.setText(dt==null? null : dt.getName());
     }
     
-    private boolean isNameEmpty() {
-        String str = nameText.getText();
-        if(str == null)
-           return true;
-       return str.trim().length() == 0;
-    }
     @Override
     public void insertUpdate(DocumentEvent e) {
+        nameFilled = true;
         fireChange();
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
+        nameFilled = true;
         fireChange();
     }
 
@@ -358,8 +356,12 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
         
         private void setDataTypes(ProjectElement element) {
             List<ProjectDataType> dataTypes = element==null? Collections.EMPTY_LIST : element.getChildValues(ProjectDataType.class);
+            boolean nf = nameFilled;
+            String name = nameText.getText();
             dataTypeCombo.setProjectDataTypes(dataTypes);
             dataTypeCombo.setSelectedItem(null);
+            nameText.setText(name);
+            nameFilled = nf;
         }
     }
     
