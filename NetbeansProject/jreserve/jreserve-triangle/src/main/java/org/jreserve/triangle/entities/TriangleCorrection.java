@@ -3,6 +3,7 @@ package org.jreserve.triangle.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 
 /**
@@ -21,7 +22,7 @@ public class TriangleCorrection implements Serializable {
     
     @Id
     @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="TRIANGLE_ID", referencedColumnName="ID", nullable=false)
+    @JoinColumn(name="TRIANGLE_ID", referencedColumnName="ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
     private Triangle triangle;
     
     @Id

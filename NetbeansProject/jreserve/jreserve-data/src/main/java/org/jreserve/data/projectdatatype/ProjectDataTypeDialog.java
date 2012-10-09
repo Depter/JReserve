@@ -293,7 +293,7 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
         
         private void update() {
             for(ProjectDataType dt : updated) {
-                if(dt.getId() == 0) {
+                if(dt.getVersion() == null) {
                     create(dt);
                 } else {
                     update(dt);

@@ -2,6 +2,8 @@ package org.jreserve.triangle.entities;
 
 import javax.persistence.*;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.persistence.AbstractPersistentObject;
+import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.project.entities.Project;
 
@@ -10,8 +12,10 @@ import org.jreserve.project.entities.Project;
  * @author Peter Decsi
  * @version 1.0
  */
-@MappedSuperclass
-public abstract class AbstractData {
+@EntityRegistration
+@Entity
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+public abstract class AbstractData extends AbstractPersistentObject {
     
     private final static int NAME_SIZE = 64;
     
@@ -67,23 +71,5 @@ public abstract class AbstractData {
     
     public void setName(String name) {
         initName(name);
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if(o instanceof AbstractData)
-            return equals((AbstractData) o);
-        return false;
-    }
-    
-    private boolean equals(AbstractData o) {
-        return project.equals(o.project) &&
-               name.equalsIgnoreCase(o.name);
-    }
-    
-    @Override
-    public int hashCode() {
-        int hash = 31 + project.hashCode();
-        return 17 * hash + name.toLowerCase().hashCode();
     }
 }

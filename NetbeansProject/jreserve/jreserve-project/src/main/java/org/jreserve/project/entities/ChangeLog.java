@@ -1,8 +1,8 @@
 package org.jreserve.project.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.openide.util.NbBundle.Messages;
 
@@ -11,30 +11,14 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(generateId=true)
+@EntityRegistration
 @Entity
 @Table(name="CHANGE_LOG", schema="JRESERVE")
-@TableGenerator(
-    name="org.jreserve.project.entities.ChangeLog",
-    catalog=EntityRegistration.CATALOG,
-    schema=EntityRegistration.SCHEMA,
-    table=EntityRegistration.TABLE,
-    pkColumnName=EntityRegistration.ID_COLUMN,
-    valueColumnName=EntityRegistration.VALUE_COLUMN,
-    allocationSize=EntityRegistration.ALLOCATION_SIZE,
-    initialValue=EntityRegistration.INITIAL_VALUE,
-    pkColumnValue="org.jreserve.project.entities.ChangeLog"
-)
 @Messages({
     "LBL.LogType.Project=Project"
 })
-public class ChangeLog implements Serializable, Comparable<ChangeLog> {
+public class ChangeLog extends AbstractPersistentObject implements Comparable<ChangeLog> {
     private final static long serialVersionUID = 1L;
-    
-    @Id
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.project.entities.ChangeLog")
-    @Column(name="ID")
-    private long id;
     
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
@@ -88,10 +72,6 @@ public class ChangeLog implements Serializable, Comparable<ChangeLog> {
         if(userName == null)
             userName = "unknown";
     }
-    
-    public long getId() {
-        return id;
-    }
 
     public Project getProject() {
         return project;
@@ -123,28 +103,10 @@ public class ChangeLog implements Serializable, Comparable<ChangeLog> {
             return -1;
         
         int dif = creationTime.compareTo(o.creationTime);
-        return dif!=0? dif : compareId(o);
-    }
-    
-    private int compareId(ChangeLog o) {
-        if(id < o.id)
-            return -1;
-        return id==o.id? 0 : 1;
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if(!(o instanceof ChangeLog))
-            return false;
-        if(compareTo((ChangeLog)o) != 0)
-            return false;
-        return id!=0? true : super.equals(o);
-    }
-    
-    @Override
-    public int hashCode() {
-        int hash = 31 + creationTime.hashCode();
-        return 17 * hash + (int) id;
+        if(dif != 0)
+            return dif;
+        String id = getId();
+        return id==null? -1 : id.compareTo(o.getId());
     }
     
     @Override

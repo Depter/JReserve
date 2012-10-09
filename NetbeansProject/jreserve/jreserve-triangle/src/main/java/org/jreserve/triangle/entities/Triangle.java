@@ -13,26 +13,10 @@ import org.jreserve.project.entities.Project;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(generateId=true)
+@EntityRegistration
 @Entity
 @Table(name="TRIANGLE", schema="JRESERVE")
-@TableGenerator(
-    name="org.jreserve.triangle.entities.Triangle",
-    catalog=EntityRegistration.CATALOG,
-    schema=EntityRegistration.SCHEMA,
-    table=EntityRegistration.TABLE,
-    pkColumnName=EntityRegistration.ID_COLUMN,
-    valueColumnName=EntityRegistration.VALUE_COLUMN,
-    initialValue=EntityRegistration.INITIAL_VALUE,
-    allocationSize=EntityRegistration.ALLOCATION_SIZE,
-    pkColumnValue="org.jreserve.triangle.entities.Triangle"
-)
 public class Triangle extends AbstractData implements Serializable {
-    
-    @Id
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.triangle.entities.Triangle")
-    @Column(name="ID")
-    private long id;
     
     @Embedded
     private TriangleGeometry geometry;
@@ -48,10 +32,6 @@ public class Triangle extends AbstractData implements Serializable {
     
     public Triangle(Project project, ProjectDataType dataType, String name) {
         super(project, dataType, name);
-    }
-
-    public long getId() {
-        return id;
     }
     
     public TriangleGeometry getGeometry() {
@@ -97,15 +77,7 @@ public class Triangle extends AbstractData implements Serializable {
     }
     
     @Override
-    public boolean equals(Object o) {
-        if(o instanceof Triangle)
-            return super.equals(o);
-        return false;
-    }
-    
-    @Override
     public String toString() {
-        return String.format("Triangle [%s; %s;]",
-                getName(), getProject().getName());
+        return String.format("Triangle [%s;]", getName());
     }
 }

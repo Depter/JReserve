@@ -19,7 +19,7 @@ public class ProjectDataTypeLoader extends AbstractProjectElementFactory<Project
 
     private final static String SQL = 
         "select t from ProjectDataType t " +
-        "where t.claimType.id = :claimTypeId " +
+        "where t.claimType.id = ':claimTypeId' " +
         "order by t.dbId";
     
     @Override

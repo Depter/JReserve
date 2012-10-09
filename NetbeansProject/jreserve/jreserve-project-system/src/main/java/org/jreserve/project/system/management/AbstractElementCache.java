@@ -12,12 +12,12 @@ import org.jreserve.persistence.SessionFactory;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractElementCache<T, E> {
+public abstract class AbstractElementCache<T, E, K> {
 
     protected final static Logger logger = Logger.getLogger(AbstractElementCache.class.getName());
     
-    private Map<Long, Set<E>> saveCache = new HashMap<Long, Set<E>>();
-    private Map<Long, Set<E>> deleteCache = new HashMap<Long, Set<E>>();
+    private Map<K, Set<E>> saveCache = new HashMap<K, Set<E>>();
+    private Map<K, Set<E>> deleteCache = new HashMap<K, Set<E>>();
     
     public synchronized List<E> getValues(T key) {
         Set<E> cache = getCache(key);
@@ -34,7 +34,7 @@ public abstract class AbstractElementCache<T, E> {
     
     protected abstract void checkKey(T key);
     
-    protected abstract long getId(T key);
+    protected abstract K getId(T key);
     
     private Set<E> initCache(T key) {
         Session session = null;
@@ -74,7 +74,7 @@ public abstract class AbstractElementCache<T, E> {
         try {
             session = openSession(true);
             
-            for(Long keyId : getIds())
+            for(K keyId : getIds())
                 updateDatabase(keyId, session);
             
             session.comitTransaction();
@@ -84,18 +84,18 @@ public abstract class AbstractElementCache<T, E> {
         }
     }
     
-    protected Set<Long> getIds() {
-        Set<Long> ids = new HashSet<Long>(saveCache.keySet());
+    protected Set<K> getIds() {
+        Set<K> ids = new HashSet<K>(saveCache.keySet());
         ids.addAll(deleteCache.keySet());
         return ids;
     }
     
-    protected void updateDatabase(Long id, Session session) {
+    protected void updateDatabase(K id, Session session) {
         deleteValues(id, session);
         saveValues(id, session);
     }
     
-    protected void deleteValues(Long id, Session session) {
+    protected void deleteValues(K id, Session session) {
         Set<E> cache = deleteCache.remove(id);
         if(cache != null && !cache.isEmpty())
             deleteValues(cache, session);
@@ -107,7 +107,7 @@ public abstract class AbstractElementCache<T, E> {
                 session.delete(entity);
     }
     
-    protected void saveValues(Long id, Session session) {
+    protected void saveValues(K id, Session session) {
         Set<E> cache = saveCache.get(id);
         if(cache != null && !cache.isEmpty())
             saveValues(cache, session);
@@ -165,7 +165,7 @@ public abstract class AbstractElementCache<T, E> {
     }
     
     private Set<E> getDeleteCache(T key) {
-        Long id = getId(key);
+        K id = getId(key);
         Set<E> cache = deleteCache.get(id);
         if(cache == null) {
             cache = new HashSet<E>();
@@ -181,7 +181,7 @@ public abstract class AbstractElementCache<T, E> {
     
     public synchronized void clearCache(T key) {
         checkKey(key);
-        Long id = getId(key);
+        K id = getId(key);
         saveCache.remove(id);
         deleteCache.remove(id);
     }

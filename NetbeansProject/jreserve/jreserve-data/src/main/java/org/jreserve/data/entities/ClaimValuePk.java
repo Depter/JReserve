@@ -12,8 +12,8 @@ import org.jreserve.data.ProjectDataType;
 public class ClaimValuePk implements Serializable {
     private final static long serialVersionUID = 1L;
     
-    private long claimType;
-    private long dataType;
+    private String claimType;
+    private String dataType;
     
     private Date accidentDate;
     private Date developmentDate;
@@ -32,11 +32,11 @@ public class ClaimValuePk implements Serializable {
         return accidentDate;
     }
 
-    public long getProject() {
+    public String getProject() {
         return claimType;
     }
 
-    public long getProjectDataType() {
+    public String getProjectDataType() {
         return dataType;
     }
 
@@ -52,16 +52,16 @@ public class ClaimValuePk implements Serializable {
     }
     
     private boolean equals(ClaimValuePk o) {
-        return claimType == o.claimType &&
-               dataType == o.dataType &&
+        return claimType.equals(o.claimType) &&
+               dataType.equals(o.dataType) &&
                accidentDate.equals(o.accidentDate) &&
                developmentDate.equals(o.developmentDate);
     }
     
     @Override
     public int hashCode() {
-        int hash = 31 + (int) dataType;
-        hash = 17 * hash + (int) claimType;
+        int hash = 31 + dataType.hashCode();
+        hash = 17 * hash + claimType.hashCode();
         hash = 17 * hash + accidentDate.hashCode();
         return 17 * hash + developmentDate.hashCode();
     }

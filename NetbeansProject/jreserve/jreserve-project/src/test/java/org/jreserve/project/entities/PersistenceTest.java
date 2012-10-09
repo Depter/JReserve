@@ -69,8 +69,8 @@ public class PersistenceTest {
         LoB lob2 = new LoB("Dummy Lob 2");
         session.save(lob1);
         session.save(lob2);
-        assertTrue(0 < lob1.getId());
-        assertTrue(0 < lob2.getId());
+        assertTrue(lob1.getVersion() != null);
+        assertTrue(lob2.getVersion() != null);
         
         List<LoB> lobs = session.createQuery("from LoB").list();
         assertEquals(2, lobs.size());
@@ -94,8 +94,8 @@ public class PersistenceTest {
             
         session.persist(lob);
         session.persist(claimType);
-        assertTrue(0 < lob.getId());
-        assertTrue(0 < claimType.getId());
+        assertTrue(lob.getVersion() != null);
+        assertTrue(claimType.getVersion() != null);
 
         session.delete(lob);
         List claimTypes = session.createQuery("from ClaimType").list();
@@ -130,9 +130,9 @@ public class PersistenceTest {
         session.persist(lob);
         session.persist(claimType);
         session.persist(project);
-        assertTrue(0 < lob.getId());
-        assertTrue(0 < claimType.getId());
-        assertTrue(0 < project.getId());
+        assertTrue(lob.getVersion() != null);
+        assertTrue(claimType.getVersion() != null);
+        assertTrue(project.getVersion() != null);
         List projects = session.createQuery("from Project").list();
         assertFalse(projects.isEmpty());
         
@@ -170,7 +170,7 @@ public class PersistenceTest {
         session.persist(project);
         session.persist(log);
         
-        assertTrue(0 < log.getId());
+        assertTrue(log.getVersion() != null);
         List logs = session.createQuery("from ChangeLog").list();
         assertFalse(logs.isEmpty());
         

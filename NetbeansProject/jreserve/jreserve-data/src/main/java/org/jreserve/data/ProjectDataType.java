@@ -1,7 +1,7 @@
 package org.jreserve.data;
 
-import java.io.Serializable;
 import javax.persistence.*;
+import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.ClaimType;
 
@@ -10,28 +10,12 @@ import org.jreserve.project.entities.ClaimType;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(generateId=true)
+@EntityRegistration
 @Entity
 @Table(name="DATA_TYPE", schema="JRESERVE")
-@TableGenerator(
-    name="org.jreserve.data.ProjectDataType",
-    catalog=EntityRegistration.CATALOG,
-    schema=EntityRegistration.SCHEMA,
-    table=EntityRegistration.TABLE,
-    pkColumnName=EntityRegistration.ID_COLUMN,
-    valueColumnName=EntityRegistration.VALUE_COLUMN,
-    initialValue=EntityRegistration.INITIAL_VALUE,
-    allocationSize=EntityRegistration.ALLOCATION_SIZE,
-    pkColumnValue="org.jreserve.data.ProjectDataType"
-)
-public class ProjectDataType implements Serializable {
+public class ProjectDataType extends AbstractPersistentObject {
     private final static long serialVersionUID = 1L;
     public final static int MAX_NAME_LENGTH = 64;
-    
-    @Id
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.data.ProjectDataType")
-    @Column(name="ID", nullable=false)
-    private long id;
     
     @ManyToOne(fetch=FetchType.LAZY, optional=false)
     @JoinColumn(name="CLAIM_TYPE_ID", referencedColumnName="ID", nullable=false)
@@ -62,10 +46,6 @@ public class ProjectDataType implements Serializable {
         checkName(name);
         this.name = name;
         this.isTriangle = isTriangle;
-    }
-    
-    public long getId() {
-        return id;
     }
     
     private void setClaimType(ClaimType claimType) {

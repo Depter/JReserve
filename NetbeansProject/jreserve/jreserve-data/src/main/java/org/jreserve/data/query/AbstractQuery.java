@@ -28,13 +28,13 @@ class AbstractQuery {
     private void addClaimType(StringBuilder sb, ClaimType claimType) {
         if(claimType == null)
             throw new IllegalArgumentException("ClaimType not set!");
-        sb.append(" WHERE c.claimType.id =").append(claimType.getId());
+        sb.append(" WHERE c.claimType.id ='").append(claimType.getId()).append("'");
     }
     
     private void addDataType(StringBuilder sb, ProjectDataType dt) {
         if(dt == null)
             return;
-        sb.append(" AND c.dataType.id = ").append(dt.getId());
+        sb.append(" AND c.dataType.id = '").append(dt.getId()).append("'");
     }
 
     private void addFromAccidentDate(StringBuilder sb, Date from) {

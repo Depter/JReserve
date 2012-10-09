@@ -3,7 +3,9 @@ package org.jreserve.data.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.hibernate.annotations.Type;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.ClaimType;
 
@@ -24,12 +26,12 @@ public class ClaimValue implements Serializable {
     
     @Id
     @ManyToOne
-    @JoinColumn(name="CLAIM_TYPE_ID", referencedColumnName="ID", nullable=false)
+    @JoinColumn(name="CLAIM_TYPE_ID", referencedColumnName="ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
     private ClaimType claimType;
     
     @Id
     @ManyToOne
-    @JoinColumn(name="DATA_TYPE_ID", referencedColumnName="ID", nullable=false)
+    @JoinColumn(name="DATA_TYPE_ID", referencedColumnName="ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
     private ProjectDataType dataType;
     
     @Id

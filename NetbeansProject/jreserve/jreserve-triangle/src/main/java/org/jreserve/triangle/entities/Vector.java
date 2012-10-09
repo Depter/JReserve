@@ -13,26 +13,10 @@ import org.jreserve.project.entities.Project;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(generateId=true)
+@EntityRegistration
 @Entity
 @Table(name="VECTOR", schema="JRESERVE")
-@TableGenerator(
-    name="org.jreserve.triangle.entities.Vector",
-    catalog=EntityRegistration.CATALOG,
-    schema=EntityRegistration.SCHEMA,
-    table=EntityRegistration.TABLE,
-    pkColumnName=EntityRegistration.ID_COLUMN,
-    valueColumnName=EntityRegistration.VALUE_COLUMN,
-    initialValue=EntityRegistration.INITIAL_VALUE,
-    allocationSize=EntityRegistration.ALLOCATION_SIZE,
-    pkColumnValue="org.jreserve.triangle.entities.Vector"
-)
 public class Vector extends AbstractData implements Serializable {
-    
-    @Id
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.triangle.entities.Vector")
-    @Column(name="ID")
-    private long id;
     
     @Embedded
     private VectorGeometry geometry;
@@ -48,10 +32,6 @@ public class Vector extends AbstractData implements Serializable {
     
     public Vector(Project project, ProjectDataType dataType, String name) {
         super(project, dataType, name);
-    }
-
-    public long getId() {
-        return id;
     }
     
     public VectorGeometry getGeometry() {
@@ -97,15 +77,7 @@ public class Vector extends AbstractData implements Serializable {
     }
     
     @Override
-    public boolean equals(Object o) {
-        if(o instanceof Vector)
-            return super.equals(o);
-        return false;
-    }
-    
-    @Override
     public String toString() {
-        return String.format("Vector [%s; %s;]",
-                getName(), getProject().getName());
+        return String.format("Vector [%s]", getName());
     }
 }

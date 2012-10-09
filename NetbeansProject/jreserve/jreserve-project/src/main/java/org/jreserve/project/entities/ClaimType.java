@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
 
@@ -12,28 +13,12 @@ import org.jreserve.persistence.PersistenceUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(generateId=true)
+@EntityRegistration
 @Entity
 @Table(name="CLAIM_TYPE", schema="JRESERVE")
-@TableGenerator(
-    name="org.jreserve.project.entities.ClaimType",
-    catalog=EntityRegistration.CATALOG,
-    schema=EntityRegistration.SCHEMA,
-    table=EntityRegistration.TABLE,
-    pkColumnName=EntityRegistration.ID_COLUMN,
-    valueColumnName=EntityRegistration.VALUE_COLUMN,
-    allocationSize=EntityRegistration.ALLOCATION_SIZE,
-    initialValue=EntityRegistration.INITIAL_VALUE,
-    pkColumnValue="org.jreserve.project.entities.ClaimType"
-)
-public class ClaimType implements Serializable {
+public class ClaimType extends AbstractPersistentObject {
     private final static long serialVersionUID = 1L;
     private final static int NAME_LENGTH = 64;
-    
-    @Id
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.project.entities.ClaimType")
-    @Column(name="ID", nullable=false)
-    private long id;
     
     @Column(name="CLAIM_TYPE_NAME", nullable=false, length=NAME_LENGTH)
     private String name;
@@ -51,10 +36,6 @@ public class ClaimType implements Serializable {
     public ClaimType(String name) {
         PersistenceUtil.checkVarchar(name, NAME_LENGTH);
         this.name = name;
-    }
-    
-    public long getId() {
-        return id;
     }
     
     public void setName(String name) {
@@ -102,31 +83,8 @@ public class ClaimType implements Serializable {
     }    
     
     @Override
-    public boolean equals(Object o) {
-        if(o instanceof ClaimType)
-            return equals((ClaimType)o);
-        return false;
-    }
-    
-    private boolean equals(ClaimType o) {
-        return equals(o.lob) &&
-               name.equalsIgnoreCase(o.name);
-    }
-    
-    private boolean equals(LoB otherLoB) {
-        if(lob == null)
-            return otherLoB == null;
-        return lob.equals(otherLoB);
-    }
-    
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-    
-    @Override
     public String toString() {
-        return String.format("ClaimType [%d; %s]", id, name);
+        return String.format("ClaimType [%s]", name);
     }
     
     public String getPath() {

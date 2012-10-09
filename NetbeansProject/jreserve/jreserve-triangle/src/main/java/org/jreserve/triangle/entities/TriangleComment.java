@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 import org.hibernate.annotations.Type;
+import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
 
@@ -12,29 +13,13 @@ import org.jreserve.persistence.PersistenceUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(generateId=true)
+@EntityRegistration
 @Entity
 @Table(name="TRIANGLE_COMMENT", schema="JRESERVE")
-@TableGenerator(
-    name="org.jreserve.triangle.entities.TriangleComment",
-    catalog=EntityRegistration.CATALOG,
-    schema=EntityRegistration.SCHEMA,
-    table=EntityRegistration.TABLE,
-    pkColumnName=EntityRegistration.ID_COLUMN,
-    valueColumnName=EntityRegistration.VALUE_COLUMN,
-    initialValue=EntityRegistration.INITIAL_VALUE,
-    allocationSize=EntityRegistration.ALLOCATION_SIZE,
-    pkColumnValue="org.jreserve.triangle.entities.TriangleComment"
-)
-public class TriangleComment implements Serializable {
+public class TriangleComment extends AbstractPersistentObject {
     private final static long serialVersionUID = 1L;
     
     private final static int NAME_SIZE = 64;
-    
-    @Id
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.triangle.entities.TriangleComment")
-    @Column(name="ID")
-    private long id;
     
     @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="TRIANGLE_ID", referencedColumnName="ID", nullable=false)
@@ -100,10 +85,6 @@ public class TriangleComment implements Serializable {
         this.commentText = comment;
     }
 
-    public long getId() {
-        return id;
-    }
-
     public Triangle getTriangle() {
         return triangle;
     }
@@ -132,18 +113,6 @@ public class TriangleComment implements Serializable {
     
     public void setCommentText(String comment) {
         initComment(comment);
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if(o instanceof TriangleComment)
-            return id == ((TriangleComment)o).id;
-        return false;
-    }
-    
-    @Override
-    public int hashCode() {
-        return (int) id;
     }
     
     @Override

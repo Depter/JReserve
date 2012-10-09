@@ -167,7 +167,11 @@ public class VectorFormatWizardPanel implements WizardDescriptor.AsynchronousVal
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                getContainer().addVector(vector);
+                try {
+                    getContainer().addVector(vector);
+                } catch (RuntimeException ex) {
+                    logger.log(Level.SEVERE, "Unable to create element!", ex);
+                }
             }
         });
     }

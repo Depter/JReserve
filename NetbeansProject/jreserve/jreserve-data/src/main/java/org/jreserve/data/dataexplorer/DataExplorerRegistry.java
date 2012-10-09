@@ -41,7 +41,7 @@ class DataExplorerRegistry {
         
     }
     
-    private static Map<Long, DataExplorerTopComponent> explorers = new HashMap<Long, DataExplorerTopComponent>();
+    private static Map<String, DataExplorerTopComponent> explorers = new HashMap<String, DataExplorerTopComponent>();
     
     public static DataExplorerTopComponent getComponent(ProjectElement<ClaimType> element) {
         ClaimType claimType = element.getValue();

@@ -3,6 +3,7 @@ package org.jreserve.project.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Type;
+import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
 
@@ -11,29 +12,13 @@ import org.jreserve.persistence.PersistenceUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-@EntityRegistration(generateId=true)
+@EntityRegistration
 @Entity
 @Table(name="PROJECT", schema="JRESERVE")
-@TableGenerator(
-    name="org.jreserve.project.entities.Project",
-    catalog=EntityRegistration.CATALOG,
-    schema=EntityRegistration.SCHEMA,
-    table=EntityRegistration.TABLE,
-    pkColumnName=EntityRegistration.ID_COLUMN,
-    valueColumnName=EntityRegistration.VALUE_COLUMN,
-    allocationSize=EntityRegistration.ALLOCATION_SIZE,
-    initialValue=EntityRegistration.INITIAL_VALUE,
-    pkColumnValue="org.jreserve.project.entities.Project"
-)
-public class Project implements Serializable {
+public class Project extends AbstractPersistentObject {
     private final static long serialVersionUID = 1L;
 
     private final static int NAME_LENGTH = 64;
-    
-    @Id
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="org.jreserve.project.entities.Project")
-    @Column(name="ID")
-    private long id;
     
     @ManyToOne(fetch= FetchType.LAZY, optional=false)
     @JoinColumn(name="CLAIM_TYPE_ID", referencedColumnName="ID", nullable=false)
@@ -56,10 +41,6 @@ public class Project implements Serializable {
     private void initName(String name) {
         PersistenceUtil.checkVarchar(name, NAME_LENGTH);
         this.name = name;
-    }
-    
-    public long getId() {
-        return id;
     }
     
     public ClaimType getClaimType() {
@@ -87,32 +68,8 @@ public class Project implements Serializable {
     }
     
     @Override
-    public boolean equals(Object o) {
-        if(o instanceof Project)
-            return equals((Project) o);
-        return false;
-    }
-    
-    private boolean equals(Project o) {
-        return claimTypeEquals(o.claimType) &&
-               name.equalsIgnoreCase(o.name);
-    }
-    
-    private boolean claimTypeEquals(ClaimType claimType) {
-        if(this.claimType == null)
-            return claimType == null;
-        return this.claimType.equals(claimType);
-    }
-    
-    @Override
-    public int hashCode() {
-        int hash = 31 + claimType.hashCode();
-        return 17 * hash + name.toLowerCase().hashCode();
-    }
-    
-    @Override
     public String toString() {
-        return String.format("Project [%d; %s]", id, name);
+        return String.format("Project [%s]", name);
     }
     
     public String getPath() {

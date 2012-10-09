@@ -46,10 +46,9 @@ public class ProjectDataTypeInstaller implements ProjectSystemCreationListener {
         }
     }
     
-    
     private ClaimType getClaimType(ProjectElement element) {
         ClaimType claimType = (ClaimType) element.getValue();
-        long id = claimType.getId();
+        String id = claimType.getId();
         return session.find(ClaimType.class, id);
     }
     

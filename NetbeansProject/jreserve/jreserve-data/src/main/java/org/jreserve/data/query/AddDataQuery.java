@@ -18,8 +18,8 @@ import org.jreserve.project.entities.ClaimType;
  */
 public class AddDataQuery {
     
-    private Map<Long, ClaimType> claimTypes = new HashMap<Long, ClaimType>();
-    private Map<Long, ProjectDataType> dataTypes = new HashMap<Long, ProjectDataType>();
+    private Map<String, ClaimType> claimTypes = new HashMap<String, ClaimType>();
+    private Map<String, ProjectDataType> dataTypes = new HashMap<String, ProjectDataType>();
     
     public AddDataQuery() {
     }
@@ -40,13 +40,13 @@ public class AddDataQuery {
     }
     
     private void loadPersistentClaimType(Session session, ClaimType claimType) {
-        Long id = claimType.getId();
+        String id = claimType.getId();
         if(!claimTypes.containsKey(id))
             claimTypes.put(id, session.find(ClaimType.class, id));
     }
     
     private void loadPersistentDataType(Session session, ProjectDataType dataType) {
-        Long id = dataType.getId();
+        String id = dataType.getId();
         if(!dataTypes.containsKey(id))
             dataTypes.put(id, session.find(ProjectDataType.class, id));
     }
@@ -78,12 +78,12 @@ public class AddDataQuery {
     }
     
     private ClaimType getPersistentClaimType(Data data) {
-        long id = data.getDataType().getClaimType().getId();
+        String id = data.getDataType().getClaimType().getId();
         return claimTypes.get(id);
     }
     
     private ProjectDataType getPersistentDataType(Data data) {
-        long id = data.getDataType().getId();
+        String id = data.getDataType().getId();
         return dataTypes.get(id);
     }
     

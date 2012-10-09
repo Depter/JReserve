@@ -11,7 +11,7 @@ import org.jreserve.project.system.management.AbstractElementCache;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog> {
+public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog, String> {
     
     private static ChangeLogUtil DEFAULT = null;
     
@@ -24,7 +24,7 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog> {
     private final static String ERR_PROJECT_NOT_PERSISTED = 
         "Project '%s' must be peristed first, before log can be added to it!";
     private final static String QUERY = 
-        "SELECT c FROM ChangeLog c WHERE c.project.id = :projectId";
+        "SELECT c FROM ChangeLog c WHERE c.project.id = ':projectId'";
     
     private final static Comparator<ChangeLog> COMPARATOR = new Comparator<ChangeLog>() {
         @Override
@@ -41,7 +41,7 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog> {
         }
     };
     
-    private Map<Long, Set<ChangeLogListener>> listeners = new HashMap<Long, Set<ChangeLogListener>>();
+    private Map<String, Set<ChangeLogListener>> listeners = new HashMap<String, Set<ChangeLogListener>>();
     
     private ChangeLogUtil() {
     }
@@ -53,7 +53,7 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog> {
 
     @Override
     protected void checkKey(Project project) {
-        if(project.getId() > 0)
+        if(project.getVersion() != null)
             return;
         String msg = String.format(ERR_PROJECT_NOT_PERSISTED, project.getName());
         throw new IllegalArgumentException(msg);
@@ -72,7 +72,7 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog> {
     }
 
     @Override
-    protected long getId(Project project) {
+    protected String getId(Project project) {
         return project.getId();
     }
     
@@ -124,6 +124,6 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog> {
 
     @Override
     protected boolean isNew(ChangeLog entity) {
-        return entity.getId() == 0;
+        return entity.getVersion() == null;
     }
 }
