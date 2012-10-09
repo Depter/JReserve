@@ -1,27 +1,28 @@
-package org.jreserve.vector;
+package org.jreserve.triangle;
 
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
-import org.jreserve.triangle.entities.Vector;
+import org.jreserve.triangle.entities.Triangle;
 import org.openide.nodes.Node;
 
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
-public class VectorProjectElement extends ProjectElement<Vector> {
+public class TriangleProjectElement extends ProjectElement<Triangle> {
 
-    public final static int POSITION = 200;
+    public final static int POSITION = 100;
     
-    public VectorProjectElement(Vector vector) {
-        super(vector);
-        super.setProperty(NAME_PROPERTY, vector.getName());
+    public TriangleProjectElement(Triangle triangle) {
+        super(triangle);
+        super.setProperty(NAME_PROPERTY, triangle.getName());
         super.addToLookup(new PersistentDeletable(this));
     }
 
     @Override
     public Node createNodeDelegate() {
-        return new VectorNode(this);
+        return new TriangleNode(this);
     }
     
     @Override

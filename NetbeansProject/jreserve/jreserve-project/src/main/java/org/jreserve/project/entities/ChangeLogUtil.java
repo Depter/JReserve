@@ -24,7 +24,7 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog, Stri
     private final static String ERR_PROJECT_NOT_PERSISTED = 
         "Project '%s' must be peristed first, before log can be added to it!";
     private final static String QUERY = 
-        "SELECT c FROM ChangeLog c WHERE c.project.id = ':projectId'";
+        "SELECT c FROM ChangeLog c WHERE c.project.id = :projectId";
     
     private final static Comparator<ChangeLog> COMPARATOR = new Comparator<ChangeLog>() {
         @Override

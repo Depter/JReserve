@@ -19,7 +19,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class ChangeLogDeleter implements ProjectSystemDeletionListener {
 
     private final static String SQL = 
-            "delete from ChangeLog c where c.project.id= ':projectId'";
+            "delete from ChangeLog c where c.project.id= :projectId";
     
     private final static Logger logger = Logger.getLogger(ChangeLogDeleter.class.getName());
     

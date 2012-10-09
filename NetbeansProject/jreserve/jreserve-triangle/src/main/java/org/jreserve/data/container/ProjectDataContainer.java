@@ -1,9 +1,10 @@
 package org.jreserve.data.container;
 
-import java.util.ArrayList;
 import java.util.List;
+import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.vector.VectorProjectElement;
@@ -16,12 +17,18 @@ import org.jreserve.vector.VectorProjectElement;
 public class ProjectDataContainer {
 
     private Project project;
-    private List<Vector> vectors = new ArrayList<Vector>();
-    private List<Triangle> triangles = new ArrayList<Triangle>();
     private ProjectElement myElement;
     
     public ProjectDataContainer(Project project) {
         this.project = project;
+    }
+    
+    public Project getProject() {
+        return project;
+    }
+    
+    public ProjectElement<Project> getElement() {
+        return myElement;
     }
     
     public boolean containsName(String name) {
@@ -29,14 +36,18 @@ public class ProjectDataContainer {
     }
     
     private boolean containsVectorName(String name) {
-        for(Vector vector : vectors)
+        for(Vector vector : getChildValues(Vector.class))
             if(vector.getName().equalsIgnoreCase(name))
                 return true;
         return false;
     }
     
+    private <T> List<T> getChildValues(Class<T> clazz) {
+        return myElement.getChildValues(clazz);
+    }
+    
     private boolean containsTriangleName(String name) {
-        for(Triangle triangle : triangles)
+        for(Triangle triangle : getChildValues(Triangle.class))
             if(triangle.getName().equalsIgnoreCase(name))
                 return true;
         return false;
@@ -46,21 +57,44 @@ public class ProjectDataContainer {
         myElement = element;
     }
     
-    public void addVector(Vector vector) {
-        if(vector == null)
-            throw new NullPointerException("Vector is null!");
-        if(vector.getProject() == null)
-            throw new IllegalArgumentException("Vector does not belongs to any project!");
-        if(vector.getProject().getId() != project.getId())
-            throw new IllegalArgumentException("Vector does belongs to another project!");
-        if(vectors.contains(vector))
-            throw new IllegalArgumentException("Vector already added!");
-        createElement(vector);
+    public <T extends PersistentObject> void addElement(ProjectElement<T> element) {
+        checkAddableElement(element.getValue());
+        myElement.addChild(element);
     }
     
-    private void createElement(Vector vector) {
-        vectors.add(vector);
+    private <T> void checkAddableElement(T value) {
+        if(value == null)
+            throw new NullPointerException("Value is null!");
+        if(containsValue(value))
+            throw new IllegalArgumentException("Value already added!" + value);
+    }
+    
+    private <T> boolean containsValue(T value) {
+        List<T> values = (List<T>) getChildValues(value.getClass());
+        for(T v : values)
+            if(v.equals(value))
+                return true;
+        return false;
+    }
+    
+    public ProjectElement<Vector> addVector(Vector vector) {
+        checkProject(vector.getProject());
         VectorProjectElement element = new VectorProjectElement(vector);
-        myElement.addChild(element);
+        addElement(element);
+        return element;
+    }
+    
+    private void checkProject(Project p) {
+        if(p == null)
+            throw new IllegalArgumentException("Value does not belongs to any project!");
+        if(!p.getId().equals(project.getId()))
+            throw new IllegalArgumentException("Value belongs to another project!");
+    }
+    
+    public ProjectElement<Triangle> addTriangle(Triangle triangle) {
+        checkProject(triangle.getProject());
+        TriangleProjectElement element = new TriangleProjectElement(triangle);
+        addElement(element);
+        return element;
     }
 }

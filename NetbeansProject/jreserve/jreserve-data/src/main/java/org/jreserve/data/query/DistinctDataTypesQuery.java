@@ -16,7 +16,7 @@ public class DistinctDataTypesQuery implements DataQuery<List<ProjectDataType>> 
     private final static String DATA_TYPES = 
         "SELECT dt " + 
         "FROM ProjectDataType dt " + 
-        "WHERE dt.claimType.id = ':claimTypeId' " + 
+        "WHERE dt.claimType.id = :claimTypeId " + 
         "ORDER BY dt.dbId";
 
     

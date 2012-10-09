@@ -19,11 +19,11 @@ public abstract class AbstractData extends AbstractPersistentObject {
     
     private final static int NAME_SIZE = 64;
     
-    @ManyToOne(cascade=CascadeType.REMOVE, fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
     private Project project;
     
-    @ManyToOne(cascade=CascadeType.REMOVE, fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="DATA_TYPE_ID", referencedColumnName="ID", nullable=false)
     private ProjectDataType dataType;
     

@@ -1,4 +1,4 @@
-package org.jreserve.vector;
+package org.jreserve.triangle;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
@@ -9,13 +9,14 @@ import org.openide.util.ImageUtilities;
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
-class VectorNode extends DefaultProjectNode {
+class TriangleNode extends DefaultProjectNode {
     
-    private final static ImageIcon ICON = ImageUtilities.loadImageIcon("resources/vector.png", false);
-    private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-DataContainerNode-VectorNode";
+    private final static ImageIcon ICON = ImageUtilities.loadImageIcon("resources/triangle.png", false);
+    private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-DataContainerNode-TriangleNode";
 
-    VectorNode(ProjectElement element) {
+    TriangleNode(ProjectElement element) {
         super(element);
         super.addActionPath(ACTION_PATH);
     }
@@ -24,5 +25,4 @@ class VectorNode extends DefaultProjectNode {
     public Image getIcon(int type) {
         return ICON.getImage();
     }
-    
 }

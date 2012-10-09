@@ -42,7 +42,7 @@ class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
     private class ProjectDataTypeDeletable extends PersistentDeletable {
         
         private final static String SQL = 
-            "delete from ClaimValue c where c.dataType.id= ':dataTypeId'";
+            "delete from ClaimValue c where c.dataType.id= :dataTypeId";
         
         private final String id;
         

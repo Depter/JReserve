@@ -115,4 +115,16 @@ class HibernateQuery implements Query {
         }
         return this;
     }
+
+    @Override
+    public Query setParameter(String name, String value) {
+        query.setString(name, value);
+        return this;
+    }
+
+    @Override
+    public Query setParameter(int position, String value) {
+        query.setString(position, value);
+        return this;
+    }
 }

@@ -80,5 +80,14 @@ public interface Query {
      * Bind an argument to a named parameter.
      */
      public Query setParameter(String name, Object value);
- 
+          
+    /**
+     * Bind a String argument to a named parameter.
+     */
+     public Query setParameter(String name, String value);
+          
+    /**
+     * Bind a String argument to a positional parameter. 
+     */
+     public Query setParameter(int position, String value); 
 }

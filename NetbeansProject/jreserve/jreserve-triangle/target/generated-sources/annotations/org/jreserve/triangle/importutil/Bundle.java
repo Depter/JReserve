@@ -24,6 +24,34 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.Steps");
     }
     /**
+     * @return <i>Accident</i>
+     * @see DataFormatVisualPanel
+     */
+    static String LBL_DataFormatVisualPanel_AccidentGeometry() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataFormatVisualPanel.AccidentGeometry");
+    }
+    /**
+     * @return <i>Development</i>
+     * @see DataFormatVisualPanel
+     */
+    static String LBL_DataFormatVisualPanel_DevelopmentGeometry() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataFormatVisualPanel.DevelopmentGeometry");
+    }
+    /**
+     * @return <i>Geometry</i>
+     * @see DataFormatVisualPanel
+     */
+    static String LBL_DataFormatVisualPanel_PanelName() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataFormatVisualPanel.PanelName");
+    }
+    /**
+     * @return <i>There is no data selected!</i>
+     * @see DataFormatWizardPanel
+     */
+    static String LBL_DataFormatWizardPanel_NoData() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataFormatWizardPanel.NoData");
+    }
+    /**
      * @return <i>Periods</i>
      * @see ImportTableModel
      */
@@ -71,6 +99,13 @@ class Bundle {
      */
     static String LBL_NameSelectVisualPanel_Project() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.NameSelectVisualPanel.Project");
+    }
+    /**
+     * @return <i>Unable to save vector!</i>
+     * @see DataFormatWizardPanel
+     */
+    static String MSG_DataFormatWizardPanel_SaveError() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataFormatWizardPanel.SaveError");
     }
     /**
      * @return <i>Unable to load data!</i>

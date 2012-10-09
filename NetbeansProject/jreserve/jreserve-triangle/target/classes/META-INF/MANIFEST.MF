@@ -3,7 +3,7 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/triangle/Bundle.propert
  ies
 OpenIDE-Module-Specification-Version: 1.0
 OpenIDE-Module-Implementation-Version: 1.0-20121009
-OpenIDE-Module-Build-Version: 201210091131
+OpenIDE-Module-Build-Version: 201210092233
 OpenIDE-Module: org.jreserve.jreserve.triangle
 OpenIDE-Module-Public-Packages: -
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1

@@ -42,17 +42,17 @@
         </folder>
         <folder name="NewWizard">
             <folder name="Data">
-                <file name="org-jreserve-triangle-triangleimport-TriangleImportWizard.instance">
-                    <!--org.jreserve.triangle.triangleimport.TriangleImportWizard-->
+                <file name="org-jreserve-triangle-dataimport-TriangleCreatorWizard.instance">
+                    <!--org.jreserve.triangle.dataimport.TriangleCreatorWizard-->
                     <attr
-                        bundlevalue="org.jreserve.triangle.triangleimport.Bundle#LBL.TriangleImportWizard.Name" name="displayName"/>
+                        bundlevalue="org.jreserve.triangle.dataimport.Bundle#LBL.TriangleImportWizard.Name" name="displayName"/>
                     <attr name="iconBase" stringvalue="resources/triangle.png"/>
                     <attr intvalue="100" name="position"/>
                 </file>
-                <file name="org-jreserve-triangle-entities-vectorimport-VectorCreatorWizard.instance">
-                    <!--org.jreserve.triangle.entities.vectorimport.VectorCreatorWizard-->
+                <file name="org-jreserve-triangle-dataimport-VectorCreatorWizard.instance">
+                    <!--org.jreserve.triangle.dataimport.VectorCreatorWizard-->
                     <attr
-                        bundlevalue="org.jreserve.triangle.entities.vectorimport.Bundle#LBL.VectorCreatorWizard.Name" name="displayName"/>
+                        bundlevalue="org.jreserve.triangle.dataimport.Bundle#LBL.VectorCreatorWizard.Name" name="displayName"/>
                     <attr name="iconBase" stringvalue="resources/vector.png"/>
                     <attr intvalue="100" name="position"/>
                 </file>
@@ -60,6 +60,10 @@
         </folder>
         <folder name="Project">
             <folder name="ElementFactories">
+                <file name="org-jreserve-vector-VectorLoader.instance">
+                    <!--org.jreserve.vector.VectorLoader-->
+                    <attr intvalue="200" name="priority"/>
+                </file>
                 <file name="org-jreserve-data-container-ProjectDataContainerLoader.instance">
                     <!--org.jreserve.data.container.ProjectDataContainerLoader-->
                     <attr intvalue="500" name="priority"/>
