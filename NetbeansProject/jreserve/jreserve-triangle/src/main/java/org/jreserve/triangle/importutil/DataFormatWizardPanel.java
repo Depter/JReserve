@@ -3,7 +3,6 @@ package org.jreserve.triangle.importutil;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;

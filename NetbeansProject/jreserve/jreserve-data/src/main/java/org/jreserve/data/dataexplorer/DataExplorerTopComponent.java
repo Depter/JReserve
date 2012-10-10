@@ -25,7 +25,6 @@ import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.util.DateTableCellRenderer;
 import org.jreserve.data.util.DoubleTableCellRenderer;
-import org.jreserve.data.util.ProjectDataTypeComboRenderer;
 import org.jreserve.data.util.ProjectDataTypeComparator;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
@@ -42,6 +41,8 @@ import org.openide.NotifyDescriptor;
 import org.openide.actions.CopyAction;
 import org.openide.actions.DeleteAction;
 import org.openide.util.ImageUtilities;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
 import org.openide.util.actions.SystemAction;
@@ -167,7 +168,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     private void initComponents() {
 
         jToolBar1 = new javax.swing.JToolBar();
-        dataTypeCombo = new javax.swing.JComboBox();
+        dataTypeCombo = new org.jreserve.project.system.visual.ProjectElementComboBox();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         firstPageButton = new ToolBarButton(ImageUtilities.loadImageIcon(FIRST_PAGE, false));
         prevPageButton = new ToolBarButton(ImageUtilities.loadImageIcon(PREVIOUS_PAGE, false));
@@ -190,14 +191,10 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
 
         jToolBar1.setRollover(true);
 
-        dataTypeCombo.setModel(comboModel);
-        dataTypeCombo.setSelectedItem(null);
-        dataTypeCombo.setActionCommand(DATA_TYPE_ACTION);
+        dataTypeCombo.addLookupListener(ProjectDataType.class, new DataTypeListener());
         dataTypeCombo.setMaximumSize(new java.awt.Dimension(150, 18));
         dataTypeCombo.setMinimumSize(new java.awt.Dimension(150, 18));
         dataTypeCombo.setPreferredSize(new java.awt.Dimension(150, 18));
-        dataTypeCombo.setRenderer(new ProjectDataTypeComboRenderer());
-        dataTypeCombo.addActionListener(this);
         jToolBar1.add(dataTypeCombo);
         jToolBar1.add(jSeparator1);
 
@@ -270,7 +267,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jreserve.resources.ToolBarButton copyButton;
-    private javax.swing.JComboBox dataTypeCombo;
+    private org.jreserve.project.system.visual.ProjectElementComboBox dataTypeCombo;
     private org.jreserve.resources.ToolBarButton deleteButton;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
@@ -309,12 +306,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     @Override
     public void actionPerformed(ActionEvent evt) {
         String command = evt.getActionCommand();
-        if(DATA_TYPE_ACTION.equals(command)) {
-            tableModel.setDataType((ProjectDataType) dataTypeCombo.getSelectedItem());
-            tableModel.setRowsPerPage(getRowPerPage());
-            int rowCount = tableModel.getTotalRowCount();
-            totalRowsLabel.setText(Bundle.LBL_DataExplorerTopComponent_MaxNumberOfRows(rowCount));
-        } else if(FIRST_PAGE_ACTION.equals(command)) {
+        if(FIRST_PAGE_ACTION.equals(command)) {
             tableModel.setPageIndex(0);
         } else if(LAST_PAGE_ACTION.equals(command)) {
             tableModel.setPageIndex(tableModel.getPageCount());
@@ -344,6 +336,10 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         return tableModel.getAllDataOnPage();
     }
     
+    private ProjectDataType getSelectedDataType() {
+        return dataTypeCombo.getSelectedItem(ProjectDataType.class);
+    }
+    
     private class CopyDataAction extends AbstractAction {
 
         private StringBuilder sb = new StringBuilder();
@@ -363,7 +359,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
             dateFormat = dateRenderer.getFormat();
             decimalSep = doubleRenderer.getFormat().getDecimalFormatSymbols().getDecimalSeparator();
             sb.setLength(0);
-            ProjectDataType dt = (ProjectDataType) dataTypeCombo.getSelectedItem();
+            ProjectDataType dt = getSelectedDataType();
             isTriangle = (dt==null)? false : dt.isTriangle();
         }
         
@@ -405,7 +401,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         
         private void deleteData(List<Data> datas) {
             DataSource ds = new DataSource();
-            ProjectDataType dt = (ProjectDataType) dataTypeCombo.getSelectedItem();
+            ProjectDataType dt = getSelectedDataType();
             try {
                 ds.open();
                 ds.deleteData(datas);
@@ -442,14 +438,10 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
             if(value instanceof ProjectDataType) {
                 ProjectDataType dt = (ProjectDataType) child.getValue();
                 ProjectDataType selected = getSelectedDataType();
-                comboModel.removeElement(value);
+                comboModel.removeElement(child);
                 if(dt == selected)
                     comboModel.setSelectedItem(null);
             }
-        }
-
-        private ProjectDataType getSelectedDataType() {
-            return (ProjectDataType) dataTypeCombo.getSelectedItem();
         }
         
         @Override
@@ -460,9 +452,20 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         }
         
         private void reloadDataTypes() {
-            ProjectDataType selected = (ProjectDataType) dataTypeCombo.getSelectedItem();
+            ProjectElement selected = dataTypeCombo.getSelectedItem();
             loadDataTypes();
             dataTypeCombo.setSelectedItem(selected);
+        }
+    }
+    
+    private class DataTypeListener implements LookupListener {
+
+        @Override
+        public void resultChanged(LookupEvent le) {
+            tableModel.setDataType(getSelectedDataType());
+            tableModel.setRowsPerPage(getRowPerPage());
+            int rowCount = tableModel.getTotalRowCount();
+            totalRowsLabel.setText(Bundle.LBL_DataExplorerTopComponent_MaxNumberOfRows(rowCount));
         }
     }
 }

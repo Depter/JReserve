@@ -1,9 +1,12 @@
 package org.jreserve.triangle.importutil;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,8 +31,15 @@ import org.openide.util.NbBundle.Messages;
     "LBL.DataFormatVisualPanel.AccidentGeometry=Accident",
     "LBL.DataFormatVisualPanel.DevelopmentGeometry=Development"
 })
-public class DataFormatVisualPanel extends JPanel implements ChangeListener {
+public class DataFormatVisualPanel extends JPanel implements PropertyChangeListener {
 
+    public final static String PROPERTY_ACCIDENT_FROM = "ACCIDNET FROM DATE";
+    public final static String PROPERTY_ACCIDENT_PERIODS = "ACCIDNET PERIODS";
+    public final static String PROPERTY_ACCIDENT_MONTHS = "ACCIDNET MONTHS";
+    public final static String PROPERTY_DEVELOPMENT_FROM = "DEVELOPMENT FROM DATE";
+    public final static String PROPERTY_DEVELOPMENT_PERIODS = "DEVELOPMENT PERIODS";
+    public final static String PROPERTY_DEVELOPMENT_MONTHS = "DEVELOPMENT MONTHS";
+    
     protected AxisGeometryPanel accidentGeometry;
     protected AxisGeometryPanel developmentGeometry;
     protected ImportTableModel tableModel = new ImportTableModel();
@@ -52,7 +62,7 @@ public class DataFormatVisualPanel extends JPanel implements ChangeListener {
         
         accidentGeometry = new AxisGeometryPanel();
         accidentGeometry.setBorder(createTitleBorder(Bundle.LBL_DataFormatVisualPanel_AccidentGeometry()));
-        accidentGeometry.addChangeListener(this);
+        accidentGeometry.addPropertyChangeListener(this);
         GridBagConstraints gc = new GridBagConstraints();
         gc.anchor = GridBagConstraints.NORTHWEST;
         gc.gridx = 0; gc.gridy = 0;
@@ -62,6 +72,7 @@ public class DataFormatVisualPanel extends JPanel implements ChangeListener {
         
         developmentGeometry = new AxisGeometryPanel();
         developmentGeometry.setBorder(createTitleBorder(Bundle.LBL_DataFormatVisualPanel_DevelopmentGeometry()));
+        developmentGeometry.addPropertyChangeListener(this);
         gc.gridx = 1;
         gc.insets = new Insets(0, 0, 5, 0);
         add(developmentGeometry, gc);
@@ -76,8 +87,6 @@ public class DataFormatVisualPanel extends JPanel implements ChangeListener {
         table = new JTable(tableModel);
         table.setPreferredSize(new Dimension(250, 250));
         table.setFillsViewportHeight(true);
-        table.setDefaultRenderer(Double.class, DoubleRenderer.getTableRenderer());
-        table.setDefaultRenderer(Date.class, DateRenderer.getTableRenderer());
         gc.gridx = 0; gc.gridy = 1;
         gc.gridwidth=3;
         gc.weightx=1d; gc.weighty=1d;
@@ -85,6 +94,7 @@ public class DataFormatVisualPanel extends JPanel implements ChangeListener {
         gc.insets = new Insets(0, 0, 0, 0);
         JScrollPane scroll = new JScrollPane(table);
         scroll.setPreferredSize(new Dimension(250, 250));
+        table.setBackground(scroll.getBackground());
         add(scroll, gc);
         
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -97,9 +107,15 @@ public class DataFormatVisualPanel extends JPanel implements ChangeListener {
     }
 
     public void setData(List<Data> datas) {
+        setRenderers();
         tableModel.setDatas(datas);
         readDates(datas);
         initGeometry();
+    }
+    
+    private void setRenderers() {
+        table.setDefaultRenderer(Double.class, new DoubleTriangleTableRenderer(tableModel));
+        table.setDefaultRenderer(Date.class, DateRenderer.getTableRenderer());
     }
     
     private void readDates(List<Data> datas) {
@@ -132,7 +148,7 @@ public class DataFormatVisualPanel extends JPanel implements ChangeListener {
         developmentGeometry.setMonthPerStep(getDevelopmentMonthCount(developmentStart));
     }
     
-    private int getDevelopmentMonthCount(Date date) {
+    protected int getDevelopmentMonthCount(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         int count = 1;
@@ -141,14 +157,6 @@ public class DataFormatVisualPanel extends JPanel implements ChangeListener {
             count++;
         }
         return count;
-    }
-    
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        if(developmentGeometry.equals(e.getSource()))
-            developmentGeometry.setMonthPerStep(getDevelopmentMonthCount(developmentGeometry.getFromDate()));
-        tableModel.setGeometry(getGeometry());
-        fireChange();
     }
     
     private TriangleGeometry getGeometry() {
@@ -207,5 +215,53 @@ public class DataFormatVisualPanel extends JPanel implements ChangeListener {
         ChangeEvent evt = new ChangeEvent(this);
         for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
             listener.stateChanged(evt);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(processProperty(evt)) {
+            tableModel.setGeometry(getGeometry());
+            fireChange();
+        }
+    }
+    
+    private boolean processProperty(PropertyChangeEvent evt) {
+        if(accidentGeometry == evt.getSource()) {
+            return processAccidnetProperty(evt.getPropertyName(), evt.getNewValue());
+        } else if(developmentGeometry == evt.getSource()) {
+            return processDevelopmentProperty(evt.getPropertyName(), evt.getNewValue());
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean processAccidnetProperty(String property, Object value) {
+        if(AxisGeometryPanel.PROPERTY_FROM.equals(property)) {
+            putClientProperty(PROPERTY_ACCIDENT_FROM, value);
+            return true;
+        } else if(AxisGeometryPanel.PROPERTY_PERIODS.equals(property)) {
+            putClientProperty(PROPERTY_ACCIDENT_PERIODS, value);
+            return true;
+        } else if(AxisGeometryPanel.PROPERTY_MONTHS.equals(property)) {
+            putClientProperty(PROPERTY_ACCIDENT_MONTHS, value);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean processDevelopmentProperty(String property, Object value) {
+        if(AxisGeometryPanel.PROPERTY_FROM.equals(property)) {
+            putClientProperty(PROPERTY_DEVELOPMENT_FROM, value);
+            return true;
+        } else if(AxisGeometryPanel.PROPERTY_PERIODS.equals(property)) {
+            putClientProperty(PROPERTY_DEVELOPMENT_PERIODS, value);
+            return true;
+        } else if(AxisGeometryPanel.PROPERTY_MONTHS.equals(property)) {
+            putClientProperty(PROPERTY_DEVELOPMENT_MONTHS, value);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

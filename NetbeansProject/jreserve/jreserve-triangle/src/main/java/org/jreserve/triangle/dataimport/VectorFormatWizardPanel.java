@@ -1,5 +1,6 @@
 package org.jreserve.triangle.dataimport;
 
+import java.beans.PropertyChangeEvent;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +13,7 @@ import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
+import org.jreserve.triangle.importutil.AxisGeometryPanel;
 import org.jreserve.triangle.importutil.DataFormatVisualPanel;
 import org.jreserve.triangle.importutil.DataFormatWizardPanel;
 import org.jreserve.triangle.importutil.NameSelectWizardPanel;
@@ -33,7 +35,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
     
     private final Object lock = new Object();
     private VectorData vectorData;
-
+    
     @Override
     protected DataFormatVisualPanel createPanel() {
         return new VisualPanel();
@@ -125,6 +127,21 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
             super.initComponents();
             developmentGeometry.setEnabled(false);
             developmentGeometry.setFromDateEnabled(true);
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            super.propertyChange(evt);
+            if(developmentFromChanged(evt))
+            if(developmentGeometry == evt.getSource())
+                developmentGeometry.setMonthPerStep(getDevelopmentMonthCount(developmentGeometry.getFromDate()));
+        }
+        
+        private boolean developmentFromChanged(PropertyChangeEvent evt) {
+            Object source = evt.getSource();
+            String property = evt.getPropertyName();
+            return developmentGeometry == source &&
+                   AxisGeometryPanel.PROPERTY_FROM.equals(property);
         }
     }
 }

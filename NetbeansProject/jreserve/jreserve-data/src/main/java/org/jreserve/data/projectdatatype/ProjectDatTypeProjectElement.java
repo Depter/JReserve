@@ -26,7 +26,7 @@ class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
 
     @Override
     public Node createNodeDelegate() {
-        return null;
+        return new ProjectDataTypeNode(this);
     }
 
     @Override

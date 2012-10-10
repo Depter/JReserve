@@ -22,6 +22,15 @@ public class DoubleRenderer implements TextRenderer<Double> {
         return new ClassTableRenderer(Double.class, renderer);
     }
     
+    public static TextRenderer<Double> getRenderer() {
+        DecimalFormat format = LocaleSettings.getDecimalFormatter();
+        return getRenderer(format);
+    }
+    
+    public static TextRenderer<Double> getRenderer(DecimalFormat format) {
+        return new DoubleRenderer(format);
+    }
+    
     private DecimalFormat format;
     private String nan;
     

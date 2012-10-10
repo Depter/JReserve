@@ -1,8 +1,6 @@
 package org.jreserve.triangle.importutil;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -21,29 +19,16 @@ import org.openide.util.NbBundle.Messages;
     "LBL.AxisGeometryPanel.Steps=Months per step:"
 })
 public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentListener, ChangeListener {
+    
+    public final static String PROPERTY_FROM = "FROM DATE";
+    public final static String PROPERTY_PERIODS = "PERIODS";
+    public final static String PROPERTY_MONTHS = "MONTHS";
 
     private final static String DEFAULT_PERIODS = "1";
     private final static String DEFAULT_STEPS = "12";
-    
-    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
 
     public AxisGeometryPanel() {
         initComponents();
-    }
-    
-    public void addChangeListener(ChangeListener listener) {
-        if(!listeners.contains(listener))
-            listeners.add(listener);
-    }
-    
-    public void removeChangeListener(ChangeListener listener) {
-        listeners.remove(listener);
-    }
-    
-    private void fireChangeEvent() {
-        ChangeEvent evt = new ChangeEvent(this);
-        for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
-            listener.stateChanged(evt);
     }
     
     @Override
@@ -102,8 +87,16 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
     
     @Override
     public void insertUpdate(DocumentEvent e) {
-        if(getSource(e).isEnabled())
-            fireChangeEvent();
+        textFieldChanged(e);
+    }
+    
+    private void textFieldChanged(DocumentEvent evt) {
+        JTextField field = getSource(evt);
+        if(periodsText == field) {
+            setProperty(PROPERTY_PERIODS, field.getText());
+        } else {
+            setProperty(PROPERTY_MONTHS, field.getText());
+        }
     }
     
     private JTextField getSource(DocumentEvent evt) {
@@ -114,8 +107,7 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        if(getSource(e).isEnabled())
-            fireChangeEvent();
+        textFieldChanged(e);
     }
 
     @Override
@@ -124,8 +116,11 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if(fromSpinner.isEnabled())
-            fireChangeEvent();
+        setProperty(PROPERTY_FROM, fromSpinner.getValue());
+    }
+    
+    private void setProperty(String name, Object value) {
+        putClientProperty(name, value);
     }
     
     /**

@@ -1,0 +1,262 @@
+#LyX 1.6.6.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Target
+\end_layout
+
+\begin_layout Standard
+The target is to create an opensource, free, easy-to-extend software for
+ non-life reserve calculations.
+ The program should be easily extendable and modular.
+ For example the addition of a new supported database (i.e Derby, MySQL etc.)
+ should be independent of the avaiable estimation modules.
+ This means that at compile time there is no knowledge over the database
+ structure.
+ On the other hand the estimation methods should have no knowledge about
+ how or where they are saved, how the data is loaded etc.
+\end_layout
+
+\begin_layout Section
+Platform
+\end_layout
+
+\begin_layout Standard
+For Java applications I know two options to build on: Netbeans RCP or Eclipse
+ RCP.
+ Netbeans RCP was chosen, because it builds on the standard Swing libraries,
+ thus more platform independent than the SWT libraries in Eclipse RCP.
+ Furthermode Maven is used as dependency management and build tool.
+\end_layout
+
+\begin_layout Section
+Structure
+\end_layout
+
+\begin_layout Standard
+To reach the desired level of flexibility the software is divided into separate
+ modules.
+ The aim of these modules is to provide a backbone for business functionalities
+ by managing common tasks, such as database management, persistence or the
+ project structure.
+ These modules provide extension points for business functionalities.
+\end_layout
+
+\begin_layout Subsection
+Database API
+\end_layout
+
+\begin_layout Standard
+This module represents the database support for the application.
+ the main role of this module is to create/delete databases and provide
+ a connection string to the Persistence API.
+ To create support for a new database (i,e, Derby, MySql) one just need
+ to create an implementation for the
+\begin_inset Newline newline
+\end_inset
+
+ 
+\shape italic
+org.jreserve.database.DatabaseProvider 
+\shape default
+interface.
+ Further this module takes care of creating, deleting databases and representing
+ them in the GUI.
+\end_layout
+
+\begin_layout Subsection
+Persistence API
+\end_layout
+
+\begin_layout Standard
+This module is responsible for entity management.
+ It exposes a subset of JPA.
+ By separating this module from the Database API it is possible to create
+ a new databse on the fly, without any compile time knowledge about the
+ database vendor, or the database structure.
+ Besides the JPA this module exposes the 
+\shape italic
+org.jreserve.persistence.EntityRegistration 
+\shape default
+annotation.
+ The annotated JPA entity classes are automaticly become managed entities,
+ thus there is no need for an appart persistence unit in each module, which
+ contains entities.
+\end_layout
+
+\begin_layout Subsection
+Project System
+\end_layout
+
+\begin_layout Standard
+This module abstract the data structure within the application (very simmilar
+ to the DataObject concept).
+ It's most important class is the 
+\shape italic
+
+\begin_inset Newline newline
+\end_inset
+
+org.jreserve.project.system.ProjectElement 
+\shape default
+class.
+ This class represents all business elements within the application (form
+ a line of business to triangles, estimation methods etc).
+ It provides basic functionality for loading, creating, saving, deleting,
+ renaming and representing these elements in the GUI.
+ The project elements are joind together in a tree structure.
+ For extending modules it is easy to get a given child or insert a new child
+ at an arbitrary location.
+\end_layout
+
+\begin_layout Subsection
+Project API.
+\end_layout
+
+\begin_layout Standard
+This module provides the basic business entities, such as LoB (Like Motor,
+ Fire), ClaimType (like CASCO, MTPL) and the Project class.
+ 
+\end_layout
+
+\begin_layout Subsection
+Data API
+\end_layout
+
+\begin_layout Standard
+This module is responsible for managing the data specificaly used by estimations
+ (claim data, earned premium, etc).
+ It exposes a simple query object and hooks for importing data into the
+ application.
+\end_layout
+
+\begin_layout Subsection
+Triangle API
+\end_layout
+
+\begin_layout Standard
+This module is responsible to provide easy access to data for the estimation
+ methods.
+ This module is currently under development.
+ It will provide the tirangle and vector data structures as well as basic
+ GUI elements for representing them.
+\end_layout
+
+\begin_layout Subsection
+Estimation API
+\end_layout
+
+\begin_layout Standard
+This module will be the extension point for the different estimation methods.
+ It will provide the abstract 
+\shape italic
+org.jreserve.estimation.Estimation
+\shape default
+ class, as well as standard GUI elements.
+\end_layout
+
+\begin_layout Subsection
+Bootstrap API
+\end_layout
+
+\begin_layout Standard
+This module will be the extension point for the different bootstrap methods.
+ It will provide the abstract 
+\shape italic
+org.jreserve.bootstrap.Bootstrap
+\shape default
+ class, as well as standard GUI elements.
+\end_layout
+
+\begin_layout Subsection
+Other utilities
+\end_layout
+
+\begin_layout Standard
+There are some other, utility modules for example for logging, plotting
+ or general settings.
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename C:/Documents and Settings/aa461472/Desktop/components.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Basic modules
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

@@ -213,7 +213,6 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
     
     @Override
     public void prepareValidation() {
-        System.out.println("PREPARE VALIDATION");
         wizard.putProperty(PROP_DATA_NAME, component.getDataName());
         wizard.putProperty(PROP_DATA_TYPE, component.getDataType());
         wizard.putProperty(PROP_PROJECT, component.getProject());
@@ -225,7 +224,6 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
 
     @Override
     public void validate() throws WizardValidationException {
-        System.out.println("VALIDATE");
         List<Data> datas = loadDatas();
         setDatas(datas);
         stopProgressBar();

@@ -12,11 +12,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.data.DataImport;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.data.util.ProjectDataTypeComboRenderer;
 import org.jreserve.localesettings.util.LocaleSettings;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.resources.textfieldfilters.CharacterDocument;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -46,7 +47,6 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
     private DateFormat dateFormat;
     private DecimalFormatSymbols decimalSymbols;
     private DecimalFormat numberFormat;
-    private ProjectDataTypeComboModel comboModel = new ProjectDataTypeComboModel();
 
     private List<ActionListener> listeners = new ArrayList<ActionListener>();
 
@@ -151,11 +151,11 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
     public void setClaimType(ProjectElement<ClaimType> element) {
         String name = element==null? null : element.getValue().getName();
         this.claimTypeNameText.setText(name);
-        comboModel.setClaimType(element);
+        dataTypeCombo.setElements(element.getChildren(ProjectDataType.class));
     }
     
     public ProjectDataType getDataType() {
-        return (ProjectDataType) dataTypeCombo.getSelectedItem();
+        return dataTypeCombo.getSelectedItem(ProjectDataType.class);
     }
     
     public DateFormat getDateFormat() {
@@ -204,7 +204,6 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         decimalSeparatorLabel = new javax.swing.JLabel();
         thousandSeparatorLabel = new javax.swing.JLabel();
         claimTypeNameText = new javax.swing.JLabel();
-        dataTypeCombo = new javax.swing.JComboBox();
         cummulatedCheck = new javax.swing.JCheckBox();
         dateFormatCombo = new org.jreserve.localesettings.util.DateFormatCombo();
         decimalSeparatorText = new javax.swing.JTextField();
@@ -214,6 +213,7 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         bottomFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         importMethodLabel = new javax.swing.JLabel();
         importMethodCombo = new javax.swing.JComboBox(DataImport.ImportType.values());
+        dataTypeCombo = new org.jreserve.project.system.visual.ProjectElementComboBox();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -280,19 +280,6 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         add(claimTypeNameText, gridBagConstraints);
-
-        dataTypeCombo.setModel(comboModel);
-        dataTypeCombo.setActionCommand(DATA_TYPE_SELECT_ACTION);
-        dataTypeCombo.setRenderer(new ProjectDataTypeComboRenderer());
-        dataTypeCombo.addActionListener(this);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        add(dataTypeCombo, gridBagConstraints);
 
         cummulatedCheck.setText(null);
         cummulatedCheck.setActionCommand(CUMMULATED_ACTION);
@@ -389,13 +376,23 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         add(importMethodCombo, gridBagConstraints);
+
+        dataTypeCombo.addLookupListener(ProjectDataType.class, new DataTypeListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        add(dataTypeCombo, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler bottomFiller;
     private javax.swing.JLabel claimTypeNameText;
     private javax.swing.JCheckBox cummulatedCheck;
     private javax.swing.JLabel cummulatedLabel;
-    private javax.swing.JComboBox dataTypeCombo;
+    private org.jreserve.project.system.visual.ProjectElementComboBox dataTypeCombo;
     private javax.swing.JLabel dataTypeLabel;
     private javax.swing.JLabel dateExampleLabel;
     private org.jreserve.localesettings.util.DateFormatCombo dateFormatCombo;
@@ -409,4 +406,15 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
     private javax.swing.JLabel thousandSeparatorLabel;
     private javax.swing.JTextField thousandSeparatorText;
     // End of variables declaration//GEN-END:variables
+
+    private class DataTypeListener implements LookupListener {
+
+        @Override
+        public void resultChanged(LookupEvent le) {
+            ActionEvent evt = new ActionEvent(dataTypeCombo, ActionEvent.ACTION_FIRST, DATA_TYPE_SELECT_ACTION);
+            actionPerformed(evt);
+        }
+    
+    }
 }
+

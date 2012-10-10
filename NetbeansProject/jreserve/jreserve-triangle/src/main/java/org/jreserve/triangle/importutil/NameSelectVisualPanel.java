@@ -1,7 +1,5 @@
 package org.jreserve.triangle.importutil;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,18 +29,16 @@ import org.openide.util.NbBundle.Messages;
     "LBL.NameSelectVisualPanel.DataType=Data type:",
     "LBL.NameSelectVisualPanel.Name=Name:"
 })
-public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionListener, DocumentListener {
+public class NameSelectVisualPanel extends javax.swing.JPanel implements DocumentListener {
     
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private boolean isTriangle;
     private boolean nameFilled = false;
     
     public NameSelectVisualPanel(boolean isTriangle) {
         initComponents();
         setName(Bundle.LBL_NameSelectVisualPanel_PanelName());
-        if(isTriangle)
-            dataTypeCombo.setShowVector(false);
-        else
-            dataTypeCombo.setShowTriangle(false);
+        this.isTriangle = isTriangle;
     }
 
     void setLoB(LoB lob) {
@@ -80,7 +76,7 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
     }
     
     ProjectDataType getDataType() {
-        return (ProjectDataType) dataTypeCombo.getSelectedItem();
+        return dataTypeCombo.getSelectedItem(ProjectDataType.class);
     }
     
     void setDataName(String name) {
@@ -98,20 +94,6 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
     
     void removeChangeListener(ChangeListener listenener) {
         listeners.remove(listenener);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(dataTypeCombo == e.getSource())
-            setDefaultName();
-        fireChange();
-    }
-
-    private void setDefaultName() {
-        if(nameFilled)
-            return;
-        ProjectDataType dt = dataTypeCombo.getDataType();
-        nameText.setText(dt==null? null : dt.getName());
     }
     
     @Override
@@ -172,7 +154,7 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
         lobCombo = new org.jreserve.project.system.visual.ProjectElementComboBox(RootElement.getDefault().getChildren(LoB.class));
         claimTypeCombo = new org.jreserve.project.system.visual.ProjectElementComboBox();
         projectCombo = new org.jreserve.project.system.visual.ProjectElementComboBox();
-        dataTypeCombo = new org.jreserve.data.util.ProjectDataTypeComboBox();
+        dataTypeCombo = new org.jreserve.project.system.visual.ProjectElementComboBox();
         nameText = new javax.swing.JTextField();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
         pBarPanel = new javax.swing.JPanel();
@@ -252,15 +234,15 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         add(projectCombo, gridBagConstraints);
 
-        dataTypeCombo.addActionListener(this);
+        dataTypeCombo.addLookupListener(ProjectDataType.class, new DataTypeListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         add(dataTypeCombo, gridBagConstraints);
@@ -302,7 +284,7 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jreserve.project.system.visual.ProjectElementComboBox claimTypeCombo;
     private javax.swing.JLabel claimTypeLabel;
-    private org.jreserve.data.util.ProjectDataTypeComboBox dataTypeCombo;
+    private org.jreserve.project.system.visual.ProjectElementComboBox dataTypeCombo;
     private javax.swing.JLabel dataTypeLabel;
     private javax.swing.Box.Filler filler1;
     private org.jreserve.project.system.visual.ProjectElementComboBox lobCombo;
@@ -355,13 +337,34 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
         }
         
         private void setDataTypes(ProjectElement element) {
-            List<ProjectDataType> dataTypes = element==null? Collections.EMPTY_LIST : element.getChildValues(ProjectDataType.class);
+            if(element == null)
+                setDataTypes(Collections.EMPTY_LIST);
+            else
+                setDataTypes(element.getChildren(ProjectDataType.class));
+        }
+        
+        private void setDataTypes(List<ProjectElement<ProjectDataType>> elements) {
             boolean nf = nameFilled;
             String name = nameText.getText();
-            dataTypeCombo.setProjectDataTypes(dataTypes);
+            dataTypeCombo.setElements(filteredElements(elements));
             dataTypeCombo.setSelectedItem(null);
             nameText.setText(name);
             nameFilled = nf;
+        }
+        
+        private List<ProjectElement> filteredElements(List<ProjectElement<ProjectDataType>> elements) { 
+            List<ProjectElement> result = new ArrayList<ProjectElement>();
+            for(ProjectElement<ProjectDataType> element : elements)
+                if(shouldAddelement(element))
+                    result.add(element);
+            return result;
+        }
+        
+        private boolean shouldAddelement(ProjectElement<ProjectDataType> element) {
+            ProjectDataType dt = element.getValue();
+            if(isTriangle)
+                return dt.isTriangle();
+            return !dt.isTriangle();
         }
     }
     
@@ -373,6 +376,22 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements ActionL
             Object value = element==null? null : element.getValue();
             putClientProperty(NameSelectWizardPanel.PROP_PROJECT, value);
             fireChange();
+        }
+    }
+    
+    private class DataTypeListener implements LookupListener {
+
+        @Override
+        public void resultChanged(LookupEvent le) {
+            ProjectDataType dt = dataTypeCombo.getSelectedItem(ProjectDataType.class);
+            setDefaultName(dt);
+            fireChange();
+        }
+
+        private void setDefaultName(ProjectDataType dt) {
+            if(nameFilled)
+                return;
+            nameText.setText(dt==null? null : dt.getName());
         }
     }
 }
