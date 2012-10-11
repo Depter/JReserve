@@ -6,6 +6,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import javax.swing.event.DocumentEvent;
@@ -40,6 +42,14 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
     public final static String DATE_FORMAT_ACTION = "DATE_FORMAT";
     public final static String NUMBER_FORMAT_ACTION = "NUMBER_FORMAT";
     public final static String IMPORT_METHOD_ACTION = "IMPORT_METHOD";
+    
+    private final static Comparator<ProjectElement<ProjectDataType>> COMPARATOR = new Comparator<ProjectElement<ProjectDataType>>() {
+        public int compare(ProjectElement<ProjectDataType> o1, ProjectElement<ProjectDataType> o2) {
+            ProjectDataType d1 = o1.getValue();
+            ProjectDataType d2 = o2.getValue();
+            return d1.compareTo(d2);
+        }
+    };
     
     private final Date now = new Date();
     private final double number = 1234.56;
@@ -151,7 +161,13 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
     public void setClaimType(ProjectElement<ClaimType> element) {
         String name = element==null? null : element.getValue().getName();
         this.claimTypeNameText.setText(name);
-        dataTypeCombo.setElements(element.getChildren(ProjectDataType.class));
+        dataTypeCombo.setElements(getDataTypeElements(element));
+    }
+    
+    private List<ProjectElement> getDataTypeElements(ProjectElement<ClaimType> element) {
+        List<ProjectElement<ProjectDataType>> elements = element.getChildren(ProjectDataType.class);
+        Collections.sort(elements, COMPARATOR);
+        return new ArrayList<ProjectElement>(elements);
     }
     
     public ProjectDataType getDataType() {

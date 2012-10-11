@@ -170,8 +170,8 @@ public class ProjectElement<T> implements Lookup.Provider {
      * Returns a list of children, that contain values from the
      * given class.
      */
-    public <T> List<ProjectElement> getChildren(Class<T> valueClass) {
-        List<ProjectElement> result = new ArrayList<ProjectElement>();
+    public <T> List<ProjectElement<T>> getChildren(Class<T> valueClass) {
+        List<ProjectElement<T>> result = new ArrayList<ProjectElement<T>>();
         for(ProjectElement child : children) {
             Class clazz = child.getValue().getClass();
             if(valueClass.isAssignableFrom(clazz))

@@ -39,7 +39,7 @@ public class DoubleRenderer implements TextRenderer<Double> {
     }
     
     public void setMaximumFractionDigits(int count) {
-        format.setMinimumFractionDigits(count);
+        format.setMaximumFractionDigits(count);
     }
     
     @Override

@@ -91,6 +91,8 @@ public class ProjectElementComboBox extends JPanel implements ExplorerManager.Pr
         Node[] nodes = getNodeFor(o);
         try {
             em.setSelectedNodes(nodes);
+            if(nodes.length == 0)
+                em.setExploredContext(em.getRootContext());
         } catch (Exception ex) {}
     }
     

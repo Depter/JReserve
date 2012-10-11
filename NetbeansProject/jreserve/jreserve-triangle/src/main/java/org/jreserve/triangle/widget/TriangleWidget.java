@@ -136,6 +136,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         tableModel = new ImportTableModel();
         table = new JTable(tableModel);
         doubleRenderer = new DoubleTriangleTableRenderer(tableModel);
+        table.getTableHeader().setDefaultRenderer(new TriangleWidgetHeaderRenderer());
         table.setDefaultRenderer(Double.class, doubleRenderer);
         table.setDefaultRenderer(Date.class, new DateTriangleTableRenderer(table));
         table.setFillsViewportHeight(false);

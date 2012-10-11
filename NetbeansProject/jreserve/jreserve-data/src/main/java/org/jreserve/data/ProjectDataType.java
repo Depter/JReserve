@@ -13,7 +13,7 @@ import org.jreserve.project.entities.ClaimType;
 @EntityRegistration
 @Entity
 @Table(name="DATA_TYPE", schema="JRESERVE")
-public class ProjectDataType extends AbstractPersistentObject {
+public class ProjectDataType extends AbstractPersistentObject implements Comparable<ProjectDataType> {
     private final static long serialVersionUID = 1L;
     public final static int MAX_NAME_LENGTH = 64;
     
@@ -95,6 +95,7 @@ public class ProjectDataType extends AbstractPersistentObject {
         return false;
     }
     
+    @Override
     public int compareTo(ProjectDataType o) {
         if(o == null) return -1;
         return dbId - o.dbId;

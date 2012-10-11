@@ -92,6 +92,7 @@ public class RootElement extends ProjectElement {
         try {
             setChildren(loader.get());
         } catch (Exception ex) {
+            setChildren(Collections.EMPTY_LIST);
             Exceptions.printStackTrace(ex);
         }
     }

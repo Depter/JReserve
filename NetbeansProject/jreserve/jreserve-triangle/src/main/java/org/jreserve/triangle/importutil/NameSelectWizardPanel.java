@@ -78,8 +78,8 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
     public void readSettings(WizardDescriptor wizard) {
         this.wizard = wizard;
         Lookup lkp = (Lookup) wizard.getProperty(ElementCreatorWizard.PROP_ELEMENT_LOOKUP);
-        boolean set = setProject(lkp) || setClaimType(lkp) || setLoB(lkp);
-        setDataType();
+        if(setProject(lkp) || setClaimType(lkp) || setLoB(lkp))
+            setDataType();
         setDataName();
         validatePanel();
     }
@@ -113,8 +113,17 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
     
     private void setDataType() {
         ProjectDataType dataType = (ProjectDataType) wizard.getProperty(PROP_DATA_TYPE);
-        if(dataType != null)
+        if(dataType != null && exists(dataType))
             component.setDataType(dataType);
+        else
+            component.setDataType(null);
+    }
+    
+    private boolean exists(ProjectDataType dataType) {
+        ProjectElement project = component.getProjectElement();
+        if(project == null)
+            return false;
+        return project.getChildValues(ProjectDataType.class).contains(dataType);
     }
     
     private void setDataName() {
@@ -226,7 +235,6 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
     public void validate() throws WizardValidationException {
         List<Data> datas = loadDatas();
         setDatas(datas);
-        stopProgressBar();
     }
     
     private List<Data> loadDatas() throws WizardValidationException {
@@ -255,12 +263,14 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
     
     private void setDatas(List<Data> datas) throws WizardValidationException {
         if(datas.isEmpty()) {
+            stopProgressBar();
             String msg = Bundle.MSG_NameSelectWizardPanel_NoData();
             throw new WizardValidationException(component, msg, msg);
         } else {
             synchronized(wizard) {
                 wizard.putProperty(PROP_DATA, datas);
             }
+            stopProgressBar();
         }
     }
 }

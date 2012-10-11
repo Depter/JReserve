@@ -2,6 +2,7 @@ package org.jreserve.triangle.importutil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -319,7 +320,7 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements Documen
         }
     }
     
-    private class ClaimTypeListener implements LookupListener {
+    private class ClaimTypeListener implements LookupListener, Comparator<ProjectElement> {
 
         @Override
         public void resultChanged(LookupEvent le) {
@@ -357,6 +358,7 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements Documen
             for(ProjectElement<ProjectDataType> element : elements)
                 if(shouldAddelement(element))
                     result.add(element);
+            Collections.sort(result, this);
             return result;
         }
         
@@ -365,6 +367,13 @@ public class NameSelectVisualPanel extends javax.swing.JPanel implements Documen
             if(isTriangle)
                 return dt.isTriangle();
             return !dt.isTriangle();
+        }
+
+        @Override
+        public int compare(ProjectElement o1, ProjectElement o2) {
+            ProjectDataType d1 = (ProjectDataType) o1.getValue();
+            ProjectDataType d2 = (ProjectDataType) o2.getValue();
+            return d1.compareTo(d2);
         }
     }
     
