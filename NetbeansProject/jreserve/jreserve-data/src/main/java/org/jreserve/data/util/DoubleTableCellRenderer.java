@@ -12,11 +12,11 @@ import org.jreserve.localesettings.util.LocaleSettings;
  */
 public class DoubleTableCellRenderer extends DefaultTableCellRenderer {
 
-    private DecimalFormat format = LocaleSettings.getDecimalFormatter();
+    private DecimalFormat format = LocaleSettings.getDecimalFormat();
 
     public void setFormat(DecimalFormat format) {
         if(format == null)
-            this.format = LocaleSettings.getDecimalFormatter();
+            this.format = LocaleSettings.getDecimalFormat();
         else
             this.format = format;
     }

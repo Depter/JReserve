@@ -2,7 +2,9 @@ package org.jreserve.localesettings;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.*;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -211,25 +213,19 @@ public class LocaleSettingPanel extends JPanel implements ActionListener, Docume
     }
     
     private void resetLocale(Locale locale) {
-        Locale dl = Locale.getDefault();
-        Locale.setDefault(locale);
-        resetDateLocale();
-        resetDecimalFormat();
-        Locale.setDefault(dl);
+        resetDateLocale(locale);
+        resetDecimalFormat(locale);
         validateInput();
     }
     
-    private void resetDateLocale() {
-        SimpleDateFormat df = new SimpleDateFormat();
-        df.setDateFormatSymbols(DateFormatSymbols.getInstance(Locale.ENGLISH));
-        dateFormatCombo.setSelectedItem(df.toLocalizedPattern());
+    private void resetDateLocale(Locale l) {
+        String pattern = LocaleSettings.getDefaultDateFormatString(l);
+        dateFormatCombo.setSelectedItem(pattern);
     }
     
-    private void resetDecimalFormat() {
-        DecimalFormat df = new DecimalFormat();
-        df.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-        numberFormatCombo.setSelectedItem(df.toLocalizedPattern());
-        decimalSymbols = DecimalFormatSymbols.getInstance(Locale.getDefault());
+    private void resetDecimalFormat(Locale l) {
+        numberFormatCombo.setSelectedItem(LocaleSettings.getDefaultDecimalFormatString(l));
+        decimalSymbols = LocaleSettings.getDefaultDecimalSymbols(l);
         resetDecimalSymbols();
     }
     
@@ -256,16 +252,16 @@ public class LocaleSettingPanel extends JPanel implements ActionListener, Docume
         nanText.setText(decimalSymbols.getNaN());
         
         dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormatString());
-        numberFormatCombo.setSelectedItem(LocaleSettings.getDecimalFormat());
+        numberFormatCombo.setSelectedItem(LocaleSettings.getDecimalFormatString());
         validateInput();
     }
     
     void store() {
         LocaleSettings.setLocale(getSelectedLocale());
         LocaleSettings.setDateFormat(dateFormatCombo.getFormatValue());
-        LocaleSettings.setDecimalFormat(numberFormatCombo.getFormatValue());
+        LocaleSettings.setDecimalFormatString(numberFormatCombo.getFormatValue());
         LocaleSettings.setDecimalSeparator(decimalSymbols.getDecimalSeparator());
-        LocaleSettings.setThousandSeparator(decimalSymbols.getGroupingSeparator());
+        LocaleSettings.setGroupingSeparator(decimalSymbols.getGroupingSeparator());
         LocaleSettings.setNaN(decimalSymbols.getNaN());
     }
 

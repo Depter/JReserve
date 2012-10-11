@@ -62,7 +62,7 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
     }
     
     private void initNumberformat() {
-        numberFormat = LocaleSettings.getDecimalFormatter();
+        numberFormat = LocaleSettings.getDecimalFormat();
         decimalSymbols = numberFormat.getDecimalFormatSymbols();
         formatNumberExample();
     }
@@ -318,7 +318,7 @@ public class InputPanel extends javax.swing.JPanel implements ActionListener, Do
         add(decimalSeparatorText, gridBagConstraints);
 
         thousandSeparatorText.setDocument(new CharacterDocument());
-        thousandSeparatorText.setText(Character.toString(LocaleSettings.getThousandSeparator()));
+        thousandSeparatorText.setText(Character.toString(LocaleSettings.getGroupingSeparator()));
         thousandSeparatorText.getDocument().addDocumentListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;

@@ -1,6 +1,7 @@
 package org.jreserve.triangle.dataimport;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -125,15 +126,19 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         @Override
         protected void initComponents() {
             super.initComponents();
+            initDevelopmentGeometry();
+        }
+        
+        private void initDevelopmentGeometry() {
             developmentGeometry.setEnabled(false);
             developmentGeometry.setFromDateEnabled(true);
+            developmentGeometry.setPeriods(1);
         }
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             super.propertyChange(evt);
             if(developmentFromChanged(evt))
-            if(developmentGeometry == evt.getSource())
                 developmentGeometry.setMonthPerStep(getDevelopmentMonthCount(developmentGeometry.getFromDate()));
         }
         
@@ -142,6 +147,17 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
             String property = evt.getPropertyName();
             return developmentGeometry == source &&
                    AxisGeometryPanel.PROPERTY_FROM.equals(property);
+        }
+        
+        private int getDevelopmentMonthCount(Date date) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            int count = 1;
+            while(c.getTime().before(developmentEnd)) {
+                c.add(Calendar.MONTH, 1);
+                count++;
+            }
+            return count;
         }
     }
 }

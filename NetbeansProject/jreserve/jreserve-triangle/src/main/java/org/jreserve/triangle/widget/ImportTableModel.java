@@ -1,4 +1,4 @@
-package org.jreserve.triangle.importutil;
+package org.jreserve.triangle.widget;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +20,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.ImportTableModel.Periods=Periods"
 })
-public class ImportTableModel extends DefaultTableModel {
+class ImportTableModel extends DefaultTableModel {
 
     private List<Data> datas = new ArrayList<Data>();
     private TriangleGeometry geometry;
@@ -69,6 +69,10 @@ public class ImportTableModel extends DefaultTableModel {
         if(column == 0)
             return Date.class;
         return Double.class;
+    }
+    
+    public List<Data> getDatas() {
+        return new ArrayList<Data>(datas);
     }
     
     public void setDatas(List<Data> datas) {

@@ -52,13 +52,6 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataFormatWizardPanel.NoData");
     }
     /**
-     * @return <i>Periods</i>
-     * @see ImportTableModel
-     */
-    static String LBL_ImportTableModel_Periods() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.ImportTableModel.Periods");
-    }
-    /**
      * @return <i>Claim type:</i>
      * @see NameSelectVisualPanel
      */

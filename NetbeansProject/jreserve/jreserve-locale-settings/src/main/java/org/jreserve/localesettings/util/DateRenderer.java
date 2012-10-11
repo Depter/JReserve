@@ -25,7 +25,11 @@ public class DateRenderer implements TextRenderer<Date> {
     
     private DateFormat format;
     
-    private DateRenderer(DateFormat format) {
+    public DateRenderer() {
+        this(LocaleSettings.getDateFormat());
+    }
+    
+    public DateRenderer(DateFormat format) {
         this.format = format;
     }
     

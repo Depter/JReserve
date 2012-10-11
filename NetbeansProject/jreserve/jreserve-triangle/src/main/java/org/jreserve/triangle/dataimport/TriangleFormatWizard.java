@@ -125,5 +125,7 @@ class TriangleFormatWizard extends DataFormatWizardPanel implements WizardDescri
     }
 
     private static class VisualPanel extends DataFormatVisualPanel {    
+    
+        
     }
 }

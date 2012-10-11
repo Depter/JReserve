@@ -1,6 +1,5 @@
 package org.jreserve.triangle.importutil;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,7 +7,6 @@ import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.*;
@@ -17,9 +15,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
 import org.jreserve.data.model.DataTable;
-import org.jreserve.localesettings.util.DateRenderer;
-import org.jreserve.localesettings.util.DoubleRenderer;
 import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.widget.TriangleWidget;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -42,13 +39,12 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
     
     protected AxisGeometryPanel accidentGeometry;
     protected AxisGeometryPanel developmentGeometry;
-    protected ImportTableModel tableModel = new ImportTableModel();
-    protected JTable table;
+    protected TriangleWidget triangle;
     
-    private Date accidentStart;
-    private Date accidentEnd;
-    private Date developmentStart;
-    private Date developmentEnd;
+    protected Date accidentStart;
+    protected Date accidentEnd;
+    protected Date developmentStart;
+    protected Date developmentEnd;
     
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
@@ -84,18 +80,14 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
         gc.insets = new Insets(0, 0, 5, 0);
         add(Box.createHorizontalGlue(), gc);
         
-        table = new JTable(tableModel);
-        table.setPreferredSize(new Dimension(250, 250));
-        table.setFillsViewportHeight(true);
+        triangle = new TriangleWidget();
+        triangle.setPreferredSize(new Dimension(250, 200));
         gc.gridx = 0; gc.gridy = 1;
         gc.gridwidth=3;
         gc.weightx=1d; gc.weighty=1d;
         gc.fill=GridBagConstraints.BOTH;
         gc.insets = new Insets(0, 0, 0, 0);
-        JScrollPane scroll = new JScrollPane(table);
-        scroll.setPreferredSize(new Dimension(250, 250));
-        table.setBackground(scroll.getBackground());
-        add(scroll, gc);
+        add(triangle, gc);
         
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
     }
@@ -107,15 +99,9 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
     }
 
     public void setData(List<Data> datas) {
-        setRenderers();
-        tableModel.setDatas(datas);
+        triangle.setDatas(datas);
         readDates(datas);
         initGeometry();
-    }
-    
-    private void setRenderers() {
-        table.setDefaultRenderer(Double.class, new DoubleTriangleTableRenderer(tableModel));
-        table.setDefaultRenderer(Date.class, DateRenderer.getTableRenderer());
     }
     
     private void readDates(List<Data> datas) {
@@ -144,19 +130,6 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
     protected void initGeometry() {
         accidentGeometry.setFromDate(accidentStart);
         developmentGeometry.setFromDate(developmentStart);
-        developmentGeometry.setPeriods(1);
-        developmentGeometry.setMonthPerStep(getDevelopmentMonthCount(developmentStart));
-    }
-    
-    protected int getDevelopmentMonthCount(Date date) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        int count = 1;
-        while(c.getTime().before(developmentEnd)) {
-            c.add(Calendar.MONTH, 1);
-            count++;
-        }
-        return count;
     }
     
     private TriangleGeometry getGeometry() {
@@ -175,7 +148,7 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
     }
     
     public DataTable getTable() {
-        return tableModel.getTable();
+        return triangle.getDataTable();
     }
     
     public Date getAccidentStartDate() {
@@ -220,7 +193,7 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if(processProperty(evt)) {
-            tableModel.setGeometry(getGeometry());
+            triangle.setTriangleGeometry(getGeometry());
             fireChange();
         }
     }

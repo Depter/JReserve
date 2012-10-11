@@ -13,7 +13,7 @@ import org.jreserve.resources.textfieldfilters.TextRenderer;
 public class DoubleRenderer implements TextRenderer<Double> {
 
     public static TableCellRenderer getTableRenderer() {
-        DecimalFormat format = LocaleSettings.getDecimalFormatter();
+        DecimalFormat format = LocaleSettings.getDecimalFormat();
         return getTableRenderer(format);
     }
     
@@ -22,21 +22,24 @@ public class DoubleRenderer implements TextRenderer<Double> {
         return new ClassTableRenderer(Double.class, renderer);
     }
     
-    public static TextRenderer<Double> getRenderer() {
-        DecimalFormat format = LocaleSettings.getDecimalFormatter();
-        return getRenderer(format);
-    }
-    
-    public static TextRenderer<Double> getRenderer(DecimalFormat format) {
-        return new DoubleRenderer(format);
-    }
-    
     private DecimalFormat format;
     private String nan;
     
-    private DoubleRenderer(DecimalFormat format) {
+    public DoubleRenderer() {
+        this(LocaleSettings.getDecimalFormat());
+    }
+    
+    public DoubleRenderer(DecimalFormat format) {
         this.format = format;
         nan = format.getDecimalFormatSymbols().getNaN();
+    }
+    
+    public int getMaximumFractionDigits() {
+        return format.getMaximumFractionDigits();
+    }
+    
+    public void setMaximumFractionDigits(int count) {
+        format.setMinimumFractionDigits(count);
     }
     
     @Override
