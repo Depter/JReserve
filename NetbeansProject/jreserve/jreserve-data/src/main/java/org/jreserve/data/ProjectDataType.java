@@ -98,7 +98,8 @@ public class ProjectDataType extends AbstractPersistentObject implements Compara
     @Override
     public int compareTo(ProjectDataType o) {
         if(o == null) return -1;
-        return dbId - o.dbId;
+        int dif = getDbId() - o.getDbId();
+        return dif;
     }
     
     @Override

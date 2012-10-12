@@ -79,6 +79,13 @@ public class DataRow implements Comparable<DataRow> {
                 accidentEnd.after(date);
     }
     
+    DataCell getPreviousCell(DataCell cell) {
+        int index = Collections.binarySearch(cells, cell);
+        if(index > 0)
+            return cells.get(index-1);
+        return null;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if(o instanceof DataRow)

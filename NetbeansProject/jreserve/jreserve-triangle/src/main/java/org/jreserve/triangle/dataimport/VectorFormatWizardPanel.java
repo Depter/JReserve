@@ -10,6 +10,8 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.container.ProjectDataContainer;
 import org.jreserve.persistence.Session;
 import org.jreserve.persistence.SessionFactory;
+import org.jreserve.project.entities.ChangeLog;
+import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.entities.Vector;
@@ -28,7 +30,11 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "MSG.VectorFormatWizardPanel.SaveError=Unable to save vector!"
+    "MSG.VectorFormatWizardPanel.SaveError=Unable to save vector!",
+    "# {0} - vector name",
+    "# {1} - db id",
+    "# {2} - db name",
+    "LOG.VectorFormatWizardPanel.Created=Created vector \"{0}\" for data type {1} - {2}"
 })
 class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
     
@@ -54,6 +60,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         synchronized(lock) {
             Vector vector = saveVector();
             addProjectElement(vector);
+            logCreation();
         }
     }
     
@@ -91,6 +98,13 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         ProjectElement element = vectorData.element;
         Object v = element.getFirstChildValue(ProjectDataContainer.class);
         return (ProjectDataContainer) v;
+    }
+    
+    private void logCreation() {
+        ProjectDataType dt = vectorData.dataType;
+        String msg = Bundle.LOG_VectorFormatWizardPanel_Created(vectorData.name, dt.getDbId(), dt.getName());
+        ChangeLogUtil.getDefault().addChange(vectorData.project, ChangeLog.Type.DATA, msg);
+        ChangeLogUtil.getDefault().saveValues(vectorData.project);
     }
     
     private class VectorData {

@@ -1,5 +1,6 @@
 package org.jreserve.resources.textfieldfilters;
 
+import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -11,6 +12,12 @@ import javax.swing.text.PlainDocument;
  */
 public class IntegerFilter extends PlainDocument {
 
+    public static JTextField getTextField() {
+        JTextField field = new JTextField();
+        field.setDocument(new IntegerFilter());
+        return field;
+    }
+    
     public static final String NUMERIC = "0123456789";
 
     protected String acceptedChars = null;

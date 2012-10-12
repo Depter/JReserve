@@ -4,6 +4,11 @@
 <filesystem>
     <folder name="JReserve">
         <folder name="Entities">
+            <file name="org-jreserve-triangle-entities-VectorCorrection.entity">
+                <!--org.jreserve.triangle.entities.VectorCorrection-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.VectorCorrection"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
             <file name="org-jreserve-triangle-entities-VectorComment.entity">
                 <!--org.jreserve.triangle.entities.VectorComment-->
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.VectorComment"/>
@@ -14,19 +19,9 @@
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleCorrection"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
-            <file name="org-jreserve-triangle-entities-AbstractData.entity">
-                <!--org.jreserve.triangle.entities.AbstractData-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.AbstractData"/>
-                <attr boolvalue="false" name="generatedId"/>
-            </file>
-            <file name="org-jreserve-triangle-entities-VectorCorrection.entity">
-                <!--org.jreserve.triangle.entities.VectorCorrection-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.VectorCorrection"/>
-                <attr boolvalue="false" name="generatedId"/>
-            </file>
-            <file name="org-jreserve-triangle-entities-TriangleComment.entity">
-                <!--org.jreserve.triangle.entities.TriangleComment-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleComment"/>
+            <file name="org-jreserve-triangle-entities-Triangle.entity">
+                <!--org.jreserve.triangle.entities.Triangle-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
             <file name="org-jreserve-triangle-entities-Vector.entity">
@@ -34,9 +29,14 @@
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.Vector"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
-            <file name="org-jreserve-triangle-entities-Triangle.entity">
-                <!--org.jreserve.triangle.entities.Triangle-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
+            <file name="org-jreserve-triangle-entities-TriangleComment.entity">
+                <!--org.jreserve.triangle.entities.TriangleComment-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleComment"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
+            <file name="org-jreserve-triangle-entities-AbstractData.entity">
+                <!--org.jreserve.triangle.entities.AbstractData-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.AbstractData"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
         </folder>
@@ -60,13 +60,17 @@
         </folder>
         <folder name="Project">
             <folder name="ElementFactories">
+                <file name="org-jreserve-vector-VectorLoader.instance">
+                    <!--org.jreserve.vector.VectorLoader-->
+                    <attr intvalue="200" name="priority"/>
+                </file>
                 <file name="org-jreserve-data-container-ProjectDataContainerLoader.instance">
                     <!--org.jreserve.data.container.ProjectDataContainerLoader-->
                     <attr intvalue="500" name="priority"/>
                 </file>
-                <file name="org-jreserve-vector-VectorLoader.instance">
-                    <!--org.jreserve.vector.VectorLoader-->
-                    <attr intvalue="200" name="priority"/>
+                <file name="org-jreserve-triangle-TriangleLoader.instance">
+                    <!--org.jreserve.triangle.TriangleLoader-->
+                    <attr intvalue="100" name="priority"/>
                 </file>
             </folder>
         </folder>

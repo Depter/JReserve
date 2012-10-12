@@ -2,11 +2,8 @@ package org.jreserve.triangle.widget;
 
 import java.awt.Color;
 import java.awt.Component;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import javax.swing.table.TableCellRenderer;
 
 /**
@@ -18,7 +15,7 @@ class TriangleWidgetHeaderRenderer extends JLabel implements TableCellRenderer {
     private final static Color BACKGROUND = UIManager.getColor("Panel.background");
     
     TriangleWidgetHeaderRenderer() {
-        setBorder(BorderFactory.createRaisedBevelBorder());
+        setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         setHorizontalAlignment(SwingConstants.CENTER);
         setBackground(BACKGROUND);
         setOpaque(true);
@@ -29,5 +26,4 @@ class TriangleWidgetHeaderRenderer extends JLabel implements TableCellRenderer {
         setText(""+value);
         return this;
     }
-
 }

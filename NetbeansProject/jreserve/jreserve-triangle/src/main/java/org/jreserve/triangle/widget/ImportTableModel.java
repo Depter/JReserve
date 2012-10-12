@@ -1,12 +1,9 @@
 package org.jreserve.triangle.widget;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import org.jreserve.data.Data;
-import org.jreserve.data.model.DataCell;
-import org.jreserve.data.model.DataRow;
 import org.jreserve.data.model.DataTable;
 import org.jreserve.data.model.DataTableFactory;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -22,53 +19,48 @@ import org.openide.util.NbBundle.Messages;
 })
 class ImportTableModel extends DefaultTableModel {
 
+    static enum ModelType {
+        DEVELOPMENT,
+        CALENDAR
+    };
+    
     private List<Data> datas = new ArrayList<Data>();
     private TriangleGeometry geometry;
-    
     private DataTable table;
-
+    
+    private boolean cummulated = false;
+    
+    private TriangleModel triangleModel = new DevelopmentPeriodTriangleModel();
+    private ModelType type = ModelType.DEVELOPMENT;
+    
     @Override
     public int getColumnCount() {
-        return table==null? 0 : table.getColumnCount()+1;
+        return triangleModel==null? 0 : triangleModel.getColumnCount();
     }
 
     @Override
     public String getColumnName(int column) {
-        if(column == 0)
-            return Bundle.LBL_ImportTableModel_Periods();
-        return Integer.toString(column);
+        return triangleModel.getColumnName(column);
     }
 
     @Override
     public int getRowCount() {
-        return table==null? 0 : table.getRowCount();
+        return triangleModel==null? 0 : triangleModel.getRowCount();
     }
 
     @Override
     public Object getValueAt(int row, int column) {
-        DataRow dataRow = table.getRow(row);
-        if(dataRow == null)
-            return null;
-        return getValueAt(dataRow, column);
-    }
-    
-    private Object getValueAt(DataRow row, int column) {
-        if(column == 0)
-            return row.getAccidentBegin();
-        DataCell cell = row.getCell(column - 1);
-        return cell==null? null : cell.getValue();
+        return triangleModel.getValueAt(row, column);
     }
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        return false;
+        return triangleModel.isCellEditable(row, column);
     }
 
     @Override
     public Class<?> getColumnClass(int column) {
-        if(column == 0)
-            return Date.class;
-        return Double.class;
+        return triangleModel.getColumnClass(column);
     }
     
     public List<Data> getDatas() {
@@ -109,6 +101,21 @@ class ImportTableModel extends DefaultTableModel {
             table = factory.buildTable();
             factory.setValues(datas);
         }
+        initModel();
+    }
+    
+    private void initModel() {
+        switch(type) {
+            case DEVELOPMENT:
+                triangleModel = new DevelopmentPeriodTriangleModel();
+                break;
+            case CALENDAR:
+                triangleModel = new CalendarYearTriangleModel();
+                break;
+            default:
+                throw new IllegalStateException("Unknown ModelType: "+type);
+        }
+        triangleModel.setDataTable(table);
     }
     
     private void fireRowsInserted() {
@@ -119,5 +126,34 @@ class ImportTableModel extends DefaultTableModel {
     
     public DataTable getTable() {
         return table;
+    }
+    
+    public boolean isCummulated() {
+        return cummulated;
+    }
+    
+    public void setCummulated(boolean cummulated) {
+        this.cummulated = cummulated;
+        triangleModel.setCummulated(cummulated);
+        super.fireTableDataChanged();
+    }
+    
+    public ModelType getModelType() {
+        return type;
+    }
+    
+    public void setModelType(ModelType type) {
+        if(type == null)
+            type = ModelType.DEVELOPMENT;
+        if(this.type != type) {
+            this.type = type;
+            rebuildTable();
+        }
+    }
+    
+    public boolean hasValueAt(int row, int column) {
+        if(triangleModel == null)
+            return false;
+        return triangleModel.hasValueAt(row, column);
     }
 }

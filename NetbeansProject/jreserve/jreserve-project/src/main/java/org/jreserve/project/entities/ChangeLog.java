@@ -15,7 +15,8 @@ import org.openide.util.NbBundle.Messages;
 @Entity
 @Table(name="CHANGE_LOG", schema="JRESERVE")
 @Messages({
-    "LBL.LogType.Project=Project"
+    "LBL.LogType.Project=Project",
+    "LBL.LogType.Data=Data"
 })
 public class ChangeLog extends AbstractPersistentObject implements Comparable<ChangeLog> {
     private final static long serialVersionUID = 1L;
@@ -116,7 +117,8 @@ public class ChangeLog extends AbstractPersistentObject implements Comparable<Ch
     }
     
     public static enum Type {
-        PROJECT(1, Bundle.LBL_LogType_Project());
+        PROJECT(1, Bundle.LBL_LogType_Project()),
+        DATA(2, Bundle.LBL_LogType_Data());
         
         private final int dbId;
         private final String userName;

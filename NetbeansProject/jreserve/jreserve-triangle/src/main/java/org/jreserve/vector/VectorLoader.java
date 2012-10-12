@@ -55,6 +55,4 @@ public class VectorLoader extends AbstractProjectElementFactory<Vector> {
     protected ProjectElement createProjectElement(Vector value) {
         return new VectorProjectElement(value);
     }
-    
-    
 }

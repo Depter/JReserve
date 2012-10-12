@@ -6,7 +6,6 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import org.jreserve.data.model.DataTable;
 import org.jreserve.localesettings.util.DoubleRenderer;
 
 /**
@@ -36,16 +35,9 @@ class DoubleTriangleTableRenderer implements TableCellRenderer {
     }
     
     private Color getBackground(int row, int column) {
-        if(hasValue(row, column))
+        if(model.hasValueAt(row, column))
             return VALUE_BG;
         return EMPTY_BG;
-    }
-    
-    private boolean hasValue(int row, int column) {
-        DataTable table = model.getTable();
-        if(table == null)
-            return false;
-        return table.getCell(row, column-1) != null;
     }
     
     public void setMaximumFractionDigits(int count) {

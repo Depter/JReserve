@@ -8,6 +8,8 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.container.ProjectDataContainer;
 import org.jreserve.persistence.Session;
 import org.jreserve.persistence.SessionFactory;
+import org.jreserve.project.entities.ChangeLog;
+import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.entities.Triangle;
@@ -25,7 +27,11 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "MSG.TriangleFormatWizardPanel.SaveError=Unable to save triangle!"
+    "MSG.TriangleFormatWizardPanel.SaveError=Unable to save triangle!",
+    "# {0} - triangle name",
+    "# {1} - db id",
+    "# {2} - db name",
+    "LOG.TriangleFormatWizard.Created=Created triangle \"{0}\" for data type {1} - {2}"
 })
 class TriangleFormatWizard extends DataFormatWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
     
@@ -51,6 +57,7 @@ class TriangleFormatWizard extends DataFormatWizardPanel implements WizardDescri
         synchronized(lock) {
             Triangle triangle = saveTriangle();
             addProjectElement(triangle);
+            logCreation();
         }
     }
     
@@ -88,6 +95,13 @@ class TriangleFormatWizard extends DataFormatWizardPanel implements WizardDescri
         ProjectElement element = triangleData.element;
         Object v = element.getFirstChildValue(ProjectDataContainer.class);
         return (ProjectDataContainer) v;
+    }
+    
+    private void logCreation() {
+        ProjectDataType dt = triangleData.dataType;
+        String msg = Bundle.LOG_TriangleFormatWizard_Created(triangleData.name, dt.getDbId(), dt.getName());
+        ChangeLogUtil.getDefault().addChange(triangleData.project, ChangeLog.Type.DATA, msg);
+        ChangeLogUtil.getDefault().saveValues(triangleData.project);
     }
     
     private class TriangleData {

@@ -9,5 +9,12 @@ class Bundle {
     static String LBL_ImportTableModel_Periods() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.ImportTableModel.Periods");
     }
+    /**
+     * @return <i>Digits:</i>
+     * @see TriangleWidget
+     */
+    static String LBL_TriangleWidget_Digits() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.TriangleWidget.Digits");
+    }
     private void Bundle() {}
 }

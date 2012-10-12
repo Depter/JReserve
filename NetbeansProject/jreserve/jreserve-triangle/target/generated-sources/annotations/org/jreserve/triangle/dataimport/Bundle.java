@@ -31,6 +31,26 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.VectorCreatorWizard.Name");
     }
     /**
+     * @param triangle_name triangle name
+     * @param db_id db id
+     * @param db_name db name
+     * @return <i>Created triangle "</i>{@code triangle_name}<i>" for data type </i>{@code db_id}<i> - </i>{@code db_name}
+     * @see TriangleFormatWizard
+     */
+    static String LOG_TriangleFormatWizard_Created(Object triangle_name, Object db_id, Object db_name) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LOG.TriangleFormatWizard.Created", triangle_name, db_id, db_name);
+    }
+    /**
+     * @param vector_name vector name
+     * @param db_id db id
+     * @param db_name db name
+     * @return <i>Created vector "</i>{@code vector_name}<i>" for data type </i>{@code db_id}<i> - </i>{@code db_name}
+     * @see VectorFormatWizardPanel
+     */
+    static String LOG_VectorFormatWizardPanel_Created(Object vector_name, Object db_id, Object db_name) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LOG.VectorFormatWizardPanel.Created", vector_name, db_id, db_name);
+    }
+    /**
      * @return <i>Unable to save triangle!</i>
      * @see TriangleFormatWizard
      */

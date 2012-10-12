@@ -1,12 +1,17 @@
 package org.jreserve.triangle.importutil;
 
+import java.awt.BorderLayout;
 import java.util.Date;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.resources.textfieldfilters.IntegerFilter;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -18,15 +23,18 @@ import org.openide.util.NbBundle.Messages;
     "LBL.AxisGeometryPanel.Periods=Periods:",
     "LBL.AxisGeometryPanel.Steps=Months per step:"
 })
-public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentListener, ChangeListener {
+public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListener {
     
     public final static String PROPERTY_FROM = "FROM DATE";
     public final static String PROPERTY_PERIODS = "PERIODS";
     public final static String PROPERTY_MONTHS = "MONTHS";
 
-    private final static String DEFAULT_PERIODS = "1";
-    private final static String DEFAULT_STEPS = "12";
-
+    private final static int DEFAULT_PERIODS = 1;
+    private final static int DEFAULT_STEPS = 12;
+    
+    private SpinnerNumberModel periodModel = new SpinnerNumberModel(DEFAULT_PERIODS, 0, Integer.MAX_VALUE, 1);
+    private SpinnerNumberModel monthModel = new SpinnerNumberModel(DEFAULT_STEPS, 0, Integer.MAX_VALUE, 1);
+    
     public AxisGeometryPanel() {
         initComponents();
     }
@@ -34,8 +42,10 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
     @Override
     public void setEnabled(boolean enabled) {
         fromSpinner.setEnabled(enabled);
-        periodsText.setEnabled(enabled);
-        stepText.setEnabled(enabled);
+        periodSpinner.setEnabled(enabled);
+        monthsSpinner.setEnabled(enabled);
+        
+        
     }
     
     public void setFromDateEnabled(boolean enabled) {
@@ -55,68 +65,39 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
     }
     
     public void setPeriodsEnabled(boolean enabled) {
-        periodsText.setEnabled(enabled);
+        periodSpinner.setEnabled(enabled);
     }
     
     public int getPeriods() {
-        return getIntFromField(periodsText);
+        return periodModel.getNumber().intValue();
     }
     
     public void setPeriods(int periods) {
-        periodsText.setText(Integer.toString(periods));
-    }
-    
-    private int getIntFromField(JTextField textField) {
-        String str = textField.getText();
-        if(str == null || str.trim().length()==0)
-            return 0;
-        return Integer.parseInt(str);
+        periodModel.setValue(periods);
     }
     
     public void setMonthsEnabled(boolean enabled) {
-        stepText.setEnabled(enabled);
+        monthsSpinner.setEnabled(enabled);
     }
     
     public int getMonthPerStep() {
-        return getIntFromField(stepText);
+        return monthModel.getNumber().intValue();
     }
     
     public void setMonthPerStep(int months) {
-        stepText.setText(Integer.toString(months));
-    }
-    
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        textFieldChanged(e);
-    }
-    
-    private void textFieldChanged(DocumentEvent evt) {
-        JTextField field = getSource(evt);
-        if(periodsText == field) {
-            setProperty(PROPERTY_PERIODS, field.getText());
-        } else {
-            setProperty(PROPERTY_MONTHS, field.getText());
-        }
-    }
-    
-    private JTextField getSource(DocumentEvent evt) {
-        if(periodsText.getDocument() == evt.getDocument())
-            return periodsText;
-        return stepText;
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        textFieldChanged(e);
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
+        monthModel.setValue(months);
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        setProperty(PROPERTY_FROM, fromSpinner.getValue());
+        Object source = e.getSource();
+        if(fromSpinner == source) {
+            setProperty(PROPERTY_FROM, fromSpinner.getValue());
+        } else if(periodSpinner == source) {
+            setProperty(PROPERTY_PERIODS, periodSpinner.getValue());
+        } else if(monthsSpinner == source) {
+            setProperty(PROPERTY_MONTHS, monthsSpinner.getValue());
+        }
     }
     
     private void setProperty(String name, Object value) {
@@ -137,9 +118,9 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
         toLabel = new javax.swing.JLabel();
         stepLabel = new javax.swing.JLabel();
         fromSpinner = new org.jreserve.resources.textfieldfilters.DateSpinner();
-        periodsText = new javax.swing.JTextField();
-        stepText = new javax.swing.JTextField();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+        periodSpinner = new javax.swing.JSpinner();
+        monthsSpinner = new javax.swing.JSpinner();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -179,27 +160,6 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         add(fromSpinner, gridBagConstraints);
-
-        periodsText.setText(DEFAULT_PERIODS);
-        periodsText.getDocument().addDocumentListener(this);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        add(periodsText, gridBagConstraints);
-
-        stepText.setDocument(new IntegerFilter());
-        stepText.getDocument().addDocumentListener(this);
-        stepText.setText(DEFAULT_STEPS);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.weightx = 1.0;
-        add(stepText, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -209,14 +169,103 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements DocumentLis
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(filler1, gridBagConstraints);
+
+        periodSpinner.setModel(periodModel);
+        periodSpinner.setEditor(new IntegerEditor(periodSpinner));
+        periodSpinner.addChangeListener(this);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        add(periodSpinner, gridBagConstraints);
+
+        monthsSpinner.setModel(monthModel);
+        monthsSpinner.setEditor(new IntegerEditor(monthsSpinner));
+        monthsSpinner.addChangeListener(this);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.weightx = 1.0;
+        add(monthsSpinner, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel fromLabel;
     private org.jreserve.resources.textfieldfilters.DateSpinner fromSpinner;
-    private javax.swing.JTextField periodsText;
+    private javax.swing.JSpinner monthsSpinner;
+    private javax.swing.JSpinner periodSpinner;
     private javax.swing.JLabel stepLabel;
-    private javax.swing.JTextField stepText;
     private javax.swing.JLabel toLabel;
     // End of variables declaration//GEN-END:variables
+    
+    private class IntegerEditor extends JPanel implements DocumentListener, ChangeListener {
+        
+        private JSpinner spinner;
+        private JTextField editor = IntegerFilter.getTextField();
+        private boolean fireEditorEvent = true;
+        private boolean fireSpinnerEvent = true;
+        
+        IntegerEditor(JSpinner spinner) {
+            super(new BorderLayout());
+            super.add(editor, BorderLayout.CENTER);
+            editor.getDocument().addDocumentListener(this);
+            this.spinner = spinner;
+            spinner.addChangeListener(this);
+            readModelValue();
+        }
+        
+        private void readModelValue() {
+            fireEditorEvent = false;
+            Object value = spinner.getModel().getValue();
+            editor.setText(""+value);
+            fireEditorEvent = true;
+        }
+        
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            setModelValue();
+        }
+        
+        private void setModelValue() {
+            if(!fireEditorEvent)
+                return;
+            fireSpinnerEvent = false;
+            int value = getFieldValue();
+            spinner.getModel().setValue(value);
+            fireSpinnerEvent = true;
+        }
+        
+        private int getFieldValue() {
+            String str = editor.getText();
+            if(str == null || str.trim().length() == 0)
+                return 0;
+            return Integer.parseInt(str);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            setModelValue();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if(!fireSpinnerEvent)
+                return;
+            try {
+                readModelValue();
+            } catch (RuntimeException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        
+    }
 }

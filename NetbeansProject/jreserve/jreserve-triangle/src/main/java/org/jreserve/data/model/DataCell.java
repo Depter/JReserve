@@ -11,10 +11,12 @@ import org.jreserve.data.Data;
  */
 public class DataCell implements Comparable<DataCell> {
     
+    private final static double DEFAULT_VALUE = 0d;
+    
     private DataRow row;
     private Date developmentBegin;
     private Date developmentEnd;
-    private double value = Double.NaN;
+    private double value = DEFAULT_VALUE;
     
     DataCell(Date developmentBegin, Date developmentEnd) {
         this.developmentBegin = developmentBegin;
@@ -42,7 +44,7 @@ public class DataCell implements Comparable<DataCell> {
     }
     
     void setValues(List<Data> datas) {
-        value = Double.NaN;
+        value = DEFAULT_VALUE;
         for(Data data : datas)
             if(myData(data))
                 addData(data);
@@ -57,7 +59,21 @@ public class DataCell implements Comparable<DataCell> {
     private void addData(Data data) {
         double dataValue = data.getValue();
         if(!Double.isNaN(dataValue))
-            value = Double.isNaN(value)? dataValue : value+dataValue;
+            value += dataValue;
+    }
+    
+    public double getCummulatedValue() {
+        double previous = getPreviousValue();
+        if(Double.isNaN(previous))
+            return value;
+        return previous + value;
+    }
+    
+    private double getPreviousValue() {
+        if(row == null)
+            return Double.NaN;
+        DataCell previous = row.getPreviousCell(this);
+        return previous==null? Double.NaN : previous.getCummulatedValue();
     }
     
     @Override

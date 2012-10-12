@@ -102,7 +102,8 @@ public class DataTableFactory {
     }
     
     private void addCell(DataRow row, DataCellDummy dummy) {
-        Date start = getCellStartDate(row, dummy);
+        Date start = dummy.start;
+        //Date start = getCellStartDate(row, dummy);
         row.addCell(new DataCell(start, dummy.end));
     }
     
