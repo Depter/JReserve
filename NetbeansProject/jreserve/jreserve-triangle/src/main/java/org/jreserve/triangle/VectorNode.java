@@ -5,20 +5,19 @@ import javax.swing.ImageIcon;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.project.system.DefaultProjectNode;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.triangle.entities.Triangle;
+import org.jreserve.triangle.entities.Vector;
 import org.openide.util.ImageUtilities;
 
 /**
  *
  * @author Peter Decsi
- * @version 1.0
  */
-class TriangleNode extends DefaultProjectNode {
+class VectorNode extends DefaultProjectNode {
     
-    private final static ImageIcon ICON = ImageUtilities.loadImageIcon("resources/triangle.png", false);
-    private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-DataContainerNode-TriangleNode";
+    private final static ImageIcon ICON = ImageUtilities.loadImageIcon("resources/vector.png", false);
+    private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-DataContainerNode-VectorNode";
 
-    TriangleNode(ProjectElement<Triangle> element) {
+    VectorNode(ProjectElement<Vector> element) {
         super(element);
         super.addActionPath(ACTION_PATH);
         initToolTip(element.getValue().getDataType());
@@ -33,4 +32,5 @@ class TriangleNode extends DefaultProjectNode {
     public Image getIcon(int type) {
         return ICON.getImage();
     }
+    
 }

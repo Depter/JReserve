@@ -11,7 +11,6 @@ import org.jreserve.project.system.management.Deletable;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
-import org.openide.explorer.view.ListView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -20,7 +19,6 @@ import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.lookup.Lookups;
 import org.openide.windows.WindowManager;
 
 /**

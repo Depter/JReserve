@@ -3,7 +3,6 @@ package org.jreserve.project.system.deletedialog;
 import java.awt.Image;
 import org.jreserve.project.system.management.Deletable;
 import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.lookup.Lookups;
 

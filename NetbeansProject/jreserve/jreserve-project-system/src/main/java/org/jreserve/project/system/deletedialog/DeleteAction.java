@@ -40,7 +40,11 @@ public class DeleteAction implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        DeleteDialog dialog = new DeleteDialog(context);
+        delete(context);
+    }
+    
+    public static void delete(List<Deletable> deletables) {
+        DeleteDialog dialog = new DeleteDialog(deletables);
         dialog.setVisible(true);
     }
 }

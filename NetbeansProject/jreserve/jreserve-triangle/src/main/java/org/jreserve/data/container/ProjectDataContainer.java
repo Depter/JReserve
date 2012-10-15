@@ -1,13 +1,14 @@
 package org.jreserve.data.container;
 
 import java.util.List;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.Vector;
-import org.jreserve.vector.VectorProjectElement;
+import org.jreserve.triangle.VectorProjectElement;
 
 /**
  *
@@ -17,7 +18,7 @@ import org.jreserve.vector.VectorProjectElement;
 public class ProjectDataContainer {
 
     private Project project;
-    private ProjectElement myElement;
+    private ProjectElement<ProjectDataContainer> myElement;
     
     public ProjectDataContainer(Project project) {
         this.project = project;
@@ -27,7 +28,7 @@ public class ProjectDataContainer {
         return project;
     }
     
-    public ProjectElement<Project> getElement() {
+    public ProjectElement<ProjectDataContainer> getElement() {
         return myElement;
     }
     
@@ -53,7 +54,7 @@ public class ProjectDataContainer {
         return false;
     }
     
-    void setMyElement(ProjectElement element) {
+    void setMyElement(ProjectElement<ProjectDataContainer> element) {
         myElement = element;
     }
     
@@ -96,5 +97,9 @@ public class ProjectDataContainer {
         TriangleProjectElement element = new TriangleProjectElement(triangle);
         addElement(element);
         return element;
+    }
+    
+    public <T> List<ProjectElement<T>> getProjectElements(Class<T> clazz) {
+        return myElement.getChildren(clazz);
     }
 }
