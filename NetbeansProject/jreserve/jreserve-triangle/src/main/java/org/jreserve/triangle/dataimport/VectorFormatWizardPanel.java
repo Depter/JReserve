@@ -14,10 +14,10 @@ import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
-import org.jreserve.triangle.importutil.AxisGeometryPanel;
-import org.jreserve.triangle.importutil.DataFormatVisualPanel;
+import org.jreserve.triangle.importutil.DataFormatVisualPanel2;
 import org.jreserve.triangle.importutil.DataFormatWizardPanel;
 import org.jreserve.triangle.importutil.NameSelectWizardPanel;
 import org.openide.WizardDescriptor;
@@ -44,7 +44,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
     private VectorData vectorData;
     
     @Override
-    protected DataFormatVisualPanel createPanel() {
+    protected DataFormatVisualPanel2 createPanel() {
         return new VisualPanel();
     }
 
@@ -127,45 +127,59 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         }
         
         private void readPanel() {
-            Date start = panel.getAccidentStartDate();
-            int periods = panel.getAccidentPeriodCount();
-            int months = panel.getAccidentMonthsPerStep();
-            geometry = new VectorGeometry(start, periods, months);
+            TriangleGeometry triangle = panel.getGeometry();
+            Date start = triangle.getAccidentStart();
+            int periods = triangle.getAccidentPeriods();
+            int months = triangle.getMonthInAccident();
+            this.geometry = new VectorGeometry(start, periods, months);
         }
         
     }
     
-    private static class VisualPanel extends DataFormatVisualPanel {
+    private static class VisualPanel extends DataFormatVisualPanel2 {
+        
+        private Date devFromDate = null;
         
         @Override
-        protected void initComponents() {
-            super.initComponents();
-            initDevelopmentGeometry();
+        protected void componentsInitialized() {
+            geometry.setSymmetricPeriods(false);
+            geometry.setSymmetricPeriodsEnabled(false);
+            geometry.setSymmetricMonths(false);
+            geometry.setSymmetricMonthsEnabled(false);
+            geometry.setDevelopmentPeriodCount(1);
         }
         
-        private void initDevelopmentGeometry() {
-            developmentGeometry.setEnabled(false);
-            developmentGeometry.setFromDateEnabled(true);
-            developmentGeometry.setPeriods(1);
-        }
-
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             super.propertyChange(evt);
-            if(developmentFromChanged(evt))
-                developmentGeometry.setMonthPerStep(getDevelopmentMonthCount(developmentGeometry.getFromDate()));
+            if(developmentFromChanged())
+                geometry.setDevelopmentMonthsPerStep(getDevelopmentMonthCount());
         }
         
-        private boolean developmentFromChanged(PropertyChangeEvent evt) {
-            Object source = evt.getSource();
-            String property = evt.getPropertyName();
-            return developmentGeometry == source &&
-                   AxisGeometryPanel.PROPERTY_FROM.equals(property);
+        private boolean developmentFromChanged() {
+            Date from = geometry.getDevelopmentStartDate();
+            if(devFromDate == null)
+                return setNewDevFromDate(from);
+            return setDevFromDate(from);
         }
         
-        private int getDevelopmentMonthCount(Date date) {
+        private boolean setNewDevFromDate(Date from) {
+            if(from == null)
+                return false;
+            devFromDate = from;
+            return true;
+        }
+        
+        private boolean setDevFromDate(Date from) {
+            if(devFromDate.equals(from))
+                return false;
+            devFromDate = from;
+            return true;
+        }
+        
+        private int getDevelopmentMonthCount() {
             Calendar c = Calendar.getInstance();
-            c.setTime(date);
+            c.setTime(devFromDate);
             int count = 1;
             while(c.getTime().before(developmentEnd)) {
                 c.add(Calendar.MONTH, 1);

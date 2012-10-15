@@ -1,7 +1,7 @@
 package org.jreserve.triangle.widget;
 
 import javax.swing.table.TableModel;
-import org.jreserve.data.model.DataTable;
+import org.jreserve.data.model.TriangleTable;
 
 /**
  *
@@ -10,7 +10,7 @@ import org.jreserve.data.model.DataTable;
  */
 interface TriangleModel extends TableModel {
 
-    public void setDataTable(DataTable table);
+    public void setDataTable(TriangleTable table);
     
     public void setCummulated(boolean cummulated);
 

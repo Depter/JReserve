@@ -10,16 +10,16 @@ import org.jreserve.data.Data;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DataTable {
+public class TriangleTable {
 
-    private List<DataRow> rows = new ArrayList<DataRow>();
+    private List<TriangleRow> rows = new ArrayList<TriangleRow>();
     private int rowCount = 0;
     private int columnCount = 0;
     
-    DataTable() {
+    TriangleTable() {
     }
     
-    void addRow(DataRow row) {
+    void addRow(TriangleRow row) {
         rows.add(row);
         row.setTable(this);
         Collections.sort(rows);
@@ -44,19 +44,19 @@ public class DataTable {
         return rows.get(row).getCellCount();
     }
     
-    public DataRow getRow(int row) {
+    public TriangleRow getRow(int row) {
         if(row < 0 || rowCount <= row)
             return null;
         return rows.get(row);
     }
     
-    public DataCell getCell(int row, int column) {
-        DataRow r = getRow(row);
+    public TriangleCell getCell(int row, int column) {
+        TriangleRow r = getRow(row);
         return r==null? null : r.getCell(column);
     }
     
-    void setValues(List<Data> datas) {
-        for(DataRow row : rows)
+    public void setValues(List<Data> datas) {
+        for(TriangleRow row : rows)
             row.setValues(datas);
     }
 }

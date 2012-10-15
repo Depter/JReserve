@@ -21,20 +21,20 @@ public class DataTableFactoryTest {
 
     @Test
     public void testBuildData_8x8() {
-        DataTableFactory factory = getFactory(8, 12, 8, 12);
-        DataTable table = factory.buildTable();
+        TriangleTableFactory factory = getFactory(8, 12, 8, 12);
+        TriangleTable table = factory.buildTable();
         assertEquals(8, table.getRowCount());
         assertEquals(8, table.getColumnCount());
         
         int year = 1997;
         for(int r=0; r<8; r++) {
-            DataRow row = table.getRow(r);
+            TriangleRow row = table.getRow(r);
             assertEquals(getDate(year+r, 1), row.getAccidentBegin());
             assertEquals(getDate(year+1+r, 1), row.getAccidentEnd());
             assertEquals(8-r, row.getCellCount());
             
             for(int c=1; c<=(8-r); c++) {
-                DataCell cell = row.getCell(c-1);
+                TriangleCell cell = row.getCell(c-1);
                 assertEquals(getDate(year+r+c-1, 1), cell.getDevelopmentBegin());
                 assertEquals(getDate(year+r+c, 1), cell.getDevelopmentEnd());
             }
@@ -46,9 +46,9 @@ public class DataTableFactoryTest {
         return TestUtil.getDate(str);
     }
     
-    private DataTableFactory getFactory(int aPeriods, int aMonths, int dPeriods, int dMonths) {
+    private TriangleTableFactory getFactory(int aPeriods, int aMonths, int dPeriods, int dMonths) {
         TriangleGeometry geometry = getGeometry(aPeriods, aMonths, dPeriods, dMonths);
-        return new DataTableFactory(geometry);
+        return new TriangleTableFactory(geometry);
     }
     
     private TriangleGeometry getGeometry(int aPeriods, int aMonths, int dPeriods, int dMonths) {
@@ -57,8 +57,8 @@ public class DataTableFactoryTest {
 
     @Test
     public void testBuildData_5x5() {
-        DataTableFactory factory = getFactory(5, 18, 5, 18);
-        DataTable table = factory.buildTable();
+        TriangleTableFactory factory = getFactory(5, 18, 5, 18);
+        TriangleTable table = factory.buildTable();
         assertEquals(5, table.getRowCount());
         assertEquals(5, table.getColumnCount());
         
@@ -68,7 +68,7 @@ public class DataTableFactoryTest {
         cellCalendar.setTime(ACCIDENT_BEGIN);
         
         for(int r=0; r<5; r++) {
-            DataRow row = table.getRow(r);
+            TriangleRow row = table.getRow(r);
             assertEquals(rowCalendar.getTime(), row.getAccidentBegin());
             
             rowCalendar.add(Calendar.MONTH, 18);
@@ -78,7 +78,7 @@ public class DataTableFactoryTest {
             
             cellCalendar.setTime(row.getAccidentBegin());
             for(int c=1; c<=(5-r); c++) {
-                DataCell cell = row.getCell(c-1);
+                TriangleCell cell = row.getCell(c-1);
                 assertEquals(cellCalendar.getTime(), cell.getDevelopmentBegin());
                 cellCalendar.add(Calendar.MONTH, 18);
                 assertEquals(cellCalendar.getTime(), cell.getDevelopmentEnd());
@@ -88,8 +88,8 @@ public class DataTableFactoryTest {
 
     @Test
     public void testBuildData_8x32() {
-        DataTableFactory factory = getFactory(8, 12, 32, 3);
-        DataTable table = factory.buildTable();
+        TriangleTableFactory factory = getFactory(8, 12, 32, 3);
+        TriangleTable table = factory.buildTable();
         assertEquals(8, table.getRowCount());
         assertEquals(32, table.getColumnCount());
         
@@ -99,7 +99,7 @@ public class DataTableFactoryTest {
         cellCalendar.setTime(ACCIDENT_BEGIN);
         
         for(int r=0; r<8; r++) {
-            DataRow row = table.getRow(r);
+            TriangleRow row = table.getRow(r);
             assertEquals(rowCalendar.getTime(), row.getAccidentBegin());
             
             rowCalendar.add(Calendar.MONTH, 12);
@@ -109,7 +109,7 @@ public class DataTableFactoryTest {
             
             cellCalendar.setTime(row.getAccidentBegin());
             for(int c=1; c<=(32-r*4); c++) {
-                DataCell cell = row.getCell(c-1);
+                TriangleCell cell = row.getCell(c-1);
                 assertEquals(cellCalendar.getTime(), cell.getDevelopmentBegin());
                 cellCalendar.add(Calendar.MONTH, 3);
                 assertEquals(cellCalendar.getTime(), cell.getDevelopmentEnd());

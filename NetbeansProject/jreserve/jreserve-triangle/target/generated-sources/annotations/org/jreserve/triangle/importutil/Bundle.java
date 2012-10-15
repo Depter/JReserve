@@ -3,27 +3,6 @@ package org.jreserve.triangle.importutil;
 @javax.annotation.Generated(value="org.netbeans.modules.openide.util.NbBundleProcessor")
 class Bundle {
     /**
-     * @return <i>Begin:</i>
-     * @see AxisGeometryPanel
-     */
-    static String LBL_AxisGeometryPanel_Begin() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.Begin");
-    }
-    /**
-     * @return <i>Periods:</i>
-     * @see AxisGeometryPanel
-     */
-    static String LBL_AxisGeometryPanel_Periods() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.Periods");
-    }
-    /**
-     * @return <i>Months per step:</i>
-     * @see AxisGeometryPanel
-     */
-    static String LBL_AxisGeometryPanel_Steps() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.AxisGeometryPanel.Steps");
-    }
-    /**
      * @return <i>Accident</i>
      * @see DataFormatVisualPanel
      */
@@ -99,6 +78,48 @@ class Bundle {
      */
     static String MSG_DataFormatWizardPanel_SaveError() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataFormatWizardPanel.SaveError");
+    }
+    /**
+     * @return <i>Field 'Begin' in group 'Accident' is invalid!</i>
+     * @see GeometrySettingPanel
+     */
+    static String MSG_GeometrySettingPanel_Accident_Invalid_From() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.GeometrySettingPanel.Accident.Invalid.From");
+    }
+    /**
+     * @return <i>Field 'Month per step' in group 'Accident' is invalid!</i>
+     * @see GeometrySettingPanel
+     */
+    static String MSG_GeometrySettingPanel_Accident_Invalid_Months() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.GeometrySettingPanel.Accident.Invalid.Months");
+    }
+    /**
+     * @return <i>Field 'Periods' in group 'Accident' is invalid!</i>
+     * @see GeometrySettingPanel
+     */
+    static String MSG_GeometrySettingPanel_Accident_Invalid_Periods() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.GeometrySettingPanel.Accident.Invalid.Periods");
+    }
+    /**
+     * @return <i>Field 'Begin' in group 'Development' is invalid!</i>
+     * @see GeometrySettingPanel
+     */
+    static String MSG_GeometrySettingPanel_Development_Invalid_From() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.GeometrySettingPanel.Development.Invalid.From");
+    }
+    /**
+     * @return <i>Field 'Month per step' in group 'Development' is invalid!</i>
+     * @see GeometrySettingPanel
+     */
+    static String MSG_GeometrySettingPanel_Development_Invalid_Months() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.GeometrySettingPanel.Development.Invalid.Months");
+    }
+    /**
+     * @return <i>Field 'Periods' in group 'Development' is invalid!</i>
+     * @see GeometrySettingPanel
+     */
+    static String MSG_GeometrySettingPanel_Development_Invalid_Periods() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.GeometrySettingPanel.Development.Invalid.Periods");
     }
     /**
      * @return <i>Unable to load data!</i>

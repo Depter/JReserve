@@ -21,6 +21,12 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog, Stri
         return DEFAULT;
     }
     
+    public static ProjectChangeLog getDefault(Project project) {
+        if(project == null)
+            throw new NullPointerException("Project can not be null!");
+        return new ProjectChangeLog(project);
+    }
+    
     private final static String ERR_PROJECT_NOT_PERSISTED = 
         "Project '%s' must be peristed first, before log can be added to it!";
     private final static String QUERY = 
@@ -125,5 +131,38 @@ public class ChangeLogUtil extends AbstractElementCache<Project, ChangeLog, Stri
     @Override
     protected boolean isNew(ChangeLog entity) {
         return entity.getVersion() == null;
+    }
+    
+    public static class ProjectChangeLog {
+        
+        private final Project project;
+        
+        private ProjectChangeLog(Project project) {
+            this.project = project;
+        }
+        
+        public void addChange(ChangeLog.Type type, String log) {
+            ChangeLogUtil.getDefault().addChange(project, type, log);
+        }
+        
+        public List<ChangeLog> getChanges() {
+            return ChangeLogUtil.getDefault().getValues(project);
+        }
+
+        public void addChangeLogListener(ChangeLogListener listener) {
+            ChangeLogUtil.getDefault().addChangeLogListener(project, listener);
+        }
+    
+        public void removeChangeLogListener(Project project, ChangeLogListener listener) {
+            ChangeLogUtil.getDefault().removeChangeLogListener(project, listener);
+        }
+        
+        public void clearCache() {
+            ChangeLogUtil.getDefault().clearCache(project);
+        }
+        
+        public void saveValues() {
+            ChangeLogUtil.getDefault().saveValues(project);
+        }
     }
 }

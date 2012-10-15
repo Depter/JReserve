@@ -18,7 +18,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import org.jreserve.data.Data;
-import org.jreserve.data.model.DataTable;
+import org.jreserve.data.model.TriangleTable;
 import org.jreserve.resources.ToolBarToggleButton;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.openide.util.ImageUtilities;
@@ -187,7 +187,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         tableModel.setDatas(datas);
     }
     
-    public DataTable getDataTable() {
+    public TriangleTable getDataTable() {
         return tableModel.getTable();
     }
     

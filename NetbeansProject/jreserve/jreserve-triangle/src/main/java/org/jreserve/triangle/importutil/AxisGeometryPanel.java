@@ -12,17 +12,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.resources.textfieldfilters.IntegerFilter;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  */
-@Messages({
-    "LBL.AxisGeometryPanel.Begin=Begin:",
-    "LBL.AxisGeometryPanel.Periods=Periods:",
-    "LBL.AxisGeometryPanel.Steps=Months per step:"
-})
 public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListener {
     
     public final static String PROPERTY_FROM = "FROM DATE";
@@ -44,8 +38,6 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
         fromSpinner.setEnabled(enabled);
         periodSpinner.setEnabled(enabled);
         monthsSpinner.setEnabled(enabled);
-        
-        
     }
     
     public void setFromDateEnabled(boolean enabled) {
@@ -124,7 +116,7 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
 
         setLayout(new java.awt.GridBagLayout());
 
-        fromLabel.setText(Bundle.LBL_AxisGeometryPanel_Begin());
+        fromLabel.setText(org.openide.util.NbBundle.getMessage(AxisGeometryPanel.class, "LBL.AxisGeometryPanel.Begin")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -133,7 +125,7 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         add(fromLabel, gridBagConstraints);
 
-        toLabel.setText(Bundle.LBL_AxisGeometryPanel_Periods());
+        toLabel.setText(org.openide.util.NbBundle.getMessage(AxisGeometryPanel.class, "LBL.AxisGeometryPanel.Periods")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -142,7 +134,7 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         add(toLabel, gridBagConstraints);
 
-        stepLabel.setText(Bundle.LBL_AxisGeometryPanel_Steps());
+        stepLabel.setText(org.openide.util.NbBundle.getMessage(AxisGeometryPanel.class, "LBL.AxisGeometryPanel.Steps")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -203,7 +195,7 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
     private javax.swing.JLabel toLabel;
     // End of variables declaration//GEN-END:variables
     
-    private class IntegerEditor extends JPanel implements DocumentListener, ChangeListener {
+    private static class IntegerEditor extends JPanel implements DocumentListener, ChangeListener {
         
         private JSpinner spinner;
         private JTextField editor = IntegerFilter.getTextField();

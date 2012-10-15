@@ -1,5 +1,4 @@
 Manifest-Version: 1.0
-OpenIDE-Module-Install: org/jreserve/project/Installer.class
 OpenIDE-Module-Layer: org/jreserve/project/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/project/Bundle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager

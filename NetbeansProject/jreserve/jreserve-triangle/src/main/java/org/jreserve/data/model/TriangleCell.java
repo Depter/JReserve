@@ -9,25 +9,25 @@ import org.jreserve.data.Data;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DataCell implements Comparable<DataCell> {
+public class TriangleCell implements Comparable<TriangleCell> {
     
     private final static double DEFAULT_VALUE = 0d;
     
-    private DataRow row;
+    private TriangleRow row;
     private Date developmentBegin;
     private Date developmentEnd;
     private double value = DEFAULT_VALUE;
     
-    DataCell(Date developmentBegin, Date developmentEnd) {
+    TriangleCell(Date developmentBegin, Date developmentEnd) {
         this.developmentBegin = developmentBegin;
         this.developmentEnd = developmentEnd;
     }
     
-    void setRow(DataRow row) {
+    void setRow(TriangleRow row) {
         this.row = row;
     }
     
-    public DataRow getRow() {
+    public TriangleRow getRow() {
         return row;
     }
     
@@ -72,19 +72,19 @@ public class DataCell implements Comparable<DataCell> {
     private double getPreviousValue() {
         if(row == null)
             return Double.NaN;
-        DataCell previous = row.getPreviousCell(this);
+        TriangleCell previous = row.getPreviousCell(this);
         return previous==null? Double.NaN : previous.getCummulatedValue();
     }
     
     @Override
     public boolean equals(Object o) {
-        if(o instanceof DataCell)
-            return compareTo((DataCell)o) == 0;
+        if(o instanceof TriangleCell)
+            return compareTo((TriangleCell)o) == 0;
         return false;
     }
     
     @Override
-    public int compareTo(DataCell row) {
+    public int compareTo(TriangleCell row) {
         return developmentBegin.compareTo(row.developmentBegin);
     }
     

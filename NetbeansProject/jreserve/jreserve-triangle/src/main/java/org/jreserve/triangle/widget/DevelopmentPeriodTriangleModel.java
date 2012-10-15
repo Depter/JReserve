@@ -1,7 +1,7 @@
 package org.jreserve.triangle.widget;
 
-import org.jreserve.data.model.DataCell;
-import org.jreserve.data.model.DataRow;
+import org.jreserve.data.model.TriangleCell;
+import org.jreserve.data.model.TriangleRow;
 
 /**
  *
@@ -18,7 +18,7 @@ class DevelopmentPeriodTriangleModel extends AbstractTriangleModel {
     }
 
     @Override
-    protected DataCell getCellAt(DataRow row, int column) {
+    protected TriangleCell getCellAt(TriangleRow row, int column) {
         return row.getCell(column - 1);
     }
 }

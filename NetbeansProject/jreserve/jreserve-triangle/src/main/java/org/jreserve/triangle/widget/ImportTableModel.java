@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import org.jreserve.data.Data;
-import org.jreserve.data.model.DataTable;
-import org.jreserve.data.model.DataTableFactory;
+import org.jreserve.data.model.TriangleTable;
+import org.jreserve.data.model.TriangleTableFactory;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.openide.util.NbBundle.Messages;
 
@@ -26,7 +26,7 @@ class ImportTableModel extends DefaultTableModel {
     
     private List<Data> datas = new ArrayList<Data>();
     private TriangleGeometry geometry;
-    private DataTable table;
+    private TriangleTable table;
     
     private boolean cummulated = false;
     
@@ -97,9 +97,9 @@ class ImportTableModel extends DefaultTableModel {
         if(geometry == null) {
             table = null;
         } else {
-            DataTableFactory factory = new DataTableFactory(geometry);
+            TriangleTableFactory factory = new TriangleTableFactory(geometry);
             table = factory.buildTable();
-            factory.setValues(datas);
+            table.setValues(datas);
         }
         initModel();
     }
@@ -124,7 +124,7 @@ class ImportTableModel extends DefaultTableModel {
             fireTableRowsInserted(0, rows-1);
     }
     
-    public DataTable getTable() {
+    public TriangleTable getTable() {
         return table;
     }
     

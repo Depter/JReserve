@@ -14,6 +14,7 @@ import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ChangeLog.Type;
 import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.project.entities.ChangeLogUtil.ProjectChangeLog;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.entities.Project;
@@ -235,9 +236,9 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
     }
     
     private void createLog(Project project) {
-        ChangeLogUtil util = ChangeLogUtil.getDefault();
-        util.addChange(project, Type.PROJECT, Bundle.MSG_ProjectCreatorWizardPanel_projectcreated());
-        util.saveValues(project);
+        ProjectChangeLog util = ChangeLogUtil.getDefault(project);
+        util.addChange(Type.PROJECT, Bundle.MSG_ProjectCreatorWizardPanel_projectcreated());
+        util.saveValues();
     }
     
     private void setDescription(Project project) {

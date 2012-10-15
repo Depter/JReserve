@@ -12,7 +12,7 @@ import org.jreserve.triangle.entities.TriangleGeometry;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DataTableFactory {
+public class TriangleTableFactory {
     
     private Date accidentStart;
     private int accidentPeriods;
@@ -23,10 +23,10 @@ public class DataTableFactory {
     private int developmentMonths;
     
     private Calendar calendar = Calendar.getInstance();
-    private DataTable table = new DataTable();
+    private TriangleTable table = new TriangleTable();
     private boolean built = false;
     
-    public DataTableFactory(TriangleGeometry geometry) {
+    public TriangleTableFactory(TriangleGeometry geometry) {
         setAccident(geometry);
         setDevelopment(geometry);
     }
@@ -43,7 +43,7 @@ public class DataTableFactory {
         this.developmentMonths = geometry.getMonthInDevelopment();
     }
     
-    public DataTable buildTable() {
+    public TriangleTable buildTable() {
         checkState();
         buildRows();
         return table;
@@ -77,40 +77,33 @@ public class DataTableFactory {
     }
     
     private void buildRow(List<DataCellDummy> dummies) {
-        DataRow row = createRow();
+        TriangleRow row = createRow();
         buildColumns(row, dummies);
         table.addRow(row);
     }
     
-    private DataRow createRow() {
+    private TriangleRow createRow() {
         Date rowStart = calendar.getTime();
         calendar.add(Calendar.MONTH, accidentMonths);
         Date rowEnd = calendar.getTime();
-        return new DataRow(rowStart, rowEnd);
+        return new TriangleRow(rowStart, rowEnd);
     }
     
-    private void buildColumns(DataRow row, List<DataCellDummy> dummies) {
+    private void buildColumns(TriangleRow row, List<DataCellDummy> dummies) {
         for(DataCellDummy dummy : dummies)
             if(containsDummy(row, dummy))
                 addCell(row, dummy);
     }
     
-    private boolean containsDummy(DataRow row, DataCellDummy dummy) {
+    private boolean containsDummy(TriangleRow row, DataCellDummy dummy) {
         Date dummyEnd = dummy.end;
         Date rowBegin = row.getAccidentBegin();
         return dummyEnd.after(rowBegin);
     }
     
-    private void addCell(DataRow row, DataCellDummy dummy) {
+    private void addCell(TriangleRow row, DataCellDummy dummy) {
         Date start = dummy.start;
-        //Date start = getCellStartDate(row, dummy);
-        row.addCell(new DataCell(start, dummy.end));
-    }
-    
-    private Date getCellStartDate(DataRow row, DataCellDummy dummy) {
-        Date rowStart = row.getAccidentBegin();
-        Date dummyStart = dummy.start;
-        return dummyStart.before(rowStart)? rowStart : dummyStart;
+        row.addCell(new TriangleCell(start, dummy.end));
     }
     
     private static class DataCellDummy {
@@ -122,8 +115,8 @@ public class DataTableFactory {
             this.end = end;
         }
     }
-    
-    public void setValues(List<Data> datas) {
-        table.setValues(datas);
-    }
+//    
+//    public void setValues(List<Data> datas) {
+//        table.setValues(datas);
+//    }
 }

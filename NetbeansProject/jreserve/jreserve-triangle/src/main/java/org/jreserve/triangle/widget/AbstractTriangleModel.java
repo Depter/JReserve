@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.event.TableModelListener;
-import org.jreserve.data.model.DataCell;
-import org.jreserve.data.model.DataRow;
-import org.jreserve.data.model.DataTable;
+import org.jreserve.data.model.TriangleCell;
+import org.jreserve.data.model.TriangleRow;
+import org.jreserve.data.model.TriangleTable;
 
 /**
  *
@@ -15,7 +15,7 @@ import org.jreserve.data.model.DataTable;
  */
 abstract class AbstractTriangleModel implements TriangleModel {
     
-    protected DataTable table;
+    protected TriangleTable table;
     protected boolean cummulated;
     
     private List<TableModelListener> listeners = new ArrayList<TableModelListener>();
@@ -59,29 +59,29 @@ abstract class AbstractTriangleModel implements TriangleModel {
     
     @Override
     public Object getValueAt(int row, int column) {
-        DataRow dataRow = table.getRow(row);
+        TriangleRow dataRow = table.getRow(row);
         if(dataRow == null)
             return null;
         return getValueAt(dataRow, column);
     }
 
-    protected Object getValueAt(DataRow row, int column) {
+    protected Object getValueAt(TriangleRow row, int column) {
         if(column == 0)
             return row.getAccidentBegin();
-        DataCell cell = getCellAt(row, column);
+        TriangleCell cell = getCellAt(row, column);
         return getValue(cell);
     }
     
-    protected abstract DataCell getCellAt(DataRow row, int column);
+    protected abstract TriangleCell getCellAt(TriangleRow row, int column);
     
-    protected Object getValue(DataCell cell) {
+    protected Object getValue(TriangleCell cell) {
         if(cell == null)
             return null;
         return cummulated? cell.getCummulatedValue() : cell.getValue();
     }
 
     @Override
-    public void setDataTable(DataTable table) {
+    public void setDataTable(TriangleTable table) {
         this.table = table;
     }
     
@@ -96,7 +96,7 @@ abstract class AbstractTriangleModel implements TriangleModel {
             return false;
         if(column == 0)
             return true;
-        DataRow tableRow = table.getRow(row);
+        TriangleRow tableRow = table.getRow(row);
         if(tableRow == null)
             return false;
         return getCellAt(tableRow, column) != null;

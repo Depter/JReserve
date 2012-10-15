@@ -6,8 +6,8 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
-import org.jreserve.data.model.DataRow;
-import org.jreserve.data.model.DataTable;
+import org.jreserve.data.model.TriangleRow;
+import org.jreserve.data.model.TriangleTable;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
@@ -23,7 +23,7 @@ import org.openide.util.NbBundle.Messages;
 public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, ChangeListener {
     
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
-    protected DataFormatVisualPanel panel;
+    protected DataFormatVisualPanel2 panel;
     private boolean isValid = false;
     protected WizardDescriptor wizard;
     
@@ -36,7 +36,7 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
         return panel;
     }
 
-    protected abstract DataFormatVisualPanel createPanel();
+    protected abstract DataFormatVisualPanel2 createPanel();
     
     @Override
     public HelpCtx getHelp() {
@@ -47,8 +47,8 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
     public void readSettings(WizardDescriptor wizard) {
         this.wizard = wizard;
         List<Data> datas = (List<Data>) wizard.getProperty(NameSelectWizardPanel.PROP_DATA);
-        panel.setData(datas);
-        validatePanel();
+        panel.setDatas(datas);
+        validate();
     }
 
     @Override
@@ -73,18 +73,25 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        validatePanel();
+        validate();
         fireChange();
     }
     
-    private void validatePanel() {
-        DataTable table = panel.getTable();
-        isValid = checkTable(table);
+    private void validate() {
+        isValid = validateInput() && validateTable();
         if(isValid)
             showError(null);
     }
     
-    private boolean checkTable(DataTable table) {
+    private boolean validateInput() {
+        if(panel.isInputValid())
+            return true;
+        showError(panel.getErrorMsg());
+        return false;
+    }
+    
+    private boolean validateTable() {
+        TriangleTable table = panel.getTable();
         if(table == null || !validTable(table)) {
             showError(Bundle.LBL_DataFormatWizardPanel_NoData());
             return false;
@@ -92,14 +99,14 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
         return true;
     }
     
-    private boolean validTable(DataTable table) {
+    private boolean validTable(TriangleTable table) {
         for(int r=0, count=table.getRowCount(); r<count; r++)
             if(validRow(table.getRow(r)))
                 return true;
         return false;
     }
     
-    private boolean validRow(DataRow row) {
+    private boolean validRow(TriangleRow row) {
         for(int c=0, count=row.getCellCount(); c<count; c++)
             if(!Double.isNaN(row.getCell(c).getValue()))
                 return true;

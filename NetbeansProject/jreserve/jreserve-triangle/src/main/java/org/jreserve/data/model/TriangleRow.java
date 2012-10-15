@@ -11,26 +11,26 @@ import org.jreserve.data.Data;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DataRow implements Comparable<DataRow> {
+public class TriangleRow implements Comparable<TriangleRow> {
     
-    private DataTable table;
+    private TriangleTable table;
     
     private final Date accidentBegin;
     private final Date accidentEnd;
     
-    private List<DataCell> cells = new ArrayList<DataCell>();
+    private List<TriangleCell> cells = new ArrayList<TriangleCell>();
     private int cellCount;
     
-    DataRow(Date accidentBegin, Date accidentEnd) {
+    TriangleRow(Date accidentBegin, Date accidentEnd) {
         this.accidentBegin = accidentBegin;
         this.accidentEnd = accidentEnd;
     }
     
-    void setTable(DataTable table) {
+    void setTable(TriangleTable table) {
         this.table = table;
     }
     
-    public DataTable getTable() {
+    public TriangleTable getTable() {
         return table;
     }
     
@@ -42,7 +42,7 @@ public class DataRow implements Comparable<DataRow> {
         return accidentEnd;
     }
     
-    void addCell(DataCell cell) {
+    void addCell(TriangleCell cell) {
         cells.add(cell);
         Collections.sort(cells);
         cellCount++;
@@ -53,7 +53,7 @@ public class DataRow implements Comparable<DataRow> {
         return cellCount;
     }
     
-    public DataCell getCell(int index) {
+    public TriangleCell getCell(int index) {
         if(index <0 || cellCount <= index)
             return null;
         return cells.get(index);
@@ -61,7 +61,7 @@ public class DataRow implements Comparable<DataRow> {
     
     void setValues(List<Data> datas) {
         List<Data> rowData = getRowData(datas);
-        for(DataCell cell : cells)
+        for(TriangleCell cell : cells)
             cell.setValues(rowData);
     }
     
@@ -79,7 +79,7 @@ public class DataRow implements Comparable<DataRow> {
                 accidentEnd.after(date);
     }
     
-    DataCell getPreviousCell(DataCell cell) {
+    TriangleCell getPreviousCell(TriangleCell cell) {
         int index = Collections.binarySearch(cells, cell);
         if(index > 0)
             return cells.get(index-1);
@@ -88,13 +88,13 @@ public class DataRow implements Comparable<DataRow> {
     
     @Override
     public boolean equals(Object o) {
-        if(o instanceof DataRow)
-            return compareTo((DataRow)o) == 0;
+        if(o instanceof TriangleRow)
+            return compareTo((TriangleRow)o) == 0;
         return false;
     }
     
     @Override
-    public int compareTo(DataRow row) {
+    public int compareTo(TriangleRow row) {
         return accidentBegin.compareTo(row.accidentBegin);
     }
     

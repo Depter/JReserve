@@ -1,6 +1,5 @@
 package org.jreserve.triangle.dataimport;
 
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -14,7 +13,7 @@ import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.importutil.DataFormatVisualPanel;
+import org.jreserve.triangle.importutil.DataFormatVisualPanel2;
 import org.jreserve.triangle.importutil.DataFormatWizardPanel;
 import org.jreserve.triangle.importutil.NameSelectWizardPanel;
 import org.openide.WizardDescriptor;
@@ -41,7 +40,7 @@ class TriangleFormatWizard extends DataFormatWizardPanel implements WizardDescri
     private TriangleData triangleData;
 
     @Override
-    protected DataFormatVisualPanel createPanel() {
+    protected DataFormatVisualPanel2 createPanel() {
         return new VisualPanel();
     }
 
@@ -124,21 +123,12 @@ class TriangleFormatWizard extends DataFormatWizardPanel implements WizardDescri
         }
         
         private void readPanel() {
-            Date accidentStart = panel.getAccidentStartDate();
-            int accidentPeriods = panel.getAccidentPeriodCount();
-            int accidentMonths = panel.getAccidentMonthsPerStep();
-
-            Date developmentStart = panel.getDevelopmentStartDate();
-            int developmentPeriods = panel.getDevelopmentPeriodCount();
-            int developmentMonths = panel.getDevelopmentMonthsPerStep();
-            
-            geometry = new TriangleGeometry(accidentStart, accidentPeriods, accidentMonths, 
-                    developmentStart, developmentPeriods, developmentMonths);
+            geometry = panel.getGeometry();
         }
         
     }
 
-    private static class VisualPanel extends DataFormatVisualPanel {    
+    private static class VisualPanel extends DataFormatVisualPanel2 {    
     
         
     }

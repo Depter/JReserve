@@ -14,7 +14,7 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
-import org.jreserve.data.model.DataTable;
+import org.jreserve.data.model.TriangleTable;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.TriangleWidget;
 import org.openide.util.NbBundle.Messages;
@@ -39,6 +39,10 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
     
     protected AxisGeometryPanel accidentGeometry;
     protected AxisGeometryPanel developmentGeometry;
+    protected JCheckBox beginDateSymmetric;
+    protected JCheckBox periodsSymmetric;
+    protected JCheckBox monthsSymmetric;
+    
     protected TriangleWidget triangle;
     
     protected Date accidentStart;
@@ -69,12 +73,16 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
         developmentGeometry = new AxisGeometryPanel();
         developmentGeometry.setBorder(createTitleBorder(Bundle.LBL_DataFormatVisualPanel_DevelopmentGeometry()));
         developmentGeometry.addPropertyChangeListener(this);
+        developmentGeometry.setEnabled(false);
         gc.gridx = 1;
-        gc.insets = new Insets(0, 0, 5, 0);
         add(developmentGeometry, gc);
         
+        gc.gridx = 2;
+        gc.insets = new Insets(0, 0, 5, 0);
+        add(getSymmetricPanel(), gc);
+        
         gc.anchor = GridBagConstraints.NORTHWEST;
-        gc.gridx = 2; gc.gridy = 0;
+        gc.gridx = 3; gc.gridy = 0;
         gc.weightx=1d;
         gc.fill = GridBagConstraints.HORIZONTAL;
         gc.insets = new Insets(0, 0, 5, 0);
@@ -83,7 +91,7 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
         triangle = new TriangleWidget();
         triangle.setPreferredSize(new Dimension(250, 200));
         gc.gridx = 0; gc.gridy = 1;
-        gc.gridwidth=3;
+        gc.gridwidth=4;
         gc.weightx=1d; gc.weighty=1d;
         gc.fill=GridBagConstraints.BOTH;
         gc.insets = new Insets(0, 0, 0, 0);
@@ -97,7 +105,38 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
         Border inner = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         return BorderFactory.createCompoundBorder(outter, inner);
     }
+    
+    private JPanel getSymmetricPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gc = new java.awt.GridBagConstraints();
+        
+        gc.gridx = 0; gc.gridy = 0;
+        gc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gc.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gc.weightx = 1d;
+        gc.insets = new java.awt.Insets(0, 0, 5, 0);
+        beginDateSymmetric = createCheckBox("Begin:");
+        panel.add(beginDateSymmetric, gc);
+        
+        gc.gridy = 1;
+        periodsSymmetric = createCheckBox("Periods:");
+        panel.add(periodsSymmetric, gc);
+        
+        gc.gridy = 2;
+        gc.insets = new java.awt.Insets(0, 0, 0, 0);
+        monthsSymmetric = createCheckBox("Months:");
+        panel.add(monthsSymmetric, gc);
+        
+        panel.setBorder(createTitleBorder("Symmetry"));
+        return panel;
+    }
 
+    private JCheckBox createCheckBox(String title) {
+        JCheckBox check = new JCheckBox(title, true);
+        check.setHorizontalTextPosition(SwingConstants.LEFT);
+        return check;
+    }
+    
     public void setData(List<Data> datas) {
         triangle.setDatas(datas);
         readDates(datas);
@@ -147,7 +186,7 @@ public class DataFormatVisualPanel extends JPanel implements PropertyChangeListe
         return new TriangleGeometry(aStart, aPeriods, aMonths, dStart, dPeriods, dMonths);
     }
     
-    public DataTable getTable() {
+    public TriangleTable getTable() {
         return triangle.getDataTable();
     }
     

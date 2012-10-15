@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import org.jreserve.data.model.DataCell;
-import org.jreserve.data.model.DataRow;
-import org.jreserve.data.model.DataTable;
+import org.jreserve.data.model.TriangleCell;
+import org.jreserve.data.model.TriangleRow;
+import org.jreserve.data.model.TriangleTable;
 import org.jreserve.localesettings.util.DateRenderer;
 
 /**
@@ -35,10 +35,10 @@ class CalendarYearTriangleModel extends AbstractTriangleModel {
     }
     
     @Override
-    protected DataCell getCellAt(DataRow row, int column) {
+    protected TriangleCell getCellAt(TriangleRow row, int column) {
         Date date = getDevelopmentDate(column);
         for(int i=0, count=row.getCellCount(); i<count; i++) {
-            DataCell cell = row.getCell(i);
+            TriangleCell cell = row.getCell(i);
             if(date.equals(cell.getDevelopmentBegin()))
                 return cell;
         }
@@ -46,7 +46,7 @@ class CalendarYearTriangleModel extends AbstractTriangleModel {
     }
 
     @Override
-    public void setDataTable(DataTable table) {
+    public void setDataTable(TriangleTable table) {
         super.setDataTable(table);
         setDevelopmentPeriods();
         Collections.sort(developmentPeriods);
@@ -60,7 +60,7 @@ class CalendarYearTriangleModel extends AbstractTriangleModel {
             setDevelopmentPeriods(table.getRow(i));
     }
     
-    private void setDevelopmentPeriods(DataRow row) {
+    private void setDevelopmentPeriods(TriangleRow row) {
         for(int i=0, count=row.getCellCount(); i<count; i++) {
             Date date = row.getCell(i).getDevelopmentBegin();
             if(!developmentPeriods.contains(date))

@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogListener;
 import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.project.entities.ChangeLogUtil.ProjectChangeLog;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.ProjectElement;
 import org.openide.util.NbBundle.Messages;
@@ -40,9 +41,9 @@ class ChangeLogTableModel extends AbstractTableModel implements ChangeLogListene
     
     private void loadChanges() {
         Project project = element.getValue();
-        ChangeLogUtil util = ChangeLogUtil.getDefault();
-        allChanges.addAll(util.getValues(project));
-        util.addChangeLogListener(project, this);
+        ProjectChangeLog util = ChangeLogUtil.getDefault(project);
+        allChanges.addAll(util.getChanges());
+        util.addChangeLogListener(this);
     }
     
     void setLogType(ChangeLog.Type type) {
