@@ -21,25 +21,17 @@ public class LayeredTableModel implements TriangleTableModel {
     private List<TriangleTableModel> layers = new ArrayList<TriangleTableModel>();
     
     public LayeredTableModel(TriangleTableModelFactory modelFactory) {
-        this.modelFactory = modelFactory;
+        checkModelFactory(modelFactory);
     }
     
-    @Override
-    public int getRowCount() {
-        if(layers.isEmpty())
-            return 0;
-        return layers.get(0).getRowCount();
-    }
-
-    @Override
-    public int getColumnCount() {
-        if(layers.isEmpty())
-            return 0;
-        return layers.get(0).getColumnCount();
+    private void checkModelFactory(TriangleTableModelFactory modelFactory) {
+        if(modelFactory == null)
+            throw new NullPointerException("TriangleTableModelFactory can not be null!");
+        this.modelFactory = modelFactory;
     }
 
     public void setModelType(TriangleTableModelFactory factory) {
-        this.modelFactory = factory;
+        checkModelFactory(factory);
         List<TriangleTableModel> oldList = new ArrayList<TriangleTableModel>(layers);
         createNewModels(oldList);
         fireChange();
@@ -58,32 +50,17 @@ public class LayeredTableModel implements TriangleTableModel {
     }
     
     @Override
-    public void setTable(TriangleTable table) {
-        setTable(table, 0);
-    }
-    
-    @Override
-    public TriangleTable getTable() {
+    public int getRowCount() {
         if(layers.isEmpty())
-            return null;
-        return layers.get(0).getTable();
+            return 0;
+        return layers.get(0).getRowCount();
     }
-    
-    public void addTable(TriangleTable table) {
-        TriangleTableModel model = modelFactory.createModel(table);
-        layers.add(model);
-        fireChange();
-    }
-    
-    public void setTable(TriangleTable table, int layer) {
-        layers.get(layer).setTable(table);
-        fireChange();
-    } 
-    
-    public void addLayer(TriangleTable table) {
-        TriangleTableModel model = modelFactory.createModel(table);
-        layers.add(model);
-        fireChange();
+
+    @Override
+    public int getColumnCount() {
+        if(layers.isEmpty())
+            return 0;
+        return layers.get(0).getColumnCount();
     }
 
     @Override
@@ -107,7 +84,7 @@ public class LayeredTableModel implements TriangleTableModel {
     
     @Override
     public AbstractCell getCellAt(int row, int column) {
-        for(int l=layers.size(); l>=0; l--) {
+        for(int l=layers.size()-1; l>=0; l--) {
             AbstractCell cell = getCellAt(row, column, l);
             if(isValueCell(cell))
                 return cell;
@@ -118,6 +95,51 @@ public class LayeredTableModel implements TriangleTableModel {
     public AbstractCell getCellAt(int row, int colum, int layer) {
         TriangleTableModel model = layers.get(layer);
         return model.getCellAt(row, colum);
+    }
+    
+    public void addTable(TriangleTable table) {
+        TriangleTableModel model = modelFactory.createModel(table);
+        layers.add(model);
+        fireChange();
+    }
+    
+    @Override
+    public void setTable(TriangleTable table) {
+        setTable(table, 0);
+    }
+    
+    public void setTable(TriangleTable table, int layer) {
+        if(table == null) {
+            removeTable(layer);
+        } else {
+            setTableAt(table, layer);
+        }
+    } 
+    
+    public void removeTable(int layer) {
+        if(layer >= 0 && layer < layers.size()) {
+            layers.remove(layer);
+            fireChange();
+        }
+    }
+    
+    private void setTableAt(TriangleTable table, int layer) {
+        ensureLayerExists(layer);
+        layers.get(layer).setTable(table);
+        fireChange();
+    }
+    
+    private void ensureLayerExists(int layer) {
+        int count = layer - layers.size() + 1;
+        for(int l=0; l<count; l++)
+            layers.add(modelFactory.createModel(new TriangleTable()));
+    }
+    
+    @Override
+    public TriangleTable getTable() {
+        if(layers.isEmpty())
+            return null;
+        return layers.get(0).getTable();
     }
     
     @Override

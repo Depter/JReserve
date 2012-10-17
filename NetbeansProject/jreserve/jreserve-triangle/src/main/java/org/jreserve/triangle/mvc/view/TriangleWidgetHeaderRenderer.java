@@ -1,4 +1,4 @@
-package org.jreserve.triangle.widget;
+package org.jreserve.triangle.mvc.view;
 
 import java.awt.Color;
 import java.awt.Component;

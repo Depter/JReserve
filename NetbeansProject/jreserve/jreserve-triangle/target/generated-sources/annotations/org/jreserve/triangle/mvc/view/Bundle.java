@@ -1,5 +1,5 @@
-package org.jreserve.triangle.widget;
-/** Localizable strings for {@link org.jreserve.triangle.widget}. */
+package org.jreserve.triangle.mvc.view;
+/** Localizable strings for {@link org.jreserve.triangle.mvc.view}. */
 @javax.annotation.Generated(value="org.netbeans.modules.openide.util.NbBundleProcessor")
 class Bundle {
     /**

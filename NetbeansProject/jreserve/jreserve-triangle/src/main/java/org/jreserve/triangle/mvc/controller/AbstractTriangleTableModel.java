@@ -23,12 +23,16 @@ abstract class AbstractTriangleTableModel implements TriangleTableModel {
     protected TriangleTable table;
     
     protected AbstractTriangleTableModel(TriangleTable table) {
+        if(table == null)
+            throw new NullPointerException("TriangleTable can not be null!");
         this.table = table;
         initModel();
     }
 
     @Override
     public void setTable(TriangleTable table) {
+        if(table == null)
+            throw new NullPointerException("TriangleTable can not be null!");
         this.table = table;
         initModel();
         fireChange();

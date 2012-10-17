@@ -121,6 +121,7 @@ public class TriangleLoader implements Runnable {
         DataSource ds = null;
         try {
             ds = new DataSource();
+            ds.open();
             table.setValues(ds.getData(criteria));
         } finally {
             if(ds != null)

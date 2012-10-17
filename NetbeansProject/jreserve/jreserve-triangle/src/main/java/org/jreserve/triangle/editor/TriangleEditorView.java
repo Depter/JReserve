@@ -48,7 +48,7 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
         java.awt.GridBagConstraints gridBagConstraints;
 
         geometry = new org.jreserve.triangle.importutil.GeometrySettingPanel();
-        widget = new org.jreserve.triangle.widget.TriangleWidget();
+        widget = new org.jreserve.triangle.mvc.view.TriangleWidget();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setLayout(new java.awt.GridBagLayout());
@@ -71,7 +71,7 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jreserve.triangle.importutil.GeometrySettingPanel geometry;
-    private org.jreserve.triangle.widget.TriangleWidget widget;
+    private org.jreserve.triangle.mvc.view.TriangleWidget widget;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -130,7 +130,7 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
         TriangleTable table = getTable(loader);
         if(table == null)
             return;
-        widget.addTriangleTable(table);
+        widget.setTable(table, 0);
     }
     
     private TriangleTable getTable(TriangleLoader loader) {

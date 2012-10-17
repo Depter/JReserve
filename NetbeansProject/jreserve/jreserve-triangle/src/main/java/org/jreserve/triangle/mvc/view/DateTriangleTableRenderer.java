@@ -1,4 +1,4 @@
-package org.jreserve.triangle.widget;
+package org.jreserve.triangle.mvc.view;
 
 import java.awt.Component;
 import java.util.Date;
@@ -11,7 +11,7 @@ import org.jreserve.localesettings.util.DateRenderer;
  * @author Peter Decsi
  * @version 1.0
  */
-class DateTriangleTableRenderer implements TableCellRenderer {
+class DateTriangleTableRenderer implements TableCellRenderer, ColumnRenderer {
 
     private TableCellRenderer renderer;
     private DateRenderer dateRenderer = new DateRenderer();
@@ -22,9 +22,15 @@ class DateTriangleTableRenderer implements TableCellRenderer {
     
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        if(value instanceof Date)
-            value = dateRenderer.toString((Date) value);
+        value = getColumnName(value);
         return renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    }
+
+    @Override
+    public String getColumnName(Object value) {
+        if(value instanceof Date)
+            return dateRenderer.toString((Date) value);
+        return ""+value;
     }
 
 }

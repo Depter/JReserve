@@ -16,7 +16,7 @@ public class TriangleTable {
     private int rowCount = 0;
     private int columnCount = 0;
     
-    TriangleTable() {
+    public TriangleTable() {
     }
     
     void addRow(TriangleRow row) {

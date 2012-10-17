@@ -31,15 +31,17 @@ public class DoubleRenderer implements TextRenderer<Double> {
     
     public DoubleRenderer(DecimalFormat format) {
         this.format = format;
+        this.format.setMinimumFractionDigits(format.getMaximumFractionDigits());
         nan = format.getDecimalFormatSymbols().getNaN();
     }
     
-    public int getMaximumFractionDigits() {
+    public int getFractionDigits() {
         return format.getMaximumFractionDigits();
     }
     
-    public void setMaximumFractionDigits(int count) {
+    public void setFractionDigits(int count) {
         format.setMaximumFractionDigits(count);
+        format.setMinimumFractionDigits(count);
     }
     
     @Override

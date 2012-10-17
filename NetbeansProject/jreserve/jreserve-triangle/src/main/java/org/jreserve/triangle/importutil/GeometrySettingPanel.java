@@ -169,7 +169,7 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
         periodsSymmetry.setSelected(true);
         periodsSymmetry.setText(null);
         periodsSymmetry.setMaximumSize(new java.awt.Dimension(91, 18));
-        periodsSymmetry.setMinimumSize(new java.awt.Dimension(0, 18));
+        periodsSymmetry.setMinimumSize(new java.awt.Dimension(18, 18));
         periodsSymmetry.setPreferredSize(new java.awt.Dimension(91, 18));
         periodsSymmetry.addActionListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -182,7 +182,7 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
         monthsSymmetry.setSelected(true);
         monthsSymmetry.setText(null);
         monthsSymmetry.setMaximumSize(new java.awt.Dimension(91, 18));
-        monthsSymmetry.setMinimumSize(new java.awt.Dimension(0, 18));
+        monthsSymmetry.setMinimumSize(new java.awt.Dimension(18, 18));
         monthsSymmetry.setPreferredSize(new java.awt.Dimension(91, 18));
         monthsSymmetry.addActionListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();

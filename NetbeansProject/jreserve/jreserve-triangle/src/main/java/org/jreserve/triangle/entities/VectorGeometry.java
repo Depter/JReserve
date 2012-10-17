@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -13,6 +14,7 @@ import javax.persistence.TemporalType;
  * @version 1.0
  */
 @Embeddable
+@MappedSuperclass
 public class VectorGeometry implements Serializable  {
     private final static long serialVersionUID = 1L;
     

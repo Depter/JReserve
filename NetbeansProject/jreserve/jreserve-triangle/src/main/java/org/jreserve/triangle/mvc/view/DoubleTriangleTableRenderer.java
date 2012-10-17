@@ -1,4 +1,4 @@
-package org.jreserve.triangle.widget;
+package org.jreserve.triangle.mvc.view;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -40,7 +40,7 @@ class DoubleTriangleTableRenderer implements TableCellRenderer {
         return EMPTY_BG;
     }
     
-    public void setMaximumFractionDigits(int count) {
-        valueRenderer.setMaximumFractionDigits(count);
+    public void setFractionDigits(int count) {
+        valueRenderer.setFractionDigits(count);
     }
 }

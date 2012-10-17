@@ -73,7 +73,7 @@ public class DataFormatVisualPanel extends javax.swing.JPanel implements Propert
         this.table = null;
         if(geometry != null)
             createTable();
-        triangle.addTriangleTable(table);
+        triangle.setTable(table, 0);
     }
     
     private void createTable() {
@@ -144,7 +144,7 @@ public class DataFormatVisualPanel extends javax.swing.JPanel implements Propert
 
         geometrySetting = new org.jreserve.triangle.importutil.GeometrySettingPanel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
-        triangle = new org.jreserve.triangle.widget.TriangleWidget();
+        triangle = new org.jreserve.triangle.mvc.view.TriangleWidget();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setLayout(new java.awt.GridBagLayout());
@@ -175,6 +175,6 @@ public class DataFormatVisualPanel extends javax.swing.JPanel implements Propert
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
     protected org.jreserve.triangle.importutil.GeometrySettingPanel geometrySetting;
-    private org.jreserve.triangle.widget.TriangleWidget triangle;
+    private org.jreserve.triangle.mvc.view.TriangleWidget triangle;
     // End of variables declaration//GEN-END:variables
 }

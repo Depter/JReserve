@@ -1,4 +1,4 @@
-package org.jreserve.triangle.widget;
+package org.jreserve.triangle.mvc.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -153,7 +153,9 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         doubleRenderer = new DoubleTriangleTableRenderer(tableModel);
         table.getTableHeader().setDefaultRenderer(new TriangleWidgetHeaderRenderer());
         table.setDefaultRenderer(Double.class, doubleRenderer);
-        table.setDefaultRenderer(Date.class, new DateTriangleTableRenderer(table));
+        DateTriangleTableRenderer dateRenderer = new DateTriangleTableRenderer(table);
+        table.setDefaultRenderer(Date.class, dateRenderer);
+        tableModel.setColumnRenderer(dateRenderer);
         table.setFillsViewportHeight(false);
         table.setIntercellSpacing(INTERNAL_SPACIN);
         table.getModel().addTableModelListener(this);
@@ -196,9 +198,9 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if(command.equals(CUMMULATED_ACTION)) {
-//            tableModel.setCummulated(true);
+            tableModel.setCummulated(true);
         } else if(command.equals(NOT_CUMMULATED_ACTION)) {
-//            tableModel.setCummulated(false);
+            tableModel.setCummulated(false);
         } else if(command.equals(CALENDAR_PERIOD_STRUCTURE_ACTION)) {
             tableModel.setModelType(TriangleTableModel.ModelType.CALENDAR);
         } else if(command.equals(DEVELOPMENT_PERIOD_STRUCTURE_ACTION)) {
@@ -210,8 +212,8 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
     @Override
     public void stateChanged(ChangeEvent e) {
         int value = spinner.getIntValue();
-        doubleRenderer.setMaximumFractionDigits(value);
-        tableModel.fireTableDataChanged();
+        doubleRenderer.setFractionDigits(value);
+        tableModel.fireRowsChanged();
     }
     
 //    public boolean isCummulated() {
@@ -255,7 +257,15 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
     public void componentHidden(ComponentEvent e) {
     }
     
-    public void addTriangleTable(TriangleTable table) {
-        tableModel.addTriangleTable(table);
+    public void addTable(TriangleTable table) {
+        tableModel.addTable(table);
+    }
+    
+    public void setTable(TriangleTable table, int layer) {
+        tableModel.setTable(table, layer);
+    } 
+    
+    public void removeTable(int layer) {
+        tableModel.removeTable(layer);
     }
 }
