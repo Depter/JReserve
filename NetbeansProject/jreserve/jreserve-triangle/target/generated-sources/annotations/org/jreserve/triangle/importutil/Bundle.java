@@ -3,27 +3,6 @@ package org.jreserve.triangle.importutil;
 @javax.annotation.Generated(value="org.netbeans.modules.openide.util.NbBundleProcessor")
 class Bundle {
     /**
-     * @return <i>Accident</i>
-     * @see DataFormatVisualPanel
-     */
-    static String LBL_DataFormatVisualPanel_AccidentGeometry() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataFormatVisualPanel.AccidentGeometry");
-    }
-    /**
-     * @return <i>Development</i>
-     * @see DataFormatVisualPanel
-     */
-    static String LBL_DataFormatVisualPanel_DevelopmentGeometry() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataFormatVisualPanel.DevelopmentGeometry");
-    }
-    /**
-     * @return <i>Geometry</i>
-     * @see DataFormatVisualPanel
-     */
-    static String LBL_DataFormatVisualPanel_PanelName() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataFormatVisualPanel.PanelName");
-    }
-    /**
      * @return <i>There is no data selected!</i>
      * @see DataFormatWizardPanel
      */

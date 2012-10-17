@@ -14,10 +14,11 @@ import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.triangle.VectorProjectElement;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
-import org.jreserve.triangle.importutil.DataFormatVisualPanel2;
+import org.jreserve.triangle.importutil.DataFormatVisualPanel;
 import org.jreserve.triangle.importutil.DataFormatWizardPanel;
 import org.jreserve.triangle.importutil.NameSelectWizardPanel;
 import org.openide.WizardDescriptor;
@@ -44,7 +45,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
     private VectorData vectorData;
     
     @Override
-    protected DataFormatVisualPanel2 createPanel() {
+    protected DataFormatVisualPanel createPanel() {
         return new VisualPanel();
     }
 
@@ -86,7 +87,8 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
             @Override
             public void run() {
                 try {
-                    getContainer().addVector(vector);
+                    VectorProjectElement element = new VectorProjectElement(vector);
+                    getContainer().addElement(element);
                 } catch (RuntimeException ex) {
                     logger.log(Level.SEVERE, "Unable to create element!", ex);
                 }
@@ -136,28 +138,28 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         
     }
     
-    private static class VisualPanel extends DataFormatVisualPanel2 {
+    private static class VisualPanel extends DataFormatVisualPanel {
         
         private Date devFromDate = null;
         
         @Override
         protected void componentsInitialized() {
-            geometry.setSymmetricPeriods(false);
-            geometry.setSymmetricPeriodsEnabled(false);
-            geometry.setSymmetricMonths(false);
-            geometry.setSymmetricMonthsEnabled(false);
-            geometry.setDevelopmentPeriodCount(1);
+            geometrySetting.setSymmetricPeriods(false);
+            geometrySetting.setSymmetricPeriodsEnabled(false);
+            geometrySetting.setSymmetricMonths(false);
+            geometrySetting.setSymmetricMonthsEnabled(false);
+            geometrySetting.setDevelopmentPeriodCount(1);
         }
         
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             super.propertyChange(evt);
             if(developmentFromChanged())
-                geometry.setDevelopmentMonthsPerStep(getDevelopmentMonthCount());
+                geometrySetting.setDevelopmentMonthsPerStep(getDevelopmentMonthCount());
         }
         
         private boolean developmentFromChanged() {
-            Date from = geometry.getDevelopmentStartDate();
+            Date from = geometrySetting.getDevelopmentStartDate();
             if(devFromDate == null)
                 return setNewDevFromDate(from);
             return setDevFromDate(from);

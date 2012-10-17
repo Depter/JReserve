@@ -1,2 +1,3 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/triangle/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager

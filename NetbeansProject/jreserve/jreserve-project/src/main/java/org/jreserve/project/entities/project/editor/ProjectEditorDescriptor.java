@@ -6,6 +6,7 @@ import org.jreserve.project.entities.project.ProjectElement;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
@@ -18,6 +19,7 @@ import org.openide.windows.TopComponent;
 })
 class ProjectEditorDescriptor implements MultiViewDescription, Serializable {
 
+    final static Image IMG = ImageUtilities.loadImage("resources/project.png", false);
     final static String PREFERRED_ID = "panel_1";
     private ProjectElement element;
 
@@ -42,7 +44,7 @@ class ProjectEditorDescriptor implements MultiViewDescription, Serializable {
 
     @Override
     public Image getIcon() {
-        return null;
+        return IMG;
     }
 
     @Override

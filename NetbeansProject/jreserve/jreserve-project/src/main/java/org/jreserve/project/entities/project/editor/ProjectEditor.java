@@ -3,7 +3,6 @@ package org.jreserve.project.entities.project.editor;
 import org.jreserve.project.entities.project.ProjectElement;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
 import org.netbeans.core.spi.multiview.MultiViewFactory;
-import org.openide.util.ImageUtilities;
 import org.openide.windows.TopComponent;
 
 /**
@@ -20,7 +19,6 @@ public class ProjectEditor {
         TopComponent tc = MultiViewFactory.createCloneableMultiView(desc, desc[0]);
         String name = element.getValue().getName();
         tc.setHtmlDisplayName("<html>"+name+"</html>");
-        tc.setIcon(ImageUtilities.loadImage("resources/project.png"));
         return tc;
     }
 }

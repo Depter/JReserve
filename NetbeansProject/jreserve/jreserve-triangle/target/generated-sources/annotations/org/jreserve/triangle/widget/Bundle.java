@@ -4,7 +4,7 @@ package org.jreserve.triangle.widget;
 class Bundle {
     /**
      * @return <i>Periods</i>
-     * @see ImportTableModel
+     * @see TriangleTableModel
      */
     static String LBL_ImportTableModel_Periods() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.ImportTableModel.Periods");

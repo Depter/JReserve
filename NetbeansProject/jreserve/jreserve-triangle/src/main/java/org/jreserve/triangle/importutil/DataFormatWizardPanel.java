@@ -6,8 +6,9 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
-import org.jreserve.data.model.TriangleRow;
-import org.jreserve.data.model.TriangleTable;
+import org.jreserve.triangle.mvc.model.ValueCell;
+import org.jreserve.triangle.mvc.model.TriangleRow;
+import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
@@ -23,7 +24,7 @@ import org.openide.util.NbBundle.Messages;
 public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, ChangeListener {
     
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
-    protected DataFormatVisualPanel2 panel;
+    protected DataFormatVisualPanel panel;
     private boolean isValid = false;
     protected WizardDescriptor wizard;
     
@@ -36,7 +37,7 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
         return panel;
     }
 
-    protected abstract DataFormatVisualPanel2 createPanel();
+    protected abstract DataFormatVisualPanel createPanel();
     
     @Override
     public HelpCtx getHelp() {
@@ -108,7 +109,7 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
     
     private boolean validRow(TriangleRow row) {
         for(int c=0, count=row.getCellCount(); c<count; c++)
-            if(!Double.isNaN(row.getCell(c).getValue()))
+            if(!Double.isNaN(((ValueCell) row.getCell(c)).getValue()))
                 return true;
         return false;
     }

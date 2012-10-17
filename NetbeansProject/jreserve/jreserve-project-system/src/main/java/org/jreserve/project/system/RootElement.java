@@ -80,12 +80,12 @@ public class RootElement extends ProjectElement {
         if(pu == null)
             setChildren(Collections.EMPTY_LIST);
         else
-            loadChildren(pu);
+            loadChildren();
     }
         
-    private void loadChildren(PersistenceUnit pu) {
+    private void loadChildren() {
         addChild(LOADING_CHILD);
-        new RootLoader(this, pu).start();
+        new RootLoader(this).start();
     }
         
     private void loadingFinnished(RootLoader loader) {
@@ -107,7 +107,6 @@ public class RootElement extends ProjectElement {
     private class RootLoader implements Runnable {
         
         private final RootElement rootElement;
-        private final PersistenceUnit pu;
         private Session session;
         private ProgressHandle progress;
         
@@ -115,9 +114,8 @@ public class RootElement extends ProjectElement {
         private List<ProjectElement> elements;
         private Exception ex;
         
-        private RootLoader(RootElement rootElement, PersistenceUnit pu) {
+        private RootLoader(RootElement rootElement) {
             this.rootElement = rootElement;
-            this.pu = pu;
             initialize();
         }
         

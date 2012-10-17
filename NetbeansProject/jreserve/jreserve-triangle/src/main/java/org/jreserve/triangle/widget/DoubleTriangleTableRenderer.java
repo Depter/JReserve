@@ -20,9 +20,9 @@ class DoubleTriangleTableRenderer implements TableCellRenderer {
     
     private TableCellRenderer renderer = new DefaultTableCellRenderer();
     private DoubleRenderer valueRenderer = new DoubleRenderer();
-    private ImportTableModel model;
+    private TriangleTableModel model;
     
-    public DoubleTriangleTableRenderer(ImportTableModel model) {
+    public DoubleTriangleTableRenderer(TriangleTableModel model) {
         this.model = model;
     }
     

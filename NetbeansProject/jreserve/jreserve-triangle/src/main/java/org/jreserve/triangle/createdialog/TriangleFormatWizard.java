@@ -11,9 +11,10 @@ import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.importutil.DataFormatVisualPanel2;
+import org.jreserve.triangle.importutil.DataFormatVisualPanel;
 import org.jreserve.triangle.importutil.DataFormatWizardPanel;
 import org.jreserve.triangle.importutil.NameSelectWizardPanel;
 import org.openide.WizardDescriptor;
@@ -40,7 +41,7 @@ class TriangleFormatWizard extends DataFormatWizardPanel implements WizardDescri
     private TriangleData triangleData;
 
     @Override
-    protected DataFormatVisualPanel2 createPanel() {
+    protected DataFormatVisualPanel createPanel() {
         return new VisualPanel();
     }
 
@@ -82,7 +83,8 @@ class TriangleFormatWizard extends DataFormatWizardPanel implements WizardDescri
             @Override
             public void run() {
                 try {
-                    getContainer().addTriangle(triangle);
+                    TriangleProjectElement element = new TriangleProjectElement(triangle);
+                    getContainer().addElement(element);
                 } catch (RuntimeException ex) {
                     logger.log(Level.SEVERE, "Unable to create element!", ex);
                 }
@@ -128,7 +130,7 @@ class TriangleFormatWizard extends DataFormatWizardPanel implements WizardDescri
         
     }
 
-    private static class VisualPanel extends DataFormatVisualPanel2 {    
+    private static class VisualPanel extends DataFormatVisualPanel {    
     
         
     }

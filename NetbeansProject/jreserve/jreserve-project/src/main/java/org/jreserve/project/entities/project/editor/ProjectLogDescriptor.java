@@ -42,7 +42,7 @@ class ProjectLogDescriptor implements MultiViewDescription, Serializable {
 
     @Override
     public Image getIcon() {
-        return null;
+        return ProjectEditorDescriptor.IMG;
     }
 
     @Override

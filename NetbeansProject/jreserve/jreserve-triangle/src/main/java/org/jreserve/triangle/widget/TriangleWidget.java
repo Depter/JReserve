@@ -9,7 +9,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
@@ -17,10 +16,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
-import org.jreserve.data.Data;
-import org.jreserve.data.model.TriangleTable;
+import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.jreserve.resources.ToolBarToggleButton;
-import org.jreserve.triangle.entities.TriangleGeometry;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
@@ -52,7 +49,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
     private ToolBarToggleButton cummulatedButton;
     private ToolBarToggleButton notCummulatedButton;
     
-    private ImportTableModel tableModel;
+    private TriangleTableModel tableModel;
     private JTable table;
     private JScrollPane scroll;
     
@@ -151,7 +148,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
     }
     
     private JScrollPane getTable() {
-        tableModel = new ImportTableModel();
+        tableModel = new TriangleTableModel();
         table = new JTable(tableModel);
         doubleRenderer = new DoubleTriangleTableRenderer(tableModel);
         table.getTableHeader().setDefaultRenderer(new TriangleWidgetHeaderRenderer());
@@ -179,33 +176,33 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         return toolBar.isVisible();
     }
     
-    public List<Data> getDatas() {
-        return tableModel.getDatas();
-    }
+//    public List<Data> getDatas() {
+//        return tableModel.getDatas();
+//    }
     
-    public void setDatas(List<Data> datas) {
-        tableModel.setDatas(datas);
-    }
+//    public void setDatas(List<Data> datas) {
+//        tableModel.setDatas(datas);
+//    }
     
-    public TriangleTable getDataTable() {
-        return tableModel.getTable();
-    }
+//    public TriangleTable getDataTable() {
+//        return tableModel.getTable();
+//    }
     
-    public void setTriangleGeometry(TriangleGeometry geometry) {
-        tableModel.setGeometry(geometry);
-    }
+//    public void setTriangleGeometry(TriangleGeometry geometry) {
+//        tableModel.setGeometry(geometry);
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if(command.equals(CUMMULATED_ACTION)) {
-            tableModel.setCummulated(true);
+//            tableModel.setCummulated(true);
         } else if(command.equals(NOT_CUMMULATED_ACTION)) {
-            tableModel.setCummulated(false);
+//            tableModel.setCummulated(false);
         } else if(command.equals(CALENDAR_PERIOD_STRUCTURE_ACTION)) {
-            tableModel.setModelType(ImportTableModel.ModelType.CALENDAR);
+            tableModel.setModelType(TriangleTableModel.ModelType.CALENDAR);
         } else if(command.equals(DEVELOPMENT_PERIOD_STRUCTURE_ACTION)) {
-            tableModel.setModelType(ImportTableModel.ModelType.DEVELOPMENT);
+            tableModel.setModelType(TriangleTableModel.ModelType.DEVELOPMENT);
         }
         
     }
@@ -217,14 +214,14 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         tableModel.fireTableDataChanged();
     }
     
-    public boolean isCummulated() {
-        return tableModel.isCummulated();
-    }
-    
-    public void setCummulated(boolean cummulated) {
-        selectCummulatedButton(cummulated);
-        tableModel.setCummulated(cummulated);
-    }
+//    public boolean isCummulated() {
+//        return tableModel.isCummulated();
+//    }
+//    
+//    public void setCummulated(boolean cummulated) {
+//        selectCummulatedButton(cummulated);
+//        tableModel.setCummulated(cummulated);
+//    }
     
     private void selectCummulatedButton(boolean cummulated) {
         cummulatedButton.setSelected(cummulated);
@@ -256,5 +253,9 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
 
     @Override
     public void componentHidden(ComponentEvent e) {
+    }
+    
+    public void addTriangleTable(TriangleTable table) {
+        tableModel.addTriangleTable(table);
     }
 }

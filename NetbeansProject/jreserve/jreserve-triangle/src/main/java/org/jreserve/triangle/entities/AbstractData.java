@@ -1,6 +1,7 @@
 package org.jreserve.triangle.entities;
 
 import javax.persistence.*;
+import org.jreserve.data.ProjectData;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
@@ -15,7 +16,7 @@ import org.jreserve.project.entities.Project;
 @EntityRegistration
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractData extends AbstractPersistentObject {
+public abstract class AbstractData extends AbstractPersistentObject implements ProjectData {
     
     private final static int NAME_SIZE = 64;
     
@@ -57,6 +58,7 @@ public abstract class AbstractData extends AbstractPersistentObject {
         this.name = name;
     }
 
+    @Override
     public Project getProject() {
         return project;
     }
@@ -65,6 +67,7 @@ public abstract class AbstractData extends AbstractPersistentObject {
         return dataType;
     }
 
+    @Override
     public String getName() {
         return name;
     }

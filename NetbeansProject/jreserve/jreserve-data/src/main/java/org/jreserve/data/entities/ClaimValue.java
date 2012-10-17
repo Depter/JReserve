@@ -3,7 +3,6 @@ package org.jreserve.data.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
-import org.hibernate.annotations.Type;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
