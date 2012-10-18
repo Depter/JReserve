@@ -149,7 +149,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
     
     private static class VisualPanel extends DataFormatVisualPanel {
         
-        private Date devFromDate = null;
+        private Calendar calendar = Calendar.getInstance();
         
         @Override
         protected void componentsInitialized() {
@@ -163,40 +163,41 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             super.propertyChange(evt);
-            if(developmentFromChanged())
-                geometrySetting.setDevelopmentMonthsPerStep(getDevelopmentMonthCount());
-        }
-        
-        private boolean developmentFromChanged() {
-            Date from = geometrySetting.getDevelopmentStartDate();
-            if(devFromDate == null)
-                return setNewDevFromDate(from);
-            return setDevFromDate(from);
-        }
-        
-        private boolean setNewDevFromDate(Date from) {
-            if(from == null)
-                return false;
-            devFromDate = from;
-            return true;
-        }
-        
-        private boolean setDevFromDate(Date from) {
-            if(devFromDate.equals(from))
-                return false;
-            devFromDate = from;
-            return true;
+            geometrySetting.setDevelopmentMonthsPerStep(getDevelopmentMonthCount());
         }
         
         private int getDevelopmentMonthCount() {
-            Calendar c = Calendar.getInstance();
-            c.setTime(devFromDate);
-            int count = 1;
-            while(c.getTime().before(developmentEnd)) {
-                c.add(Calendar.MONTH, 1);
-                count++;
-            }
-            return count;
+            if(geometry == null)
+                return 0;
+            Date end = getDevelopmentEnd();
+            Date from = geometry.getDevelopmentStart();
+            if(end==null || from==null)
+                return 0;
+            return getDifference(from, end);
+        }
+        
+        private Date getDevelopmentEnd() {
+            Date start = geometry.getAccidentStart();
+            if(start == null)
+                return null;
+            calendar.setTime(start);
+            int periods = geometry.getAccidentPeriods();
+            int months = geometry.getMonthInAccident();
+            calendar.add(Calendar.MONTH, periods * months);
+            return calendar.getTime();
+        }
+        
+        private int getDifference(Date from, Date end) {
+            int begin = getYearMonth(from);
+            int stop = getYearMonth(end);
+            return stop > begin? stop - begin : 0;
+        }
+        
+        private int getYearMonth(Date date) {
+            calendar.setTime(date);
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            return year * 12 + month;
         }
     }
 }

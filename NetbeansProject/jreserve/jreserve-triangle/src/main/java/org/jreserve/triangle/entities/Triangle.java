@@ -17,6 +17,8 @@ import org.jreserve.project.entities.Project;
 @Entity
 @Table(name="TRIANGLE", schema="JRESERVE")
 public class Triangle extends AbstractData implements Serializable {
+
+    public final static int POSITION = 100;
     
     @Embedded
     private TriangleGeometry geometry;
@@ -41,5 +43,10 @@ public class Triangle extends AbstractData implements Serializable {
     @Override
     public String toString() {
         return String.format("Triangle [%s;]", getName());
+    }
+
+    @Override
+    public int getPosition() {
+        return POSITION;
     }
 }

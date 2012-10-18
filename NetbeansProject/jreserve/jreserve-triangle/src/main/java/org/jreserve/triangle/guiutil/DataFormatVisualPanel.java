@@ -12,6 +12,7 @@ import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.mvc.TriangleTableUtil;
 import org.jreserve.triangle.mvc.model.TriangleTableFactory;
+import org.openide.util.Exceptions;
 
 /**
  *

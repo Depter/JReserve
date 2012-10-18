@@ -26,8 +26,14 @@ public class TriangleCell<V> implements Comparable<TriangleCell> {
         this.row = row;
     }
     
-    public TriangleRow getRow() {
+    public TriangleRow<V> getRow() {
         return row;
+    }
+    
+    public TriangleCell<V> getPreviousCell() {
+        if(row == null)
+            return null;
+        return row.getPreviousCell(this);
     }
     
     public Date getDevelopmentBegin() {

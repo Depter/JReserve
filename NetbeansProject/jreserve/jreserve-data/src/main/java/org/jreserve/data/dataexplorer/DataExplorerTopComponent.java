@@ -6,6 +6,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,6 +20,7 @@ import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.util.DateTableCellRenderer;
 import org.jreserve.data.util.DoubleTableCellRenderer;
+import org.jreserve.data.util.ProjectDataTypeElementComparator;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.ClaimType;
@@ -109,7 +111,13 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     }
     
     private void loadDataTypes() {
-        dataTypeCombo.setElements(element.getChildren(ProjectDataType.class));
+        dataTypeCombo.setElements(getSortedDataTypes());
+    }
+    
+    private List<ProjectElement> getSortedDataTypes() {
+        List<ProjectElement> elements = element.getChildren(ProjectDataType.class);
+        Collections.sort(elements, new ProjectDataTypeElementComparator());
+        return elements;
     }
 
     private void setTableRenderers() {
@@ -421,12 +429,8 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         @Override
         public void childRemoved(ProjectElement child) {
             Object value = child.getValue();
-            if(value instanceof ProjectDataType) {
-                ProjectElement selected = dataTypeCombo.getSelectedItem();
-                List<ProjectElement> dts = element.getChildren(ProjectDataType.class);
-                dataTypeCombo.setElements(dts);
-                dataTypeCombo.setSelectedItem(dts.contains(selected)? selected : null);
-            }
+            if(value instanceof ProjectDataType)
+                reloadDataTypes();
         }
         
         @Override
@@ -438,8 +442,9 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         
         private void reloadDataTypes() {
             ProjectElement selected = dataTypeCombo.getSelectedItem();
-            loadDataTypes();
-            dataTypeCombo.setSelectedItem(selected);
+            List<ProjectElement> dts = getSortedDataTypes();
+            dataTypeCombo.setElements(dts);
+            dataTypeCombo.setSelectedItem(dts.contains(selected)? selected : null);
         }
     }
     

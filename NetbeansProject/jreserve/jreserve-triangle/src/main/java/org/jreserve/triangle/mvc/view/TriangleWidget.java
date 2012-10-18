@@ -16,8 +16,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
-import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.jreserve.resources.ToolBarToggleButton;
+import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
@@ -177,22 +177,6 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
     public boolean getShowsToolbar() {
         return toolBar.isVisible();
     }
-    
-//    public List<Data> getDatas() {
-//        return tableModel.getDatas();
-//    }
-    
-//    public void setDatas(List<Data> datas) {
-//        tableModel.setDatas(datas);
-//    }
-    
-//    public TriangleTable getDataTable() {
-//        return tableModel.getTable();
-//    }
-    
-//    public void setTriangleGeometry(TriangleGeometry geometry) {
-//        tableModel.setGeometry(geometry);
-//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -216,14 +200,14 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         tableModel.fireRowsChanged();
     }
     
-//    public boolean isCummulated() {
-//        return tableModel.isCummulated();
-//    }
-//    
-//    public void setCummulated(boolean cummulated) {
-//        selectCummulatedButton(cummulated);
-//        tableModel.setCummulated(cummulated);
-//    }
+    public boolean isCummulated() {
+        return tableModel.isCummulated();
+    }
+    
+    public void setCummulated(boolean cummulated) {
+        selectCummulatedButton(cummulated);
+        tableModel.setCummulated(cummulated);
+    }
     
     private void selectCummulatedButton(boolean cummulated) {
         cummulatedButton.setSelected(cummulated);

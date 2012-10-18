@@ -8,7 +8,7 @@ import org.jreserve.data.ProjectDataType;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ProjectDataTypeComparator implements Comparator<ProjectDataType> {
+public class ProjectDataTypeComparator implements Comparator<ProjectDataType>  {
 
     @Override
     public int compare(ProjectDataType o1, ProjectDataType o2) {

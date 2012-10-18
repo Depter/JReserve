@@ -6,16 +6,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.jreserve.data.Criteria;
-import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.Query;
 import org.jreserve.persistence.Session;
 import org.jreserve.persistence.SessionFactory;
+import org.jreserve.project.entities.Project;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleCorrection;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.mvc.model.TriangleCell;
-import org.jreserve.triangle.mvc.model.TriangleRow;
 import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.jreserve.triangle.mvc.model.TriangleTableFactory;
 import org.netbeans.api.progress.ProgressHandle;
@@ -38,51 +37,85 @@ public class TriangleLoader implements Runnable {
     
     private final static Logger logger = Logger.getLogger(TriangleLoader.class.getName());
     
-    private ProgressHandle handle;
-    private RequestProcessor.Task task;
+    private final ProgressHandle handle;
+    private final RequestProcessor.Task task;
     
     private final Callback callBack;
-    private String triangleName;
-    private String triangleId;
-    private TriangleGeometry geometry;
+    private Project project;
+    private ProjectDataType dataType;
+    private final TriangleGeometry geometry;
+    private final String triangleId;
+    private final String triangleName;
+    
     private Criteria criteria;
+    
+    private Session session;
     
     private volatile RuntimeException ex;
     private volatile TriangleTable<Double> table;
     
     public TriangleLoader(Triangle triangle, Callback callBack) {
         this.callBack = callBack;
-        task = RequestProcessor.getDefault().create(this);
-        handle = ProgressHandleFactory.createHandle(getCaption(triangle), task);
-        initCriteria(triangle);
-        triangleId = triangle.getId();
+        this.triangleId = triangle.getId();
+        this.project = triangle.getProject();
+        this.dataType = triangle.getDataType();
+        this.geometry = copyGeometry(triangle.getGeometry());
+        this.triangleName = triangle.getName();
+        this.task = RequestProcessor.getDefault().create(this);
+        this.handle = ProgressHandleFactory.createHandle(getCaption(), task);
     }
     
-    private String getCaption(Triangle triangle) {
-        triangleName = triangle.getName();
-        return Bundle.MSG_TriangleLoader_Title(triangleName);
-    }
-    
-    private void initCriteria(Triangle triangle) {
-        criteria = new Criteria(triangle.getProject().getClaimType());
-        criteria.setDataType(triangle.getDataType());
-        setGeometry(triangle);
-    }
-    
-    private void setGeometry(Triangle triangle) {
-        copyGeometry(triangle.getGeometry());
-        setAccidentGeometry();
-        setDevelopmentGeometry();
-    }
-    
-    private void copyGeometry(TriangleGeometry geometry) {
-        Date aFrom = geometry.getAccidentStart();
+    private TriangleGeometry copyGeometry(TriangleGeometry geometry) {
+        Date aStart = geometry.getAccidentStart();
         int aPeriods = geometry.getAccidentPeriods();
         int aMonths = geometry.getMonthInAccident();
-        Date dFrom = geometry.getDevelopmentStart();
+        Date dStart = geometry.getDevelopmentStart();
         int dPeriods = geometry.getDevelopmentPeriods();
         int dMonths = geometry.getMonthInDevelopment();
-        this.geometry = new TriangleGeometry(aFrom, aPeriods, aMonths, dFrom, dPeriods, dMonths);
+        return new TriangleGeometry(aStart, aPeriods, aMonths, dStart, dPeriods, dMonths);
+    }
+    
+    private String getCaption() {
+        return Bundle.MSG_TriangleLoader_Title(triangleName);
+    }
+
+    public void start() {
+        task.schedule(0);
+    }
+    
+    @Override
+    public void run() {
+        handle.start();
+        handle.switchToIndeterminate();
+        try {
+            initSession();
+            initCriteria();
+            createTable();
+        } catch (RuntimeException ex) {
+            this.ex = ex;
+            logger.log(Level.SEVERE, "Unable to load data for triangle: "+triangleName, ex);
+        } finally {
+            closeSession();
+        }
+        handle.finish();
+        callBack();
+    }
+    
+    private void initSession() {
+        session = SessionFactory.createSession();
+        project = (Project) session.merge(project);
+        dataType = (ProjectDataType) session.merge(dataType);
+    }
+    
+    private void initCriteria() {
+        criteria = new Criteria(project.getClaimType());
+        criteria.setDataType(dataType);
+        //setGeometry();
+    }
+    
+    private void setGeometry() {
+        setAccidentGeometry();
+        setDevelopmentGeometry();
     }
     
     private void setAccidentGeometry() {
@@ -102,24 +135,6 @@ public class TriangleLoader implements Runnable {
         criteria.setFromDevelopmentDate(from);
         criteria.setToDevelopmentDate(end);
     }
-
-    public void start() {
-        task.schedule(0);
-    }
-    
-    @Override
-    public void run() {
-        handle.start();
-        handle.switchToIndeterminate();
-        try {
-            createTable();
-        } catch (RuntimeException ex) {
-            this.ex = ex;
-            logger.log(Level.SEVERE, "Unable to load data for triangle: "+triangleName, ex);
-        }
-        handle.finish();
-        callBack();
-    }
     
     private void createTable() {
         TriangleTableFactory<Double> factory = new TriangleTableFactory<Double>(geometry);
@@ -129,35 +144,21 @@ public class TriangleLoader implements Runnable {
     }
     
     private void loadData() {
-        DataSource ds = null;
-        try {
-            ds = new DataSource();
-            ds.open();
-            TriangleTableUtil.setValues(table, ds.getClaimData(criteria));
-        } finally {
-            if(ds != null)
-                ds.rollBack();
-        }
+        DataSource ds = new DataSource(session);
+        TriangleTableUtil.setValues(table, ds.getClaimData(criteria));
     }
     
     private void loadUtilityData() {
-        Session session = null;
-        try {
-            session = SessionFactory.beginTransaction();
-            loadCorrections(session);
-            //TODO load comments
-        } finally {
-            if(session != null)
-                session.close();
-        }
+        loadCorrections();
+        //TODO load comments
     }
     
-    private void loadCorrections(Session session) {
-        List<TriangleCorrection> corrections = query(CORRECTION_QUERY, session);
+    private void loadCorrections() {
+        List<TriangleCorrection> corrections = query(CORRECTION_QUERY);
         
     }
     
-    private List query(String sql, Session session) {
+    private List query(String sql) {
         Query query = session.createQuery(sql);
         query.setParameter("triangleId", triangleId);
         return query.getResultList();
@@ -184,6 +185,13 @@ public class TriangleLoader implements Runnable {
     public void cancel() {
         if(!task.isFinished())
             task.cancel();
+    }
+    
+    private void closeSession() {
+        if(session == null)
+            return;
+        session.close();
+        session = null;
     }
     
     public static interface Callback {

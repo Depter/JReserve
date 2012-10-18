@@ -17,6 +17,8 @@ import org.jreserve.project.entities.Project;
 @Entity
 @Table(name="VECTOR", schema="JRESERVE")
 public class Vector extends AbstractData implements Serializable {
+
+    public final static int POSITION = 200;
     
     @Embedded
     private VectorGeometry geometry;
@@ -41,5 +43,10 @@ public class Vector extends AbstractData implements Serializable {
     @Override
     public String toString() {
         return String.format("Vector [%s]", getName());
+    }
+
+    @Override
+    public int getPosition() {
+        return POSITION;
     }
 }

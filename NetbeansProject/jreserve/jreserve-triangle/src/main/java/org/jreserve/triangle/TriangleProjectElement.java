@@ -26,8 +26,6 @@ import org.openide.windows.TopComponent;
     "LOG.TriangleProjectElement.Deleted=Triangle \"{0}\" deleted."
 })
 public class TriangleProjectElement extends ProjectElement<Triangle> {
-
-    public final static int POSITION = 100;
     
     public TriangleProjectElement(Triangle triangle) {
         super(triangle);
@@ -43,7 +41,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     
     @Override
     public int getPosition() {
-        return POSITION;
+        return Triangle.POSITION;
     }
     
     private class TriangleDeletable extends PersistentDeletable {

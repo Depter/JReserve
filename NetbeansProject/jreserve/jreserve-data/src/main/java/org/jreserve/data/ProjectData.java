@@ -13,4 +13,6 @@ public interface ProjectData {
     
     public Project getProject();
     
+    public int getPosition();
+    
 }

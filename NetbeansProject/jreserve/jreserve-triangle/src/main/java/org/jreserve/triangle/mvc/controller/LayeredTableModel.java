@@ -74,14 +74,16 @@ public class LayeredTableModel<V> implements TriangleTableModel<V> {
 
     @Override
     public boolean hasCellAt(int row, int column) {
-        return getCellAt(row, column) != null;
+        if(layers.isEmpty())
+            return false;
+        return layers.get(0).hasCellAt(row, column);
     }
     
     @Override
     public TriangleCell<V> getCellAt(int row, int column) {
         for(int l=layers.size()-1; l>=0; l--) {
             TriangleCell<V> cell = getCellAt(row, column, l);
-            if(cell.getValue() != null)
+            if(cell != null && cell.getValue() != null)
                 return cell;
         }
         return null;

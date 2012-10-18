@@ -44,12 +44,14 @@ class TriangleTableModel implements TableModel, ChangeListener {
     
     @Override
     public int getRowCount() {
-        return model.getRowCount();
+        int v = model.getRowCount();
+        return v;
     }
 
     @Override
     public int getColumnCount() {
-        return model.getColumnCount() + 1;
+        int v = model.getColumnCount() + 1;
+        return v;
     }
 
     @Override
@@ -71,10 +73,34 @@ class TriangleTableModel implements TableModel, ChangeListener {
         if(column == 0)
             return model.getRowTitle(row);
         TriangleCell<Double> cell = model.getCellAt(row, column-1);
-        return cell==null? null : cell.getValue();
+        return getCellValue(cell);
     }
     
-    public boolean hasValueAt(int row, int column) {
+    private Double getCellValue(TriangleCell<Double> cell) {
+        if(cell == null)
+            return null;
+        return isCummulated? getCummulatedCellValue(cell) : cell.getValue();
+    }
+    
+    private Double getCummulatedCellValue(TriangleCell<Double> cell) {
+        Double value = null;
+        while(cell != null) {
+            Double v = cell.getValue();
+            if(value == null)
+                value = v;
+            if(v == null)
+                return value;
+            double d = v;
+            if(Double.isNaN(d))
+                return value;
+            value += d;
+            
+            cell = cell.getPreviousCell();
+        }
+        return value;
+    }
+    
+    public boolean hasCellAt(int row, int column) {
         if(column == 0)
             return true;
         return model.hasCellAt(row, column-1);
@@ -130,6 +156,10 @@ class TriangleTableModel implements TableModel, ChangeListener {
             this.isCummulated = cummulated;
             fireRowsChanged();
         }
+    }
+    
+    public boolean isCummulated() {
+        return isCummulated;
     }
     
     protected void fireRowsChanged() {

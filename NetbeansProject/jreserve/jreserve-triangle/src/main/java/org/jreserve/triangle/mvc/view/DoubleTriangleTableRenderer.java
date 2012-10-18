@@ -17,7 +17,7 @@ class DoubleTriangleTableRenderer implements TableCellRenderer {
 
     private final static Color VALUE_BG = UIManager.getColor("Table.background");
     private final static Color EMPTY_BG = UIManager.getColor("Panel.background");
-    
+
     private TableCellRenderer renderer = new DefaultTableCellRenderer();
     private DoubleRenderer valueRenderer = new DoubleRenderer();
     private TriangleTableModel model;
@@ -28,16 +28,18 @@ class DoubleTriangleTableRenderer implements TableCellRenderer {
     
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        String str = valueRenderer.toString((Double) value);
+        boolean hasBackground = model.hasCellAt(row, column);
+        String str = hasBackground? getStringValue(value) : null;
         Component c = renderer.getTableCellRendererComponent(table, str, false, hasFocus, row, column);
-        c.setBackground(getBackground(row, column));
+        c.setBackground(hasBackground? VALUE_BG : EMPTY_BG);
         return c;
     }
     
-    private Color getBackground(int row, int column) {
-        if(model.hasValueAt(row, column))
-            return VALUE_BG;
-        return EMPTY_BG;
+    private String getStringValue(Object value) {
+        if(value instanceof Double)
+            return valueRenderer.toString((Double) value);
+        Double d = Double.NaN;
+        return valueRenderer.toString(d);
     }
     
     public void setFractionDigits(int count) {

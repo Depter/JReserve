@@ -19,8 +19,6 @@ import org.openide.util.NbBundle.Messages;
     "LOG.VectorProjectElement.Deleted=Vector \"{0}\" deleted."
 })
 public class VectorProjectElement extends ProjectElement<Vector> {
-
-    public final static int POSITION = 200;
     
     public VectorProjectElement(Vector vector) {
         super(vector);
@@ -35,7 +33,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
     
     @Override
     public int getPosition() {
-        return POSITION;
+        return Vector.POSITION;
     }
 
     

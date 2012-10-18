@@ -15,6 +15,13 @@ public class DataSource {
     
     private Session session;
     
+    public DataSource() {
+    }
+    
+    public DataSource(Session session) {
+        this.session = session;
+    }
+    
     /**
      * Opens the datasource. Before executing any works, this method should be called
      */
