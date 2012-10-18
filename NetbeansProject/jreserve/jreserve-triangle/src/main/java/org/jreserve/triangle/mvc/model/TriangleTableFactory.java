@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import org.jreserve.data.Data;
 import org.jreserve.triangle.entities.TriangleGeometry;
 
 /**
@@ -12,7 +11,7 @@ import org.jreserve.triangle.entities.TriangleGeometry;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleTableFactory {
+public class TriangleTableFactory<V> {
     
     private Date accidentStart;
     private int accidentPeriods;
@@ -23,12 +22,24 @@ public class TriangleTableFactory {
     private int developmentMonths;
     
     private Calendar calendar = Calendar.getInstance();
-    private TriangleTable table = new TriangleTable();
-    private boolean built = false;
+    private TriangleTable<V> table;
+    private CellFactory<V> cellFactory;
     
     public TriangleTableFactory(TriangleGeometry geometry) {
+        this(geometry, new TriangleCellFactory<V>());
+    }
+    
+    public TriangleTableFactory(TriangleGeometry geometry, CellFactory<V> cellFactory) {
         setAccident(geometry);
         setDevelopment(geometry);
+        setCellFactory(cellFactory);
+    }
+    
+    private void setCellFactory(CellFactory<V> cellFactory) {
+        if(cellFactory == null)
+            throw new NullPointerException("CellFactory can not be null!");
+        this.cellFactory = cellFactory;
+        
     }
     
     private void setAccident(TriangleGeometry geometry) {
@@ -43,15 +54,12 @@ public class TriangleTableFactory {
         this.developmentMonths = geometry.getMonthInDevelopment();
     }
     
-    public TriangleTable buildTable() {
-        checkState();
+    public TriangleTable<V> buildTable() {
+        table = new TriangleTable<V>();
         buildRows();
-        return table;
-    }
-    
-    private void checkState() {
-        if(built)
-            throw new IllegalStateException("Data already built!");
+        TriangleTable result = table;
+        table = null;
+        return result;
     }
     
     private void buildRows() {
@@ -77,19 +85,19 @@ public class TriangleTableFactory {
     }
     
     private void buildRow(List<DataCellDummy> dummies) {
-        TriangleRow row = createRow();
+        TriangleRow<V> row = createRow();
         buildColumns(row, dummies);
         table.addRow(row);
     }
     
-    private TriangleRow createRow() {
+    private TriangleRow<V> createRow() {
         Date rowStart = calendar.getTime();
         calendar.add(Calendar.MONTH, accidentMonths);
         Date rowEnd = calendar.getTime();
-        return new TriangleRow(rowStart, rowEnd);
+        return new TriangleRow<V>(rowStart, rowEnd);
     }
     
-    private void buildColumns(TriangleRow row, List<DataCellDummy> dummies) {
+    private void buildColumns(TriangleRow<V> row, List<DataCellDummy> dummies) {
         for(DataCellDummy dummy : dummies)
             if(containsDummy(row, dummy))
                 addCell(row, dummy);
@@ -103,7 +111,8 @@ public class TriangleTableFactory {
     
     private void addCell(TriangleRow row, DataCellDummy dummy) {
         Date start = dummy.start;
-        row.addCell(new ValueCell(start, dummy.end));
+        Date end = dummy.end;
+        row.addCell(cellFactory.createCell(start, end));
     }
     
     private static class DataCellDummy {
@@ -115,8 +124,4 @@ public class TriangleTableFactory {
             this.end = end;
         }
     }
-//    
-//    public void setValues(List<Data> datas) {
-//        table.setValues(datas);
-//    }
 }

@@ -16,15 +16,15 @@ import org.openide.windows.TopComponent;
  * @version 1.0
  */
 @Messages({
-    "LBL.TriangleEditorDescriptor.title=Data"
+    "LBL.TriangleEditorDescriptor.Title=Triangle"
 })
 class TriangleEditorDescriptor implements MultiViewDescription, Serializable {
     
-    private final static Image IMG = ImageUtilities.loadImage("resources/triangle.png", false);
-    
-    private final static String PREFERRED_ID = "panel_1";
-    private TriangleProjectElement element;
+    private final static String PREFERRED_ID = "TriangleEditorDescriptor";
+    final static Image IMG = ImageUtilities.loadImage("resources/triangle.png", false);
 
+    private TriangleProjectElement element;
+    
     TriangleEditorDescriptor(TriangleProjectElement element) {
         this.element = element;
     }
@@ -36,7 +36,7 @@ class TriangleEditorDescriptor implements MultiViewDescription, Serializable {
 
     @Override
     public String getDisplayName() {
-        return Bundle.LBL_TriangleEditorDescriptor_title();
+        return Bundle.LBL_TriangleEditorDescriptor_Title();
     }
 
     @Override
@@ -58,4 +58,5 @@ class TriangleEditorDescriptor implements MultiViewDescription, Serializable {
     public MultiViewElement createElement() {
         return new TriangleEditorView(element);
     }
+
 }

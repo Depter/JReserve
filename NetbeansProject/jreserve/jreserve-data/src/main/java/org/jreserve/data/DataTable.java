@@ -11,7 +11,7 @@ import org.jreserve.project.entities.ClaimType;
 public class DataTable {
 
     private ProjectDataType dataType;
-    private Map<Date, TreeSet<Data>> datas = new TreeMap<Date, TreeSet<Data>>();
+    private Map<Date, TreeSet<Data<Double>>> datas = new TreeMap<Date, TreeSet<Data<Double>>>();
     private Date firstAccidentDate;
     private Date lastAccidentDate;
     
@@ -31,22 +31,22 @@ public class DataTable {
         return new ArrayList<Date>(datas.keySet());
     }
     
-    public List<Data> getDatas(Date accidentDate) {
-        Set<Data> data = datas.get(accidentDate);
+    public List<Data<Double>> getDatas(Date accidentDate) {
+        Set<Data<Double>> data = datas.get(accidentDate);
         if(data == null)
             data = Collections.EMPTY_SET;
-        return new ArrayList<Data>(data);
+        return new ArrayList<Data<Double>>(data);
     }
     
-    public Data getData(Date accidentDate, Date developmentDate) {
-        Set<Data> data = datas.get(accidentDate);
+    public Data<Double> getData(Date accidentDate, Date developmentDate) {
+        Set<Data<Double>> data = datas.get(accidentDate);
         if(data == null)
             return null;
         return getData(developmentDate, data);
     }
     
-    private Data getData(Date developmentDate, Set<Data> data) {
-        for(Data d : data)
+    private Data<Double> getData(Date developmentDate, Set<Data<Double>> data) {
+        for(Data<Double> d : data)
             if(d.getDevelopmentDate().equals(developmentDate))
                 return d;
         return null;
@@ -60,33 +60,33 @@ public class DataTable {
         return lastAccidentDate;
     }
     
-    public void addData(Data data) {
+    public void addData(Data<Double> data) {
         setDates(data);
-        Set<Data> aData = getCachedDatas(data.getAccidentDate());
+        Set<Data<Double>> aData = getCachedDatas(data.getAccidentDate());
         aData.add(data);
     }
     
-    private void setDates(Data data) {
+    private void setDates(Data<Double> data) {
         setFirstAccidentDate(data);
         setLastAccidentDate(data);
     }
     
-    private void setFirstAccidentDate(Data data) {
+    private void setFirstAccidentDate(Data<Double> data) {
         Date date = data.getAccidentDate();
         if(firstAccidentDate==null || firstAccidentDate.after(date))
             firstAccidentDate = date;
     }
     
-    private void setLastAccidentDate(Data data) {
+    private void setLastAccidentDate(Data<Double> data) {
         Date date = data.getAccidentDate();
         if(lastAccidentDate==null || lastAccidentDate.before(date))
             lastAccidentDate = date;
     }
     
-    private TreeSet<Data> getCachedDatas(Date accidentDate) {
-        TreeSet<Data> data = datas.get(accidentDate);
+    private TreeSet<Data<Double>> getCachedDatas(Date accidentDate) {
+        TreeSet<Data<Double>> data = datas.get(accidentDate);
         if(data == null) {
-            data = new TreeSet<Data>();
+            data = new TreeSet<Data<Double>>();
             datas.put(accidentDate, data);
         }
         return data;
@@ -94,7 +94,7 @@ public class DataTable {
     
     public int getDataCount() {
         int count = 0;
-        for(Set<Data> set : datas.values())
+        for(Set<Data<Double>> set : datas.values())
             count += set.size();
         return count;
     }
@@ -104,9 +104,9 @@ public class DataTable {
             cummulate(datas.get(accident));
     }
     
-    private void cummulate(Set<Data> dataSet) {
+    private void cummulate(Set<Data<Double>> dataSet) {
         double sum = 0d;
-        for(Data data : dataSet) {
+        for(Data<Double> data : dataSet) {
             sum += data.getValue();
             data.setValue(sum);
         }
@@ -117,10 +117,10 @@ public class DataTable {
             deCummulate(datas.get(accident));
     }
     
-    private void deCummulate(TreeSet<Data> dataSet) {
-        Data prev = null;
-        for(Iterator<Data> it = dataSet.descendingIterator(); it.hasNext();) {
-            Data current = it.next();
+    private void deCummulate(TreeSet<Data<Double>> dataSet) {
+        Data<Double> prev = null;
+        for(Iterator<Data<Double>> it = dataSet.descendingIterator(); it.hasNext();) {
+            Data<Double> current = it.next();
             if(prev != null)
                 prev.setValue(prev.getValue()-current.getValue());
             prev = current;

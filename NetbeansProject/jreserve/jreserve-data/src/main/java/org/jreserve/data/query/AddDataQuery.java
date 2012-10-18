@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.jreserve.data.Data;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.data.entities.ClaimValuePk;
-import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ClaimType;
 
@@ -24,15 +24,15 @@ public class AddDataQuery {
     public AddDataQuery() {
     }
     
-    public void add(Session session, List<Data> datas) {
-        for(Data data : datas) {
+    public void add(Session session, List<Data<Double>> datas) {
+        for(Data<Double> data : datas) {
             loadPersistence(session, data);
             add(session, data);
         }
         clearPersistence();
     }
     
-    private void loadPersistence(Session session, Data data) {
+    private void loadPersistence(Session session, Data<Double> data) {
         ProjectDataType dataType = data.getDataType();
         ClaimType claimType = dataType.getClaimType();
         loadPersistentClaimType(session, claimType);
@@ -51,7 +51,7 @@ public class AddDataQuery {
             dataTypes.put(id, session.find(ProjectDataType.class, id));
     }
     
-    private void add(Session session, Data data) {
+    private void add(Session session, Data<Double> data) {
         boolean update = true;
         ClaimValue cv = getPersistedClaimValue(session, data);
         if(cv == null) {

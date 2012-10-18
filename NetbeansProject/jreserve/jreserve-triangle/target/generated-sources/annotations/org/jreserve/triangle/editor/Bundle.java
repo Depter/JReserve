@@ -4,10 +4,17 @@ package org.jreserve.triangle.editor;
 class Bundle {
     /**
      * @return <i>Data</i>
+     * @see TriangleDataEditorDescriptor
+     */
+    static String LBL_TriangleDataEditorDescriptor_title() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.TriangleDataEditorDescriptor.title");
+    }
+    /**
+     * @return <i>Triangle</i>
      * @see TriangleEditorDescriptor
      */
-    static String LBL_TriangleEditorDescriptor_title() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.TriangleEditorDescriptor.title");
+    static String LBL_TriangleEditorDescriptor_Title() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.TriangleEditorDescriptor.Title");
     }
     private void Bundle() {}
 }

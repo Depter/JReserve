@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.triangle.mvc.model.AbstractCell;
+import org.jreserve.triangle.mvc.model.TriangleCell;
 import org.jreserve.triangle.mvc.model.TriangleRow;
 import org.jreserve.triangle.mvc.model.TriangleTable;
 
@@ -15,14 +15,14 @@ import org.jreserve.triangle.mvc.model.TriangleTable;
  * @author Peter Decsi
  * @version 1.0
  */
-abstract class AbstractTriangleTableModel implements TriangleTableModel {
+abstract class AbstractTriangleTableModel<V> implements TriangleTableModel<V> {
 
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     protected List<Date> accidentDates = new ArrayList<Date>();
     protected List<Date> developmentDates = new ArrayList<Date>();
-    protected TriangleTable table;
+    protected TriangleTable<V> table;
     
-    protected AbstractTriangleTableModel(TriangleTable table) {
+    protected AbstractTriangleTableModel(TriangleTable<V> table) {
         if(table == null)
             throw new NullPointerException("TriangleTable can not be null!");
         this.table = table;
@@ -30,7 +30,7 @@ abstract class AbstractTriangleTableModel implements TriangleTableModel {
     }
 
     @Override
-    public void setTable(TriangleTable table) {
+    public void setTable(TriangleTable<V> table) {
         if(table == null)
             throw new NullPointerException("TriangleTable can not be null!");
         this.table = table;
@@ -39,7 +39,7 @@ abstract class AbstractTriangleTableModel implements TriangleTableModel {
     }
     
     @Override
-    public TriangleTable getTable() {
+    public TriangleTable<V> getTable() {
         return table;
     }
     
@@ -66,7 +66,7 @@ abstract class AbstractTriangleTableModel implements TriangleTableModel {
             queryCell(row.getCell(c));
     }
     
-    private void queryCell(AbstractCell cell) {
+    private void queryCell(TriangleCell cell) {
         Date date = cell.getDevelopmentBegin();
         if(!developmentDates.contains(date))
             developmentDates.add(date);
@@ -105,7 +105,17 @@ abstract class AbstractTriangleTableModel implements TriangleTableModel {
     }
     
     @Override
-    public boolean hasValueAt(int row, int column) {
+    public boolean hasCellAt(int row, int column) {
         return getCellAt(row, column) != null;
+    }
+
+    @Override
+    public Object getRowTitle(int row) {
+        return Integer.valueOf(row + 1);
+    }
+
+    @Override
+    public Object getColumnTitle(int column) {
+        return Integer.valueOf(column+1);
     }
 }

@@ -31,6 +31,9 @@ public abstract class AbstractData extends AbstractPersistentObject implements P
     @Column(name="NAME", nullable=false, length=64)
     private String name;
     
+    @Column(name="DESCRIPTION")
+    private String description;
+    
     protected AbstractData() {
     }
     
@@ -74,5 +77,13 @@ public abstract class AbstractData extends AbstractPersistentObject implements P
     
     public void setName(String name) {
         initName(name);
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

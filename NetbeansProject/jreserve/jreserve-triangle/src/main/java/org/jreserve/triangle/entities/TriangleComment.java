@@ -89,12 +89,6 @@ public class TriangleComment extends AbstractPersistentObject {
         return triangle;
     }
     
-    void setTriangle(Triangle triangle) {
-        if(this.triangle != null)
-            this.triangle.removeComment(this);
-        this.triangle = triangle;
-    }
-    
     public String getUserName() {
         return userName;
     }

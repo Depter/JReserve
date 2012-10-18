@@ -5,36 +5,29 @@ import javax.swing.JComponent;
 import javax.swing.JToolBar;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
-import org.jreserve.triangle.model.TriangleLoader;
-import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
 
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleEditorView extends javax.swing.JPanel implements MultiViewElement, TriangleLoader.Callback {
+public class TriangleEditorView extends javax.swing.JPanel implements MultiViewElement {
 
     private MultiViewElementCallback callBack;
-    private JToolBar toolBar = new JToolBar();
     private TriangleProjectElement element;
-    private TriangleLoader loader;
+    private Triangle triangle;
+    private JToolBar toolBar = new JToolBar();
     
-    TriangleEditorView(TriangleProjectElement element) {
+    public TriangleEditorView(TriangleProjectElement element) {
         this.element = element;
+        this.triangle = element.getValue();
         initComponents();
-        loadData();
-    }
-    
-    private void loadData() {
-        Triangle triangle = element.getValue();
-        loader = new TriangleLoader(triangle, this);
-        loader.start();
     }
 
     /**
@@ -47,31 +40,86 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        geometry = new org.jreserve.triangle.importutil.GeometrySettingPanel();
-        widget = new org.jreserve.triangle.mvc.view.TriangleWidget();
+        pathLabel = new javax.swing.JLabel();
+        pathText = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
+        nameText = new javax.swing.JTextField();
+        descriptionLabel = new javax.swing.JLabel();
+        descriptionScroll = new javax.swing.JScrollPane();
+        descriptionText = new javax.swing.JTextArea();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setLayout(new java.awt.GridBagLayout());
+
+        pathLabel.setText(org.openide.util.NbBundle.getMessage(TriangleEditorView.class, "LBL.TriangleEditorView.Path")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        add(geometry, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        add(pathLabel, gridBagConstraints);
+
+        pathText.setText(element.getNamePath());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        add(pathText, gridBagConstraints);
+
+        nameLabel.setText(org.openide.util.NbBundle.getMessage(TriangleEditorView.class, "LBL.TriangleEditorView.Name")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 15, 5);
+        add(nameLabel, gridBagConstraints);
+
+        nameText.setColumns(64);
+        nameText.setText(triangle.getName());
+        nameText.setPreferredSize(new java.awt.Dimension(200, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 15, 5);
+        add(nameText, gridBagConstraints);
+
+        descriptionLabel.setText(org.openide.util.NbBundle.getMessage(TriangleEditorView.class, "LBL.TriangleEditorView.Description")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        add(descriptionLabel, gridBagConstraints);
+
+        descriptionText.setColumns(20);
+        descriptionText.setRows(5);
+        descriptionText.setText(triangle.getDescription());
+        descriptionScroll.setViewportView(descriptionText);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        add(widget, gridBagConstraints);
+        add(descriptionScroll, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.jreserve.triangle.importutil.GeometrySettingPanel geometry;
-    private org.jreserve.triangle.mvc.view.TriangleWidget widget;
+    private javax.swing.JLabel descriptionLabel;
+    private javax.swing.JScrollPane descriptionScroll;
+    private javax.swing.JTextArea descriptionText;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField nameText;
+    private javax.swing.JLabel pathLabel;
+    private javax.swing.JLabel pathText;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -95,16 +143,9 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     public Lookup getLookup() {
         return element.getLookup();
     }
-    
-    @Override 
-    public void componentClosed() {
-        if(loader != null) {
-            loader.cancel();
-            loader = null;
-        }
-    }
 
     @Override public void componentOpened() {}
+    @Override public void componentClosed() {}
     @Override public void componentShowing() {}
     @Override public void componentHidden() {}
     @Override public void componentActivated() {}
@@ -123,22 +164,5 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     @Override
     public CloseOperationState canCloseElement() {
         return CloseOperationState.STATE_OK;
-    }
-
-    @Override
-    public void finnished(TriangleLoader loader) {
-        TriangleTable table = getTable(loader);
-        if(table == null)
-            return;
-        widget.setTable(table, 0);
-    }
-    
-    private TriangleTable getTable(TriangleLoader loader) {
-        try {
-            return loader.getResult();
-        } catch (RuntimeException ex) {
-            //TODO show error
-            return null;
-        }
     }
 }

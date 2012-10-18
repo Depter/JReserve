@@ -3,6 +3,7 @@ package org.jreserve.dataimport.clipboardtable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -204,10 +205,10 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     
     private Data getData(DataDummy dummy, ProjectDataType dt, DateFormat df, DoubleParser dp) {
         try {
-            return new Data().setDataType(dt)
-                 .setAccidentDate(df.parse(dummy.getAccident()))
-                .setDevelopmentDate(df.parse(dummy.getDevelopment()))
-                .setValue(dp.parse(dummy.getValue()));
+            Date accident = df.parse(dummy.getAccident());
+            Date development = df.parse(dummy.getDevelopment());
+            double value = dp.parse(dummy.getValue());
+            return new Data(dt, accident, development, value);
         } catch (ParseException ex) {
             Exceptions.printStackTrace(ex);
             return null;

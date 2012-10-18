@@ -53,12 +53,6 @@ public class VectorCorrection implements Serializable {
     public Vector getVector() {
         return vector;
     }
-    
-    void setVector(Vector vector) {
-        if(this.vector != null)
-            this.vector.removeCorrection(this);
-        this.vector = vector;
-    }
 
     public Date getAccidentDate() {
         return accidentDate;

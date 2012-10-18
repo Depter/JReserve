@@ -76,12 +76,6 @@ public class TriangleCorrection implements Serializable {
     public Triangle getTriangle() {
         return triangle;
     }
-    
-    void setTriangle(Triangle triangle) {
-        if(this.triangle != null)
-            this.triangle.removeCorrection(this);
-        this.triangle = triangle;
-    }
 
     public Date getAccidentDate() {
         return accidentDate;

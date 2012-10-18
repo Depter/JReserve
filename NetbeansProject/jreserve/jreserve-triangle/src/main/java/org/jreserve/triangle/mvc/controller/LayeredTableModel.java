@@ -4,21 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.triangle.mvc.model.AbstractCell;
+import org.jreserve.triangle.mvc.model.TriangleCell;
 import org.jreserve.triangle.mvc.model.TriangleTable;
-import org.jreserve.triangle.mvc.model.ValueCell;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class LayeredTableModel implements TriangleTableModel {
+public class LayeredTableModel<V> implements TriangleTableModel<V> {
 
     private TriangleTableModelFactory modelFactory;
     
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
-    private List<TriangleTableModel> layers = new ArrayList<TriangleTableModel>();
+    private List<TriangleTableModel<V>> layers = new ArrayList<TriangleTableModel<V>>();
     
     public LayeredTableModel(TriangleTableModelFactory modelFactory) {
         checkModelFactory(modelFactory);
@@ -32,20 +31,20 @@ public class LayeredTableModel implements TriangleTableModel {
 
     public void setModelType(TriangleTableModelFactory factory) {
         checkModelFactory(factory);
-        List<TriangleTableModel> oldList = new ArrayList<TriangleTableModel>(layers);
+        List<TriangleTableModel<V>> oldList = new ArrayList<TriangleTableModel<V>>(layers);
         createNewModels(oldList);
         fireChange();
     }
     
-    private void createNewModels(List<TriangleTableModel> oldList) {
+    private void createNewModels(List<TriangleTableModel<V>> oldList) {
         layers.clear();
-        for(TriangleTableModel oldModel : oldList)
+        for(TriangleTableModel<V> oldModel : oldList)
             createNewModel(oldModel);
     }
     
-    private void createNewModel(TriangleTableModel oldModel) {
-        TriangleTable table = oldModel.getTable();
-        TriangleTableModel model = modelFactory.createModel(table);
+    private void createNewModel(TriangleTableModel<V> oldModel) {
+        TriangleTable<V> table = oldModel.getTable();
+        TriangleTableModel<V> model = modelFactory.createModel(table);
         layers.add(model);
     }
     
@@ -74,41 +73,37 @@ public class LayeredTableModel implements TriangleTableModel {
     }
 
     @Override
-    public boolean hasValueAt(int row, int column) {
+    public boolean hasCellAt(int row, int column) {
         return getCellAt(row, column) != null;
     }
     
-    private boolean isValueCell(AbstractCell cell) {
-        return cell != null && (cell instanceof ValueCell);
-    }
-    
     @Override
-    public AbstractCell getCellAt(int row, int column) {
+    public TriangleCell<V> getCellAt(int row, int column) {
         for(int l=layers.size()-1; l>=0; l--) {
-            AbstractCell cell = getCellAt(row, column, l);
-            if(isValueCell(cell))
+            TriangleCell<V> cell = getCellAt(row, column, l);
+            if(cell.getValue() != null)
                 return cell;
         }
         return null;
     }
     
-    public AbstractCell getCellAt(int row, int colum, int layer) {
-        TriangleTableModel model = layers.get(layer);
+    public TriangleCell<V> getCellAt(int row, int colum, int layer) {
+        TriangleTableModel<V> model = layers.get(layer);
         return model.getCellAt(row, colum);
     }
     
-    public void addTable(TriangleTable table) {
-        TriangleTableModel model = modelFactory.createModel(table);
+    public void addTable(TriangleTable<V> table) {
+        TriangleTableModel<V> model = modelFactory.createModel(table);
         layers.add(model);
         fireChange();
     }
     
     @Override
-    public void setTable(TriangleTable table) {
+    public void setTable(TriangleTable<V> table) {
         setTable(table, 0);
     }
     
-    public void setTable(TriangleTable table, int layer) {
+    public void setTable(TriangleTable<V> table, int layer) {
         if(table == null) {
             removeTable(layer);
         } else {
@@ -123,7 +118,7 @@ public class LayeredTableModel implements TriangleTableModel {
         }
     }
     
-    private void setTableAt(TriangleTable table, int layer) {
+    private void setTableAt(TriangleTable<V> table, int layer) {
         ensureLayerExists(layer);
         layers.get(layer).setTable(table);
         fireChange();
@@ -132,11 +127,11 @@ public class LayeredTableModel implements TriangleTableModel {
     private void ensureLayerExists(int layer) {
         int count = layer - layers.size() + 1;
         for(int l=0; l<count; l++)
-            layers.add(modelFactory.createModel(new TriangleTable()));
+            layers.add(modelFactory.createModel(new TriangleTable<V>()));
     }
     
     @Override
-    public TriangleTable getTable() {
+    public TriangleTable<V> getTable() {
         if(layers.isEmpty())
             return null;
         return layers.get(0).getTable();

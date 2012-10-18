@@ -78,12 +78,6 @@ public class VectorComment extends AbstractPersistentObject {
         return vector;
     }
     
-    void setVector(Vector vector) {
-        if(this.vector != null)
-            this.vector.removeComment(this);
-        this.vector = vector;
-    }
-    
     public String getUserName() {
         return userName;
     }

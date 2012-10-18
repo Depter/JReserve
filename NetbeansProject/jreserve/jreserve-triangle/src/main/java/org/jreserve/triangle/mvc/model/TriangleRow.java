@@ -11,14 +11,14 @@ import org.jreserve.data.Data;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleRow implements Comparable<TriangleRow> {
+public class TriangleRow<V> implements Comparable<TriangleRow> {
     
     private TriangleTable table;
     
     private final Date accidentBegin;
     private final Date accidentEnd;
     
-    private List<AbstractCell> cells = new ArrayList<AbstractCell>();
+    private List<TriangleCell<V>> cells = new ArrayList<TriangleCell<V>>();
     private int cellCount;
     
     TriangleRow(Date accidentBegin, Date accidentEnd) {
@@ -26,11 +26,11 @@ public class TriangleRow implements Comparable<TriangleRow> {
         this.accidentEnd = accidentEnd;
     }
     
-    void setTable(TriangleTable table) {
+    void setTable(TriangleTable<V> table) {
         this.table = table;
     }
     
-    public TriangleTable getTable() {
+    public TriangleTable<V> getTable() {
         return table;
     }
     
@@ -42,7 +42,7 @@ public class TriangleRow implements Comparable<TriangleRow> {
         return accidentEnd;
     }
     
-    void addCell(AbstractCell cell) {
+    void addCell(TriangleCell<V> cell) {
         cells.add(cell);
         Collections.sort(cells);
         cellCount++;
@@ -53,38 +53,61 @@ public class TriangleRow implements Comparable<TriangleRow> {
         return cellCount;
     }
     
-    public AbstractCell getCell(int index) {
-        if(index <0 || cellCount <= index)
+    public TriangleCell<V> getCell(int column) {
+        if(column <0 || cellCount <= column)
             return null;
-        return cells.get(index);
+        return cells.get(column);
     }
     
-    void setValues(List<Data> datas) {
-        List<Data> rowData = getRowData(datas);
-        for(AbstractCell cell : cells)
-            if(cell instanceof ValueCell)
-                ((ValueCell)cell).setValues(rowData);
+    public TriangleCell<V> getCell(Date developmentDate) {
+        for(TriangleCell<V> cell : cells)
+            if(cell.containsDate(developmentDate))
+                return cell;
+        return null;
     }
     
-    private List<Data> getRowData(List<Data> datas) {
-        List<Data> rowData = new ArrayList<Data>();
-        for(Data data : datas)
-            if(myData(data))
-                rowData.add(data);
-        return rowData;
+    boolean containsDate(Date accidentDate) {
+        return !accidentDate.before(accidentBegin) &&
+                accidentDate.before(accidentEnd);
     }
     
-    private boolean myData(Data data) {
-        Date date = data.getAccidentDate();
-        return !accidentBegin.after(date) &&
-                accidentEnd.after(date);
-    }
-    
-    AbstractCell getPreviousCell(ValueCell cell) {
+    TriangleCell<V> getPreviousCell(TriangleCell<V> cell) {
         int index = Collections.binarySearch(cells, cell);
         if(index > 0)
             return cells.get(index-1);
         return null;
+    }
+    
+    public <T> List<Data<T>> getRelevantData(List<Data<T>> values) {
+        List<Data<T>> result = new ArrayList<Data<T>>(values.size());
+        for(Data<T> value : values)
+            if(containsDate(value.getAccidentDate()))
+                result.add(value);
+        return result;
+    }
+    
+    public V getValue(int column) {
+        TriangleCell<V> cell = getCell(column);
+        return cell==null? null : cell.getValue();
+    }
+    
+    public V getValue(Date developmentDate) {
+        TriangleCell<V> cell = getCell(developmentDate);
+        return cell==null? null : cell.getValue();
+    }
+    
+    public void setValue(V value, int column) {
+        TriangleCell<V> cell = getCell(column);
+        if(cell == null)
+            throw new IllegalArgumentException("Cell not found for column: "+column);
+        cell.setValue(value);
+    }
+    
+    public void setValue(V value, Date developmentDate) {
+        TriangleCell<V> cell = getCell(developmentDate);
+        if(cell == null)
+            throw new IllegalArgumentException(String.format("Cell not found for date: %tF", developmentDate));
+        cell.setValue(value);
     }
     
     @Override

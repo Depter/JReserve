@@ -1,8 +1,7 @@
 package org.jreserve.triangle.mvc.controller;
 
 import java.util.Date;
-import org.jreserve.triangle.mvc.model.AbstractCell;
-import org.jreserve.triangle.mvc.model.TriangleRow;
+import org.jreserve.triangle.mvc.model.TriangleCell;
 import org.jreserve.triangle.mvc.model.TriangleTable;
 
 /**
@@ -10,16 +9,16 @@ import org.jreserve.triangle.mvc.model.TriangleTable;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CalendarTriangleTableModel extends AbstractTriangleTableModel {
+public class CalendarTriangleTableModel<V> extends AbstractTriangleTableModel<V> {
 
     public final static TriangleTableModelFactory FACTORY = new TriangleTableModelFactory() {
         @Override
-        public TriangleTableModel createModel(TriangleTable table) {
-            return new CalendarTriangleTableModel(table);
+        public <V> TriangleTableModel<V> createModel(TriangleTable<V> table) {
+            return new CalendarTriangleTableModel<V>(table);
         }
     };
     
-    public CalendarTriangleTableModel(TriangleTable table) {
+    public CalendarTriangleTableModel(TriangleTable<V> table) {
         super(table);
     }
     
@@ -34,19 +33,9 @@ public class CalendarTriangleTableModel extends AbstractTriangleTableModel {
     }
 
     @Override
-    public AbstractCell getCellAt(int row, int column) {
-        TriangleRow r = table.getRow(row);
-        if(r == null)
-            return null;
-        return getCellAt(r, developmentDates.get(column));
-    }
-
-    private AbstractCell getCellAt(TriangleRow row, Date date) {
-        for(int c=0, cCount=row.getCellCount(); c<cCount; c++) {
-            AbstractCell cell = row.getCell(c);
-            if(date.equals(cell.getDevelopmentBegin()))
-                return cell;
-        }
-        return null;
+    public TriangleCell<V> getCellAt(int row, int column) {
+        Date accident = accidentDates.get(row);
+        Date development = developmentDates.get(column);
+        return table.getCell(accident, development);
     }
 }

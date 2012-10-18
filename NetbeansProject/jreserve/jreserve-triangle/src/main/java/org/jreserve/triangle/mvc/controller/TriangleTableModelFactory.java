@@ -9,5 +9,5 @@ import org.jreserve.triangle.mvc.model.TriangleTable;
  */
 public interface TriangleTableModelFactory {
 
-    public TriangleTableModel createModel(TriangleTable table);
+    public <V> TriangleTableModel<V> createModel(TriangleTable<V> table);
 }

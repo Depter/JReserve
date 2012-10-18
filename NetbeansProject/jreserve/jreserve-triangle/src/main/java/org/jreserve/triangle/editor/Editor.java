@@ -14,7 +14,8 @@ public class Editor {
 
     public static TopComponent createTopComponent(TriangleProjectElement element) {
         MultiViewDescription[] desc = {
-            new TriangleEditorDescriptor(element)
+            new TriangleEditorDescriptor(element),
+            new TriangleDataEditorDescriptor(element)
         };
         String name = element.getValue().getName();
         return createTopComponent(desc, name);

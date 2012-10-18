@@ -64,8 +64,8 @@ public abstract class DataImport {
     
     protected abstract void processTable();
         
-    protected List<Data> getTableAsList() {
-        List<Data> result = new ArrayList<Data>();
+    protected List<Data<Double>> getTableAsList() {
+        List<Data<Double>> result = new ArrayList<Data<Double>>();
         for(Date accidentDate : table.getAccidentDates())
             result.addAll(table.getDatas(accidentDate));
         return result;
@@ -95,8 +95,8 @@ public abstract class DataImport {
         @Override
         protected void processTable() {
             deleteOldValues();
-            List<Data> datas = super.getTableAsList();
-            ds.saveData(datas);
+            List<Data<Double>> datas = super.getTableAsList();
+            ds.saveClaimData(datas);
         }
         
         private void deleteOldValues() {
@@ -120,14 +120,14 @@ public abstract class DataImport {
 
         @Override
         protected void processTable() {
-            List<Data> persisted = getPersistedData();
-            List<Data> newData = getNewData(persisted);
-            ds.saveData(newData);
+            List<Data<Double>> persisted = getPersistedData();
+            List<Data<Double>> newData = getNewData(persisted);
+            ds.saveClaimData(newData);
         }
         
-        private List<Data> getPersistedData() {
+        private List<Data<Double>> getPersistedData() {
             Criteria c = createCriteria();
-            return ds.getData(c);
+            return ds.getClaimData(c);
         }
         
         private Criteria createCriteria() {
@@ -137,9 +137,9 @@ public abstract class DataImport {
                     .setToAccidentDate(table.getLastAccidentDate());
         }
         
-        private List<Data> getNewData(List<Data> persisted) {
-            List<Data> newData = getTableAsList();
-            for(Iterator<Data> it = newData.iterator(); it.hasNext();)
+        private List<Data<Double>> getNewData(List<Data<Double>> persisted) {
+            List<Data<Double>> newData = getTableAsList();
+            for(Iterator<Data<Double>> it = newData.iterator(); it.hasNext();)
                 if(persisted.contains(it.next()))
                     it.remove();
             return newData;

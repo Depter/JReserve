@@ -53,7 +53,7 @@ class DataExplorerTabelModel extends DefaultTableModel {
         DataSource ds = new DataSource();
         try {
             ds.open();
-            allData.addAll(ds.getData(getCriteria()));
+            allData.addAll(ds.getClaimData(getCriteria()));
             Collections.sort(allData);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, String.format("Unable to load data for %s/%s", claimType, dataType), ex);

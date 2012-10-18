@@ -5,7 +5,7 @@ import java.util.List;
 import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.jreserve.project.system.management.ElementCreatorWizard.Category;
 import org.jreserve.project.system.management.ElementCreatorWizard.Registration;
-import org.jreserve.triangle.importutil.NameSelectWizardPanel;
+import org.jreserve.triangle.guiutil.NameSelectWizardPanel;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
 
@@ -43,6 +43,6 @@ public class TriangleCreatorWizard implements ElementCreatorWizard {
     private void createPanels() {
         panels = new ArrayList<WizardDescriptor.Panel>(2);
         panels.add(new NameSelectWizardPanel(true));
-        panels.add(new TriangleFormatWizard());
+        panels.add(new TriangleFormatWizardPanel());
     }
 }

@@ -1,7 +1,7 @@
 package org.jreserve.triangle.mvc.controller;
 
 import javax.swing.event.ChangeListener;
-import org.jreserve.triangle.mvc.model.AbstractCell;
+import org.jreserve.triangle.mvc.model.TriangleCell;
 import org.jreserve.triangle.mvc.model.TriangleTable;
 
 /**
@@ -9,11 +9,11 @@ import org.jreserve.triangle.mvc.model.TriangleTable;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface TriangleTableModel {
+public interface TriangleTableModel<V> {
     
-    public void setTable(TriangleTable table);
+    public void setTable(TriangleTable<V> table);
     
-    public TriangleTable getTable();
+    public TriangleTable<V> getTable();
     
     public int getRowCount();
     
@@ -23,9 +23,9 @@ public interface TriangleTableModel {
 
     public Object getColumnTitle(int column);
     
-    public boolean hasValueAt(int row, int column);
+    public boolean hasCellAt(int row, int column);
     
-    public AbstractCell getCellAt(int row, int column);
+    public TriangleCell<V> getCellAt(int row, int column);
     
     public void addChangeListener(ChangeListener listener);
     

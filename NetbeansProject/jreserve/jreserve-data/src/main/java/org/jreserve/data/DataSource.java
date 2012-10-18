@@ -61,8 +61,8 @@ public class DataSource {
     /**
      * Returns all data for the given criteria.
      */
-    public List<Data> getData(Criteria criteria) {
-        DataQuery<List<Data>> query = new SelectDataQuery();
+    public List<Data<Double>> getClaimData(Criteria criteria) {
+        DataQuery<List<Data<Double>>> query = new SelectDataQuery();
         return query.query(session, criteria);
     }
     
@@ -70,7 +70,7 @@ public class DataSource {
      * Saves the given data. If a datapoint for the given dates and
      * data type is already exists, the old value is overwritten.
      */
-    public void saveData(List<Data> data) {
+    public void saveClaimData(List<Data<Double>> data) {
         AddDataQuery query = new AddDataQuery();
         query.add(session, data);
     }

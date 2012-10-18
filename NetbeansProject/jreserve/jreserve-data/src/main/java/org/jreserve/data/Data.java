@@ -7,47 +7,58 @@ import java.util.Date;
  * @author Peter Decsi
  * @version 1.0
  */
-public class Data implements Comparable<Data> {
+public class Data<T> implements Comparable<Data> {
 
     private ProjectDataType dataType;
     private Date accidentDate;
     private Date developmentDate;
-    private double value = Double.NaN;
+    private T value;
+    
+    public Data(ProjectDataType dt, Date accidentDate, Date developmentDate, T value) {
+        setDataType(dt);
+        setAccidentDate(accidentDate);
+        setDevelopmentDate(developmentDate);
+        setValue(value);
+    }
+    
+    private void setDataType(ProjectDataType dt) {
+        if(dt == null)
+            throw new NullPointerException("ProjectDataType is null!");
+        this.dataType = dt;
+    }
+    
+    private void setAccidentDate(Date date) {
+        if(date == null)
+            throw new NullPointerException("AccidentDate is null!");
+        this.accidentDate = date;
+    }
+    
+    private void setDevelopmentDate(Date date) {
+        if(date == null)
+            throw new NullPointerException("DevelopmentDate is null!");
+        this.developmentDate = date;
+    }
+    
+    void setValue(T value) {
+        if(value == null)
+            throw new NullPointerException("Value is null!");
+        this.value = value;
+    }
     
     public ProjectDataType getDataType() {
         return dataType;
-    }
-    
-    public Data setDataType(ProjectDataType dt) {
-        this.dataType = dt;
-        return this;
     }
 
     public Date getAccidentDate() {
         return accidentDate;
     }
-    
-    public Data setAccidentDate(Date date) {
-        this.accidentDate = date;
-        return this;
-    }
 
     public Date getDevelopmentDate() {
         return developmentDate;
     }
-    
-    public Data setDevelopmentDate(Date date) {
-        this.developmentDate = date;
-        return this;
-    }
 
-    public double getValue() {
+    public T getValue() {
         return value;
-    }
-    
-    public Data setValue(double value) {
-        this.value = value;
-        return this;
     }
 
     @Override

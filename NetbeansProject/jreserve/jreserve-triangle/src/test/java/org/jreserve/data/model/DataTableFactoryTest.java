@@ -38,7 +38,7 @@ public class DataTableFactoryTest {
             assertEquals(8-r, row.getCellCount());
             
             for(int c=1; c<=(8-r); c++) {
-                AbstractCell cell = row.getCell(c-1);
+                TriangleCell cell = row.getCell(c-1);
                 assertEquals(getDate(year+r+c-1, 1), cell.getDevelopmentBegin());
                 assertEquals(getDate(year+r+c, 1), cell.getDevelopmentEnd());
             }
@@ -82,7 +82,7 @@ public class DataTableFactoryTest {
             
             cellCalendar.setTime(row.getAccidentBegin());
             for(int c=1; c<=(5-r); c++) {
-                AbstractCell cell = row.getCell(c-1);
+                TriangleCell cell = row.getCell(c-1);
                 assertEquals(cellCalendar.getTime(), cell.getDevelopmentBegin());
                 cellCalendar.add(Calendar.MONTH, 18);
                 assertEquals(cellCalendar.getTime(), cell.getDevelopmentEnd());
@@ -113,7 +113,7 @@ public class DataTableFactoryTest {
             
             cellCalendar.setTime(row.getAccidentBegin());
             for(int c=1; c<=(32-r*4); c++) {
-                AbstractCell cell = row.getCell(c-1);
+                TriangleCell cell = row.getCell(c-1);
                 assertEquals(cellCalendar.getTime(), cell.getDevelopmentBegin());
                 cellCalendar.add(Calendar.MONTH, 3);
                 assertEquals(cellCalendar.getTime(), cell.getDevelopmentEnd());

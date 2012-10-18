@@ -35,7 +35,7 @@ class Bundle {
      * @param db_id db id
      * @param db_name db name
      * @return <i>Created triangle "</i>{@code triangle_name}<i>" for data type </i>{@code db_id}<i> - </i>{@code db_name}
-     * @see TriangleFormatWizard
+     * @see TriangleFormatWizardPanel
      */
     static String LOG_TriangleFormatWizard_Created(Object triangle_name, Object db_id, Object db_name) {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LOG.TriangleFormatWizard.Created", triangle_name, db_id, db_name);
@@ -52,7 +52,7 @@ class Bundle {
     }
     /**
      * @return <i>Unable to save triangle!</i>
-     * @see TriangleFormatWizard
+     * @see TriangleFormatWizardPanel
      */
     static String MSG_TriangleFormatWizardPanel_SaveError() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleFormatWizardPanel.SaveError");

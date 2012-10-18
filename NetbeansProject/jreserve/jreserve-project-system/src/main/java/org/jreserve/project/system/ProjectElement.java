@@ -28,6 +28,7 @@ public class ProjectElement<T> implements Lookup.Provider {
     public final static String DESCRIPTION_PROPERTY = "DESCRIPTION";
     
     private final static String PATH_SEPARATOR = "/";
+    private final static String NULL_NAME = "null";
     
     private final static Comparator<ProjectElement> CHILD_COMPARATOR = new Comparator<ProjectElement>() {
         @Override
@@ -406,8 +407,28 @@ public class ProjectElement<T> implements Lookup.Provider {
     private String getPath() {
         if(parent == null)
             return "";
-        String name = value==null? "null" : value.toString();
+        String name = value==null? NULL_NAME : value.toString();
         return parent.getPath()+PATH_SEPARATOR+name;
+    }
+    
+    /**
+     * Returns the values of the {@link #NAME_PROPERTY name} property for
+     * this element and all of it's parent, separated by a "/". If the
+     * property for an element is not set "null" is returned for the 
+     * given element.
+     */
+    public String getNamePath() {
+        String name = (String) getProperty(NAME_PROPERTY);
+        if(name == null)
+            name = NULL_NAME;
+        if(hasParent())
+            name = parent.getNamePath() + PATH_SEPARATOR + name;
+        return name;
+    }
+    
+    private boolean hasParent() {
+        return parent != null &&
+               !(parent instanceof RootElement);
     }
     
     /**

@@ -16,7 +16,7 @@ import org.jreserve.persistence.Session;
  * @author Peter Decsi
  * @version 1.0
  */
-public class SelectDataQuery extends AbstractQuery implements DataQuery<List<Data>> {
+public class SelectDataQuery extends AbstractQuery implements DataQuery<List<Data<Double>>> {
     
     private final static Logger logger = Logger.getLogger(SelectDataQuery.class.getName());
     
@@ -30,26 +30,26 @@ public class SelectDataQuery extends AbstractQuery implements DataQuery<List<Dat
         "FROM ClaimValue c";
     
     @Override
-    public List<Data> query(Session session, Criteria criteria) {
+    public List<Data<Double>> query(Session session, Criteria criteria) {
         String sql = buildCriteria(SQL, criteria);
         logger.log(Level.FINER, "Query ClaimValues: {0}", sql);
         Query query = session.createQuery(sql);
         return getData(query.getResultList());
     }
 
-    private List<Data> getData(List<Object[]> records) {
-        List<Data> data = new ArrayList<Data>(records.size());
+    private List<Data<Double>> getData(List<Object[]> records) {
+        List<Data<Double>> data = new ArrayList<Data<Double>>(records.size());
         for(Object[] record : records)
             data.add(getData(record));
         return data;
     }
     
-    private Data getData(Object[] record) {
-        return new Data()
-            .setDataType(getDataType(record))
-            .setAccidentDate((Date) record[COL_ACCIDENT])
-            .setDevelopmentDate((Date) record[COL_DEVELOPMENT])
-            .setValue(getValue(record));
+    private Data<Double> getData(Object[] record) {
+        ProjectDataType dt = getDataType(record);
+        Date accident = (Date) record[COL_ACCIDENT];
+        Date development = (Date) record[COL_DEVELOPMENT];
+        double value = getValue(record);
+        return new Data<Double>(dt, accident, development, value);
     }
     
     private ProjectDataType getDataType(Object[] record) {

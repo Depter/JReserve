@@ -1,6 +1,6 @@
 package org.jreserve.triangle.mvc.controller;
 
-import org.jreserve.triangle.mvc.model.AbstractCell;
+import org.jreserve.triangle.mvc.model.TriangleCell;
 import org.jreserve.triangle.mvc.model.TriangleTable;
 
 /**
@@ -8,22 +8,17 @@ import org.jreserve.triangle.mvc.model.TriangleTable;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DevelopmentTriangleTableModel extends AbstractTriangleTableModel {
+public class DevelopmentTriangleTableModel<V> extends AbstractTriangleTableModel<V> {
 
     public final static TriangleTableModelFactory FACTORY = new TriangleTableModelFactory() {
         @Override
-        public TriangleTableModel createModel(TriangleTable table) {
-            return new DevelopmentTriangleTableModel(table);
+        public <V> TriangleTableModel<V> createModel(TriangleTable<V> table) {
+            return new DevelopmentTriangleTableModel<V>(table);
         }
     };
     
-    public DevelopmentTriangleTableModel(TriangleTable table) {
+    public DevelopmentTriangleTableModel(TriangleTable<V> table) {
         super(table);
-    }
-
-    @Override
-    public AbstractCell getCellAt(int row, int column) {
-        return table.getCell(row, column);
     }
 
     @Override
@@ -32,7 +27,7 @@ public class DevelopmentTriangleTableModel extends AbstractTriangleTableModel {
     }
 
     @Override
-    public Object getColumnTitle(int column) {
-        return Integer.valueOf(column+1);
+    public TriangleCell<V> getCellAt(int row, int column) {
+        return table.getCell(row, column);
     }
 }

@@ -11,9 +11,8 @@ import javax.swing.table.TableModel;
 import org.jreserve.triangle.mvc.controller.CalendarTriangleTableModel;
 import org.jreserve.triangle.mvc.controller.DevelopmentTriangleTableModel;
 import org.jreserve.triangle.mvc.controller.LayeredTableModel;
-import org.jreserve.triangle.mvc.model.AbstractCell;
+import org.jreserve.triangle.mvc.model.TriangleCell;
 import org.jreserve.triangle.mvc.model.TriangleTable;
-import org.jreserve.triangle.mvc.model.ValueCell;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -34,9 +33,10 @@ class TriangleTableModel implements TableModel, ChangeListener {
     private List<TableModelListener> listeners = new ArrayList<TableModelListener>();
     
     private ModelType type = ModelType.DEVELOPMENT; 
-    private LayeredTableModel model = new LayeredTableModel(DevelopmentTriangleTableModel.FACTORY);
+    private LayeredTableModel<Double> model = new LayeredTableModel<Double>(DevelopmentTriangleTableModel.FACTORY);
     private boolean isCummulated = false;
     private ColumnRenderer columnRenderer = new DefaultColumnRenderer();
+    private int editingLayer = -1;
     
     TriangleTableModel() {
         model.addChangeListener(this);
@@ -67,37 +67,38 @@ class TriangleTableModel implements TableModel, ChangeListener {
     }
 
     @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return false;
-    }
-
-    @Override
     public Object getValueAt(int row, int column) {
         if(column == 0)
             return model.getRowTitle(row);
-        AbstractCell cell = model.getCellAt(row, column-1);
-        return getValue(cell);
+        TriangleCell<Double> cell = model.getCellAt(row, column-1);
+        return cell==null? null : cell.getValue();
     }
     
     public boolean hasValueAt(int row, int column) {
         if(column == 0)
             return true;
-        return model.hasValueAt(row, column-1);
-    }
-    
-    private Double getValue(AbstractCell cell) {
-        if(cell instanceof ValueCell) {
-            ValueCell value = (ValueCell) cell;
-            return isCummulated? value.getCummulatedValue() : value.getValue();
-        }
-        return null;
+        return model.hasCellAt(row, column-1);
     }
 
     @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        
+    public boolean isCellEditable(int row, int column) {
+        if(column == 0 || editingLayer < 0)
+            return false;
+        return model.getCellAt(row, column-1, editingLayer) != null;
     }
 
+    @Override
+    public void setValueAt(Object value, int row, int column) {
+        TriangleCell<Double> cell = model.getCellAt(row, column-1, editingLayer);
+        cell.setValue((Double) value);
+        fireCellChanged(row, column);
+    }
+
+    private void fireCellChanged(int row, int column) {
+        TableModelEvent evt = new TableModelEvent(this, row, row, column);
+        fireTableModelEvent(evt);
+    }
+    
     @Override
     public void addTableModelListener(TableModelListener listener) {
         if(!listeners.contains(listener))

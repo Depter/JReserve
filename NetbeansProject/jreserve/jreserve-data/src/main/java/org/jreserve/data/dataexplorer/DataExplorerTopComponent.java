@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jreserve.data.dataexplorer;
 
 import java.awt.Toolkit;
@@ -10,13 +6,11 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
@@ -25,7 +19,6 @@ import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.util.DateTableCellRenderer;
 import org.jreserve.data.util.DoubleTableCellRenderer;
-import org.jreserve.data.util.ProjectDataTypeComparator;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.ClaimType;
@@ -87,7 +80,6 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     private final static String LAST_PAGE = "resources/resultset_last.png";
     private final static int NUMBER_OF_ROWS = 25;
 
-    private final static String DATA_TYPE_ACTION = "DATA_TYPE_ACTION";
     private final static String FIRST_PAGE_ACTION = "FIRST_PAGE_ACTION";
     private final static String PREVIOUS_PAGE_ACTION = "PREVIOUS_PAGE_ACTION";
     private final static String NEXT_PAGE_ACTION = "NEXT_PAGE_ACTION";
@@ -96,7 +88,6 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     
     private ClaimType claimType;
     private ProjectElement element;
-    private DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
     private DataExplorerTabelModel tableModel;
     private DateTableCellRenderer dateRenderer;
     private DoubleTableCellRenderer doubleRenderer;
@@ -109,8 +100,8 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         this.element = element;
         this.claimType = element.getValue();
         this.tableModel = new DataExplorerTabelModel(claimType, NUMBER_OF_ROWS);
-        loadDataTypes();
         initComponents();
+        loadDataTypes();
         setTableRenderers();
         setName(claimType.getName());
         registerActions();
@@ -118,12 +109,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     }
     
     private void loadDataTypes() {
-        List<ProjectDataType> dts = element.getChildValues(ProjectDataType.class);
-        Collections.sort(dts, new ProjectDataTypeComparator());
-        comboModel.removeAllElements();
-        for(ProjectDataType dt : dts)
-            comboModel.addElement(dt);
-        comboModel.setSelectedItem(null);
+        dataTypeCombo.setElements(element.getChildren(ProjectDataType.class));
     }
 
     private void setTableRenderers() {
@@ -436,11 +422,10 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         public void childRemoved(ProjectElement child) {
             Object value = child.getValue();
             if(value instanceof ProjectDataType) {
-                ProjectDataType dt = (ProjectDataType) child.getValue();
-                ProjectDataType selected = getSelectedDataType();
-                comboModel.removeElement(child);
-                if(dt == selected)
-                    comboModel.setSelectedItem(null);
+                ProjectElement selected = dataTypeCombo.getSelectedItem();
+                List<ProjectElement> dts = element.getChildren(ProjectDataType.class);
+                dataTypeCombo.setElements(dts);
+                dataTypeCombo.setSelectedItem(dts.contains(selected)? selected : null);
             }
         }
         

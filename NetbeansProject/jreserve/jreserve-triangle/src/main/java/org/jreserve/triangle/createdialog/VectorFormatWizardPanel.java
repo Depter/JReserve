@@ -18,9 +18,9 @@ import org.jreserve.triangle.VectorProjectElement;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
-import org.jreserve.triangle.importutil.DataFormatVisualPanel;
-import org.jreserve.triangle.importutil.DataFormatWizardPanel;
-import org.jreserve.triangle.importutil.NameSelectWizardPanel;
+import org.jreserve.triangle.guiutil.DataFormatVisualPanel;
+import org.jreserve.triangle.guiutil.DataFormatWizardPanel;
+import org.jreserve.triangle.guiutil.NameSelectWizardPanel;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.NbBundle.Messages;
@@ -62,6 +62,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
             Vector vector = saveVector();
             addProjectElement(vector);
             logCreation();
+            clearProperties();
         }
     }
     
@@ -69,8 +70,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         Session session = SessionFactory.beginTransaction();
         try {
             Project project = session.find(Project.class, vectorData.project.getId());
-            Vector vector = new Vector(project, vectorData.dataType, vectorData.name);
-            vector.setGeometry(vectorData.geometry);
+            Vector vector = createVector(project);
             session.persist(vector);
             session.comitTransaction();
             return vector;
@@ -80,6 +80,13 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
             String msg = Bundle.MSG_VectorFormatWizardPanel_SaveError();
             throw new WizardValidationException(panel, msg, msg);
         }
+    }
+    
+    private Vector createVector(Project project) {
+        Vector vector = new Vector(project, vectorData.dataType, vectorData.name);
+        vector.setDescription(vectorData.description);
+        vector.setGeometry(vectorData.geometry);
+        return vector;
     }
     
     private void addProjectElement(final Vector vector) {
@@ -114,6 +121,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         private Project project;
         private ProjectDataType dataType;
         private String name;
+        private String description;
         private VectorGeometry geometry;
         
         private VectorData() {
@@ -126,6 +134,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
             project = (Project) wizard.getProperty(NameSelectWizardPanel.PROP_PROJECT);
             dataType = (ProjectDataType) wizard.getProperty(NameSelectWizardPanel.PROP_DATA_TYPE);
             name = (String) wizard.getProperty(NameSelectWizardPanel.PROP_DATA_NAME);
+            description = (String) wizard.getProperty(NameSelectWizardPanel.PROP_DATA_DESCRIPTION);
         }
         
         private void readPanel() {
