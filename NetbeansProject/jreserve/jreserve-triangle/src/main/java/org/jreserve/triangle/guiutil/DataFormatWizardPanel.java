@@ -2,6 +2,7 @@ package org.jreserve.triangle.guiutil;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -23,7 +24,7 @@ import org.openide.util.NbBundle.Messages;
 public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, ChangeListener {
 
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
-    protected DataFormatVisualPanel panel;
+    protected TriangleFormatVisualPanel panel;
     private boolean isValid = false;
     protected WizardDescriptor wizard;
 
@@ -36,7 +37,7 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
         return panel;
     }
 
-    protected abstract DataFormatVisualPanel createPanel();
+    protected abstract TriangleFormatVisualPanel createPanel();
 
     @Override
     public HelpCtx getHelp() {
@@ -47,8 +48,25 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
     public void readSettings(WizardDescriptor wizard) {
         this.wizard = wizard;
         List<Data<Double>> datas = (List<Data<Double>>) wizard.getProperty(NameSelectWizardPanel.PROP_DATA);
+        setFirstDate(datas);
         panel.setDatas(datas);
         validate();
+    }
+    
+    private void setFirstDate(List<Data<Double>> datas) {
+        Date start = getFirstDate(datas);
+        if(start != null)
+            panel.setAccidentStart(start);
+    }
+    
+    private Date getFirstDate(List<Data<Double>> datas) {
+        Date first = null;
+        for(Data data : datas) {
+            Date date = data.getAccidentDate();
+            if(first==null || date.before(first))
+                first = date;
+        }
+        return first;
     }
 
     @Override

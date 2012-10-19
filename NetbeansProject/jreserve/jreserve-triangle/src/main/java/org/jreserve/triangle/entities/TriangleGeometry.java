@@ -89,6 +89,21 @@ public class TriangleGeometry extends VectorGeometry {
         initMonthInDevelopment(month);
     }
     
+    public TriangleGeometry copy() {
+        Date aStart = super.getAccidentStart();
+        int aPeriods = super.getAccidentPeriods();
+        int aMonth = super.getMonthInAccident();
+        return new TriangleGeometry(aStart, aPeriods, aMonth, developmentStart, developmentPeriods, monthInDevelopment);
+    }
+    
+    public boolean isEqualGeometry(TriangleGeometry g) {
+        if(!super.isEqualGeometry(g))
+            return false;
+        return developmentStart.equals(g.developmentStart) &&
+               developmentPeriods == g.developmentPeriods &&
+               monthInDevelopment == g.monthInDevelopment;
+    }
+    
     @Override
     public String toString() {
         return String.format("Geometry [%tF; %d; %d] / [%tF; %d; %d]",

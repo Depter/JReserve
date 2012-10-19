@@ -1,33 +1,48 @@
 package org.jreserve.triangle.editor;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import org.jreserve.data.container.ProjectDataContainer;
+import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.TriangleProjectElement;
-import org.jreserve.triangle.entities.Triangle;
+import org.netbeans.api.actions.Savable;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
-import org.openide.util.Lookup;
-
+import org.openide.util.Lookup.Result;
+import org.openide.util.*;
+import org.openide.windows.TopComponent;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleEditorView extends javax.swing.JPanel implements MultiViewElement {
+public class TriangleEditorView extends javax.swing.JPanel implements MultiViewElement, Serializable, DocumentListener, LookupListener, PropertyChangeListener {
+    
+    private final static String ERR_IMG = "org/netbeans/modules/dialogs/error.gif";
 
-    private MultiViewElementCallback callBack;
     private TriangleProjectElement element;
-    private Triangle triangle;
     private JToolBar toolBar = new JToolBar();
+    private MultiViewElementCallback callBack;
+    private InputValidator validator = new InputValidator();
+    private boolean userEditing = false;
+    
+    private Result<Savable> savableResult;
     
     public TriangleEditorView(TriangleProjectElement element) {
         this.element = element;
-        this.triangle = element.getValue();
         initComponents();
+        savableResult = element.getLookup().lookupResult(Savable.class);
+        savableResult.addLookupListener(this);
+        element.addPropertyChangeListener(WeakListeners.propertyChange(this, element));
     }
 
     /**
@@ -41,12 +56,13 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
         java.awt.GridBagConstraints gridBagConstraints;
 
         pathLabel = new javax.swing.JLabel();
-        pathText = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
-        nameText = new javax.swing.JTextField();
         descriptionLabel = new javax.swing.JLabel();
+        pathText = new javax.swing.JLabel();
+        nameText = new javax.swing.JTextField();
         descriptionScroll = new javax.swing.JScrollPane();
         descriptionText = new javax.swing.JTextArea();
+        msgLabel = new javax.swing.JLabel(ImageUtilities.loadImageIcon(ERR_IMG, false));
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setLayout(new java.awt.GridBagLayout());
@@ -54,53 +70,49 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
         pathLabel.setText(org.openide.util.NbBundle.getMessage(TriangleEditorView.class, "LBL.TriangleEditorView.Path")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         add(pathLabel, gridBagConstraints);
 
-        pathText.setText(element.getNamePath());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        add(pathText, gridBagConstraints);
-
         nameLabel.setText(org.openide.util.NbBundle.getMessage(TriangleEditorView.class, "LBL.TriangleEditorView.Name")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 15, 5);
         add(nameLabel, gridBagConstraints);
 
-        nameText.setColumns(64);
-        nameText.setText(triangle.getName());
-        nameText.setPreferredSize(new java.awt.Dimension(200, 20));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 15, 5);
-        add(nameText, gridBagConstraints);
-
         descriptionLabel.setText(org.openide.util.NbBundle.getMessage(TriangleEditorView.class, "LBL.TriangleEditorView.Description")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         add(descriptionLabel, gridBagConstraints);
+
+        pathText.setText(element.getNamePath());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        add(pathText, gridBagConstraints);
+
+        nameText.setText(element.getValue().getName());
+        nameText.setPreferredSize(new java.awt.Dimension(200, 20));
+        nameText.getDocument().addDocumentListener(this);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 15, 0);
+        add(nameText, gridBagConstraints);
 
         descriptionText.setColumns(20);
         descriptionText.setRows(5);
-        descriptionText.setText(triangle.getDescription());
+        descriptionText.setText(element.getValue().getDescription());
+        descriptionText.getDocument().addDocumentListener(this);
         descriptionScroll.setViewportView(descriptionText);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -110,17 +122,31 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 15, 0);
         add(descriptionScroll, gridBagConstraints);
+
+        msgLabel.setText(null);
+        msgLabel.setVisible(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
+        add(msgLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel descriptionLabel;
     private javax.swing.JScrollPane descriptionScroll;
     private javax.swing.JTextArea descriptionText;
+    private javax.swing.JLabel msgLabel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameText;
     private javax.swing.JLabel pathLabel;
     private javax.swing.JLabel pathText;
     // End of variables declaration//GEN-END:variables
+
 
     @Override
     public JComponent getVisualRepresentation() {
@@ -143,9 +169,9 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     public Lookup getLookup() {
         return element.getLookup();
     }
-
-    @Override public void componentOpened() {}
+    
     @Override public void componentClosed() {}
+    @Override public void componentOpened() {}
     @Override public void componentShowing() {}
     @Override public void componentHidden() {}
     @Override public void componentActivated() {}
@@ -164,5 +190,153 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     @Override
     public CloseOperationState canCloseElement() {
         return CloseOperationState.STATE_OK;
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        changed();
+    }
+        
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        changed();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+    }
+    
+    private void changed() {
+        userEditing = true;
+        showError(null);
+        changeName();
+        changeDescription();
+        userEditing = false;
+    }
+    
+    private void changeName() {
+        String name = nameText.getText();
+        if(validator.isNameValid(name))
+            element.setProperty(org.jreserve.project.system.ProjectElement.NAME_PROPERTY, name);
+    }
+    
+    private void changeDescription() {
+        String description = descriptionText.getText();
+        if(validator.isDescriptionValid(description))
+            element.setProperty(org.jreserve.project.system.ProjectElement.DESCRIPTION_PROPERTY, description);
+    }
+    
+    private boolean isEmpty(String s) {
+        return s == null || s.trim().length() == 0;
+    }
+
+    private void showError(String msg) {
+        msgLabel.setVisible(msg != null);
+        if(msg != null && msgLabel.getText()!=null)
+            return;
+        msgLabel.setText(msg);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(userEditing)
+            return;
+        String property = evt.getPropertyName();
+        if(ProjectElement.NAME_PROPERTY.equals(property)) {
+            setNameText(getStringProperty(property));
+        } else if (ProjectElement.DESCRIPTION_PROPERTY.equals(property)) {
+            setDescriptionText(getStringProperty(property));
+        }
+    }
+        
+    private String getStringProperty(String property) {
+        return (String) element.getProperty(property);
+    }
+    
+    private void setNameText(String newText) {
+        if(equals(newText, nameText.getText()))
+            return;
+        nameText.setText(newText);
+    }
+    
+    private boolean equals(String s1, String s2) {
+        if(isEmpty(s1))
+            return isEmpty(s2);
+        return s1.equalsIgnoreCase(s2);
+    }
+    
+    private void setDescriptionText(String newText) {
+        if(equals(newText, descriptionText.getText()))
+            return;
+        descriptionText.setText(newText);
+    }
+
+    @Override
+    public void resultChanged(LookupEvent le) {
+        boolean changed = !savableResult.allClasses().isEmpty();
+        setHtmlDisplayName(changed);
+    }
+    
+    private void setHtmlDisplayName(boolean isChanged) {
+        if(callBack == null)
+            return;
+        TopComponent tc = callBack.getTopComponent();
+        if(isChanged) 
+            tc.setHtmlDisplayName(getChangedHtmlDisplayName());
+        else
+            tc.setHtmlDisplayName(getUnchangedHtmlDisplayName());
+    }
+    
+    private String getChangedHtmlDisplayName() {
+        return getHtmlDisplayName("<b>%s</b>");
+    }
+    
+    private String getHtmlDisplayName(String format) {
+        String name = getStringProperty(ProjectElement.NAME_PROPERTY);
+        format = "<html>"+format+"</html>";
+        return String.format(format, name);
+    }
+    
+    private String getUnchangedHtmlDisplayName() {
+        return getHtmlDisplayName("%s");
+    }
+    
+    private class InputValidator {
+        
+        private boolean isNameValid(String name) {
+            return !isNameEmpty(name) && isNewName(name);
+        }
+        
+        private boolean isNameEmpty(String name) {
+            if(!isEmpty(name))
+                return false;
+            showError("Name is empty!");
+            return true;
+        }
+        
+        private boolean isNewName(String name) {
+            String elementName = getStringProperty(ProjectElement.NAME_PROPERTY);
+            if(elementName.equals(name))
+                return !elementName.equalsIgnoreCase(name);
+            return isNewNameInContainer(name);
+        }
+        
+        private boolean isNewNameInContainer(String name) {
+            ProjectDataContainer container = getContainer();
+            if(container.containsName(name)) {
+                showError("Name already used!");
+                return false;
+            }
+            return true;
+        }
+        
+        private ProjectDataContainer getContainer() {
+            ProjectElement parent = element.getParent();
+            return (ProjectDataContainer) parent.getValue();
+        }
+        
+        private boolean isDescriptionValid(String description) {
+            return true;
+        }
     }
 }

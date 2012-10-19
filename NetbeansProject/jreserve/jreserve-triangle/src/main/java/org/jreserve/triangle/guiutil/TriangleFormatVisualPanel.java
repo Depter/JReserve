@@ -8,30 +8,24 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
-import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.mvc.TriangleTableUtil;
+import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.jreserve.triangle.mvc.model.TriangleTableFactory;
-import org.openide.util.Exceptions;
 
 /**
  *
  * @author Peter Decsi
  */
-public class DataFormatVisualPanel extends javax.swing.JPanel implements PropertyChangeListener {
+public class TriangleFormatVisualPanel extends javax.swing.JPanel implements PropertyChangeListener {
 
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
-    
-    protected Date accidentStart;
-    protected Date accidentEnd;
-    protected Date developmentStart;
-    protected Date developmentEnd;
     
     protected TriangleGeometry geometry;
     protected List<Data<Double>> datas = new ArrayList<Data<Double>>();
     protected TriangleTable<Double> table;
     
-    public DataFormatVisualPanel() {
+    public TriangleFormatVisualPanel() {
         initComponents();
         componentsInitialized();
     }
@@ -45,6 +39,10 @@ public class DataFormatVisualPanel extends javax.swing.JPanel implements Propert
     
     public TriangleTable<Double> getTable() {
         return table;
+    }
+    
+    public void setAccidentStart(Date start) {
+        geometrySetting.setAccidentStartDate(start);
     }
     
     public void addChangeListener(ChangeListener listener) {
@@ -101,37 +99,6 @@ public class DataFormatVisualPanel extends javax.swing.JPanel implements Propert
         this.datas.clear();
         this.datas.addAll(datas);
         resetTable();
-        readDates(datas);
-        initGeometry();
-    }
-    
-    private void readDates(List<Data<Double>> datas) {
-        if(datas == null)
-            return;
-        for(Data data : datas) {
-            setAccidnetDates(data.getAccidentDate());
-            setDevelopmentDates(data.getDevelopmentDate());
-        }
-    }
-    
-    private void setAccidnetDates(Date accidentDate) {
-        if(accidentStart==null || accidentStart.after(accidentDate))
-            accidentStart = accidentDate;
-        if(accidentEnd==null || accidentEnd.before(accidentDate))
-            accidentEnd = accidentDate;
-    }
-    
-    private void setDevelopmentDates(Date developmentDate) {
-        if(developmentStart==null || developmentStart.after(developmentDate))
-            developmentStart = developmentDate;
-        if(developmentEnd==null || developmentEnd.before(developmentDate))
-            developmentEnd = developmentDate;
-    }
-    
-    protected void initGeometry() {
-        geometrySetting.setAccidentStartDate(accidentStart);
-        if(!geometrySetting.isSymmetricFromDate())
-            geometrySetting.setDevelopmentStartDate(developmentStart);
     }
 
     /**

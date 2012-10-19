@@ -29,6 +29,8 @@ class TriangleTableModel implements TableModel, ChangeListener {
         DEVELOPMENT,
         CALENDAR
     };
+    
+    private final static double MISSING_VALUE = 0d;
 
     private List<TableModelListener> listeners = new ArrayList<TableModelListener>();
     
@@ -79,24 +81,27 @@ class TriangleTableModel implements TableModel, ChangeListener {
     private Double getCellValue(TriangleCell<Double> cell) {
         if(cell == null)
             return null;
-        return isCummulated? getCummulatedCellValue(cell) : cell.getValue();
+        if(isCummulated)
+            return getCummulatedCellValue(cell);
+        return getUncummulatedValue(cell);
     }
     
-    private Double getCummulatedCellValue(TriangleCell<Double> cell) {
-        Double value = null;
+    private double getCummulatedCellValue(TriangleCell<Double> cell) {
+        double value = 0d;
         while(cell != null) {
-            Double v = cell.getValue();
-            if(value == null)
-                value = v;
-            if(v == null)
-                return value;
-            double d = v;
+            double d = getUncummulatedValue(cell);
             if(Double.isNaN(d))
-                return value;
+                break;
             value += d;
-            
             cell = cell.getPreviousCell();
         }
+        return value;
+    }
+    
+    private double getUncummulatedValue(TriangleCell<Double> cell) {
+        Double value = cell.getValue();
+        if(value == null)
+            return MISSING_VALUE;
         return value;
     }
     

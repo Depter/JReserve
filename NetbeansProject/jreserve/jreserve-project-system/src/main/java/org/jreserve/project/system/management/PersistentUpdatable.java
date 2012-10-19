@@ -7,9 +7,9 @@ import org.jreserve.project.system.ProjectElement;
  * @author Peter Decsi
  * @version 1.0
  */
-public class PersistentUpdatable extends PersistentSavable {
+ abstract class PersistentUpdatable<T> extends PersistentSavable<T> {
 
-    public PersistentUpdatable(ProjectElement element) {
+    public PersistentUpdatable(ProjectElement<T> element) {
         super(element);
     }
     

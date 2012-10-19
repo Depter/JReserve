@@ -1,7 +1,5 @@
 package org.jreserve.triangle.createdialog;
 
-import java.beans.PropertyChangeEvent;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,9 +16,10 @@ import org.jreserve.triangle.VectorProjectElement;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
-import org.jreserve.triangle.guiutil.DataFormatVisualPanel;
 import org.jreserve.triangle.guiutil.DataFormatWizardPanel;
 import org.jreserve.triangle.guiutil.NameSelectWizardPanel;
+import org.jreserve.triangle.guiutil.TriangleFormatVisualPanel;
+import org.jreserve.triangle.guiutil.VectorFormatVisualPanel;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.NbBundle.Messages;
@@ -45,8 +44,8 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
     private VectorData vectorData;
     
     @Override
-    protected DataFormatVisualPanel createPanel() {
-        return new VisualPanel();
+    protected TriangleFormatVisualPanel createPanel() {
+        return new VectorFormatVisualPanel();
     }
 
     @Override
@@ -145,59 +144,5 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
             this.geometry = new VectorGeometry(start, periods, months);
         }
         
-    }
-    
-    private static class VisualPanel extends DataFormatVisualPanel {
-        
-        private Calendar calendar = Calendar.getInstance();
-        
-        @Override
-        protected void componentsInitialized() {
-            geometrySetting.setSymmetricPeriods(false);
-            geometrySetting.setSymmetricPeriodsEnabled(false);
-            geometrySetting.setSymmetricMonths(false);
-            geometrySetting.setSymmetricMonthsEnabled(false);
-            geometrySetting.setDevelopmentPeriodCount(1);
-        }
-        
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            super.propertyChange(evt);
-            geometrySetting.setDevelopmentMonthsPerStep(getDevelopmentMonthCount());
-        }
-        
-        private int getDevelopmentMonthCount() {
-            if(geometry == null)
-                return 0;
-            Date end = getDevelopmentEnd();
-            Date from = geometry.getDevelopmentStart();
-            if(end==null || from==null)
-                return 0;
-            return getDifference(from, end);
-        }
-        
-        private Date getDevelopmentEnd() {
-            Date start = geometry.getAccidentStart();
-            if(start == null)
-                return null;
-            calendar.setTime(start);
-            int periods = geometry.getAccidentPeriods();
-            int months = geometry.getMonthInAccident();
-            calendar.add(Calendar.MONTH, periods * months);
-            return calendar.getTime();
-        }
-        
-        private int getDifference(Date from, Date end) {
-            int begin = getYearMonth(from);
-            int stop = getYearMonth(end);
-            return stop > begin? stop - begin : 0;
-        }
-        
-        private int getYearMonth(Date date) {
-            calendar.setTime(date);
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            return year * 12 + month;
-        }
     }
 }

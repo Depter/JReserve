@@ -1,5 +1,6 @@
 package org.jreserve.project.entities.project;
 
+import java.io.IOException;
 import javax.swing.SwingUtilities;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ChangeLog.Type;
@@ -11,7 +12,6 @@ import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.netbeans.api.actions.Openable;
-import org.netbeans.api.actions.Savable;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
@@ -24,7 +24,8 @@ import org.openide.windows.TopComponent;
 @Messages({
     "# {0} - the old name",
     "# {1} - the new name",
-    "LOG.ProjectElement.rename=Project renamed from \"{0}\" to \"{1}\"."
+    "LOG.ProjectElement.rename=Project renamed from \"{0}\" to \"{1}\".",
+    "LOG.ProjectElement.description.change=Project description changed."
 })
 public class ProjectElement extends org.jreserve.project.system.ProjectElement<Project> {
 
@@ -32,12 +33,13 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         super(project);
         super.setProperty(NAME_PROPERTY, project.getName());
         initLookupContent();
+        new ProjectSavable();
     }
     
     private void initLookupContent() {
         addToLookup(new ProjectDeletable());
         addToLookup(new ProjectOpenable());
-        addToLookup(new ProjectRenamable());
+        addToLookup(new RenameableProjectElement(this));
     }
     
     @Override
@@ -94,33 +96,48 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         }
     }
     
-    private class ProjectRenamable extends RenameableProjectElement {
-        
-        private ProjectRenamable() {
+    private class ProjectSavable extends PersistentSavable<Project> {
+
+        public ProjectSavable() {
             super(ProjectElement.this);
+        }
+        
+        @Override
+        protected void initOriginalProperties() {
+            Project project = element.getValue();
+            originalProperties.put(NAME_PROPERTY, project.getName());
+            originalProperties.put(DESCRIPTION_PROPERTY, project.getDescription());
         }
 
         @Override
-        protected void setNewName(String newName) {
-            String oldName = getValue().getName();
-            super.setNewName(newName);
-            makeLog(oldName, newName);
-            addSavableToLookup();
+        protected void handleSave() throws IOException {
+            String oldName = (String) originalProperties.get(NAME_PROPERTY);
+            String oldDesc = (String) originalProperties.get(DESCRIPTION_PROPERTY);
+            super.handleSave();
+            makeLog(oldName, oldDesc);
         }
         
-        private void makeLog(String oldName, String newName) {
-            String msg = Bundle.LOG_ProjectElement_rename(oldName, newName);
+        private void makeLog(String oldName, String oldDesc) {
             ChangeLogUtil util = ChangeLogUtil.getDefault();
-            util.addChange(getValue(), Type.PROJECT, msg);
-            util.saveValues(getValue());
+            if(logNameChange(util, oldName) | logDescriptionChange(util, oldDesc))
+                util.saveValues(getValue());
         }
     
-        private void addSavableToLookup() {
-            Savable s = getLookup().lookup(Savable.class);
-            if(s == null)
-                addToLookup(new PersistentSavable(ProjectElement.this));
+        private boolean logNameChange(ChangeLogUtil util, String oldName) {
+            String newName = (String) originalProperties.get(NAME_PROPERTY);
+            if(!isChanged(oldName, newName))
+                return false;
+            util.addChange(getValue(), Type.PROJECT, Bundle.LOG_ProjectElement_rename(oldName, newName));
+            return true;
         }
-        
+    
+        private boolean logDescriptionChange(ChangeLogUtil util, String oldDesc) {
+            String newDesc = (String) originalProperties.get(DESCRIPTION_PROPERTY);
+            if(!isChanged(oldDesc, newDesc))
+                return false;
+            util.addChange(getValue(), Type.PROJECT, Bundle.LOG_ProjectElement_description_change());
+            return true;
+        }
     }
     
     private class ProjectOpenable implements Openable {

@@ -7,19 +7,16 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.jreserve.project.entities.ChangeLog;
-import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.ProjectElement;
-import org.jreserve.project.system.management.PersistentUpdatable;
+import org.netbeans.api.actions.Savable;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
-import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
+import org.openide.util.*;
+import org.openide.util.Lookup.Result;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.WeakListeners;
 import org.openide.windows.TopComponent;
         
 /**
@@ -34,7 +31,7 @@ import org.openide.windows.TopComponent;
     "LOG.ProjectEditorView.rename=Project renamed from \"{0}\" to \"{1}\".",
     "LOG.ProjectEditorView.descriptionChange=Project description changed!"
 })
-class ProjectEditorView extends JPanel implements MultiViewElement, DocumentListener, PropertyChangeListener {
+class ProjectEditorView extends JPanel implements MultiViewElement, DocumentListener, PropertyChangeListener, LookupListener {
     
     private final static String ERR_IMG = "org/netbeans/modules/dialogs/error.gif";
     
@@ -42,18 +39,20 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
     private MultiViewElementCallback callBack;
     private ProjectElement element;
     private InputValidator validator;
-    private DynamicSavable savable;
     
     private JTextField nameText;
     private JTextArea descriptionText;
     private JLabel msgLabel;
+    private boolean userEditing = false;
+    
+    private Result<Savable> savableResult;
     
     ProjectEditorView(ProjectElement element) {
         this.element = element;
+        savableResult = element.getLookup().lookupResult(Savable.class);
         initComponents();
         addListeners();
         validator = new InputValidator();
-        savable = new DynamicSavable();
     }
     
     private void initComponents() {
@@ -98,6 +97,7 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
         nameText.getDocument().addDocumentListener(this);
         descriptionText.getDocument().addDocumentListener(this);
         element.addPropertyChangeListener(WeakListeners.propertyChange(this, element));
+        savableResult.addLookupListener(this);
     }
     
     @Override
@@ -152,7 +152,7 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
         
     @Override
     public void removeUpdate(DocumentEvent e) {
-            changed();
+        changed();
     }
 
     @Override
@@ -160,23 +160,23 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
     }
     
     private void changed() {
+        userEditing = true;
         showError(null);
         changeName();
         changeDescription();
+        userEditing = false;
     }
     
     private void changeName() {
         String name = nameText.getText();
-        if(!validator.isNameValid(name))
-            name = savable.originalName;
-        savable.setName(name);
+        if(validator.isNameValid(name))
+            element.setProperty(org.jreserve.project.system.ProjectElement.NAME_PROPERTY, name);
     }
     
     private void changeDescription() {
         String description = descriptionText.getText();
-        if(!validator.isDescriptionValid(description))
-            description = savable.originalDescription;
-        savable.setDescription(description);
+        if(validator.isDescriptionValid(description))
+            element.setProperty(org.jreserve.project.system.ProjectElement.DESCRIPTION_PROPERTY, description);
     }
     
     private boolean isEmpty(String s) {
@@ -196,6 +196,8 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        if(userEditing)
+            return;
         String property = evt.getPropertyName();
         if(ProjectElement.NAME_PROPERTY.equals(property)) {
             setNameText(getStringProperty(property));
@@ -208,7 +210,6 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
         if(equals(newText, nameText.getText()))
             return;
         nameText.setText(newText);
-        savable.setName(newText);
     }
     
     private boolean equals(String s1, String s2) {
@@ -221,7 +222,6 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
         if(equals(newText, descriptionText.getText()))
             return;
         descriptionText.setText(newText);
-        savable.setDescription(newText);
     }
     
     private String getChangedHtmlDisplayName() {
@@ -237,6 +237,12 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
     private String getUnchangedHtmlDisplayName() {
         return getHtmlDisplayName("%s");
     }
+
+    @Override
+    public void resultChanged(LookupEvent le) {
+        boolean changed = !savableResult.allClasses().isEmpty();
+        setHtmlDisplayName(changed);
+    }
     
     private void setHtmlDisplayName(boolean isChanged) {
         if(callBack == null)
@@ -246,132 +252,6 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
             tc.setHtmlDisplayName(getChangedHtmlDisplayName());
         else
             tc.setHtmlDisplayName(getUnchangedHtmlDisplayName());
-    }
-    
-    private class DynamicSavable extends PersistentUpdatable {
-        
-        private String originalName;
-        private String name;
-        private String originalDescription;
-        private String description;
-        
-        private DynamicSavable() {
-            super(ProjectEditorView.this.element);
-            initState();
-            unregisterSavable();
-        }
-        
-        private void initState() {
-            Project project = getProject();
-            initName(project.getName());
-            initDescription(project.getDescription());
-        }
-        
-        private void initName(String name) {
-            this.originalName = name;
-            this.name = name;
-        }
-        
-        private void initDescription(String description) {
-            this.originalDescription = description;
-            this.description = description;
-        }
-        
-        private void setOriginalName(String name) {
-            originalName = name;
-            checkChanged();
-        }
-        
-        private Project getProject() {
-            return ProjectEditorView.this.element.getValue();
-        }
-        
-        private void setOriginalDescription(String description) {
-            originalDescription = description;
-            checkChanged();
-        }
-        
-        private void setName(String name) {
-            this.name = name;
-            checkChanged();
-        }
-        
-        private void setDescription(String description) {
-            if(isEmpty(description))
-                this.description = null;
-            else
-                this.description = description;
-            checkChanged();
-        }
-        
-        private void checkChanged() {
-            if(isNameChanged() || isDescriptionChanged())
-                registerSavable();
-            else
-                unregisterSavable();
-        }
-        
-        private boolean isNameChanged() {
-            return !equals(originalName, name);
-        }
-        
-        private boolean equals(String s1, String s2) {
-            if(isEmpty(s1))
-                return isEmpty(s2);
-            return s1.equals(s2);
-        }
-        
-        private boolean isDescriptionChanged() {
-            return !equals(originalDescription, description);
-        }
-        
-        private void registerSavable() {
-            register();
-            element.addToLookup(this);
-            setHtmlDisplayName(true);
-        }
-        
-        private void unregisterSavable() {
-            unregister();
-            element.removeFromLookup(this);
-            setHtmlDisplayName(false);
-        }
-        
-        @Override
-        protected void saveEntity() {
-            if(makeLog()) {
-                super.saveEntity();
-                ChangeLogUtil.getDefault().saveValues(getProject());
-            }
-            unregisterSavable();
-        }
-        
-        private boolean makeLog() {
-            return makeNameChangeLog() ||
-                   makeDescriptionChangeLog();
-        }
-        
-        private boolean makeNameChangeLog() {
-            if(equals(originalName, name))
-                return false;
-            element.setProperty(ProjectElement.NAME_PROPERTY, name);
-            createLog(Bundle.LOG_ProjectEditorView_rename(originalName, name));
-            return true;
-        }
-        
-        private void createLog(String msg) {
-            ChangeLogUtil util = ChangeLogUtil.getDefault();
-            Project project = getProject();
-            util.addChange(project, ChangeLog.Type.PROJECT, msg);
-        }
-        
-        private boolean makeDescriptionChangeLog() {
-            if(equals(originalDescription, description))
-                return false;
-            element.setProperty(ProjectElement.DESCRIPTION_PROPERTY, description);
-            createLog(Bundle.LOG_ProjectEditorView_descriptionChange());
-            return true;
-        }        
     }
     
     private class InputValidator {

@@ -24,6 +24,7 @@ class LoBElement extends ProjectElement<LoB> {
         properties.put(NAME_PROPERTY, lob.getName());
         super.addToLookup(new PersistentDeletable(this));
         super.addToLookup(new RenameableProjectElement(this));
+        new LobSavable();
     }
 
     @Override
@@ -34,13 +35,19 @@ class LoBElement extends ProjectElement<LoB> {
     @Override
     public void setProperty(String property, Object value) {
         if(NAME_PROPERTY.equals(property))
-            setName((String) value);
+            getValue().setName((String) value);
         super.setProperty(property, value);
-        getValue().setName((String) value);
     }
     
-    private void setName(String name) {
-        getValue().setName(name);
-        addToLookup(new PersistentSavable(this));
+    private class LobSavable extends PersistentSavable<LoB> {
+
+        public LobSavable() {
+            super(LoBElement.this);
+        }
+        
+        @Override
+        protected void initOriginalProperties() {
+            originalProperties.put(NAME_PROPERTY, element.getValue().getName());
+        }
     }
 }

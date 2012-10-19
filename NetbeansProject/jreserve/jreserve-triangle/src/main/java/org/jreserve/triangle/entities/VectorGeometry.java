@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
  */
 @Embeddable
 @MappedSuperclass
-public class VectorGeometry implements Serializable  {
+public class VectorGeometry implements Serializable, Cloneable  {
     private final static long serialVersionUID = 1L;
     
     private final static String ERR_PERIODS = 
@@ -82,6 +82,14 @@ public class VectorGeometry implements Serializable  {
 
     public void setMonthInAccident(int monthInAccident) {
         initMonthInAccident(monthInAccident);
+    }
+    
+    public boolean isEqualGeometry(VectorGeometry g) {
+        if(g==null)
+            return false;
+        return accidentStart.equals(g.accidentStart) &&
+               accidentPeriods == g.accidentPeriods &&
+               monthInAccident == g.monthInAccident;
     }
     
     @Override

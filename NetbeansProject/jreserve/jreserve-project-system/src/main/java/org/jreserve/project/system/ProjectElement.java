@@ -80,7 +80,7 @@ public class ProjectElement<T> implements Lookup.Provider {
             l.propertyChange(evt);
     }
     
-    public Object getProperty(String property) {
+    public Object getProperty(Object property) {
         return properties.get(property);
     }
     

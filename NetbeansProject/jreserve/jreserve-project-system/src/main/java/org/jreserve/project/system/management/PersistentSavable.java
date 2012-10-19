@@ -12,7 +12,7 @@ import org.jreserve.project.system.ProjectElement;
  * @author Peter Decsi
  * @version 1.0
  */
-public class PersistentSavable<T> extends AbstractProjectElementSavable<T> {
+public abstract class PersistentSavable<T> extends AbstractProjectElementSavable<T> {
     
     protected Session session;
     
@@ -23,7 +23,7 @@ public class PersistentSavable<T> extends AbstractProjectElementSavable<T> {
     }
     
     @Override
-    protected void handleSave() throws IOException {
+    protected void saveElement() throws IOException {
         try {
             session = SessionFactory.beginTransaction();
             saveEntity();

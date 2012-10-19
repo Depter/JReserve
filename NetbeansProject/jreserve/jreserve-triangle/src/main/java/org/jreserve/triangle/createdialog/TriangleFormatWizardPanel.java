@@ -1,6 +1,5 @@
 package org.jreserve.triangle.createdialog;
 
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -15,7 +14,7 @@ import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.guiutil.DataFormatVisualPanel;
+import org.jreserve.triangle.guiutil.TriangleFormatVisualPanel;
 import org.jreserve.triangle.guiutil.DataFormatWizardPanel;
 import org.jreserve.triangle.guiutil.NameSelectWizardPanel;
 import org.openide.WizardDescriptor;
@@ -42,8 +41,8 @@ class TriangleFormatWizardPanel extends DataFormatWizardPanel implements WizardD
     private TriangleData triangleData;
 
     @Override
-    protected DataFormatVisualPanel createPanel() {
-        return new VisualPanel();
+    protected TriangleFormatVisualPanel createPanel() {
+        return new TriangleFormatVisualPanel();
     }
 
     @Override
@@ -137,11 +136,6 @@ class TriangleFormatWizardPanel extends DataFormatWizardPanel implements WizardD
         private void readPanel() {
             geometry = panel.getGeometry();
         }
-        
-    }
-
-    private static class VisualPanel extends DataFormatVisualPanel {    
-    
         
     }
 }

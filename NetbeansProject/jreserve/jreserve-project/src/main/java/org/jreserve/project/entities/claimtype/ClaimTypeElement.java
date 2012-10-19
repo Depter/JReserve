@@ -21,6 +21,7 @@ class ClaimTypeElement extends ProjectElement<ClaimType> {
         properties.put(NAME_PROPERTY, claimType.getName());
         super.addToLookup(new ClaimTypeDeletable());
         super.addToLookup(new RenameableProjectElement(this));
+        new ClaimTypeSavable();
     }
     
     @Override
@@ -31,14 +32,8 @@ class ClaimTypeElement extends ProjectElement<ClaimType> {
     @Override
     public void setProperty(String property, Object value) {
         if(NAME_PROPERTY.equals(property))
-            setName((String) value);
+            getValue().setName((String) value);
         super.setProperty(property, value);
-        getValue().setName((String) value);
-    }
-    
-    private void setName(String name) {
-        getValue().setName(name);
-        addToLookup(new PersistentSavable(this));
     }
     
     private class ClaimTypeDeletable extends PersistentDeletable {
@@ -52,6 +47,18 @@ class ClaimTypeElement extends ProjectElement<ClaimType> {
             ClaimType ct = getValue();
             LoB lob = ct.getLoB();
             lob.removeClaimType(ct);
+        }
+    }
+    
+    private class ClaimTypeSavable extends PersistentSavable<ClaimType> {
+
+        private ClaimTypeSavable() {
+            super(ClaimTypeElement.this);
+        }
+        
+        @Override
+        protected void initOriginalProperties() {
+            originalProperties.put(NAME_PROPERTY, element.getValue().getName());
         }
     }
 }
