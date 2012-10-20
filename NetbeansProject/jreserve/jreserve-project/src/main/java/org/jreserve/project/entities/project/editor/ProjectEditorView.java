@@ -174,9 +174,16 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
     }
     
     private void changeDescription() {
-        String description = descriptionText.getText();
+        String description = getDescription();
         if(validator.isDescriptionValid(description))
             element.setProperty(org.jreserve.project.system.ProjectElement.DESCRIPTION_PROPERTY, description);
+    }
+    
+    private String getDescription() {
+        String description = descriptionText.getText();
+        if(isEmpty(description))
+            return null;
+        return description;
     }
     
     private boolean isEmpty(String s) {

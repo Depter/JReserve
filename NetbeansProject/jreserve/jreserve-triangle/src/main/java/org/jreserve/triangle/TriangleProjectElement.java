@@ -2,10 +2,11 @@ package org.jreserve.triangle;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Date;
+import java.io.IOException;
 import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.project.entities.ChangeLogUtil.ProjectChangeLog;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
@@ -27,7 +28,16 @@ import org.openide.windows.TopComponent;
  */
 @Messages({
     "# {0} - triangle name",
-    "LOG.TriangleProjectElement.Deleted=Triangle \"{0}\" deleted."
+    "LOG.TriangleProjectElement.Deleted=Triangle \"{0}\" deleted.",
+    "# {0} - old name",
+    "# {1} - new name",
+    "LOG.TriangleProjectElement.NameChange=Triangle name changed \"{0}\" => \"{1}\"",
+    "# {0} - name",
+    "LOG.TriangleProjectElement.DescriptionChange=Description of triangle \"{0}\" changed.",
+    "# {0} - name",
+    "# {1} - old geometry",
+    "# {2} - new geometry",
+    "LOG.TriangleProjectElement.GeometryChange=Geometry of triangle \"{0}\" changed {1} => {2}."
 })
 public class TriangleProjectElement extends ProjectElement<Triangle> {
     
@@ -35,9 +45,14 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     
     public TriangleProjectElement(Triangle triangle) {
         super(triangle);
-        super.setProperty(NAME_PROPERTY, triangle.getName());
-        super.setProperty(DESCRIPTION_PROPERTY, triangle.getName());
+        initProperties(triangle);
         initLookup();
+    }
+    
+    private void initProperties(Triangle triangle) {
+        super.setProperty(NAME_PROPERTY, triangle.getName());
+        super.setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
+        super.setProperty(GEOMETRY_PROPERTY, triangle.getGeometry());
     }
     
     private void initLookup() {
@@ -97,6 +112,50 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             if(g2==null) return true;
             return !g1.isEqualGeometry(g2);
         }
+
+        @Override
+        protected void saveElement() throws IOException {
+            String oldName = (String) originalProperties.get(NAME_PROPERTY);
+            String oldDescription = (String) originalProperties.get(DESCRIPTION_PROPERTY);
+            TriangleGeometry oldGeometry = (TriangleGeometry) originalProperties.get(GEOMETRY_PROPERTY);
+            
+            super.saveElement();
+            
+            logChange(oldName, oldDescription, oldGeometry);
+        }
+        
+        private void logChange(String oldName, String oldDescription, TriangleGeometry oldGeometry) {
+            ProjectChangeLog util = ChangeLogUtil.getDefault(element.getValue().getProject());
+            if(logNameChange(util, oldName) | logDescriptionChange(util, oldDescription) | logGeometryChange(util, oldGeometry))
+                util.saveValues();
+        }
+        
+        private boolean logNameChange(ProjectChangeLog util, String old) {
+            String newName = (String) element.getProperty(NAME_PROPERTY);
+            if(!isChanged(old, newName))
+                return false;
+            util.addChange(ChangeLog.Type.DATA, Bundle.LOG_TriangleProjectElement_NameChange(old, newName));
+            return true;
+        }
+        
+        private boolean logDescriptionChange(ProjectChangeLog util, String old) {
+            String newDescription = (String) element.getProperty(DESCRIPTION_PROPERTY);
+            if(!isChanged(old, newDescription))
+                return false;
+            String name = element.getValue().getName();
+            util.addChange(ChangeLog.Type.DATA, Bundle.LOG_TriangleProjectElement_DescriptionChange(name));
+            return true;
+        }
+        
+        private boolean logGeometryChange(ProjectChangeLog util, TriangleGeometry old) {
+            TriangleGeometry geoemtry = (TriangleGeometry) element.getProperty(GEOMETRY_PROPERTY);
+            if(!isChanged(old, geoemtry))
+                return false;
+            String name = element.getValue().getName();
+            String msg = Bundle.LOG_TriangleProjectElement_GeometryChange(name, old, geoemtry);
+            util.addChange(ChangeLog.Type.DATA, msg);
+            return true;
+        }
     }
     
     private class TriangleDeletable extends PersistentDeletable {
@@ -123,10 +182,11 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     private class TriangleOpenable implements Openable, PropertyChangeListener {
         
         private TopComponent editor;
-        private PropertyChangeListener listener;
         
         TriangleOpenable() {
-            listener = WeakListeners.propertyChange(this, TopComponent.getRegistry());
+            TopComponent.Registry registry = TopComponent.getRegistry();
+            PropertyChangeListener listener = WeakListeners.propertyChange(this, TopComponent.getRegistry());
+            registry.addPropertyChangeListener(listener);
         }
         
         @Override

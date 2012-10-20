@@ -11,6 +11,7 @@ import javax.swing.event.DocumentListener;
 import org.jreserve.data.container.ProjectDataContainer;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.TriangleProjectElement;
+import org.jreserve.triangle.entities.AbstractData;
 import org.netbeans.api.actions.Savable;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -29,7 +30,7 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     
     private final static String ERR_IMG = "org/netbeans/modules/dialogs/error.gif";
 
-    private TriangleProjectElement element;
+    private ProjectElement<? extends AbstractData> element;
     private JToolBar toolBar = new JToolBar();
     private MultiViewElementCallback callBack;
     private InputValidator validator = new InputValidator();
@@ -37,7 +38,7 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     
     private Result<Savable> savableResult;
     
-    public TriangleEditorView(TriangleProjectElement element) {
+    public TriangleEditorView(ProjectElement<? extends AbstractData> element) {
         this.element = element;
         initComponents();
         savableResult = element.getLookup().lookupResult(Savable.class);
@@ -221,9 +222,16 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     }
     
     private void changeDescription() {
-        String description = descriptionText.getText();
+        String description = getDescription();
         if(validator.isDescriptionValid(description))
             element.setProperty(org.jreserve.project.system.ProjectElement.DESCRIPTION_PROPERTY, description);
+    }
+    
+    private String getDescription() {
+        String str = descriptionText.getText();
+        if(isEmpty(str))
+            return null;
+        return str;
     }
     
     private boolean isEmpty(String s) {

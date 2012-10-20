@@ -3,61 +3,46 @@ package org.jreserve.triangle.editor;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.data.Criteria;
 import org.jreserve.data.Data;
-import org.jreserve.data.DataSource;
-import org.jreserve.data.ProjectDataType;
-import org.jreserve.persistence.Session;
-import org.jreserve.persistence.SessionFactory;
-import org.jreserve.project.entities.Project;
 import org.jreserve.triangle.TriangleProjectElement;
-import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.guiutil.TriangleFormatVisualPanel;
-import org.jreserve.triangle.mvc.TriangleLoader;
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.RequestProcessor;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleDataEditorView extends TriangleFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener {
-    
-    private final static Logger logger = Logger.getLogger(TriangleDataEditorView.class.getName());
+public class TriangleDataEditorView extends TriangleFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, DataLoader.Callback {
     
     private JToolBar toolBar = new JToolBar();
     private TriangleProjectElement element;
     private MultiViewElementCallback callBack;
-    private TriangleLoader loader;
+    private DataLoader loader;
     
     public TriangleDataEditorView(TriangleProjectElement element) {
         this.element = element;
         super.addChangeListener(this);
-        initGeometry(element.getValue().getGeometry());
-        new DataLoader(element.getValue()).start();
+        initGeometry();
+        startLoader();
     }
     
-    private void initGeometry(TriangleGeometry geometry) {
-        initBegin(geometry);
-        initPeriods(geometry);
-        initMonths(geometry);
+    private void initGeometry() {
+        TriangleGeometry triangleGeometry = element.getValue().getGeometry();
+        initBegin(triangleGeometry);
+        initPeriods(triangleGeometry);
+        initMonths(triangleGeometry);
     }
     
     private void initBegin(TriangleGeometry geometry) {
@@ -111,6 +96,11 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
         return aMonth == dMonth;
     }
     
+    private void startLoader() {
+        loader = new DataLoader(element.getValue(), this);
+        loader.start();
+    }
+    
     @Override
     public JComponent getVisualRepresentation() {
         return this;
@@ -162,7 +152,8 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
         return CloseOperationState.STATE_OK;
     }
 
-    private void finnished(DataLoader loader) {
+    @Override
+    public void finnished(DataLoader loader) {
         try {
             List<Data<Double>> datas = loader.getData();
             setData(datas);
@@ -181,92 +172,4 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
         if(triangleGeometry != null)
             element.setProperty(TriangleProjectElement.GEOMETRY_PROPERTY, triangleGeometry);
     }
-    
-    private class DataLoader implements Runnable {
-        private final ProgressHandle handle;
-        private final RequestProcessor.Task task;
-        
-        private Project project;
-        private ProjectDataType dataType;
-        private final TriangleGeometry geometry;
-        private final String triangleId;
-        private final String triangleName;
-        
-        private Criteria criteria;
-        private Session session;
-        
-        private volatile List<Data<Double>> datas = null;
-        private volatile RuntimeException ex = null;
-        
-        private DataLoader(Triangle triangle) {
-            this.triangleId = triangle.getId();
-            this.project = triangle.getProject();
-            this.dataType = triangle.getDataType();
-            this.geometry = triangle.getGeometry().copy();
-            this.triangleName = triangle.getName();
-            this.task = RequestProcessor.getDefault().create(this);
-            this.handle = ProgressHandleFactory.createHandle("Loading triangle: "+triangleName, task);
-        }
-
-        private void start() {
-            task.schedule(0);
-        }
-        
-        @Override
-        public void run() {
-            handle.start();
-            handle.switchToIndeterminate();
-            try {
-                initSession();
-                initCriteria();
-                loadData();
-            } catch (RuntimeException rex) {
-                this.ex = rex;
-                logger.log(Level.SEVERE, "Unable to load data for triangle: "+triangleName, ex);
-            } finally {
-                closeSession();
-            }
-            handle.finish();
-            fireFinnished();
-        }
-    
-        private void initSession() {
-            session = SessionFactory.createSession();
-            project = (Project) session.merge(project);
-            dataType = (ProjectDataType) session.merge(dataType);
-        }
-    
-        private void initCriteria() {
-            criteria = new Criteria(project.getClaimType());
-            criteria.setDataType(dataType);
-        }
-        
-        private void loadData() {
-            this.datas = new DataSource(session).getClaimData(criteria);
-        }
-        
-    
-        private void closeSession() {
-            if(session != null) {
-                session.close();
-                session = null;
-            }
-        }
-        
-        private void fireFinnished() {
-            final DataLoader loader = this;
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    TriangleDataEditorView.this.finnished(loader);
-                }
-            });
-        }
-        
-        public List<Data<Double>> getData() {
-            if(ex != null)
-                throw ex;
-            return datas;
-        }
-    } 
 }

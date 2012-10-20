@@ -2,7 +2,7 @@ package org.jreserve.triangle.editor;
 
 import java.awt.Image;
 import java.io.Serializable;
-import org.jreserve.triangle.TriangleProjectElement;
+import org.jreserve.triangle.VectorProjectElement;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.openide.util.HelpCtx;
@@ -13,19 +13,17 @@ import org.openide.windows.TopComponent;
 /**
  *
  * @author Peter Decsi
- * @version 1.0
  */
 @Messages({
-    "LBL.TriangleDataEditorDescriptor.title=Geometry"
+    "LBL.VectorDataEditorDescriptor.title=Geometry"
 })
-class TriangleDataEditorDescriptor implements MultiViewDescription, Serializable {
+public class VectorDataEditorDescriptor implements MultiViewDescription, Serializable {
     
-    final static Image IMG = ImageUtilities.loadImage("resources/triangle.png", false);
-    
-    private final static String PREFERRED_ID = "TriangleDataEditorDescriptor";
-    private TriangleProjectElement element;
+    final static Image IMG = ImageUtilities.loadImage("resources/vector.png", false);
+    private final static String PREFERRED_ID = "VectorDataEditorDescriptor";
+    private VectorProjectElement element;
 
-    TriangleDataEditorDescriptor(TriangleProjectElement element) {
+    VectorDataEditorDescriptor(VectorProjectElement element) {
         this.element = element;
     }
     
@@ -36,7 +34,7 @@ class TriangleDataEditorDescriptor implements MultiViewDescription, Serializable
 
     @Override
     public String getDisplayName() {
-        return Bundle.LBL_TriangleDataEditorDescriptor_title();
+        return Bundle.LBL_VectorDataEditorDescriptor_title();
     }
 
     @Override
@@ -56,6 +54,6 @@ class TriangleDataEditorDescriptor implements MultiViewDescription, Serializable
 
     @Override
     public MultiViewElement createElement() {
-        return new TriangleDataEditorView(element);
+        return new VectorDataEditorView(element);
     }
 }
