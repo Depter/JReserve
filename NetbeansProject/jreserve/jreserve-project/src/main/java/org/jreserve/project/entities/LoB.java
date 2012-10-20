@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
@@ -15,6 +17,7 @@ import org.jreserve.persistence.PersistenceUtil;
  * @author Peter Decsi
  * @version 1.0
  */
+@Audited
 @EntityRegistration
 @Entity
 @Table(name="LOB", schema="JRESERVE")
@@ -26,6 +29,7 @@ public class LoB extends AbstractPersistentObject {
     @Column(name="LOB_NAME", nullable=false, length=NAME_LENGTH)
     private String name;
     
+    @NotAudited
     @OneToMany(mappedBy="lob", orphanRemoval=true)
     private List<ClaimType> claimTypes = new ArrayList<ClaimType>();
     

@@ -1,8 +1,8 @@
 package org.jreserve.project.entities;
 
-import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
@@ -12,6 +12,7 @@ import org.jreserve.persistence.PersistenceUtil;
  * @author Peter Decsi
  * @version 1.0
  */
+@Audited
 @EntityRegistration
 @Entity
 @Table(name="PROJECT", schema="JRESERVE")

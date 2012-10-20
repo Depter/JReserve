@@ -2,12 +2,15 @@ package org.jreserve.persistence;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Audited
 @Entity
 @Inheritance(strategy= InheritanceType.TABLE_PER_CLASS)
 public abstract class AbstractPersistentObject implements PersistentObject, Serializable {
@@ -19,6 +22,7 @@ public abstract class AbstractPersistentObject implements PersistentObject, Seri
     @Column(name="ID", length=ID_LENGTH)
     private String id = IdGenerator.getId();
     
+    @NotAudited
     @Version
     @Column(name="VERSION", nullable=false)
     private Long version;

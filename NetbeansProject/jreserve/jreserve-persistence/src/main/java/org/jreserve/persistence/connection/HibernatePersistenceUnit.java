@@ -14,7 +14,7 @@ import org.jreserve.persistence.Session;
  * @author Peter Decsi
  * @version 1.0
  */
-class HibernatePersistenceUnit implements PersistenceUnit {
+public class HibernatePersistenceUnit implements PersistenceUnit {
     
     private final static Logger logger = Logger.getLogger(HibernatePersistenceUnit.class.getName());
     
@@ -40,6 +40,10 @@ class HibernatePersistenceUnit implements PersistenceUnit {
         return new HibernateSession(session, this, id);
     }
     
+    public org.hibernate.Session openHibernateSession() {
+        return factory.openSession();
+    }
+    
     void sessionClosed(HibernateSession session) {
         openSessions.remove(session);
         logger.log(Level.FINE, "Session [{0}] closed.", session.getId());
@@ -50,4 +54,5 @@ class HibernatePersistenceUnit implements PersistenceUnit {
             session.close();
         factory.close();
     }
+    
 }

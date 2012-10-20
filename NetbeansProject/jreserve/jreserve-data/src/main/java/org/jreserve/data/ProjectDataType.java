@@ -1,6 +1,7 @@
 package org.jreserve.data;
 
 import javax.persistence.*;
+import org.hibernate.envers.Audited;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.ClaimType;
@@ -10,6 +11,7 @@ import org.jreserve.project.entities.ClaimType;
  * @author Peter Decsi
  * @version 1.0
  */
+@Audited
 @EntityRegistration
 @Entity
 @Table(name="DATA_TYPE", schema="JRESERVE")

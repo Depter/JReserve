@@ -69,6 +69,7 @@ public class HibernateUtil {
     }
     
     private static boolean saveOpenEntities() {
+        //TODO ask user
         return true;
     }
     

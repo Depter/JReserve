@@ -1,6 +1,7 @@
 package org.jreserve.triangle.entities;
 
 import javax.persistence.*;
+import org.hibernate.envers.Audited;
 import org.jreserve.data.ProjectData;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.AbstractPersistentObject;
@@ -14,6 +15,7 @@ import org.jreserve.project.entities.Project;
  * @version 1.0
  */
 @EntityRegistration
+@Audited
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class AbstractData extends AbstractPersistentObject implements ProjectData {

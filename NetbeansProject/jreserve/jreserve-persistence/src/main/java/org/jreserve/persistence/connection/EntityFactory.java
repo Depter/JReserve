@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jreserve.persistence.revision.JReserveRevisionEntity;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
@@ -31,8 +32,10 @@ class EntityFactory {
     private ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
     
     public Set<Class<?>> getEntityClasses() {
+        entities.clear();
         FileObject dir = FileUtil.getConfigFile(EntityRegistrationProcessor.ENTITY_DIRECTORY);
         processDirectory(dir);
+        entities.add(JReserveRevisionEntity.class);
         return entities;
     }
     

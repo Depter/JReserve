@@ -1,9 +1,10 @@
 package org.jreserve.project.entities;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
@@ -13,6 +14,7 @@ import org.jreserve.persistence.PersistenceUtil;
  * @author Peter Decsi
  * @version 1.0
  */
+@Audited
 @EntityRegistration
 @Entity
 @Table(name="CLAIM_TYPE", schema="JRESERVE")
@@ -27,6 +29,7 @@ public class ClaimType extends AbstractPersistentObject {
     @JoinColumn(name="LOB_ID", referencedColumnName="ID", nullable=false)
     private LoB lob;
     
+    @NotAudited
     @OneToMany(mappedBy="claimType", orphanRemoval=true)
     private List<Project> projects = new ArrayList<Project>();
     

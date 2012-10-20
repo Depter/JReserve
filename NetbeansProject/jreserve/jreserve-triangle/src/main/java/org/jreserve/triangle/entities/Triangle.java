@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import org.hibernate.envers.Audited;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.Project;
@@ -14,6 +15,7 @@ import org.jreserve.project.entities.Project;
  * @version 1.0
  */
 @EntityRegistration
+@Audited
 @Entity
 @Table(name="TRIANGLE", schema="JRESERVE")
 public class Triangle extends AbstractData implements Serializable {
