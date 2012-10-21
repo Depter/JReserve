@@ -2,10 +2,10 @@ package org.jreserve.data.query;
 
 import java.util.Date;
 import java.util.List;
+import org.hibernate.Session;
 import org.jreserve.data.Data;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.data.entities.ClaimValuePk;
-import org.jreserve.persistence.Session;
 
 /**
  *
@@ -31,6 +31,6 @@ public class DeleteDataQuery {
         Date accident = data.getAccidentDate();
         Date development = data.getDevelopmentDate();
         ClaimValuePk id = new ClaimValuePk(data.getDataType(), accident, development);
-        return session.find(ClaimValue.class, id);
+        return (ClaimValue) session.load(ClaimValue.class, id);
     }
 }

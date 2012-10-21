@@ -13,8 +13,7 @@ public class ProjectEditor {
 
     public static TopComponent createTopComponent(ProjectElement element) {
         MultiViewDescription[] desc = {
-            new ProjectEditorDescriptor(element),
-            new ProjectLogDescriptor(element)
+            new ProjectEditorDescriptor(element)
         };
         TopComponent tc = MultiViewFactory.createCloneableMultiView(desc, desc[0]);
         String name = element.getValue().getName();

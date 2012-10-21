@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.jreserve.data.Criteria;
 import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.persistence.Query;
-import org.jreserve.persistence.Session;
 
 /**
  *
@@ -34,7 +34,7 @@ public class SelectDataQuery extends AbstractQuery implements DataQuery<List<Dat
         String sql = buildCriteria(SQL, criteria);
         logger.log(Level.FINER, "Query ClaimValues: {0}", sql);
         Query query = session.createQuery(sql);
-        return getData(query.getResultList());
+        return getData(query.list());
     }
 
     private List<Data<Double>> getData(List<Object[]> records) {

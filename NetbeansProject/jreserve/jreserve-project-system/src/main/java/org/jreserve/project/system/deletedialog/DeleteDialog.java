@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.*;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.system.management.Deletable;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
@@ -198,6 +201,7 @@ class DeleteDialog extends JDialog implements ExplorerManager.Provider {
     private class DeleteWorker extends SwingWorker<Void, Void> {
         
         private final List<Deletable> deletables;
+        private Transaction tx;
         
         private DeleteWorker(Collection<? extends Deletable> deletables) {
             this.deletables = new ArrayList<Deletable>(deletables);
@@ -205,9 +209,21 @@ class DeleteDialog extends JDialog implements ExplorerManager.Provider {
         
         @Override
         protected Void doInBackground() throws Exception {
-            for(Deletable deletable : deletables)
-                delete(deletable);
-            return null;
+            try {
+                beginTransaction();
+                for(Deletable deletable : deletables)
+                    delete(deletable);
+                comit();
+                return null;
+            } catch (Exception ex) {
+                rollback();
+                throw ex;
+            }
+        }
+        
+        private void beginTransaction() {
+            Session session = SessionFactory.getCurrentSession();
+            tx = session.beginTransaction();
         }
         
         private void delete(Deletable deletable) throws Exception {
@@ -220,6 +236,20 @@ class DeleteDialog extends JDialog implements ExplorerManager.Provider {
                 context.remove(deletable);
             }
             children.refreshKeys();
+        }
+        
+        private void comit() {
+            if(tx != null) {
+                tx.commit();
+                tx = null;
+            }
+        }
+        
+        private void rollback() {
+            if(tx != null) {
+                tx.rollback();
+                tx = null;
+            }
         }
         
         @Override

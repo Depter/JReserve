@@ -21,8 +21,6 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.util.DateTableCellRenderer;
 import org.jreserve.data.util.DoubleTableCellRenderer;
 import org.jreserve.data.util.ProjectDataTypeElementComparator;
-import org.jreserve.project.entities.ChangeLog;
-import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
@@ -415,8 +413,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         }
         
         private void logDelete(String msg, Project project) {
-            ChangeLogUtil.getDefault().addChange(project, ChangeLog.Type.PROJECT, msg);
-            ChangeLogUtil.getDefault().saveValues(project);
+            //TODO log delete
         }
     }
 

@@ -2,12 +2,6 @@ package org.jreserve.triangle;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import org.jreserve.persistence.Session;
-import org.jreserve.project.entities.ChangeLog;
-import org.jreserve.project.entities.ChangeLogUtil;
-import org.jreserve.project.entities.ChangeLogUtil.ProjectChangeLog;
-import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
@@ -56,7 +50,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     }
     
     private void initLookup() {
-        super.addToLookup(new TriangleDeletable());
+        super.addToLookup(new PersistentDeletable(this));
         super.addToLookup(new TriangleOpenable());
         super.addToLookup(new RenameableProjectElement(this));
         new TriangleSavable();
@@ -111,71 +105,6 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             if(g1==null) return g2!=null;
             if(g2==null) return true;
             return !g1.isEqualGeometry(g2);
-        }
-
-        @Override
-        protected void saveElement() throws IOException {
-            String oldName = (String) originalProperties.get(NAME_PROPERTY);
-            String oldDescription = (String) originalProperties.get(DESCRIPTION_PROPERTY);
-            TriangleGeometry oldGeometry = (TriangleGeometry) originalProperties.get(GEOMETRY_PROPERTY);
-            
-            super.saveElement();
-            
-            logChange(oldName, oldDescription, oldGeometry);
-        }
-        
-        private void logChange(String oldName, String oldDescription, TriangleGeometry oldGeometry) {
-            ProjectChangeLog util = ChangeLogUtil.getDefault(element.getValue().getProject());
-            if(logNameChange(util, oldName) | logDescriptionChange(util, oldDescription) | logGeometryChange(util, oldGeometry))
-                util.saveValues();
-        }
-        
-        private boolean logNameChange(ProjectChangeLog util, String old) {
-            String newName = (String) element.getProperty(NAME_PROPERTY);
-            if(!isChanged(old, newName))
-                return false;
-            util.addChange(ChangeLog.Type.DATA, Bundle.LOG_TriangleProjectElement_NameChange(old, newName));
-            return true;
-        }
-        
-        private boolean logDescriptionChange(ProjectChangeLog util, String old) {
-            String newDescription = (String) element.getProperty(DESCRIPTION_PROPERTY);
-            if(!isChanged(old, newDescription))
-                return false;
-            String name = element.getValue().getName();
-            util.addChange(ChangeLog.Type.DATA, Bundle.LOG_TriangleProjectElement_DescriptionChange(name));
-            return true;
-        }
-        
-        private boolean logGeometryChange(ProjectChangeLog util, TriangleGeometry old) {
-            TriangleGeometry geoemtry = (TriangleGeometry) element.getProperty(GEOMETRY_PROPERTY);
-            if(!isChanged(old, geoemtry))
-                return false;
-            String name = element.getValue().getName();
-            String msg = Bundle.LOG_TriangleProjectElement_GeometryChange(name, old, geoemtry);
-            util.addChange(ChangeLog.Type.DATA, msg);
-            return true;
-        }
-    }
-    
-    private class TriangleDeletable extends PersistentDeletable {
-        
-        TriangleDeletable() {
-            super(TriangleProjectElement.this);
-        }
-
-        @Override
-        protected void cleanUpAfterEntity(Session session) {
-            Triangle triangle = TriangleProjectElement.this.getValue();
-            String name = triangle.getName();
-            String msg = Bundle.LOG_TriangleProjectElement_Deleted(name);
-            logDeletion(triangle.getProject(), msg);
-        }
-        
-        private void logDeletion(Project project, String msg) {
-            ChangeLogUtil util = ChangeLogUtil.getDefault();
-            util.addChange(project, ChangeLog.Type.DATA, msg);
-            util.saveValues(project);
         }
     }
     

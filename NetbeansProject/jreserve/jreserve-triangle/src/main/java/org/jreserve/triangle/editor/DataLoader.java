@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import org.hibernate.Session;
 import org.jreserve.data.Criteria;
 import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.persistence.Session;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.Project;
 import org.jreserve.triangle.entities.AbstractData;
@@ -73,7 +73,7 @@ public class DataLoader implements Runnable {
     }
 
     private void initSession() {
-        session = SessionFactory.createSession();
+        session = SessionFactory.openSession();
         project = (Project) session.merge(project);
         dataType = (ProjectDataType) session.merge(dataType);
     }

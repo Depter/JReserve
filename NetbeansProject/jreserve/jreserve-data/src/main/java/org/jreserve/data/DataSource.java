@@ -1,8 +1,8 @@
 package org.jreserve.data;
 
 import java.util.List;
+import org.hibernate.Session;
 import org.jreserve.data.query.*;
-import org.jreserve.persistence.Session;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.ClaimType;
 
@@ -28,19 +28,23 @@ public class DataSource {
     public void open() {
         if(session != null)
             return;
-        session = SessionFactory.createSession();
+        session = SessionFactory.openSession();
         session.beginTransaction();
     }
     
     public void commit() {
-        if(session != null)
-            session.comitTransaction();
+        if(session != null) {
+            session.getTransaction().commit();
+            session.close();
+        }
         session = null;
     }
     
     public void rollBack() {
-        if(session != null)
-            session.rollBackTransaction();
+        if(session != null) {
+            session.getTransaction().rollback();
+            session.close();
+        }
         session = null;
     }
     

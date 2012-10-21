@@ -18,17 +18,13 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.datatypesetting.DTDummy;
 import org.jreserve.data.datatypesetting.DataTypePanel;
 import org.jreserve.data.util.ProjectDataTypeComparator;
-import org.jreserve.persistence.Session;
-import org.jreserve.persistence.SessionFactory;
-import org.jreserve.project.entities.ChangeLog;
-import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.Deletable;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
@@ -175,10 +171,14 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
 
     
     void store() {
-        List<ProjectDataType> deleted = getDeleted();
-        List<ProjectDataType> updated = updateList();
-        if(!deleted.isEmpty() || !updated.isEmpty())
-            new Persister(deleted, updated).save();
+        try {
+            List<ProjectDataType> deleted = getDeleted();
+            List<ProjectDataType> updated = updateList();
+            if(!deleted.isEmpty() || !updated.isEmpty())
+                new Persister(deleted, updated).getResult();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Unable to update ProjectDataTypes for ClaimType: "+claimType.getName(), ex);
+        }
     }
     
     private List<ProjectDataType> getDeleted() {
@@ -235,34 +235,28 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
         return updated;
     }    
     
-    private class Persister {
+    private class Persister extends SessionTask<Void> {
         
         private List<ProjectDataType> deleted;
         private List<ProjectDataType> updated;
         private List<Project> projects;
-        private Session session;
+//        private Session session;
         
         private Persister(List<ProjectDataType> deleted, List<ProjectDataType> updated) {
             this.deleted = deleted;
             this.updated = updated;
         }
-        
-        private void save() {
-            try {
-                initialize();
-                delete();
-                update();
-                session.comitTransaction();
-                saveLogs();
-            } catch (RuntimeException ex) {
-                rollBack(ex);
-                logger.log(Level.SEVERE, "Unable to update ProjectDataTypes for ClaimType: "+claimType.getName(), ex);
-            }
+
+        @Override
+        protected Void doTask() throws Exception {
+            initialize();
+            delete();
+            update();
+            return null;
         }
         
         private void initialize() {
-            session = SessionFactory.beginTransaction();
-            ClaimType ct = session.find(ClaimType.class, claimType.getId());
+            ClaimType ct = (ClaimType) session.load(ClaimType.class, claimType.getId());
             projects = ct.getProjects();
         }
         
@@ -274,21 +268,7 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
         private void deleteDataType(ProjectDataType dt) {
             ProjectElement e = element.getChild(dt);
             Deletable d = e.getLookup().lookup(Deletable.class);
-            d.delete(session);
-            logDeletion(dt);
-        }
-        
-        private void logDeletion(ProjectDataType dt) {
-            String name = dt.getName();
-            int dbId = dt.getDbId();
-            String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Deleted(name, dbId);
-            makeProjectLog(msg);
-        }
-        
-        private void makeProjectLog(String msg) {
-            ChangeLogUtil util = ChangeLogUtil.getDefault();
-            for(Project project : projects)
-                util.addChange(project, ChangeLog.Type.PROJECT, msg);
+            d.delete();
         }
         
         private void update() {
@@ -305,43 +285,10 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
             session.persist(dt);
             ProjectElement e = new ProjectDatTypeProjectElement(dt);
             element.addChild(e);
-            logCreation(dt);
-        }
-
-        private void logCreation(ProjectDataType dt) {
-            String name = dt.getName();
-            int dbId = dt.getDbId();
-            String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Created(name, dbId);
-            makeProjectLog(msg);
         }
         
         private void update(ProjectDataType dt) {
             session.update(dt);
-            logChange(dt);
-        }
-        
-        private void logChange(ProjectDataType dt) {
-            String oldName = dt.getName();
-            int dbId = dt.getDbId();
-            String msg = Bundle.MSG_ProjectDataTypeDialog_Changelog_Changed(oldName, dbId);
-            makeProjectLog(msg);
-        }
-
-        private void saveLogs() {
-            try {
-                ChangeLogUtil util = ChangeLogUtil.getDefault();
-                for(Project project : projects)
-                    util.saveValues(project);
-            } catch (RuntimeException ex) {
-                logger.log(Level.SEVERE, "Unable to save project logs!", ex);
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        
-        private void rollBack(Exception ex) {
-            session.rollBackTransaction();
-            logger.log(Level.SEVERE, "Unable to update ProjectDataTypes in the database!", ex);
-            Exceptions.printStackTrace(ex);
         }
     }
 }

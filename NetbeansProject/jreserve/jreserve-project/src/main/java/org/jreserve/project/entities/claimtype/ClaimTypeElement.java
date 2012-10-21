@@ -1,6 +1,6 @@
 package org.jreserve.project.entities.claimtype;
 
-import org.jreserve.persistence.Session;
+import org.hibernate.Session;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;

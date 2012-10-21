@@ -3,7 +3,8 @@ package org.jreserve.project.entities.lob;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.jreserve.persistence.Session;
+import org.hibernate.Session;
+import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.AbstractProjectElementFactory;
 import org.jreserve.project.system.ProjectElement;
@@ -33,10 +34,15 @@ public class LoBLoader extends AbstractProjectElementFactory<LoB> {
     }
 
     @Override
-    protected List<LoB> getChildValues(Object value, Session session) {
-        List<LoB> lobs = session.getAll(LoB.class);
+    protected List<LoB> getChildValues(Object value) {
+        List<LoB> lobs = loadLobs();
         Collections.sort(lobs, LOB_COMPARATOR);
         return lobs;
+    }
+    
+    private List<LoB> loadLobs() {
+        Session session = SessionFactory.getCurrentSession();
+        return session.createQuery("from LoB").list();
     }
     
     @Override

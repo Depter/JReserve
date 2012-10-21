@@ -3,7 +3,6 @@ package org.jreserve.project.entities.project;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.AbstractProjectElementFactory;
@@ -32,7 +31,7 @@ public class ProjectLoader extends AbstractProjectElementFactory<Project> {
     }
 
     @Override
-    protected List<Project> getChildValues(Object value, Session session) {
+    protected List<Project> getChildValues(Object value) {
         List<Project> projects = ((ClaimType)value).getProjects();
         Collections.sort(projects, COMPARATOR);
         return projects;

@@ -6,7 +6,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
-import org.jreserve.project.entities.ChangeLog;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.entities.Project;
@@ -21,7 +20,6 @@ public class HibernateUtil {
     private final static Class<?>[] ENTITIES = {
         LoB.class,
         ClaimType.class,
-        ChangeLog.class,
         Project.class
     };
     

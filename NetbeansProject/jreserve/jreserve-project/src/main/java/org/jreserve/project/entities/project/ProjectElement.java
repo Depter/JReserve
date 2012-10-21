@@ -2,9 +2,7 @@ package org.jreserve.project.entities.project;
 
 import java.io.IOException;
 import javax.swing.SwingUtilities;
-import org.jreserve.persistence.Session;
-import org.jreserve.project.entities.ChangeLog.Type;
-import org.jreserve.project.entities.ChangeLogUtil;
+import org.hibernate.Session;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.editor.ProjectEditor;
@@ -107,36 +105,6 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
             Project project = element.getValue();
             originalProperties.put(NAME_PROPERTY, project.getName());
             originalProperties.put(DESCRIPTION_PROPERTY, project.getDescription());
-        }
-
-        @Override
-        protected void handleSave() throws IOException {
-            String oldName = (String) originalProperties.get(NAME_PROPERTY);
-            String oldDesc = (String) originalProperties.get(DESCRIPTION_PROPERTY);
-            super.handleSave();
-            makeLog(oldName, oldDesc);
-        }
-        
-        private void makeLog(String oldName, String oldDesc) {
-            ChangeLogUtil util = ChangeLogUtil.getDefault();
-            if(logNameChange(util, oldName) | logDescriptionChange(util, oldDesc))
-                util.saveValues(getValue());
-        }
-    
-        private boolean logNameChange(ChangeLogUtil util, String oldName) {
-            String newName = (String) originalProperties.get(NAME_PROPERTY);
-            if(!isChanged(oldName, newName))
-                return false;
-            util.addChange(getValue(), Type.PROJECT, Bundle.LOG_ProjectElement_rename(oldName, newName));
-            return true;
-        }
-    
-        private boolean logDescriptionChange(ChangeLogUtil util, String oldDesc) {
-            String newDesc = (String) originalProperties.get(DESCRIPTION_PROPERTY);
-            if(!isChanged(oldDesc, newDesc))
-                return false;
-            util.addChange(getValue(), Type.PROJECT, Bundle.LOG_ProjectElement_description_change());
-            return true;
         }
     }
     

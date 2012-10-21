@@ -55,7 +55,6 @@ public class ProjectElementFactoryRegistrationProcessor extends LayerGeneratingP
         return roundEnv.getElementsAnnotatedWith(ANNOTATION);
     }
     
-    
     private void processElement(TypeElement element) throws LayerGenerationException {
         checkImplementsProjectElementFactory(element);
         checkConstructor(element);

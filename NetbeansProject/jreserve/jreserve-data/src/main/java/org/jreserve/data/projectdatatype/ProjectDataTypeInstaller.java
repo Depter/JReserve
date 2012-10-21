@@ -7,8 +7,7 @@ import java.util.logging.Logger;
 import org.jreserve.data.DataType;
 import org.jreserve.data.DataTypeUtil;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.persistence.Session;
-import org.jreserve.persistence.SessionFactory;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.ProjectSystemCreationListener;
@@ -20,11 +19,11 @@ import org.openide.util.lookup.ServiceProvider;
  * @version 1.0
  */
 @ServiceProvider(service=ProjectSystemCreationListener.class, position=100)
-public class ProjectDataTypeInstaller implements ProjectSystemCreationListener {
+public class ProjectDataTypeInstaller extends SessionTask<Void> implements ProjectSystemCreationListener {
     
     private final static Logger logger = Logger.getLogger(ProjectDataTypeInstaller.class.getName());
     
-    private Session session;
+    private volatile ProjectElement claimTypeElement;
     
     @Override
     public boolean isInterested(Object value) {
@@ -33,30 +32,34 @@ public class ProjectDataTypeInstaller implements ProjectSystemCreationListener {
 
     @Override
     public void created(ProjectElement element) {
+        this.claimTypeElement = element;
         try {
-            session = SessionFactory.beginTransaction();
-            ClaimType claimType = getClaimType(element);
-            saveValues(element, claimType);
-            session.comitTransaction();
-        } catch(RuntimeException ex) {
-            session.rollBackTransaction();
+            super.getResult();
+        } catch(Exception ex) {
             logger.log(Level.SEVERE, "Unable to load data types for element: "+element, ex);
         } finally {
-            session = null;
+            this.claimTypeElement = null;
         }
     }
-    
-    private ClaimType getClaimType(ProjectElement element) {
-        ClaimType claimType = (ClaimType) element.getValue();
-        String id = claimType.getId();
-        return session.find(ClaimType.class, id);
+
+    @Override
+    protected Void doTask() throws Exception {
+        ClaimType claimType = getClaimType();
+        saveValues(claimType);
+        return null;
     }
     
-    private void saveValues(ProjectElement element, ClaimType claimType) {
+    private ClaimType getClaimType() {
+        ClaimType claimType = (ClaimType) claimTypeElement.getValue();
+        String id = claimType.getId();
+        return (ClaimType) session.load(ClaimType.class, id);
+    }
+    
+    private void saveValues(ClaimType claimType) {
         List<ProjectDataType> types = createDefaultValues(claimType);
         for(ProjectDataType type : types) {
             session.persist(type);
-            element.addChild(new ProjectDatTypeProjectElement(type));
+            claimTypeElement.addChild(new ProjectDatTypeProjectElement(type));
         }
     }
     

@@ -16,9 +16,8 @@ public class VectorFormatVisualPanel extends TriangleFormatVisualPanel {
     @Override
     protected void componentsInitialized() {
         geometrySetting.setSymmetricPeriods(false);
-        geometrySetting.setSymmetricPeriodsEnabled(false);
         geometrySetting.setSymmetricMonths(false);
-        geometrySetting.setSymmetricMonthsEnabled(false);
+        geometrySetting.setSymmetricEnabled(false);
         geometrySetting.setDevelopmentPeriodCount(1);
     }
 

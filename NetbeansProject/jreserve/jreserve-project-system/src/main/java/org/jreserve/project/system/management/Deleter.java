@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jreserve.persistence.Session;
+import org.hibernate.Session;
 import org.jreserve.persistence.SessionFactory;
 
 /**
@@ -28,13 +28,18 @@ public class Deleter {
     public void delete() {
         checkState();
         try {
-            session = SessionFactory.beginTransaction();
+            beginTransaction();
             deleteElements();
             commit();
         } catch (RuntimeException ex) {
             rollBack();
             logger.log(Level.SEVERE, "Unable to delete elements! Transaction was rolled back.", ex);
         }
+    }
+    
+    private void beginTransaction() {
+        session = SessionFactory.getCurrentSession();
+        session.beginTransaction();
     }
     
     private void checkState() {
@@ -45,19 +50,19 @@ public class Deleter {
     
     private void deleteElements() {
         for(Deletable deletable : deletables)
-            deletable.delete(session);
+            deletable.delete();
         deletables = null;
     }
     
     private void rollBack() {
         if(session != null) {
-            session.rollBackTransaction();
+            session.getTransaction().rollback();
             session = null;
         }
     }
     
     private void commit() {
-        session.comitTransaction();
+        session.getTransaction().commit();
         session = null;
     }
 }

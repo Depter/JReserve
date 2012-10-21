@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hibernate.Session;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -59,7 +60,9 @@ public abstract class DataImport {
     }
     
     private void mergeValues() {
-        ds.getSession().merge(table.getClaimType(), table.getDataType());
+        Session session = ds.getSession();
+        session.merge(table.getClaimType());
+        session.merge(table.getDataType());
     }
     
     protected abstract void processTable();

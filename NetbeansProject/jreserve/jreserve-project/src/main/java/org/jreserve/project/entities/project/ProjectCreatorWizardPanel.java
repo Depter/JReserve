@@ -9,12 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.persistence.Session;
-import org.jreserve.project.entities.ChangeLog.Type;
-import org.jreserve.project.entities.ChangeLogUtil;
-import org.jreserve.project.entities.ChangeLogUtil.ProjectChangeLog;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.entities.Project;
@@ -50,14 +46,12 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
     final static String NAME_VALUE = "SELECTED_NAME";
     final static String DESCRIPTION_VALUE = "SELECTED_DESCRIPTION";
     
-    private PersistenceUnit persistenceUnit;
     private ProjectCreatorVisualPanel panel;
     private WizardDescriptor wizard = null;
     private boolean isValid = false;
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
 
     ProjectCreatorWizardPanel() {
-        persistenceUnit = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
     }
     
     @Override
@@ -205,46 +199,41 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
     }
     
     private Project createProject(ClaimType ct) throws WizardValidationException {
-        Session session = null;
-        Project project = null;
-        
         try {
-            session = persistenceUnit.getSession();
-            project = createPersistedProject(session, ct);
+            Project project = new ProjectCreator(ct).getResult();
             logger.log(Level.INFO, "Project \"{0}\" created.", project.getPath());
+            return project;
         } catch (Exception ex) {
-            if(session != null)
-                session.rollBackTransaction();
             logger.log(Level.SEVERE, String.format("Unable to create Project '%s' in ClaimType '%s'!", getName(), ct.getPath()), ex);
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
         }
-        createLog(project);
-        return project;
     }
     
-    private Project createPersistedProject(Session session, ClaimType ct) {
-        session.beginTransaction();
-        session.merge(ct);
+    private class ProjectCreator extends SessionTask<Project> {
+
+        private ClaimType ct;
         
-        Project project = new Project(getName());
-        setDescription(project);
-        ct.addProject(project);
-        session.persist(project);
+        private ProjectCreator(ClaimType ct) {
+            this.ct = ct;
+        }
         
-        session.comitTransaction();
-        return project;
-    }
+        @Override
+        protected Project doTask() throws Exception {
+            session.merge(ct);
+        
+            Project project = new Project(getName());
+            setDescription(project);
+            ct.addProject(project);
+            session.persist(project);
+        
+            return project;
+        }
     
-    private void createLog(Project project) {
-        ProjectChangeLog util = ChangeLogUtil.getDefault(project);
-        util.addChange(Type.PROJECT, Bundle.MSG_ProjectCreatorWizardPanel_projectcreated());
-        util.saveValues();
-    }
-    
-    private void setDescription(Project project) {
-        String description = (String) panel.getClientProperty(DESCRIPTION_VALUE);
-        if(description != null)
-            project.setDescription(description);
+        private void setDescription(Project project) {
+            String description = (String) panel.getClientProperty(DESCRIPTION_VALUE);
+            if(description != null)
+                project.setDescription(description);
+        }
     }
     
     private class PanelListener implements PropertyChangeListener {

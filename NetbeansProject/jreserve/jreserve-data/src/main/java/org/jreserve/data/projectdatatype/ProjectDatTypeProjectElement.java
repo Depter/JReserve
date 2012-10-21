@@ -2,9 +2,9 @@ package org.jreserve.data.projectdatatype;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.persistence.Query;
-import org.jreserve.persistence.Session;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
 import org.openide.nodes.Node;

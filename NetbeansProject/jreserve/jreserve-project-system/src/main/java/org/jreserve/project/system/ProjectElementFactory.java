@@ -5,7 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
-import org.jreserve.persistence.Session;
 
 /**
  * Interface to load instances from the database, after the 
@@ -78,7 +77,7 @@ public interface ProjectElementFactory {
      * @param session The session, to load the children.
      * @return List of children for the value.
      */
-    public List<ProjectElement> createChildren(Object value, Session session);
+    public List<ProjectElement> createChildren(Object value);
 
     /**
      * Registers a {@link ProjectElementFactory ProjectElementFactory} in the 

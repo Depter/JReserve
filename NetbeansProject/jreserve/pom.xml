@@ -62,6 +62,7 @@
         <module>jreserve-database-derby</module>
         <module>jreserve-database-oracle</module>
         <module>jreserve-persistence</module>
+        <module>jreserve-audit</module>
         <module>jreserve-project</module>
         <module>jreserve-triangle</module>
         <module>jreserve-project-system</module>

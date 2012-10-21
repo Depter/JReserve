@@ -12,7 +12,6 @@ import org.junit.runners.Suite;
     ClaimTypeTest.class,
     LoBTest.class,
     ProjectTest.class,
-    ChangeLogTest.class,
     PersistenceTest.class
 })
 public class EntitiesTestSuite {

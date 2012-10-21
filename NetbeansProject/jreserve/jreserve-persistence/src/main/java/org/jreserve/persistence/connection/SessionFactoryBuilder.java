@@ -30,6 +30,7 @@ public class SessionFactoryBuilder {
         SECOND_LEVEL_CACHE(Environment.CACHE_PROVIDER_CONFIG),      //init
         ECHO_SQL(Environment.SHOW_SQL),                             //init
         SESSION_CONTEXT(Environment.CURRENT_SESSION_CONTEXT_CLASS), //init
+        ENVERS_STORE_DELETE("org.hibernate.envers.store_data_at_delete"),
         CONNECTION_PROVIDER(Environment.CONNECTION_PROVIDER);       //init
         
         private final String propertyName;
@@ -59,6 +60,8 @@ public class SessionFactoryBuilder {
     private final static String SESSION_CONTEXT = "thread";
     private final static String UPDATE_SCHMEA = "update";
     
+    private final static boolean ENVERST_STORE_DATA_DELETION = true;
+    
     private final Configuration config;
     
     public SessionFactoryBuilder() {
@@ -78,6 +81,7 @@ public class SessionFactoryBuilder {
         setProperty(Properties.SESSION_CONTEXT, SESSION_CONTEXT);
         setProperty(Properties.ECHO_SQL, ECHO_SQL);
         setProperty(Properties.SCHEMA_GENERATION, UPDATE_SCHMEA);
+        setProperty(Properties.ENVERS_STORE_DELETE, ENVERST_STORE_DATA_DELETION);
     }
     
     private void setProperty(Properties property, int value) {

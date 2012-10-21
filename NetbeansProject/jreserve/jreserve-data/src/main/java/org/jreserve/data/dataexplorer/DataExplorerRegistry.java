@@ -3,7 +3,6 @@ package org.jreserve.data.dataexplorer;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.SwingUtilities;
-import org.jreserve.persistence.PersistenceUnit;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
@@ -25,7 +24,7 @@ class DataExplorerRegistry {
         }
     };
     
-    private final static Result<PersistenceUnit> PU_RESULT = PersistenceUtil.getLookup().lookupResult(PersistenceUnit.class);
+    private final static Result<org.hibernate.SessionFactory> PU_RESULT = PersistenceUtil.getLookup().lookupResult(org.hibernate.SessionFactory.class);
     static {
         PU_RESULT.addLookupListener(PU_LISTENER);
     }

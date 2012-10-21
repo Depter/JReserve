@@ -5,18 +5,15 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.container.ProjectDataContainer;
-import org.jreserve.persistence.Session;
-import org.jreserve.persistence.SessionFactory;
-import org.jreserve.project.entities.ChangeLog;
-import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.guiutil.TriangleFormatVisualPanel;
 import org.jreserve.triangle.guiutil.DataFormatWizardPanel;
 import org.jreserve.triangle.guiutil.NameSelectWizardPanel;
+import org.jreserve.triangle.guiutil.TriangleFormatVisualPanel;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.NbBundle.Messages;
@@ -55,34 +52,16 @@ class TriangleFormatWizardPanel extends DataFormatWizardPanel implements WizardD
     @Override
     public void validate() throws WizardValidationException {
         synchronized(lock) {
-            Triangle triangle = saveTriangle();
-            addProjectElement(triangle);
-            logCreation();
-            clearProperties();
+            try {
+                Triangle triangle = new TriangleCreator().getResult();
+                addProjectElement(triangle);
+                clearProperties();
+            } catch (Exception ex) {
+               logger.log(Level.SEVERE, "Unable to save triangle", ex);
+                String msg = Bundle.MSG_TriangleFormatWizardPanel_SaveError();
+                throw new WizardValidationException(panel, msg, msg);
+            }
         }
-    }
-    
-    private Triangle saveTriangle() throws WizardValidationException {
-        Session session = SessionFactory.beginTransaction();
-        try {
-            Project project = session.find(Project.class, triangleData.project.getId());
-            Triangle triangle = createTriangle(project);
-            session.persist(triangle);
-            session.comitTransaction();
-            return triangle;
-        } catch (Exception ex) {
-            session.rollBackTransaction();
-            logger.log(Level.SEVERE, "Unable to save triangle", ex);
-            String msg = Bundle.MSG_TriangleFormatWizardPanel_SaveError();
-            throw new WizardValidationException(panel, msg, msg);
-        }
-    }
-    
-    private Triangle createTriangle(Project project) {
-        Triangle triangle = new Triangle(project, triangleData.dataType, triangleData.name);
-        triangle.setDescription(triangleData.description);
-        triangle.setGeometry(triangleData.geometry);
-        return triangle;
     }
     
     private void addProjectElement(final Triangle triangle) {
@@ -105,11 +84,22 @@ class TriangleFormatWizardPanel extends DataFormatWizardPanel implements WizardD
         return (ProjectDataContainer) v;
     }
     
-    private void logCreation() {
-        ProjectDataType dt = triangleData.dataType;
-        String msg = Bundle.LOG_TriangleFormatWizard_Created(triangleData.name, dt.getDbId(), dt.getName());
-        ChangeLogUtil.getDefault().addChange(triangleData.project, ChangeLog.Type.DATA, msg);
-        ChangeLogUtil.getDefault().saveValues(triangleData.project);
+    private class TriangleCreator extends SessionTask<Triangle> {
+        
+        @Override
+        protected Triangle doTask() throws Exception {
+            Project project = (Project) session.get(Project.class, triangleData.project.getId());
+            Triangle triangle = createTriangle(project);
+            session.persist(triangle);
+            return triangle;
+        }
+    
+        private Triangle createTriangle(Project project) {
+            Triangle triangle = new Triangle(project, triangleData.dataType, triangleData.name);
+            triangle.setDescription(triangleData.description);
+            triangle.setGeometry(triangleData.geometry);
+            return triangle;
+        }
     }
     
     private class TriangleData {

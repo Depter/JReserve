@@ -1,13 +1,14 @@
 package org.jreserve.project.system;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import org.jreserve.persistence.*;
+import org.hibernate.Session;
+import org.jreserve.persistence.PersistenceUtil;
+import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.system.util.FactoryUtil;
 import org.jreserve.project.system.util.LoadingElement;
 import org.netbeans.api.progress.ProgressHandle;
@@ -46,7 +47,7 @@ public class RootElement extends ProjectElement {
         return FactoryUtil.getInterestedFactories(value);
     }
     
-    private Result<PersistenceUnit> puResult;
+    private Result<org.hibernate.SessionFactory> puResult;
     private LookupListener puListener = new LookupListener() {
         @Override
         public void resultChanged(LookupEvent le) {
@@ -56,7 +57,7 @@ public class RootElement extends ProjectElement {
     
     private RootElement() {
         super(VALUE);
-        puResult = PersistenceUtil.getLookup().lookupResult(PersistenceUnit.class);
+        puResult = PersistenceUtil.getLookup().lookupResult(org.hibernate.SessionFactory.class);
         puResult.addLookupListener(puListener);
     }
 
@@ -76,11 +77,10 @@ public class RootElement extends ProjectElement {
     }
     
     private void puResultChanged() {
-        PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
-        if(pu == null)
-            setChildren(Collections.EMPTY_LIST);
-        else
+        if(SessionFactory.isConnected())
             loadChildren();
+        else
+            setChildren(Collections.EMPTY_LIST);
     }
         
     private void loadChildren() {
@@ -133,7 +133,7 @@ public class RootElement extends ProjectElement {
             try {
                 progress.start();
                 progress.switchToIndeterminate();
-                session = SessionFactory.beginTransaction();
+                initSession();
                 elements = loadElements();
             } catch(Exception lex) {
                 this.ex = lex;
@@ -144,18 +144,23 @@ public class RootElement extends ProjectElement {
                 finnish();
             }
         }
+        
+        private void initSession() {
+            session = SessionFactory.getCurrentSession();
+            session.beginTransaction();
+        }
 
         private List<ProjectElement> loadElements() {
             List<ProjectElement> result = new ArrayList<ProjectElement>();
             for(ProjectElementFactory factory : FactoryUtil.getInterestedFactories(VALUE))
-                result.addAll(factory.createChildren(VALUE, new RootSession(session)));
+                result.addAll(factory.createChildren(VALUE));
             return result;
         }
         
         private void closeSession() {
             if(session == null)
                 return;
-            session.comitTransaction();
+            session.getTransaction().rollback();
             session = null;
         }
         
@@ -173,94 +178,6 @@ public class RootElement extends ProjectElement {
             if(ex == null)
                 return elements;
             throw ex;
-        }
-    }
-    
-    private class RootSession implements Session {
-        
-        private final Session session;
-        private RootSession(Session session) {
-            this.session = session;
-        }
-        
-        @Override
-        public void beginTransaction() {
-            throw new UnsupportedOperationException("Transaction already opened!");
-        }
-
-        @Override
-        public void comitTransaction() {
-            throw new UnsupportedOperationException("Do not comit this session, others may need it!");
-        }
-
-        @Override
-        public void rollBackTransaction() {
-            throw new UnsupportedOperationException("Do not roll back this session, others may need it!");
-        }
-
-        @Override
-        public void close() {
-            throw new UnsupportedOperationException("Do not close this session, others may need it!");
-        }
-
-        @Override
-        public <E> List<E> getAll(Class<E> c) {
-            return session.getAll(c);
-        }
-
-        @Override
-        public void persist(Object o) {
-            throw new UnsupportedOperationException("Do not use this session to save entities! this sesison is only for loading.");
-        }
-
-        @Override
-        public void persist(Object... o) {
-            throw new UnsupportedOperationException("Do not use this session to save entities! this sesison is only for loading.");
-        }
-
-        @Override
-        public void delete(Object o) {
-            throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
-        }
-
-        @Override
-        public void delete(Object... o) {
-            throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
-        }
-
-        @Override
-        public Object merge(Object entity) {
-            throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
-        }
-
-        @Override
-        public Object[] merge(Object... entity) {
-            throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
-        }
-
-        @Override
-        public void update(Object entity) {
-            throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
-        }
-
-        @Override
-        public void update(Object... entity) {
-            throw new UnsupportedOperationException("Do not use this session to delete entities! this sesison is only for loading.");
-        }
-
-        @Override
-        public Query createQuery(String query) {
-            return session.createQuery(query);
-        }
-
-        @Override
-        public Query createNamedQuery(String name) {
-            return session.createNamedQuery(name);
-        }
-
-        @Override
-        public <T> T find(Class<T> type, Serializable oid) {
-            return session.find(type, oid);
         }
     }
 }

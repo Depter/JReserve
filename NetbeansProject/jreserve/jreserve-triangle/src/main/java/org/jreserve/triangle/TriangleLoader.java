@@ -3,9 +3,9 @@ package org.jreserve.triangle;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import org.hibernate.Query;
 import org.jreserve.data.container.ProjectDataContainer;
-import org.jreserve.persistence.Query;
-import org.jreserve.persistence.Session;
+import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.AbstractProjectElementFactory;
 import org.jreserve.project.system.ProjectElement;
@@ -38,17 +38,17 @@ public class TriangleLoader extends AbstractProjectElementFactory<Triangle> {
     }
 
     @Override
-    protected List<Triangle> getChildValues(Object value, Session session) {
+    protected List<Triangle> getChildValues(Object value) {
         Project project = ((ProjectDataContainer) value).getProject();
-        List<Triangle> vectors = getTriangles(project, session);
+        List<Triangle> vectors = getTriangles(project);
         Collections.sort(vectors, COMPARATOR);
         return vectors;
     }
     
-    private List<Triangle> getTriangles(Project project, Session session) {
-        Query query = session.createQuery(QUERY);
+    private List<Triangle> getTriangles(Project project) {
+        Query query = SessionFactory.getCurrentSession().createQuery(QUERY);
         query.setParameter("projectId", project.getId());
-        return query.getResultList();
+        return query.list();
     }
 
     @Override

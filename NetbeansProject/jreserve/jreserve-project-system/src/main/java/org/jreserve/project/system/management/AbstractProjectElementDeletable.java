@@ -3,7 +3,6 @@ package org.jreserve.project.system.management;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingUtilities;
-import org.jreserve.persistence.Session;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.util.ProjectElementUtil;
 import org.openide.nodes.Node;
@@ -32,12 +31,7 @@ public class AbstractProjectElementDeletable implements Deletable {
     
     @Override
     public void delete() {
-        handleSave(null);
-    }
-
-    @Override
-    public void delete(Session session) {
-        handleSave(session);
+        handleSave();
     }
     
     /**
@@ -45,8 +39,8 @@ public class AbstractProjectElementDeletable implements Deletable {
      * If a session was provided for this deletable, it will be forwarded 
      * to the child deletables.
      */
-    protected void handleSave(Session session) {
-        deleteChildren(session);
+    protected void handleSave() {
+        deleteChildren();
         deleteProjectElement();
     }
     
@@ -54,30 +48,23 @@ public class AbstractProjectElementDeletable implements Deletable {
      * Deletes all deletables on the childrens, using <i>deletable()</i> or
      * <i>deletable(session)</i> if session is not <i>null</i>.
      */
-    protected void deleteChildren(Session session) {
+    protected void deleteChildren() {
         List<ProjectElement> children = element.getChildren();
         for(ProjectElement child : children)
-            deleteChildren(child, session);
+            deleteChildren(child);
     }
     
-    private void deleteChildren(ProjectElement e, Session session) {
+    private void deleteChildren(ProjectElement e) {
         List<ProjectElement> children = e.getChildren();
         for(ProjectElement child : children)
-            deleteChildren(child, session);
-        deleteDeletable(e, session);
+            deleteChildren(child);
+        deleteDeletable(e);
     }
     
-    private void deleteDeletable(ProjectElement e, Session session) {
+    private void deleteDeletable(ProjectElement e) {
         Deletable deletable = e.getLookup().lookup(Deletable.class);
         if(deletable != null)
-            deleteDeletable(deletable, session);
-    }
-    
-    private void deleteDeletable(Deletable deletable, Session session) {
-        if(session == null)
             deletable.delete();
-        else
-            deletable.delete(session);
     }
     
     /**

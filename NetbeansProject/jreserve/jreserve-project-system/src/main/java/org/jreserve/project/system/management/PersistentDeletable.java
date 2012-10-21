@@ -2,9 +2,9 @@ package org.jreserve.project.system.management;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jreserve.persistence.PersistenceUnit;
+import org.hibernate.Session;
 import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.persistence.Session;
+import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.system.ProjectElement;
 
 /**
@@ -15,39 +15,19 @@ public class PersistentDeletable extends AbstractProjectElementDeletable {
     
     protected final static Logger logger = Logger.getLogger(PersistentDeletable.class.getName());
 
-    private boolean managesSession = false;
-
     public PersistentDeletable(ProjectElement element) {
         super(element);
     }
     
     @Override
-    protected void handleSave(Session session) {
-        session = initSession(session);
+    protected void handleSave() {
+        Session session = SessionFactory.getCurrentSession();
         try {
-            super.handleSave(session);
+            super.handleSave();
             deleteEntity(session);
-            commit(session);
         } catch (RuntimeException ex) {
-            rollBack(session);
-            if(managesSession)
-                logger.log(Level.SEVERE, String.format("Unable to delete: ", element.getValue()), ex);
             throw ex;
         }
-    }
-    
-    private Session initSession(Session session) {
-        managesSession = session == null;
-        if(managesSession)
-            session = createSession();
-        return session;
-    }
-    
-    private Session createSession() {
-        PersistenceUnit pu = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
-        Session session = pu.getSession();
-        session.beginTransaction();
-        return session;
     }
     
     private void deleteEntity(Session session) {
@@ -67,16 +47,5 @@ public class PersistentDeletable extends AbstractProjectElementDeletable {
     }
     
     protected void cleanUpAfterEntity(Session session) {
-    }
-    
-    private void commit(Session session) {
-        if(managesSession)
-            session.comitTransaction();
-    }
-    
-    private void rollBack(Session session) {
-        if(managesSession) {
-            session.rollBackTransaction();
-        }
     }
 }

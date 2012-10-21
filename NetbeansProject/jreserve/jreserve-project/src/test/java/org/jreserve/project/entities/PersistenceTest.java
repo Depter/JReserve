@@ -163,20 +163,9 @@ public class PersistenceTest {
         lob.addClaimType(claimType);
         claimType.addProject(project);
         
-        ChangeLog log = new ChangeLog(project, ChangeLog.Type.PROJECT, "Changed!");
-        
         session.persist(lob);
         session.persist(claimType);
         session.persist(project);
-        session.persist(log);
-        
-        assertTrue(log.getVersion() != null);
-        List logs = session.createQuery("from ChangeLog").list();
-        assertFalse(logs.isEmpty());
-        
-        session.delete(log);
-        logs = session.createQuery("from ChangeLog").list();
-        assertTrue(logs.isEmpty());
         
         session.getTransaction().commit();
     }

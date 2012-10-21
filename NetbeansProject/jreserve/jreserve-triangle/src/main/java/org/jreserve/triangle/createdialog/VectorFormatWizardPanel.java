@@ -6,10 +6,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.container.ProjectDataContainer;
-import org.jreserve.persistence.Session;
-import org.jreserve.persistence.SessionFactory;
-import org.jreserve.project.entities.ChangeLog;
-import org.jreserve.project.entities.ChangeLogUtil;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.VectorProjectElement;
@@ -58,34 +55,16 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
     @Override
     public void validate() throws WizardValidationException {
         synchronized(lock) {
-            Vector vector = saveVector();
-            addProjectElement(vector);
-            logCreation();
-            clearProperties();
+            try {
+                Vector vector = new VectorCreator().getResult();
+                addProjectElement(vector);
+                clearProperties();
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Unable to save vector", ex);
+                String msg = Bundle.MSG_VectorFormatWizardPanel_SaveError();
+                throw new WizardValidationException(panel, msg, msg);
+            }
         }
-    }
-    
-    private Vector saveVector() throws WizardValidationException {
-        Session session = SessionFactory.beginTransaction();
-        try {
-            Project project = session.find(Project.class, vectorData.project.getId());
-            Vector vector = createVector(project);
-            session.persist(vector);
-            session.comitTransaction();
-            return vector;
-        } catch (Exception ex) {
-            session.rollBackTransaction();
-            logger.log(Level.SEVERE, "Unable to save vector", ex);
-            String msg = Bundle.MSG_VectorFormatWizardPanel_SaveError();
-            throw new WizardValidationException(panel, msg, msg);
-        }
-    }
-    
-    private Vector createVector(Project project) {
-        Vector vector = new Vector(project, vectorData.dataType, vectorData.name);
-        vector.setDescription(vectorData.description);
-        vector.setGeometry(vectorData.geometry);
-        return vector;
     }
     
     private void addProjectElement(final Vector vector) {
@@ -108,11 +87,22 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         return (ProjectDataContainer) v;
     }
     
-    private void logCreation() {
-        ProjectDataType dt = vectorData.dataType;
-        String msg = Bundle.LOG_VectorFormatWizardPanel_Created(vectorData.name, dt.getDbId(), dt.getName());
-        ChangeLogUtil.getDefault().addChange(vectorData.project, ChangeLog.Type.DATA, msg);
-        ChangeLogUtil.getDefault().saveValues(vectorData.project);
+    private class VectorCreator extends SessionTask<Vector> {
+
+        @Override
+        protected Vector doTask() throws Exception {
+            Project project = (Project) session.get(Project.class, vectorData.project.getId());
+            Vector vector = createVector(project);
+            session.persist(vector);
+            return vector;
+        }
+    
+        private Vector createVector(Project project) {
+            Vector vector = new Vector(project, vectorData.dataType, vectorData.name);
+            vector.setDescription(vectorData.description);
+            vector.setGeometry(vectorData.geometry);
+            return vector;
+        }
     }
     
     private class VectorData {

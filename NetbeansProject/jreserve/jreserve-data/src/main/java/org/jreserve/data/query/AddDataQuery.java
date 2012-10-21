@@ -4,11 +4,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.hibernate.Session;
 import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.data.entities.ClaimValuePk;
-import org.jreserve.persistence.Session;
+import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.entities.ClaimType;
 
 /**
@@ -42,13 +43,18 @@ public class AddDataQuery {
     private void loadPersistentClaimType(Session session, ClaimType claimType) {
         String id = claimType.getId();
         if(!claimTypes.containsKey(id))
-            claimTypes.put(id, session.find(ClaimType.class, id));
+            claimTypes.put(id, load(claimType, session));
+    }
+    
+    private <T extends PersistentObject> T load(T entity, Session session) {
+        Class<?> clazz = entity.getClass();
+        return (T) session.load(clazz, entity.getId());
     }
     
     private void loadPersistentDataType(Session session, ProjectDataType dataType) {
         String id = dataType.getId();
         if(!dataTypes.containsKey(id))
-            dataTypes.put(id, session.find(ProjectDataType.class, id));
+            dataTypes.put(id, load(dataType, session));
     }
     
     private void add(Session session, Data<Double> data) {
@@ -66,7 +72,7 @@ public class AddDataQuery {
         Date accident = data.getAccidentDate();
         Date development = data.getDevelopmentDate();
         ClaimValuePk id = new ClaimValuePk(data.getDataType(), accident, development);
-        return session.find(ClaimValue.class, id);
+        return (ClaimValue) session.get(ClaimValue.class, id);
     }
     
     private ClaimValue createClaimValue(Data data) {

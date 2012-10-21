@@ -3,7 +3,6 @@ package org.jreserve.project.entities.claimtype;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.AbstractProjectElementFactory;
@@ -33,7 +32,7 @@ public class ClaimTypeLoader extends AbstractProjectElementFactory<ClaimType> {
     }
 
     @Override
-    protected List<ClaimType> getChildValues(Object value, Session session) {
+    protected List<ClaimType> getChildValues(Object value) {
         List<ClaimType> claimTypes = ((LoB)value).getClaimTypes();
         Collections.sort(claimTypes, COMPARATOR);
         return claimTypes;

@@ -22,12 +22,12 @@ public class HibernateUtil {
     private final static Lookup lookup = new AbstractLookup(ic);
     
     private static PersistenceDatabase database;
-    private static HibernatePersistenceUnit pu;
+    private static SessionFactory sessionFactory;
     
     static void startupLogin(PersistenceDatabase db) {
-        SessionFactory sessionFactory = loginToDb(db);
-        if(sessionFactory != null) {
-            setSessionFactory(sessionFactory);
+        SessionFactory factory = loginToDb(db);
+        if(factory != null) {
+            setSessionFactory(factory);
             setUsedDb(db);
         } else {
             if(db.isUsed())
@@ -44,8 +44,8 @@ public class HibernateUtil {
     
     private static void setSessionFactory(SessionFactory factory) {
         logger.log(Level.FINE, "SessionFactory initialized.");
-        pu = new HibernatePersistenceUnit(factory);
-        ic.add(pu);
+        sessionFactory = factory;
+        ic.add(sessionFactory);
     }
     
     private static void setUsedDb(PersistenceDatabase db) {
@@ -75,14 +75,11 @@ public class HibernateUtil {
     
     private static void closeSessionFactory() {
         logger.info("CLosing SessionFactory...");
-        closePU();
-    }
-    
-    private static void closePU() {
-        if(pu == null) return;
-        pu.close();
-        ic.remove(pu);
-        pu = null;
+        if(sessionFactory != null) { 
+            sessionFactory.close();
+            ic.remove(sessionFactory);
+            sessionFactory = null;
+        }
     }
     
     private static void closePersistenceDatabase(boolean appClosing) {

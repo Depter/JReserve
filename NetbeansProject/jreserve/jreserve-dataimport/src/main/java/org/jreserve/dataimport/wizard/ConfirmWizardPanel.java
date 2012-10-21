@@ -10,8 +10,6 @@ import org.jreserve.data.DataImport;
 import org.jreserve.data.DataTable;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.dataimport.DataImportWizard;
-import org.jreserve.project.entities.ChangeLog;
-import org.jreserve.project.entities.ChangeLogUtil;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
@@ -173,7 +171,6 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
         boolean success = true;
         try {
             DataImport.importTable(importData.table, importData.importType);
-            makeLog();
         } catch (Exception ex) {
             success = false;
             String localized = Bundle.MSG_ConfirmWizardPanel_ImportError();
@@ -181,26 +178,6 @@ class ConfirmWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel
         } finally {
             finnishedValidating(success);
         }
-    }
-    
-    private void makeLog() {
-        String msg = getLogMessage();
-        ChangeLogUtil util = ChangeLogUtil.getDefault();
-        for(Project project : claimType.getProjects())
-            makeLog(util, project, msg);
-    }
-    
-    private void makeLog(ChangeLogUtil util, Project project, String msg) {
-        util.addChange(project, ChangeLog.Type.PROJECT, msg);
-        util.saveValues(project);
-    }
-    
-    private String getLogMessage() {
-        ProjectDataType dt = importData.table.getDataType();
-        int dtId = dt.getDbId();
-        String dtName = dt.getName();
-        String method = importData.importType.getUserName();
-        return Bundle.MSG_ConfirmWizardPanel_ChangeLog(dtId, dtName, method);
     }
     
     private void finnishedValidating(final boolean success) {

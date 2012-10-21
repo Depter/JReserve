@@ -2,12 +2,6 @@ package org.jreserve.triangle;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import org.jreserve.persistence.Session;
-import org.jreserve.project.entities.ChangeLog;
-import org.jreserve.project.entities.ChangeLogUtil;
-import org.jreserve.project.entities.ChangeLogUtil.ProjectChangeLog;
-import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
@@ -55,7 +49,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
     }
     
     private void initLookup() {
-        super.addToLookup(new VectorDeletable());
+        super.addToLookup(new PersistentDeletable(this));
         super.addToLookup(new VectorOpenable());
         super.addToLookup(new RenameableProjectElement(this));
         new VectorSavable();
@@ -110,71 +104,6 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             if(g1==null) return g2!=null;
             if(g2==null) return true;
             return !g1.isEqualGeometry(g2);
-        }
-
-        @Override
-        protected void saveElement() throws IOException {
-            String oldName = (String) originalProperties.get(NAME_PROPERTY);
-            String oldDescription = (String) originalProperties.get(DESCRIPTION_PROPERTY);
-            VectorGeometry oldGeometry = (VectorGeometry) originalProperties.get(GEOMETRY_PROPERTY);
-            
-            super.saveElement();
-            
-            logChange(oldName, oldDescription, oldGeometry);
-        }
-        
-        private void logChange(String oldName, String oldDescription, VectorGeometry oldGeometry) {
-            ProjectChangeLog util = ChangeLogUtil.getDefault(element.getValue().getProject());
-            if(logNameChange(util, oldName) | logDescriptionChange(util, oldDescription) | logGeometryChange(util, oldGeometry))
-                util.saveValues();
-        }
-        
-        private boolean logNameChange(ProjectChangeLog util, String old) {
-            String newName = (String) element.getProperty(NAME_PROPERTY);
-            if(!isChanged(old, newName))
-                return false;
-            util.addChange(ChangeLog.Type.DATA, Bundle.LOG_VectorProjectElement_NameChange(old, newName));
-            return true;
-        }
-        
-        private boolean logDescriptionChange(ProjectChangeLog util, String old) {
-            String newDescription = (String) element.getProperty(DESCRIPTION_PROPERTY);
-            if(!isChanged(old, newDescription))
-                return false;
-            String name = element.getValue().getName();
-            util.addChange(ChangeLog.Type.DATA, Bundle.LOG_VectorProjectElement_DescriptionChange(name));
-            return true;
-        }
-        
-        private boolean logGeometryChange(ProjectChangeLog util, VectorGeometry old) {
-            VectorGeometry geoemtry = (VectorGeometry) element.getProperty(GEOMETRY_PROPERTY);
-            if(!isChanged(old, geoemtry))
-                return false;
-            String name = element.getValue().getName();
-            String msg = Bundle.LOG_VectorProjectElement_GeometryChange(name, old, geoemtry);
-            util.addChange(ChangeLog.Type.DATA, msg);
-            return true;
-        }
-    }
-    
-    private class VectorDeletable extends PersistentDeletable {
-        
-        VectorDeletable() {
-            super(VectorProjectElement.this);
-        }
-
-        @Override
-        protected void cleanUpAfterEntity(Session session) {
-            Vector vector = VectorProjectElement.this.getValue();
-            String name = vector.getName();
-            String msg = Bundle.LOG_VectorProjectElement_Deleted(name);
-            logDeletion(vector.getProject(), msg);
-        }
-        
-        private void logDeletion(Project project, String msg) {
-            ChangeLogUtil util = ChangeLogUtil.getDefault();
-            util.addChange(project, ChangeLog.Type.DATA, msg);
-            util.saveValues(project);
         }
     }
     

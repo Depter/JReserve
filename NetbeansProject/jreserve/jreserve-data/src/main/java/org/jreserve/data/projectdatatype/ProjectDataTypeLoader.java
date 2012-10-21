@@ -1,9 +1,10 @@
 package org.jreserve.data.projectdatatype;
 
 import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.persistence.Query;
-import org.jreserve.persistence.Session;
+import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.AbstractProjectElementFactory;
 import org.jreserve.project.system.ProjectElement;
@@ -28,10 +29,11 @@ public class ProjectDataTypeLoader extends AbstractProjectElementFactory<Project
     }
 
     @Override
-    protected List<ProjectDataType> getChildValues(Object value, Session session) {
+    protected List<ProjectDataType> getChildValues(Object value) {
+        Session session = SessionFactory.getCurrentSession();
         Query query = session.createQuery(SQL);
         query.setParameter("claimTypeId", ((ClaimType) value).getId());
-        return query.getResultList();
+        return query.list();
     }
 
     @Override

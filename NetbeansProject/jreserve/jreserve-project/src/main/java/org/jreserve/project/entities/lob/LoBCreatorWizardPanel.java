@@ -9,9 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.persistence.PersistenceUnit;
-import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.persistence.Session;
+import org.hibernate.Session;
+import org.jreserve.persistence.SessionFactory;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.RootElement;
@@ -42,14 +42,12 @@ class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDe
         }
     };
     
-    private PersistenceUnit persistenceUnit;
     private LoBCreatorVisualPanel panel;
     private WizardDescriptor wizard;
     private boolean isValid = false;
     private List<LoB> lobs = null;
     
     LoBCreatorWizardPanel() {
-         persistenceUnit = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
     }
     
     @Override
@@ -73,7 +71,7 @@ class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDe
     }
 
     private boolean checkPersistenceUnit() {
-        if(persistenceUnit != null)
+        if(SessionFactory.isConnected())
             return true;
         setErrorMessage(Bundle.LBL_LoBCreatorWizardPanel_error_connection());
         return false;
@@ -182,25 +180,24 @@ class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDe
     }
     
     private LoB createLoB() throws WizardValidationException {
-        Session session = null;
         try {
-            session = persistenceUnit.getSession();
-            LoB lob = createPersistedLoB(session);
+            LoB lob = new LoBCreator().getResult();
             logger.log(Level.INFO, "LoB created: \"{0}\"", lob.getName());
             return lob;
         } catch (Exception ex) {
-            if(session != null)
-                session.rollBackTransaction();
             logger.log(Level.SEVERE, String.format("Unable to create LoB with name '%s'!", getLoBName()), ex);
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
         }
     }
     
-    private LoB createPersistedLoB(Session session) {
-        session.beginTransaction();
-        LoB lob = new LoB(getLoBName());
-        session.persist(lob);
-        session.comitTransaction();
-        return lob;
+    private class LoBCreator extends SessionTask<LoB> {
+        
+        @Override
+        protected LoB doTask() throws Exception {
+            LoB lob = new LoB(getLoBName());
+            session.persist(lob);
+            return lob;
+        }
+    
     }
 }

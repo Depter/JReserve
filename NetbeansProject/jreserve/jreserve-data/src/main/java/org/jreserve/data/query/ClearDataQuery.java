@@ -1,8 +1,8 @@
 package org.jreserve.data.query;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.jreserve.data.Criteria;
-import org.jreserve.persistence.Query;
-import org.jreserve.persistence.Session;
 
 /**
  *

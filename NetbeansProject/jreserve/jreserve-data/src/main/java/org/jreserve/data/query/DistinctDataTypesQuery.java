@@ -1,10 +1,10 @@
 package org.jreserve.data.query;
 
 import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.jreserve.data.Criteria;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.persistence.Query;
-import org.jreserve.persistence.Session;
 
 /**
  *
@@ -24,6 +24,6 @@ public class DistinctDataTypesQuery implements DataQuery<List<ProjectDataType>> 
     public List<ProjectDataType> query(Session session, Criteria criteria) {
         Query query = session.createQuery(DATA_TYPES);
         query.setParameter("claimTypeId", criteria.getClaimType().getId());
-        return query.getResultList();
+        return query.list();
     }
 }

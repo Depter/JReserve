@@ -26,8 +26,8 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
     private final static int DEFAULT_PERIODS = 1;
     private final static int DEFAULT_STEPS = 12;
     
-    private SpinnerNumberModel periodModel = new SpinnerNumberModel(DEFAULT_PERIODS, 0, Integer.MAX_VALUE, 1);
-    private SpinnerNumberModel monthModel = new SpinnerNumberModel(DEFAULT_STEPS, 0, Integer.MAX_VALUE, 1);
+    private SpinnerNumberModel periodModel = new SpinnerNumberModel(DEFAULT_PERIODS, 1, Integer.MAX_VALUE, 1);
+    private SpinnerNumberModel monthModel = new SpinnerNumberModel(DEFAULT_STEPS, 1, Integer.MAX_VALUE, 1);
     
     public AxisGeometryPanel() {
         initComponents();

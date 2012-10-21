@@ -9,9 +9,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.persistence.PersistenceUnit;
+import org.hibernate.Session;
 import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.persistence.Session;
+import org.jreserve.persistence.SessionFactory;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;
@@ -40,14 +41,14 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
     final static String NAME_VALUE = "SELECTED_NAME";
     private final static Logger logger = Logger.getLogger(ClaimTypeCreatorWizardPanel.class.getName());
     
-    private PersistenceUnit persistenceUnit;
+    //private PersistenceUnit persistenceUnit;
     private WizardDescriptor wizard;
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     private ClaimTypeCreatorVisualPanel panel;
     private boolean isValid = false;
 
     ClaimTypeCreatorWizardPanel() {
-        persistenceUnit = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
+        //persistenceUnit = PersistenceUtil.getLookup().lookup(PersistenceUnit.class);
     }
 
     @Override
@@ -168,27 +169,14 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
     }
     
     private ClaimType createClaimType(LoB lob) throws WizardValidationException {
-        Session session = null;
         try {
-            session = persistenceUnit.getSession();
-            ClaimType ct = createPersistedClaimType(session, lob);
+            ClaimType ct = new ClaimTypeCreator(lob).getResult();
             logger.log(Level.INFO, "ClaimType \"{0}\" created.", ct.getPath());
             return ct;
         } catch (Exception ex) {
-            if(session != null)
-                session.rollBackTransaction();
             logger.log(Level.SEVERE, String.format("Unable to create ClaimType '%s' in LoB '%s'!", getName(), lob.getPath()), ex);
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
         }
-    }
-    
-    private ClaimType createPersistedClaimType(Session session, LoB lob) {
-        session.beginTransaction();
-        ClaimType ct = new ClaimType(getName());
-        lob.addClaimType(ct);
-        session.persist(ct);
-        session.comitTransaction();
-        return ct;
     }
     
     private int getIndex(List<ProjectElement> children, String name) {
@@ -205,6 +193,24 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
             return childName.compareToIgnoreCase(name) < 0;
         }
         return false;
+    }
+    
+    private class ClaimTypeCreator extends SessionTask<ClaimType> {
+        
+        private LoB lob;
+        
+        private ClaimTypeCreator(LoB lob) {
+            this.lob = lob;
+        }
+        
+        @Override
+        protected ClaimType doTask() throws Exception {
+            ClaimType ct = new ClaimType(getName());
+            lob.addClaimType(ct);
+            session.persist(ct);
+            return ct;
+        }
+    
     }
     
     private class PanelListener implements PropertyChangeListener {

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jreserve.persistence.Session;
 
 /**
  * This class handles the load process for {@link ProjectElement ProjectElements}. 
@@ -25,17 +24,17 @@ public abstract class AbstractProjectElementFactory<T> implements ProjectElement
     private final static Logger logger = Logger.getLogger(AbstractProjectElementFactory.class.getName());
     
     @Override
-    public List<ProjectElement> createChildren(Object value, Session session) {
+    public List<ProjectElement> createChildren(Object value) {
         List<ProjectElement> result = new ArrayList<ProjectElement>();
-        for(T child : getChildValues(value, session))
-            result.add(getChildElement(child, session));
+        for(T child : getChildValues(value))
+            result.add(getChildElement(child));
         return result;
     }
 
     /**
      * Loads the child values for the given object (ie. claim types for a given lob).
      */
-    protected abstract List<T> getChildValues(Object value, Session session);
+    protected abstract List<T> getChildValues(Object value);
 
     /**
      * Creates an element for each value created by {@link #getChildValues(java.lang.Object, org.jreserve.persistence.Session) getChildValues()}.
@@ -45,10 +44,10 @@ public abstract class AbstractProjectElementFactory<T> implements ProjectElement
      * or definitly want your element to be a leaf.
      * </p>
      */
-    protected ProjectElement getChildElement(T value, Session session) {
+    protected ProjectElement getChildElement(T value) {
         logger.log(Level.FINE, "Loaded project element: {0}", value);
         ProjectElement element = createProjectElement(value);
-        for(ProjectElement child : getChildren(value, session))
+        for(ProjectElement child : getChildren(value))
             element.addChild(child);
         return element;
     }
@@ -63,10 +62,10 @@ public abstract class AbstractProjectElementFactory<T> implements ProjectElement
         return new ProjectElement(value);
     }
     
-    private List<ProjectElement> getChildren(T value, Session session) {
+    private List<ProjectElement> getChildren(T value) {
         List<ProjectElement> children = new ArrayList<ProjectElement>();
         for(ProjectElementFactory factory : RootElement.getFactories(value))
-            children.addAll(factory.createChildren(value, session));
+            children.addAll(factory.createChildren(value));
         return children;
     }
 }

@@ -2,7 +2,6 @@ package org.jreserve.data.container;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.persistence.Session;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.AbstractProjectElementFactory;
 import org.jreserve.project.system.ProjectElement;
@@ -22,7 +21,7 @@ public class ProjectDataContainerLoader extends AbstractProjectElementFactory<Pr
     }
 
     @Override
-    protected List<ProjectDataContainer> getChildValues(Object value, Session session) {
+    protected List<ProjectDataContainer> getChildValues(Object value) {
         List<ProjectDataContainer> result = new ArrayList<ProjectDataContainer>(1);
         Project project = (Project) value;
         result.add(new ProjectDataContainer(project));
