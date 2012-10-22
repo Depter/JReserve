@@ -7,6 +7,7 @@ import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.jreserve.audit.AbstractAuditor;
 import org.jreserve.audit.AuditedEntity;
+import org.jreserve.audit.Auditor;
 import org.jreserve.project.entities.LoB;
 import org.openide.util.ImageUtilities;
 
@@ -15,7 +16,8 @@ import org.openide.util.ImageUtilities;
  * @author Peter Decsi
  * @version 1.0
  */
-public class RootClaimTypeAuditor extends AbstractAuditor<LoB> {
+@Auditor.Registration(100)
+public class RootLoBAuditor extends AbstractAuditor<LoB> {
 
     private final static Image IMG = ImageUtilities.loadImage("resources/lob.png", false);
     
@@ -52,7 +54,7 @@ public class RootClaimTypeAuditor extends AbstractAuditor<LoB> {
     protected List<LoB> getEntities(AuditReader reader, Object value) {
         return reader.createQuery()
                 .forRevisionsOfEntity(LoB.class, true, true)
-                .add(AuditEntity.revisionType().eq(RevisionType.DEL))
+                .add(AuditEntity.revisionType().eq(RevisionType.ADD))
                 .addOrder(AuditEntity.revisionNumber().asc())
                 .getResultList();
     }

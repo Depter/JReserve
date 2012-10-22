@@ -6,7 +6,7 @@ import java.util.Date;
  *
  * @author Peter Decsi
  */
-public class AuditElement {
+public class AuditElement implements Comparable<AuditElement> {
     
     
     private final Date date;
@@ -40,5 +40,12 @@ public class AuditElement {
     @Override
     public String toString() {
         return String.format("Change [%tF, %s, %s]", date, user, change);
+    }
+
+    @Override
+    public int compareTo(AuditElement o) {
+        if(o == null)
+            return -1;
+        return date.compareTo(o.date);
     }
 }

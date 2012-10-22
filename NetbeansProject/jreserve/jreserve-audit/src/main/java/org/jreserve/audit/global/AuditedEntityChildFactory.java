@@ -1,6 +1,5 @@
 package org.jreserve.audit.global;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +10,7 @@ import org.jreserve.audit.AuditedEntity;
 import org.jreserve.audit.Auditor;
 import org.jreserve.audit.util.AuditorRegistry;
 import org.jreserve.persistence.SessionFactory;
+import org.openide.nodes.AbstractNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -45,7 +45,7 @@ class AuditedEntityChildFactory extends ChildFactory<AuditedEntity> {
                 list.addAll(auditor.getAuditedEntities(reader, parent));
             return true;
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, "Unable to query audited entities for entity: {0}", parent);
+            logger.log(Level.SEVERE, String.format("Unable to query audited entities for entity: %s", parent), ex);
             return false;
         } finally {
             closeSession();
@@ -66,6 +66,7 @@ class AuditedEntityChildFactory extends ChildFactory<AuditedEntity> {
     
     @Override
     protected Node createNodeForKey(AuditedEntity key) {
+        
         return new AuditedEntityNode(key);
     }
 }

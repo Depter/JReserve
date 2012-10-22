@@ -1,8 +1,6 @@
-package org.jreserve.audit.context;
+package org.jreserve.audit.table;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -29,6 +27,7 @@ class ChangeTableModel implements TableModel {
     
     ChangeTableModel(List<AuditElement> changes) {
         this.changes.addAll(changes);
+        Collections.sort(this.changes);
     }
     
     @Override
@@ -113,7 +112,12 @@ class ChangeTableModel implements TableModel {
     void setChanges(List<AuditElement> changes) {
         this.changes.clear();
         this.changes.addAll(changes);
+        Collections.sort(changes);
         fireChange();
+    }
+    
+    List<AuditElement> getChanges() {
+        return new ArrayList<AuditElement>(changes);
     }
     
     private void fireChange() {

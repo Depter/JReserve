@@ -1,3 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
-<filesystem/>
+<filesystem>
+    <folder name="JReserve">
+        <folder name="Audit">
+            <folder name="AuditFactories">
+                <file name="org-jreserve-project-entities-lob-RootClaimTypeAuditor.instance_hidden"/>
+                <file name="org-jreserve-project-entities-lob-RootLoBAuditor.instance">
+                    <attr name="priority" intvalue="100"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

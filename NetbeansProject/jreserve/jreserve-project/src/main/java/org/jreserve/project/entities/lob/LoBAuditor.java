@@ -29,7 +29,7 @@ public class LoBAuditor extends AbstractAuditor<LoB> {
     protected List<Object[]> getRevisions(AuditReader reader, Object value) {
         LoB lob = (LoB) value;
         return reader.createQuery()
-              .forRevisionsOfEntity(LoB.class, false, false)
+              .forRevisionsOfEntity(LoB.class, false, true)
               .add(AuditEntity.id().eq(lob.getId()))
               .addOrder(AuditEntity.revisionNumber().asc())
               .getResultList();

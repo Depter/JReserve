@@ -1,37 +1,29 @@
 package org.jreserve.audit.context;
 
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
-import javax.swing.SwingWorker;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultEditorKit;
-import org.hibernate.Session;
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.AuditReaderFactory;
 import org.jreserve.audit.AuditElement;
 import org.jreserve.audit.Auditable;
-import org.jreserve.audit.Auditor;
-import org.jreserve.audit.util.AuditorRegistry;
-import org.jreserve.persistence.SessionFactory;
+import org.jreserve.audit.table.CopyDataAction;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.actions.CopyAction;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.util.Lookup;
+import org.openide.util.Lookup.Result;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.*;
+import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
 
-/**
- * Top component which displays something.
- */
 @ConvertAsProperties(
     dtd = "-//org.jreserve.audit.context//ContextAuditor//EN",
     autostore = false
@@ -42,7 +34,7 @@ import org.openide.windows.TopComponent;
     persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED
 )
 @TopComponent.Registration(
-    mode = "auditor", 
+    mode = "editor", 
     openAtStartup = false
 )
 @ActionID(
@@ -61,99 +53,65 @@ import org.openide.windows.TopComponent;
     "CTL_ContextAuditorAction=Context Auditor",
     "CTL_ContextAuditorTopComponent=Context Auditor Window"
 })
-public final class ContextAuditorTopComponent extends TopComponent implements LookupListener, Lookup.Provider {
+public final class ContextAuditorTopComponent extends TopComponent implements LookupListener, Lookup.Provider, ChangeListener {
 
     private final static String NO_PATH = "-";
-    
-    private ChangeTableModel tableModel = new ChangeTableModel();
+
     private InstanceContent ic = new InstanceContent();
     private Lookup lookup = new AbstractLookup(ic);
+    private Result<Auditable> result;
+    private Auditable previousAuditable;
     
-    private Lookup.Result<Auditable> result;
-    private AuditChangeLoader loader = null;
-
     public ContextAuditorTopComponent() {
         initComponents();
         setName(Bundle.CTL_ContextAuditorTopComponent());
-        initAuditChecking();
         registerCopyAction();
-    }
-
-    private void initAuditChecking() {
-        result = Utilities.actionsGlobalContext().lookupResult(Auditable.class);
-        result.addLookupListener(this);
-        checkAudit();
     }
     
     private void registerCopyAction() {
         KeyStroke stroke = KeyStroke.getKeyStroke("control C");
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, DefaultEditorKit.copyAction);
         table.getInputMap().put(stroke, DefaultEditorKit.copyAction);
-        getActionMap().put(DefaultEditorKit.copyAction, new CopyDataAction());
-    }
-    
-    @Override
-    public void resultChanged(LookupEvent le) {
-        checkAudit();
+        table.getTableInputMap().put(stroke, DefaultEditorKit.copyAction);
+        getActionMap().put(DefaultEditorKit.copyAction, new CopyDataAction(table));
+        ic.add(getActionMap());
     }
 
-    private void checkAudit() {
-        Auditable auditor = getAuditable();
-        setNameText(auditor);
-        setLookupContent(auditor);
-        loadChanges(auditor);
+    @Override
+    public void resultChanged(LookupEvent le) {
+        queryAuditable();
     }
     
-    private void stopLoader() {
-        if(loader != null) {
-            loader.cancel(true);
-            loader = null;
-        }
+    private void queryAuditable() {
+        Auditable auditable = Utilities.actionsGlobalContext().lookup(Auditable.class);
+        if(auditable == previousAuditable)
+            return;
+        setAuditable(auditable);
     }
     
-    private Auditable getAuditable() {
-        List<Auditable> auditors = new ArrayList<Auditable>(result.allInstances());
-        if(auditors.isEmpty())
-            return null;
-        return auditors.get(0);
+    private void setAuditable(Auditable auditable) {
+        previousAuditable = auditable;
+        setPathText();
+        table.setAuditable(auditable);
+        setLookupContent();
     }
-    
-    private void setNameText(Auditable auditor) {
-        String path = auditor==null? NO_PATH : auditor.getProjectElement().getNamePath();
+
+    private void setPathText() {
+        String path = previousAuditable==null? NO_PATH : previousAuditable.getDisplayName();
         pathText.setText(path);
     }
     
-    private void setLookupContent(Auditable auditable) {
+    private void setLookupContent() {
         clearLookup();
-        addToMyLookup(auditable);
+        if(previousAuditable != null)
+            ic.add(previousAuditable);
     }
     
     private void clearLookup() {
-        Collection c = lookup.lookupAll(Object.class);
-        for(Object o : c)
+        for(Auditable o : lookup.lookupAll(Auditable.class))
             ic.remove(o);
     }
     
-    private void addToMyLookup(Auditable auditable) {
-        if(auditable != null)
-            ic.add(auditable);
-    }
-    
-    private void loadChanges(Auditable auditable) {
-        stopLoader();
-        if(auditable != null)
-            startLoader(auditable);
-        else
-            table.setModel(new ChangeTableModel());
-    }
-    
-    private void startLoader(Auditable auditable) {
-        copyButton.setEnabled(false);
-        table.setModel(LoadingTableModel.getInstance());
-        loader = new AuditChangeLoader(auditable.getProjectElement().getValue());
-        loader.execute();
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -167,8 +125,7 @@ public final class ContextAuditorTopComponent extends TopComponent implements Lo
         pathLabel = new javax.swing.JLabel();
         pathText = new javax.swing.JLabel();
         copyButton = new org.jreserve.resources.ToolBarButton(SystemAction.get(CopyAction.class));
-        tableScroll = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
+        table = new org.jreserve.audit.table.AuditTable();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -204,13 +161,8 @@ public final class ContextAuditorTopComponent extends TopComponent implements Lo
 
         add(northPanel, java.awt.BorderLayout.NORTH);
 
-        table.setModel(tableModel);
-        table.setFillsViewportHeight(true);
-        table.setShowVerticalLines(false);
-        table.setDefaultRenderer(java.util.Date.class, new DateCellRenderer());
-        tableScroll.setViewportView(table);
-
-        add(tableScroll, java.awt.BorderLayout.CENTER);
+        table.addChangeListener(this);
+        add(table, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -218,16 +170,21 @@ public final class ContextAuditorTopComponent extends TopComponent implements Lo
     private javax.swing.JPanel northPanel;
     private javax.swing.JLabel pathLabel;
     private javax.swing.JLabel pathText;
-    private javax.swing.JTable table;
-    private javax.swing.JScrollPane tableScroll;
+    private org.jreserve.audit.table.AuditTable table;
     // End of variables declaration//GEN-END:variables
+    
     @Override
     public void componentOpened() {
+        result = Utilities.actionsGlobalContext().lookupResult(Auditable.class);
+        result.addLookupListener(this);
+        queryAuditable();
     }
 
     @Override
     public void componentClosed() {
-        stopLoader();
+        table.stopLoader();
+        result.removeLookupListener(this);
+        result = null;
     }
 
     void writeProperties(java.util.Properties p) {
@@ -240,71 +197,10 @@ public final class ContextAuditorTopComponent extends TopComponent implements Lo
     public Lookup getLookup() {
         return lookup;
     }
-    
-    private class AuditChangeLoader extends SwingWorker<List<AuditElement>, Void> {
 
-        private final Object value;
-        private AuditReader reader;
-        private Session session;
-        
-        private AuditChangeLoader(Object value) {
-            this.value = value;
-        }
-        
-        @Override
-        protected List<AuditElement> doInBackground() throws Exception {
-            try {
-                if(!SessionFactory.isConnected())
-                    return Collections.EMPTY_LIST;
-                openAuditReader();
-                return getAuditElements();
-            } finally {
-                closeSession();
-            }
-        }
-        
-        private void openAuditReader() {
-            session = SessionFactory.openSession();
-            reader = AuditReaderFactory.get(session);
-        }
-        
-        private List<AuditElement> getAuditElements() {
-            List<AuditElement> changes = new ArrayList<AuditElement>();
-            for(Auditor auditor : AuditorRegistry.getAuditors(value))
-                changes.addAll(auditor.getAudits(reader, value));
-            return changes;
-        }
-        
-        private void closeSession() {
-            if(session != null) {
-                session.close();
-                session = null;
-            }
-        }
-
-        @Override
-        protected void done() {
-            try {
-                setChanges(get());
-            } catch (Exception ex) {
-                setChanges(Collections.EMPTY_LIST);
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        
-        private void setChanges(List<AuditElement> changes) {
-            copyButton.setEnabled(!changes.isEmpty());
-            table.setModel(new ChangeTableModel(changes));
-            loader = null;
-        }
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        List<AuditElement> changes = table.getChanges();
+        copyButton.setEnabled(!changes.isEmpty());
     }
-
-    
-    private class CopyDataAction extends AbstractAction {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        }
-    }
-
 }

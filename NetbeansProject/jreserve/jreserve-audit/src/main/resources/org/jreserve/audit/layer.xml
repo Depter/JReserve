@@ -2,9 +2,30 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Windows2">
+        <folder name="Components">
+            <file name="AuditedEntityExplorerTopComponent.settings">
+                <!--org.jreserve.audit.context.ContextAuditorTopComponent-->
+                <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+                <!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+                <settings version="1.0">
+                    <instance class="org.jreserve.audit.global.AuditedEntityExplorerTopComponent"/>
+                </settings>]]>
+            </file>
+        </folder>
         <folder name="Modes">
-            <file name="auditor.wsmode" url="modes/auditor.wsmode"/>
-            <file name="explorer.wsmode" url="modes/explorerWsmode.xml"/>
+            <folder name="explorer">
+                <file name="AuditedEntityExplorerTopComponent.wstcref">
+                    <attr intvalue="3" name="position"/>
+                    <!--org.jreserve.audit.global.AuditedEntityExplorerTopComponent-->
+                    <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+                    <!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+                    <tc-ref version="2.0">
+                        <tc-id id="AuditedEntityExplorerTopComponent"/>
+                        <state opened="false"/>
+                    </tc-ref>
+                    ]]>
+                </file>
+            </folder>
         </folder>
     </folder>
 </filesystem>

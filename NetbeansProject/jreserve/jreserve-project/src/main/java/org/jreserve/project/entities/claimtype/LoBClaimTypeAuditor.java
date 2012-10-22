@@ -61,8 +61,8 @@ public class LoBClaimTypeAuditor extends AbstractAuditor<ClaimType> {
     protected List<ClaimType> getEntities(AuditReader reader, Object value) {
         LoB lob = (LoB) value;
         return reader.createQuery()
-              .forRevisionsOfEntity(ClaimType.class, false, true)
-              .add(AuditEntity.revisionType().eq(RevisionType.DEL))
+              .forRevisionsOfEntity(ClaimType.class, true, true)
+              .add(AuditEntity.revisionType().eq(RevisionType.ADD))
               .add(AuditEntity.relatedId("lob").eq(lob.getId()))
               .addOrder(AuditEntity.revisionNumber().asc())
               .getResultList();

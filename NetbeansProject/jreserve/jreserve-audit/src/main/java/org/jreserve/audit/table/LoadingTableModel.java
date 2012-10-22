@@ -1,4 +1,4 @@
-package org.jreserve.audit.context;
+package org.jreserve.audit.table;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;

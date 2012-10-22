@@ -15,8 +15,12 @@ public class AuditableProjectElement implements Auditable {
     }
 
     @Override
-    public ProjectElement getProjectElement() {
-        return element;
+    public Object getAuditableEntity() {
+        return element.getValue();
     }
 
+    @Override
+    public String getDisplayName() {
+        return element.getNamePath();
+    }
 }
