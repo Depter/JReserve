@@ -1,48 +1,45 @@
 package org.jreserve.project.entities.lob;
 
-import java.util.Collections;
+import java.awt.Image;
 import java.util.List;
 import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.jreserve.audit.AbstractAuditor;
 import org.jreserve.audit.AuditedEntity;
-import org.jreserve.audit.Auditor;
 import org.jreserve.project.entities.LoB;
+import org.openide.util.ImageUtilities;
 
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
-@Auditor.Registration(100)
-public class LoBAuditor extends AbstractAuditor<LoB> {
+public class RootClaimTypeAuditor extends AbstractAuditor<LoB> {
 
-    public LoBAuditor() {
-        factory.setType("LoB");
-    }
+    private final static Image IMG = ImageUtilities.loadImage("resources/lob.png", false);
     
     @Override
     public boolean isInterested(Object value) {
-        return (value instanceof LoB);
+        return (value == null);
     }
-    
+
     @Override
     protected List<Object[]> getRevisions(AuditReader reader, Object value) {
-        LoB lob = (LoB) value;
         return reader.createQuery()
-              .forRevisionsOfEntity(LoB.class, false, false)
-              .add(AuditEntity.id().eq(lob.getId()))
+               .forRevisionsOfEntity(LoB.class, false, true)
               .addOrder(AuditEntity.revisionNumber().asc())
               .getResultList();
     }
 
     @Override
     protected String getAddChange(LoB current) {
-        return "Created";
+        return "Created lob: "+current.getName();
     }
 
     @Override
     protected String getDeleteChange(LoB current) {
-        return "Deleted";
+        return "Deleted lob: "+current.getName();
     }
 
     @Override
@@ -52,17 +49,17 @@ public class LoBAuditor extends AbstractAuditor<LoB> {
     }
 
     @Override
-    public List<AuditedEntity> getAuditedEntities(AuditReader reader, Object value) {
-        return Collections.EMPTY_LIST;
-    }
-
-    @Override
     protected List<LoB> getEntities(AuditReader reader, Object value) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return reader.createQuery()
+                .forRevisionsOfEntity(LoB.class, true, true)
+                .add(AuditEntity.revisionType().eq(RevisionType.DEL))
+                .addOrder(AuditEntity.revisionNumber().asc())
+                .getResultList();
     }
-
+    
     @Override
     protected AuditedEntity<LoB> createAuditedEntity(LoB entity) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String name = entity.getName();
+        return new AuditedEntity<LoB>(entity, name, IMG);
     }
 }

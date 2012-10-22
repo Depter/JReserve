@@ -43,7 +43,7 @@ class ClaimTypeElement extends ProjectElement<ClaimType> {
         }
         
         @Override
-        protected void cleanUpBeforeEntity(Session session) {
+        protected void cleanUpAfterEntity(Session session) {
             ClaimType ct = getValue();
             LoB lob = ct.getLoB();
             lob.removeClaimType(ct);

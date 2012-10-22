@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.jreserve.persistence.SessionFactory;
 
 /**
@@ -18,6 +19,7 @@ public class Deleter {
     private boolean used = false;
     private List<Deletable> deletables;
     private Session session;
+    private boolean initiatedTransaction;
     
     public Deleter(List<Deletable> deletables) {
         if(deletables == null)
@@ -39,7 +41,10 @@ public class Deleter {
     
     private void beginTransaction() {
         session = SessionFactory.getCurrentSession();
-        session.beginTransaction();
+        Transaction tx = session.getTransaction();
+        initiatedTransaction = !tx.isActive();
+        if(initiatedTransaction) 
+            session.beginTransaction();
     }
     
     private void checkState() {
@@ -55,14 +60,14 @@ public class Deleter {
     }
     
     private void rollBack() {
-        if(session != null) {
+        if(session != null && initiatedTransaction)
             session.getTransaction().rollback();
-            session = null;
-        }
+        session = null;
     }
     
     private void commit() {
-        session.getTransaction().commit();
+        if(initiatedTransaction)
+            session.getTransaction().commit();
         session = null;
     }
 }

@@ -16,12 +16,20 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.ChangeTableModel.When=Date",
     "LBL.ChangeTableModel.Who=User",
+    "LBL.ChangeTableModel.Type=Type",
     "LBL.ChangeTableModel.Change=Change"
 })
 class ChangeTableModel implements TableModel {
     
     private List<AuditElement> changes = new ArrayList<AuditElement>();
     private List<TableModelListener> listeners = new ArrayList<TableModelListener>();
+    
+    ChangeTableModel() {
+    }
+    
+    ChangeTableModel(List<AuditElement> changes) {
+        this.changes.addAll(changes);
+    }
     
     @Override
     public int getRowCount() {
@@ -30,7 +38,7 @@ class ChangeTableModel implements TableModel {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -41,6 +49,8 @@ class ChangeTableModel implements TableModel {
             case 1:
                 return Bundle.LBL_ChangeTableModel_Who();
             case 2:
+                return Bundle.LBL_ChangeTableModel_Type();
+            case 3:
                 return Bundle.LBL_ChangeTableModel_Change();
             default:
                 throw new IllegalArgumentException("Unknown column index: "+column);
@@ -55,6 +65,8 @@ class ChangeTableModel implements TableModel {
             case 1:
                 return String.class;
             case 2:
+                return String.class;
+            case 3:
                 return String.class;
             default:
                 throw new IllegalArgumentException("Unknown column index: "+column);
@@ -75,6 +87,8 @@ class ChangeTableModel implements TableModel {
             case 1:
                 return change.getUser();
             case 2:
+                return change.getType();
+            case 3:
                 return change.getChange();
             default:
                 throw new IllegalArgumentException("Unknown column index: "+column);

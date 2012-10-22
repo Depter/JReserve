@@ -48,7 +48,8 @@ public class ToolBarButton extends JButton implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        setBorderPainted(true);
+        if(super.isEnabled())
+            setBorderPainted(true);
     }
 
     @Override

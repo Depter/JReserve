@@ -48,7 +48,7 @@ public class AddDataQuery {
     
     private <T extends PersistentObject> T load(T entity, Session session) {
         Class<?> clazz = entity.getClass();
-        return (T) session.load(clazz, entity.getId());
+        return (T) session.get(clazz, entity.getId());
     }
     
     private void loadPersistentDataType(Session session, ProjectDataType dataType) {

@@ -1,67 +1,76 @@
 package org.jreserve.project.entities.claimtype;
 
-import java.util.ArrayList;
+import java.awt.Image;
 import java.util.List;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
-import org.jreserve.audit.AuditElement;
+import org.jreserve.audit.AbstractAuditor;
+import org.jreserve.audit.AuditedEntity;
 import org.jreserve.audit.Auditor;
-import org.jreserve.audit.JReserveRevisionEntity;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
+import org.openide.util.ImageUtilities;
 
 /**
  *
  * @author Peter Decsi
  */
 @Auditor.Registration(200)
-public class LoBClaimTypeAuditor implements Auditor {
+public class LoBClaimTypeAuditor extends AbstractAuditor<ClaimType> {
+    
+    private final static Image IMG = ImageUtilities.loadImage("resources/claim_type.png", false);
 
+    public LoBClaimTypeAuditor() {
+        factory.setType("Claim type");
+    }
+    
     @Override
     public boolean isInterested(Object value) {
         return (value instanceof LoB);
     }
-
-    @Override
-    public List<AuditElement> getAudits(AuditReader reader, Object value) {
-        List<AuditElement> elements = new ArrayList<AuditElement>();
-        ClaimType previous = null;
-        for(Object[] revision : getRevisions(reader, (LoB) value)) {
-            ClaimType current = (ClaimType) revision[0];
-            JReserveRevisionEntity re = (JReserveRevisionEntity) revision[1];
-            RevisionType type = (RevisionType) revision[2];
-            elements.add(createAuditElement(previous, current, re, type));
-            previous = current;
-        }
-        return elements;
-    }
     
-    private List<Object[]> getRevisions(AuditReader reader, LoB lob) {
+    @Override
+    protected List<Object[]> getRevisions(AuditReader reader, Object value) {
+        LoB lob = (LoB) value;
         return reader.createQuery()
-              .forRevisionsOfEntity(ClaimType.class, false, false)
+              .forRevisionsOfEntity(ClaimType.class, false, true)
               .add(AuditEntity.relatedId("lob").eq(lob.getId()))
               .addOrder(AuditEntity.property("id").asc())
               .addOrder(AuditEntity.revisionNumber().asc())
               .getResultList();
     }
-    
-    private AuditElement createAuditElement(ClaimType previous, ClaimType current, JReserveRevisionEntity re, RevisionType type) {
-        String change = getChange(previous, current, type);
-        return new AuditElement(re.getRevisionDate(), re.getUserName(), change);
+
+    @Override
+    protected String getAddChange(ClaimType current) {
+        return "Created claim type: "+current.getName();
     }
-    
-    private String getChange(ClaimType previous, ClaimType current, RevisionType type) {
-        switch(type) {
-            case ADD:
-                return "Created claim type: "+current.getName();
-            case DEL:
-                return "Deleted claim type: "+previous.getName();
-            case MOD:
-                String msg = "Name changed \"%s\" => \"%s\".";
-                return String.format(msg, previous.getName(), current.getName());
-            default:
-                throw new IllegalArgumentException("Unknown RevisionType: "+type);
-        }
+
+    @Override
+    protected String getDeleteChange(ClaimType current) {
+        return "Deleted claim type: "+current.getName();
+    }
+
+    @Override
+    protected String getChange(ClaimType previous, ClaimType current) {
+        String msg = "Name changed \"%s\" => \"%s\".";
+        return String.format(msg, previous.getName(), current.getName());
+    }
+
+    @Override
+    protected List<ClaimType> getEntities(AuditReader reader, Object value) {
+        LoB lob = (LoB) value;
+        return reader.createQuery()
+              .forRevisionsOfEntity(ClaimType.class, false, true)
+              .add(AuditEntity.revisionType().eq(RevisionType.DEL))
+              .add(AuditEntity.relatedId("lob").eq(lob.getId()))
+              .addOrder(AuditEntity.revisionNumber().asc())
+              .getResultList();
+    }
+
+    @Override
+    protected AuditedEntity<ClaimType> createAuditedEntity(ClaimType entity) {
+        String name = entity.getName();
+        return new AuditedEntity<ClaimType>(entity, name, IMG);
     }
 }

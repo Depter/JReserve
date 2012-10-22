@@ -52,7 +52,7 @@ class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
         }
 
         @Override
-        protected void cleanUpBeforeEntity(Session session) {
+        protected void cleanUpAfterEntity(Session session) {
             Query query = session.createQuery(SQL);
             query.setParameter("dataTypeId", id);
             logDeletion();

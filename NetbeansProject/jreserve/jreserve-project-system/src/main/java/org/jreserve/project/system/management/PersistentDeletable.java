@@ -3,7 +3,6 @@ package org.jreserve.project.system.management;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Session;
-import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.system.ProjectElement;
 
@@ -34,16 +33,12 @@ public class PersistentDeletable extends AbstractProjectElementDeletable {
         Object entity = element.getValue();
         logger.log(Level.INFO, "Deleting entity: \"{0}\".", entity);
         try {
-            cleanUpBeforeEntity(session);
             session.delete(element.getValue());
             cleanUpAfterEntity(session);
         } catch (RuntimeException ex) {
             logger.log(Level.SEVERE, String.format("Unable to delete entity '%s'!", entity), ex);
             throw ex;
         }
-    }
-    
-    protected void cleanUpBeforeEntity(Session session) {
     }
     
     protected void cleanUpAfterEntity(Session session) {

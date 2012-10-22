@@ -8,18 +8,17 @@ import java.util.Date;
  */
 public class AuditElement {
     
+    
     private final Date date;
     private final String user;
+    private final String type;
     private final String change;
-
-    public AuditElement(Date date, String user, String change) {
+    
+    AuditElement(Date date, String user, String type, String change) {
         this.date = date;
         this.user = user;
+        this.type = type;
         this.change = change;
-    }
-
-    public String getChange() {
-        return change;
     }
 
     public Date getDate() {
@@ -29,10 +28,17 @@ public class AuditElement {
     public String getUser() {
         return user;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getChange() {
+        return change;
+    }
     
     @Override
     public String toString() {
         return String.format("Change [%tF, %s, %s]", date, user, change);
     }
-    
 }

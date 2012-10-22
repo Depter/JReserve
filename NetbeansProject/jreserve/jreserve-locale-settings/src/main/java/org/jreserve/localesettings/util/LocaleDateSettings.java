@@ -16,7 +16,7 @@ class LocaleDateSettings {
     private final static Logger logger = Logger.getLogger(LocaleDateSettings.class.getName());
     private final static String DATE_FORMAT = "DATE_FORMAT";
     
-    static DateFormat getDateFormat() {
+    static SimpleDateFormat getDateFormat() {
         return new SimpleDateFormat(getDateFormatString());
     }
     

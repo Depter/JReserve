@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
+OpenIDE-Module-Layer: org/jreserve/audit/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/audit/Bundle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
