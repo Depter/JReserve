@@ -70,8 +70,6 @@ public final class AuditedEntityExplorerTopComponent extends TopComponent implem
         treeView = new org.openide.explorer.view.BeanTreeView();
 
         setLayout(new java.awt.BorderLayout());
-
-        treeView.setRootVisible(false);
         add(treeView, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -137,7 +135,7 @@ public final class AuditedEntityExplorerTopComponent extends TopComponent implem
     
     private void lookupChanged() {
         if(SessionFactory.isConnected()) {
-            AuditedEntity root = new AuditedEntity(null, "ROOT", null);
+            AuditedEntity root = new AuditedEntity(null, "Archives", null);
             em.setRootContext(new AuditedEntityNode(root));
         } else {
             em.setRootContext(new AbstractNode(Children.LEAF));

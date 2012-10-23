@@ -62,9 +62,12 @@ class AuditedEntityChildFactory extends ChildFactory<AuditedEntity> {
         }
     }
     
+    void refreshNodes() {
+        super.refresh(false);
+    }
+    
     @Override
     protected Node createNodeForKey(AuditedEntity key) {
-        
         return new AuditedEntityNode(key);
     }
 }

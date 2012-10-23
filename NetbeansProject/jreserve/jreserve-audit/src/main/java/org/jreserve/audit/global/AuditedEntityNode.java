@@ -1,12 +1,11 @@
 package org.jreserve.audit.global;
 
 import java.awt.Image;
-import java.util.ArrayList;
+import javax.swing.Action;
 import org.jreserve.audit.Auditable;
 import org.jreserve.audit.AuditedEntity;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
-import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
@@ -28,8 +27,8 @@ class AuditedEntityNode extends AbstractNode {
     
     AuditedEntityNode(AuditedEntity entity) {
         super(Children.create(new AuditedEntityChildFactory(entity), true), getLookup(entity));
-        setDisplayName(entity.getDisplayName());
         this.entity = entity;
+        setDisplayName(entity.getDisplayName());
         initAuditable();
     }
     
@@ -37,6 +36,11 @@ class AuditedEntityNode extends AbstractNode {
         NodeAuditable auditable = getLookup().lookup(NodeAuditable.class);
         if(auditable != null)
             auditable.setNode(this);
+    }
+    
+    void refreshChildren() {
+        AuditedEntityChildFactory factory = new AuditedEntityChildFactory(entity);
+        super.setChildren(Children.create(factory, true));
     }
     
     @Override
@@ -49,8 +53,15 @@ class AuditedEntityNode extends AbstractNode {
     public Image getOpenedIcon(int type) {
         return getIcon(type);
     }
+
+    @Override
+    public Action[] getActions(boolean context) {
+        return new Action[]{new RefreshAction(this)};
+    }
     
-    private static class NodeAuditable implements Auditable {
+    
+    
+    static class NodeAuditable implements Auditable {
         
         private AuditedEntityNode node;
         private String path = null;
@@ -65,6 +76,10 @@ class AuditedEntityNode extends AbstractNode {
         
         void setNode(AuditedEntityNode node) {
             this.node = node;
+        }
+        
+        AuditedEntityNode getNode() {
+            return this.node;
         }
         
         private void buildPath(AuditedEntityNode node) {

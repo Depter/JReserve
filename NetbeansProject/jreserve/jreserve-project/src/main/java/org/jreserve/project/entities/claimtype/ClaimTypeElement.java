@@ -1,6 +1,7 @@
 package org.jreserve.project.entities.claimtype;
 
 import org.hibernate.Session;
+import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;
@@ -19,8 +20,13 @@ class ClaimTypeElement extends ProjectElement<ClaimType> {
     ClaimTypeElement(ClaimType claimType) {
         super(claimType);
         properties.put(NAME_PROPERTY, claimType.getName());
+        initLookupContent();
+    }
+    
+    private void initLookupContent() {
         super.addToLookup(new ClaimTypeDeletable());
         super.addToLookup(new RenameableProjectElement(this));
+        super.addToLookup(new AuditableProjectElement(this));
         new ClaimTypeSavable();
     }
     

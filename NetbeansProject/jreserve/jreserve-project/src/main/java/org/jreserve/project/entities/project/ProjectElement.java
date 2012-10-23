@@ -1,8 +1,8 @@
 package org.jreserve.project.entities.project;
 
-import java.io.IOException;
 import javax.swing.SwingUtilities;
 import org.hibernate.Session;
+import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.editor.ProjectEditor;
@@ -31,13 +31,14 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         super(project);
         super.setProperty(NAME_PROPERTY, project.getName());
         initLookupContent();
-        new ProjectSavable();
     }
     
     private void initLookupContent() {
         addToLookup(new ProjectDeletable());
         addToLookup(new ProjectOpenable());
         addToLookup(new RenameableProjectElement(this));
+        addToLookup(new AuditableProjectElement(this));
+        new ProjectSavable();
     }
     
     @Override
