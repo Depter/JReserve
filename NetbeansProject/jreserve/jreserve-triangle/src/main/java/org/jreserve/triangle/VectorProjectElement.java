@@ -2,6 +2,7 @@ package org.jreserve.triangle;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
@@ -52,6 +53,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         super.addToLookup(new PersistentDeletable(this));
         super.addToLookup(new VectorOpenable());
         super.addToLookup(new RenameableProjectElement(this));
+        super.addToLookup(new AuditableProjectElement(this));
         new VectorSavable();
     }
 

@@ -1,4 +1,4 @@
-package org.jreserve.project.entities.project;
+package org.jreserve.triangle.audit;
 
 import java.awt.Image;
 import java.util.List;
@@ -8,38 +8,38 @@ import org.hibernate.envers.query.AuditEntity;
 import org.jreserve.audit.AbstractAuditedEntityFactory;
 import org.jreserve.audit.AuditedEntity;
 import org.jreserve.audit.AuditedEntityFactory;
-import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
+import org.jreserve.triangle.entities.Triangle;
 import org.openide.util.ImageUtilities;
 
 /**
  *
  * @author Peter Decsi
  */
-@AuditedEntityFactory.Registration(200)
-public class ClaimTypeProjectAuditedEntity extends AbstractAuditedEntityFactory<Project> {
+@AuditedEntityFactory.Registration(100)
+public class ProjectTriangleAuditedEntityFactory extends AbstractAuditedEntityFactory<Triangle> {
     
-    private final static Image IMG = ImageUtilities.loadImage("resources/project.png", false);
+    private final static Image IMG = ImageUtilities.loadImage("resources/triangle.png", false);
 
     @Override
     public boolean isInterested(Object value) {
-        return (value instanceof ClaimType);
+        return (value instanceof Project);
     }
 
     @Override
-    protected List<Project> getEntities(AuditReader reader, Object value) {
-        ClaimType ct = (ClaimType) value;
+    protected List<Triangle> getEntities(AuditReader reader, Object value) {
+        Project project = (Project) value;
         return reader.createQuery()
-              .forRevisionsOfEntity(Project.class, true, true)
+              .forRevisionsOfEntity(Triangle.class, true, true)
               .add(AuditEntity.revisionType().eq(RevisionType.ADD))
-              .add(AuditEntity.relatedId("claimType").eq(ct.getId()))
+              .add(AuditEntity.relatedId("project").eq(project.getId()))
               .addOrder(AuditEntity.revisionNumber().asc())
               .getResultList();
     }
 
     @Override
-    protected AuditedEntity<Project> createAuditedEntity(Project entity) {
+    protected AuditedEntity<Triangle> createAuditedEntity(Triangle entity) {
         String name = entity.getName();
-        return new AuditedEntity<Project>(entity, name, IMG);
+        return new AuditedEntity<Triangle>(entity, name, IMG);
     }
 }

@@ -29,7 +29,7 @@ public class PersistentDeletable extends AbstractProjectElementDeletable {
         }
     }
     
-    private void deleteEntity(Session session) {
+    protected void deleteEntity(Session session) {
         Object entity = element.getValue();
         logger.log(Level.INFO, "Deleting entity: \"{0}\".", entity);
         try {

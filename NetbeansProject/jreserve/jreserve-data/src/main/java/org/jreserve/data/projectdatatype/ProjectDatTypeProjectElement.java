@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.data.query.DataLogUtil;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
 import org.openide.nodes.Node;
@@ -41,8 +42,10 @@ class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
     
     private class ProjectDataTypeDeletable extends PersistentDeletable {
         
-        private final static String SQL = 
+        private final static String DELETE_CLAIMS = 
             "delete from ClaimValue c where c.dataType.id= :dataTypeId";
+        private final static String DELETE_LOG = 
+            "delete from DataLog l where l.dataType.id= :dataTypeId";
         
         private final String id;
         
@@ -52,8 +55,26 @@ class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
         }
 
         @Override
+        protected void deleteEntity(Session session) {
+            DataLogUtil.logDeletion(session, ProjectDatTypeProjectElement.this.getValue());
+            super.deleteEntity(session);
+        }
+        
+        @Override
         protected void cleanUpAfterEntity(Session session) {
-            Query query = session.createQuery(SQL);
+            deleteDataLog(session);
+            deleteClaims(session);
+        }
+        
+        private void deleteDataLog(Session session) {
+            Query query = session.createQuery(DELETE_LOG);
+            query.setParameter("dataTypeId", id);
+            logDeletion();
+            query.executeUpdate();
+        }
+        
+        private void deleteClaims(Session session) {
+            Query query = session.createQuery(DELETE_CLAIMS);
             query.setParameter("dataTypeId", id);
             logDeletion();
             query.executeUpdate();
@@ -61,7 +82,7 @@ class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
     
         private void logDeletion() {
             ProjectDataType dt = ProjectDatTypeProjectElement.this.getValue();
-            String msg = "Deleted claim data from '%s'/'%d - %s.";
+            String msg = "Deleted claim data/data log from '%s'/'%d - %s.";
             msg = String.format(msg, dt.getClaimType().getName(), dt.getDbId(), dt.getName());
             logger.log(Level.FINE, msg);
         }        

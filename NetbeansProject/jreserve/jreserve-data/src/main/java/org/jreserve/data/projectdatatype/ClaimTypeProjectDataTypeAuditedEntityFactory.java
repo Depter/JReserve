@@ -1,4 +1,4 @@
-package org.jreserve.project.entities.project;
+package org.jreserve.data.projectdatatype;
 
 import java.awt.Image;
 import java.util.List;
@@ -8,18 +8,16 @@ import org.hibernate.envers.query.AuditEntity;
 import org.jreserve.audit.AbstractAuditedEntityFactory;
 import org.jreserve.audit.AuditedEntity;
 import org.jreserve.audit.AuditedEntityFactory;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.project.entities.ClaimType;
-import org.jreserve.project.entities.Project;
-import org.openide.util.ImageUtilities;
+import org.jreserve.resources.images.TransparentImage;
 
 /**
  *
  * @author Peter Decsi
  */
-@AuditedEntityFactory.Registration(200)
-public class ClaimTypeProjectAuditedEntity extends AbstractAuditedEntityFactory<Project> {
-    
-    private final static Image IMG = ImageUtilities.loadImage("resources/project.png", false);
+@AuditedEntityFactory.Registration(100)
+public class ClaimTypeProjectDataTypeAuditedEntityFactory extends AbstractAuditedEntityFactory<ProjectDataType> {
 
     @Override
     public boolean isInterested(Object value) {
@@ -27,10 +25,10 @@ public class ClaimTypeProjectAuditedEntity extends AbstractAuditedEntityFactory<
     }
 
     @Override
-    protected List<Project> getEntities(AuditReader reader, Object value) {
+    protected List<ProjectDataType> getEntities(AuditReader reader, Object value) {
         ClaimType ct = (ClaimType) value;
         return reader.createQuery()
-              .forRevisionsOfEntity(Project.class, true, true)
+              .forRevisionsOfEntity(ProjectDataType.class, true, true)
               .add(AuditEntity.revisionType().eq(RevisionType.ADD))
               .add(AuditEntity.relatedId("claimType").eq(ct.getId()))
               .addOrder(AuditEntity.revisionNumber().asc())
@@ -38,8 +36,8 @@ public class ClaimTypeProjectAuditedEntity extends AbstractAuditedEntityFactory<
     }
 
     @Override
-    protected AuditedEntity<Project> createAuditedEntity(Project entity) {
+    protected AuditedEntity<ProjectDataType> createAuditedEntity(ProjectDataType entity) {
         String name = entity.getName();
-        return new AuditedEntity<Project>(entity, name, IMG);
+        return new AuditedEntity<ProjectDataType>(entity, name, null);
     }
 }

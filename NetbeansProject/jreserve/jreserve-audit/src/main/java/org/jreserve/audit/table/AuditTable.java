@@ -17,7 +17,6 @@ import org.jreserve.audit.Auditor;
 import org.jreserve.audit.util.AuditorRegistry;
 import org.jreserve.localesettings.util.LocaleSettings;
 import org.jreserve.persistence.SessionFactory;
-import org.openide.util.Exceptions;
 
 public class AuditTable extends javax.swing.JPanel {
     
@@ -175,7 +174,6 @@ public class AuditTable extends javax.swing.JPanel {
                 setChanges(get());
             } catch (Exception ex) {
                 setChanges(Collections.EMPTY_LIST);
-                Exceptions.printStackTrace(ex);
             }
         }
         

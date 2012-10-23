@@ -4,12 +4,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.data.entities.ClaimValuePk;
-import org.jreserve.persistence.PersistentObject;
+import org.jreserve.data.entities.DataLog;
 import org.jreserve.project.entities.ClaimType;
 
 /**
@@ -30,6 +31,7 @@ public class AddDataQuery {
             loadPersistence(session, data);
             add(session, data);
         }
+        logImport(session);
         clearPersistence();
     }
     
@@ -43,18 +45,21 @@ public class AddDataQuery {
     private void loadPersistentClaimType(Session session, ClaimType claimType) {
         String id = claimType.getId();
         if(!claimTypes.containsKey(id))
-            claimTypes.put(id, load(claimType, session));
+            claimTypes.put(id, getClaimType(session, id));
     }
     
-    private <T extends PersistentObject> T load(T entity, Session session) {
-        Class<?> clazz = entity.getClass();
-        return (T) session.get(clazz, entity.getId());
+    private ClaimType getClaimType(Session session, String id) {
+        return (ClaimType) session.get(ClaimType.class, id);
     }
     
     private void loadPersistentDataType(Session session, ProjectDataType dataType) {
         String id = dataType.getId();
         if(!dataTypes.containsKey(id))
-            dataTypes.put(id, load(dataType, session));
+            dataTypes.put(id, getDataType(session, id));
+    }
+    
+    private ProjectDataType getDataType(Session session, String id) {
+        return (ProjectDataType) session.get(ProjectDataType.class, id);
     }
     
     private void add(Session session, Data<Double> data) {
@@ -99,6 +104,11 @@ public class AddDataQuery {
         } else {
             session.persist(cv);
         }
+    }
+    
+    private void logImport(Session session) {
+        for(ProjectDataType dataType : dataTypes.values())
+            DataLogUtil.logImport(session, dataType);
     }
     
     private void clearPersistence() {
