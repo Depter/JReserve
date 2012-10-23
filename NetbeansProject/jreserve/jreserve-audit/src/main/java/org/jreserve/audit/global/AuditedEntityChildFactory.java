@@ -7,12 +7,10 @@ import org.hibernate.Session;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.jreserve.audit.AuditedEntity;
-import org.jreserve.audit.Auditor;
-import org.jreserve.audit.util.AuditorRegistry;
+import org.jreserve.audit.AuditedEntityFactory;
+import org.jreserve.audit.util.AuditedEntityFactoryRegistry;
 import org.jreserve.persistence.SessionFactory;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.ChildFactory;
-import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 
 /**
@@ -41,8 +39,8 @@ class AuditedEntityChildFactory extends ChildFactory<AuditedEntity> {
     private boolean queryKeys(List<AuditedEntity> list) {
         try {
             AuditReader reader = createReader();
-            for(Auditor auditor : AuditorRegistry.getAuditors(parent))
-                list.addAll(auditor.getAuditedEntities(reader, parent));
+            for(AuditedEntityFactory factory : AuditedEntityFactoryRegistry.getFactories(parent))
+                list.addAll(factory.getAuditedEntities(reader, parent));
             return true;
         } catch (Exception ex) {
             logger.log(Level.SEVERE, String.format("Unable to query audited entities for entity: %s", parent), ex);

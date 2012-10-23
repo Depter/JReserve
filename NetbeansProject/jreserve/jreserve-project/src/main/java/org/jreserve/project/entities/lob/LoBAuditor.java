@@ -8,16 +8,25 @@ import org.jreserve.audit.AbstractAuditor;
 import org.jreserve.audit.AuditedEntity;
 import org.jreserve.audit.Auditor;
 import org.jreserve.project.entities.LoB;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  */
+@Messages({
+    "MSG.LoBAuditor.TypeName=LoB",
+    "MSG.LoBAuditor.Created=Created",
+    "MSG.LoBAuditor.Deleted=Deleted",
+    "# {0} - old name",
+    "# {1} - new name",
+    "MSG.LoBAuditor.NameChange=Name changed \"{0}\" => \"{1}\"."
+})
 @Auditor.Registration(100)
 public class LoBAuditor extends AbstractAuditor<LoB> {
 
     public LoBAuditor() {
-        factory.setType("LoB");
+        factory.setType(Bundle.MSG_LoBAuditor_TypeName());
     }
     
     @Override
@@ -37,32 +46,18 @@ public class LoBAuditor extends AbstractAuditor<LoB> {
 
     @Override
     protected String getAddChange(LoB current) {
-        return "Created";
+        return Bundle.MSG_LoBAuditor_Created();
     }
 
     @Override
     protected String getDeleteChange(LoB current) {
-        return "Deleted";
+        return Bundle.MSG_LoBAuditor_Deleted();
     }
 
     @Override
     protected String getChange(LoB previous, LoB current) {
-        String msg = "Name changed \"%s\" => \"%s\".";
-        return String.format(msg, previous.getName(), current.getName());
-    }
-
-    @Override
-    public List<AuditedEntity> getAuditedEntities(AuditReader reader, Object value) {
-        return Collections.EMPTY_LIST;
-    }
-
-    @Override
-    protected List<LoB> getEntities(AuditReader reader, Object value) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    protected AuditedEntity<LoB> createAuditedEntity(LoB entity) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String oldName = previous.getName();
+        String newName = current.getName();
+        return Bundle.MSG_LoBAuditor_NameChange(oldName, newName);
     }
 }

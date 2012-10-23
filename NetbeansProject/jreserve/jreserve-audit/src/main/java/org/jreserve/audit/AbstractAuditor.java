@@ -65,16 +65,4 @@ public abstract class AbstractAuditor<T> implements Auditor {
     protected abstract String getDeleteChange(T current);
     
     protected abstract String getChange(T previous, T current);
-
-    @Override
-    public List<AuditedEntity> getAuditedEntities(AuditReader reader, Object value) {
-        List<AuditedEntity> auditedEntities = new ArrayList<AuditedEntity>();
-        for(T entity : getEntities(reader, value))
-            auditedEntities.add(createAuditedEntity(entity));
-        return auditedEntities;
-    }
-    
-    protected abstract List<T> getEntities(AuditReader reader, Object value);
-    
-    protected abstract AuditedEntity<T> createAuditedEntity(T entity);
 }

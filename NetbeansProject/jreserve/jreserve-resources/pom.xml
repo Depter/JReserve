@@ -106,6 +106,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.resources</publicPackage>
+                        <publicPackage>org.jreserve.resources.annotation</publicPackage>
                         <publicPackage>org.jreserve.resources.images</publicPackage>
                         <publicPackage>org.jreserve.resources.textfieldfilters</publicPackage>
                     </publicPackages>

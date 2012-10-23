@@ -6,7 +6,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
-import org.jreserve.audit.Auditor;
+import org.jreserve.audit.AuditedEntityFactory;
 import org.jreserve.resources.annotation.AbstractRegistrationProcessor;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -15,20 +15,21 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
 @ServiceProvider(service=Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedAnnotationTypes("org.jreserve.audit.Auditor.Registration")
-public class AuditorRegistrationProcessor extends AbstractRegistrationProcessor {
-    final static String ENTITY_DIRECTORY = "JReserve/Audit/AuditFactories";
+@SupportedAnnotationTypes("org.jreserve.audit.AuditedEntityFactory.Registration")
+public class AuditedEntityFactoryRegistrationProcessor extends AbstractRegistrationProcessor {
+    final static String ENTITY_DIRECTORY = "JReserve/Audit/AuditedEntityFactories";
     final static String PRIORITY = "priority";
     private final static String LOCATION = ENTITY_DIRECTORY + "/%s.instance";
     
     private final static String ERR_NEGATIVE_PRORITY = 
         "Class '%s' annotated with '%s', and has a negative priority %d!";
     
-    private final static Class<Auditor.Registration> ANNOTATION = Auditor.Registration.class;
-    private final static Class<?> INTERFACE = Auditor.class;
+    private final static Class<AuditedEntityFactory.Registration> ANNOTATION = AuditedEntityFactory.Registration.class;
+    private final static Class<?> INTERFACE = AuditedEntityFactory.class;
 
     @Override
     protected Class<? extends Annotation> getAnnotation() {
@@ -39,7 +40,7 @@ public class AuditorRegistrationProcessor extends AbstractRegistrationProcessor 
     protected Class<?> getInterface() {
         return INTERFACE;
     }
-    
+
     @Override
     protected void registerElement(TypeElement element) throws LayerGenerationException {
         LayerBuilder.File file = getFile(element);

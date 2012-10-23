@@ -3,17 +3,18 @@ package org.jreserve.audit.util;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import org.jreserve.audit.Auditor;
-import static org.jreserve.audit.util.AuditorRegistrationProcessor.ENTITY_DIRECTORY;
-import static org.jreserve.audit.util.AuditorRegistrationProcessor.PRIORITY;
+import org.jreserve.audit.AuditedEntityFactory;
+import static org.jreserve.audit.util.AuditedEntityFactoryRegistrationProcessor.ENTITY_DIRECTORY;
+import static org.jreserve.audit.util.AuditedEntityFactoryRegistrationProcessor.PRIORITY;
 import org.jreserve.resources.annotation.RegistrationRegistry;
 import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
-public class AuditorRegistry extends RegistrationRegistry<Auditor> {
+public class AuditedEntityFactoryRegistry extends RegistrationRegistry<AuditedEntityFactory> {
     
     private final static Comparator<FileObject> FILE_COMPARATOR = new Comparator<FileObject>() {
         @Override
@@ -29,17 +30,17 @@ public class AuditorRegistry extends RegistrationRegistry<Auditor> {
         }
     };
     
-    private static AuditorRegistry INSTANCE = new AuditorRegistry();
+    private static AuditedEntityFactoryRegistry INSTANCE = new AuditedEntityFactoryRegistry();
     
-    public synchronized static List<Auditor> getAuditors(Object value) {
+    public synchronized static List<AuditedEntityFactory> getFactories(Object value) {
         return INSTANCE.getValues(value);
     }
     
-    private List<Auditor> getValues(Object value) {
-        List<Auditor> result = new ArrayList<Auditor>();
-        for(Auditor auditor : getValues())
-            if(auditor.isInterested(value))
-                result.add(auditor);
+    private List<AuditedEntityFactory> getValues(Object value) {
+        List<AuditedEntityFactory> result = new ArrayList<AuditedEntityFactory>();
+        for(AuditedEntityFactory factory : getValues())
+            if(factory.isInterested(value))
+                result.add(factory);
         return result;
     }
 
