@@ -9,9 +9,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.VectorProjectElement;
-import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
 import org.jreserve.triangle.guiutil.VectorFormatVisualPanel;
 import org.netbeans.core.spi.multiview.CloseOperationState;
@@ -25,12 +24,12 @@ import org.openide.util.Lookup;
  *
  * @author Peter Decsi
  */
-public class VectorDataEditorView extends VectorFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, DataLoader.Callback {
+public class VectorDataEditorView extends VectorFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, DataLoader.Callback<Vector> {
     
     private JToolBar toolBar = new JToolBar();
     private VectorProjectElement element;
     private MultiViewElementCallback callBack;
-    private DataLoader loader;
+    private DataLoader<Vector> loader;
     
     public VectorDataEditorView(VectorProjectElement element) {
         this.element = element;
@@ -67,7 +66,7 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     }
     
     private void startLoader() {
-        loader = new DataLoader(element.getValue(), this);
+        loader = new DataLoader<Vector>(element.getValue(), this);
         loader.start();
     }
     
@@ -125,8 +124,8 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     @Override
     public void finnished(DataLoader loader) {
         try {
-            List<Data<ProjectDataType, Double>> datas = loader.getData();
-            setData(datas);
+            setData(loader.getData());
+            setCorrections(loader.getCorrections());
         } catch (RuntimeException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -134,6 +133,9 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     
     private void setData(List<Data<ProjectDataType, Double>> datas) {
         super.setDatas(datas);
+    }
+    
+    private void setCorrections(List<Data<Vector, Double>> corrections) {
     }
 
     @Override

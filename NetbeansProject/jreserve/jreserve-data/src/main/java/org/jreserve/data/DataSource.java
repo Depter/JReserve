@@ -2,10 +2,9 @@ package org.jreserve.data;
 
 import java.util.List;
 import org.hibernate.Session;
-import org.jreserve.data.entities.ClaimValue;
-import org.jreserve.data.entities.ClaimValueDataFactory;
-import org.jreserve.data.entities.DataFactory;
+import org.jreserve.data.entities.*;
 import org.jreserve.data.query.*;
+import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.ClaimType;
 
@@ -97,4 +96,14 @@ public class DataSource {
         DeleteDataQuery query = new DeleteDataQuery();
         query.delete(session, data);
     }
+    
+    /**
+     * Returns the data for the given criteria.
+     */
+    public <T extends PersistentObject> List<Data<T, Double>> getCorrections(DataCriteria<T> criteria) {
+        DataCorrectionFactory<T> factory = new DataCorrectionFactory<T>(criteria.getOwner());
+        SelectDataQuery<DataCorrection, T, Double> query = new SelectDataQuery<DataCorrection, T, Double>(DataCorrection.class, factory);
+        return query.query(session, criteria);
+    }
+    
 }
