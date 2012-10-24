@@ -3,15 +3,15 @@ package org.jreserve.data.query;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.jreserve.data.Criteria;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.project.entities.ClaimType;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class DistinctDataTypesQuery implements DataQuery<List<ProjectDataType>> {
+public class DistinctDataTypesQuery {
     
     private final static String DATA_TYPES = 
         "SELECT dt " + 
@@ -20,10 +20,9 @@ public class DistinctDataTypesQuery implements DataQuery<List<ProjectDataType>> 
         "ORDER BY dt.dbId";
 
     
-    @Override
-    public List<ProjectDataType> query(Session session, Criteria criteria) {
+    public List<ProjectDataType> query(Session session, ClaimType claimType) {
         Query query = session.createQuery(DATA_TYPES);
-        query.setParameter("claimTypeId", criteria.getClaimType().getId());
+        query.setParameter("claimTypeId", claimType.getId());
         return query.list();
     }
 }

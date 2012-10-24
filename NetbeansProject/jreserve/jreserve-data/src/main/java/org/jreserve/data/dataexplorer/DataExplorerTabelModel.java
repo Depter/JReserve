@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
-import org.jreserve.data.Criteria;
+import org.jreserve.data.DataCriteria;
 import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
@@ -31,7 +31,7 @@ class DataExplorerTabelModel extends DefaultTableModel {
     
     private ClaimType claimType;
     private ProjectDataType dataType;
-    private List<Data> allData = new ArrayList<Data>();
+    private List<Data<ProjectDataType, Double>> allData = new ArrayList<Data<ProjectDataType, Double>>();
     private int pageIndex;
     private int rowPerPage;
 
@@ -63,8 +63,8 @@ class DataExplorerTabelModel extends DefaultTableModel {
         }
     }
     
-    private Criteria getCriteria() {
-        return new Criteria(claimType).setDataType(dataType);
+    private DataCriteria<ProjectDataType> getCriteria() {
+        return new DataCriteria(dataType);
     }
     
     int getTotalRowCount() {
@@ -181,19 +181,19 @@ class DataExplorerTabelModel extends DefaultTableModel {
         }
     }
     
-    List<Data> getAllDataOnPage() {
-        List<Data> result = new ArrayList<Data>();
+    List<Data<ProjectDataType, Double>> getAllDataOnPage() {
+        List<Data<ProjectDataType, Double>> result = new ArrayList<Data<ProjectDataType, Double>>();
         for(int i=0, rowCount=getRowCount(); i<rowCount; i++)
             result.add(getData(i));
         return result;
     }
     
-    private Data getData(int row) {
+    private Data<ProjectDataType, Double> getData(int row) {
         return allData.get(pageIndex * rowPerPage + row);
     }
     
-    List<Data> getSelectedData(int[] rows) {
-        List<Data> result = new ArrayList<Data>();
+    List<Data<ProjectDataType, Double>> getSelectedData(int[] rows) {
+        List<Data<ProjectDataType, Double>> result = new ArrayList<Data<ProjectDataType, Double>>();
         for(int i=0, length=rows.length; i<length; i++)
             result.add(getData(rows[i]));
         return result;

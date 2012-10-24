@@ -18,13 +18,13 @@ import org.jreserve.project.entities.Project;
 @Audited
 @Entity
 @Table(name="TRIANGLE", schema="JRESERVE")
-public class Triangle extends AbstractData implements Serializable {
+public class Triangle extends AbstractDataStructure implements Serializable {
 
     public final static int POSITION = 100;
     
     @Embedded
     private TriangleGeometry geometry;
-    
+
     protected Triangle() {
     }
     

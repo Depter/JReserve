@@ -5,13 +5,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.hibernate.Session;
-import org.jreserve.data.Criteria;
+import org.jreserve.data.DataCriteria;
 import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.Project;
-import org.jreserve.triangle.entities.AbstractData;
+import org.jreserve.triangle.entities.AbstractDataStructure;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle.Messages;
@@ -36,12 +36,12 @@ public class DataLoader implements Runnable {
     private final String name;
     private final Callback callback;
     
-    private Criteria criteria;
+    private DataCriteria<ProjectDataType> criteria;
     private Session session;
-    private volatile List<Data<Double>> datas = null;
+    private volatile List<Data<ProjectDataType, Double>> datas = null;
     private volatile RuntimeException ex = null;
 
-    DataLoader(AbstractData data, Callback callback) {
+    DataLoader(AbstractDataStructure data, Callback callback) {
         this.callback = callback;
         this.project = data.getProject();
         this.dataType = data.getDataType();
@@ -79,8 +79,7 @@ public class DataLoader implements Runnable {
     }
 
     private void initCriteria() {
-        criteria = new Criteria(project.getClaimType());
-        criteria.setDataType(dataType);
+        criteria = new DataCriteria<ProjectDataType>(dataType);
     }
 
     private void loadData() {
@@ -106,7 +105,7 @@ public class DataLoader implements Runnable {
         });
     }
 
-    public List<Data<Double>> getData() {
+    public List<Data<ProjectDataType, Double>> getData() {
         if (ex != null) {
             throw ex;
         }

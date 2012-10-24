@@ -1,46 +1,50 @@
 package org.jreserve.data.query;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jreserve.data.Data;
+import org.jreserve.data.DataCriteria;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
-import org.jreserve.data.entities.ClaimValuePk;
-import org.jreserve.data.entities.DataLog;
 
 /**
  *
  * @author Peter Decsi
  */
-public class DeleteDataQuery {
+public class DeleteDataQuery extends AbstractQuery {
     
     private Set<ProjectDataType> dataTypes = new HashSet<ProjectDataType>();
     
     public DeleteDataQuery() {
+        super(ClaimValue.class);
     }
     
-    public void delete(Session session, List<Data> datas) {
-        for(Data data : datas)
+    public void delete(Session session, List<Data<ProjectDataType, Double>> datas) {
+        for(Data<ProjectDataType, Double> data : datas)
             delete(session, data);
         logDeletion(session);
     }
     
-    private void delete(Session session, Data data) {
+    private void delete(Session session, Data<ProjectDataType, Double> data) {
+        dataTypes.add(data.getOwner());
         ClaimValue cv = getPersistedClaimValue(session, data);
-        dataTypes.add(cv.getDataType());
         if(cv != null)
             session.delete(cv);
     }
     
     private ClaimValue getPersistedClaimValue(Session session, Data data) {
-        Date accident = data.getAccidentDate();
-        Date development = data.getDevelopmentDate();
-        ClaimValuePk id = new ClaimValuePk(data.getDataType(), accident, development);
-        return (ClaimValue) session.load(ClaimValue.class, id);
+        DataCriteria criteria = createCriteria(data);
+        return (ClaimValue) super.queryUniqueResult(session, criteria);
+    }
+    
+    private DataCriteria createCriteria(Data data) {
+        return new DataCriteria(data.getOwner())
+               .setFromAccidentDate(data.getAccidentDate())
+               .setFromAccidentEqt(DataCriteria.EQT.EQ)
+               .setFromDevelopmentDate(data.getDevelopmentDate())
+               .setFromDevelopmentEqt(DataCriteria.EQT.EQ);
     }
     
     

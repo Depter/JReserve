@@ -2,6 +2,9 @@ package org.jreserve.data;
 
 import java.util.List;
 import org.hibernate.Session;
+import org.jreserve.data.entities.ClaimValue;
+import org.jreserve.data.entities.ClaimValueDataFactory;
+import org.jreserve.data.entities.DataFactory;
 import org.jreserve.data.query.*;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.ClaimType;
@@ -57,23 +60,24 @@ public class DataSource {
      * given {@link Project project}.
      */
     public List<ProjectDataType> getDataTypes(ClaimType claimType) {
-        DataQuery<List<ProjectDataType>> query = new DistinctDataTypesQuery();
-        return query.query(session, new Criteria(claimType));
+        DistinctDataTypesQuery query = new DistinctDataTypesQuery();
+        return query.query(session, claimType);
     }
     
     /**
      * Deletes all data for the given criteria.
      */
-    public int clearData(Criteria criteria) {
-        DataQuery<Integer> query = new ClearDataQuery();
+    public int clearData(DataCriteria criteria) {
+        ClearDataQuery query = new ClearDataQuery(ClaimValue.class);
         return query.query(session, criteria);
     }
     
     /**
      * Returns all data for the given criteria.
      */
-    public List<Data<Double>> getClaimData(Criteria criteria) {
-        DataQuery<List<Data<Double>>> query = new SelectDataQuery();
+    public List<Data<ProjectDataType, Double>> getClaimData(DataCriteria<ProjectDataType> criteria) {
+        ClaimValueDataFactory<ProjectDataType> dataFactory = new ClaimValueDataFactory<ProjectDataType>(criteria.getOwner());
+        SelectDataQuery<ClaimValue, ProjectDataType, Double> query = new SelectDataQuery<ClaimValue, ProjectDataType, Double>(ClaimValue.class, dataFactory);
         return query.query(session, criteria);
     }
     
@@ -81,7 +85,7 @@ public class DataSource {
      * Saves the given data. If a datapoint for the given dates and
      * data type is already exists, the old value is overwritten.
      */
-    public void saveClaimData(List<Data<Double>> data) {
+    public void saveClaimData(List<Data<ProjectDataType, Double>> data) {
         AddDataQuery query = new AddDataQuery();
         query.add(session, data);
     }
@@ -89,7 +93,7 @@ public class DataSource {
     /**
      * Deletes the given data.
      */
-    public void deleteData(List<Data> data) {
+    public void deleteData(List<Data<ProjectDataType, Double>> data) {
         DeleteDataQuery query = new DeleteDataQuery();
         query.delete(session, data);
     }

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.triangle.mvc.model.TriangleRow;
 import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.openide.WizardDescriptor;
@@ -47,19 +48,19 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
     @Override
     public void readSettings(WizardDescriptor wizard) {
         this.wizard = wizard;
-        List<Data<Double>> datas = (List<Data<Double>>) wizard.getProperty(NameSelectWizardPanel.PROP_DATA);
+        List<Data<ProjectDataType, Double>> datas = (List<Data<ProjectDataType, Double>>) wizard.getProperty(NameSelectWizardPanel.PROP_DATA);
         setFirstDate(datas);
         panel.setDatas(datas);
         validate();
     }
     
-    private void setFirstDate(List<Data<Double>> datas) {
+    private void setFirstDate(List<Data<ProjectDataType, Double>> datas) {
         Date start = getFirstDate(datas);
         if(start != null)
             panel.setAccidentStart(start);
     }
     
-    private Date getFirstDate(List<Data<Double>> datas) {
+    private Date getFirstDate(List<Data<ProjectDataType, Double>> datas) {
         Date first = null;
         for(Data data : datas) {
             Date date = data.getAccidentDate();

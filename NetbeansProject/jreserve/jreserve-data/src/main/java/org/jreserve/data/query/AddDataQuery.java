@@ -4,30 +4,28 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jreserve.data.Data;
+import org.jreserve.data.DataCriteria;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
-import org.jreserve.data.entities.ClaimValuePk;
-import org.jreserve.data.entities.DataLog;
-import org.jreserve.project.entities.ClaimType;
+import org.jreserve.persistence.PersistentObject;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class AddDataQuery {
+public class AddDataQuery extends AbstractQuery {
     
-    private Map<String, ClaimType> claimTypes = new HashMap<String, ClaimType>();
     private Map<String, ProjectDataType> dataTypes = new HashMap<String, ProjectDataType>();
     
     public AddDataQuery() {
+        super(ClaimValue.class);
     }
     
-    public void add(Session session, List<Data<Double>> datas) {
-        for(Data<Double> data : datas) {
+    public void add(Session session, List<Data<ProjectDataType, Double>> datas) {
+        for(Data<ProjectDataType, Double> data : datas) {
             loadPersistence(session, data);
             add(session, data);
         }
@@ -35,25 +33,8 @@ public class AddDataQuery {
         clearPersistence();
     }
     
-    private void loadPersistence(Session session, Data<Double> data) {
-        ProjectDataType dataType = data.getDataType();
-        ClaimType claimType = dataType.getClaimType();
-        loadPersistentClaimType(session, claimType);
-        loadPersistentDataType(session, dataType);
-    }
-    
-    private void loadPersistentClaimType(Session session, ClaimType claimType) {
-        String id = claimType.getId();
-        if(!claimTypes.containsKey(id))
-            claimTypes.put(id, getClaimType(session, id));
-    }
-    
-    private ClaimType getClaimType(Session session, String id) {
-        return (ClaimType) session.get(ClaimType.class, id);
-    }
-    
-    private void loadPersistentDataType(Session session, ProjectDataType dataType) {
-        String id = dataType.getId();
+    private void loadPersistence(Session session, Data<ProjectDataType, Double> data) {
+        String id = data.getOwner().getId();
         if(!dataTypes.containsKey(id))
             dataTypes.put(id, getDataType(session, id));
     }
@@ -62,7 +43,7 @@ public class AddDataQuery {
         return (ProjectDataType) session.get(ProjectDataType.class, id);
     }
     
-    private void add(Session session, Data<Double> data) {
+    private void add(Session session, Data<ProjectDataType, Double> data) {
         boolean update = true;
         ClaimValue cv = getPersistedClaimValue(session, data);
         if(cv == null) {
@@ -74,28 +55,23 @@ public class AddDataQuery {
     }
     
     private ClaimValue getPersistedClaimValue(Session session, Data data) {
-        Date accident = data.getAccidentDate();
-        Date development = data.getDevelopmentDate();
-        ClaimValuePk id = new ClaimValuePk(data.getDataType(), accident, development);
-        return (ClaimValue) session.get(ClaimValue.class, id);
+        DataCriteria criteria = createCriteria(data);
+        return (ClaimValue) super.queryUniqueResult(session, criteria);
+    }
+    
+    private DataCriteria createCriteria(Data data) {
+        return new DataCriteria(data.getOwner())
+               .setFromAccidentDate(data.getAccidentDate())
+               .setFromAccidentEqt(DataCriteria.EQT.EQ)
+               .setFromDevelopmentDate(data.getDevelopmentDate())
+               .setFromDevelopmentEqt(DataCriteria.EQT.EQ);
     }
     
     private ClaimValue createClaimValue(Data data) {
         Date accident = data.getAccidentDate();
         Date development = data.getDevelopmentDate();
-        ClaimType claimType = getPersistentClaimType(data);
-        ProjectDataType dataType = getPersistentDataType(data);
-        return new ClaimValue(claimType, dataType, accident, development);
-    }
-    
-    private ClaimType getPersistentClaimType(Data data) {
-        String id = data.getDataType().getClaimType().getId();
-        return claimTypes.get(id);
-    }
-    
-    private ProjectDataType getPersistentDataType(Data data) {
-        String id = data.getDataType().getId();
-        return dataTypes.get(id);
+        PersistentObject owner = data.getOwner();
+        return new ClaimValue(owner, accident, development);
     }
     
     private void saveClaimValue(boolean update, Session session, ClaimValue cv) {
@@ -112,7 +88,6 @@ public class AddDataQuery {
     }
     
     private void clearPersistence() {
-        claimTypes.clear();
         dataTypes.clear();
     }
 }

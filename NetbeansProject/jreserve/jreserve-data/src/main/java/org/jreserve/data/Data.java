@@ -1,30 +1,31 @@
 package org.jreserve.data;
 
 import java.util.Date;
+import org.jreserve.persistence.PersistentObject;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class Data<T> implements Comparable<Data> {
+public class Data<O extends PersistentObject, V> implements Comparable<Data> {
 
-    private ProjectDataType dataType;
+    private O owner;
     private Date accidentDate;
     private Date developmentDate;
-    private T value;
+    private V value;
     
-    public Data(ProjectDataType dt, Date accidentDate, Date developmentDate, T value) {
-        setDataType(dt);
+    public Data(O owner, Date accidentDate, Date developmentDate, V value) {
+        setOwner(owner);
         setAccidentDate(accidentDate);
         setDevelopmentDate(developmentDate);
         setValue(value);
     }
     
-    private void setDataType(ProjectDataType dt) {
-        if(dt == null)
-            throw new NullPointerException("ProjectDataType is null!");
-        this.dataType = dt;
+    private void setOwner(O owner) {
+        if(owner == null)
+            throw new NullPointerException("Owner is null!");
+        this.owner = owner;
     }
     
     private void setAccidentDate(Date date) {
@@ -39,14 +40,14 @@ public class Data<T> implements Comparable<Data> {
         this.developmentDate = date;
     }
     
-    void setValue(T value) {
+    void setValue(V value) {
         if(value == null)
             throw new NullPointerException("Value is null!");
         this.value = value;
     }
     
-    public ProjectDataType getDataType() {
-        return dataType;
+    public O getOwner() {
+        return owner;
     }
 
     public Date getAccidentDate() {
@@ -57,7 +58,7 @@ public class Data<T> implements Comparable<Data> {
         return developmentDate;
     }
 
-    public T getValue() {
+    public V getValue() {
         return value;
     }
 
@@ -72,17 +73,15 @@ public class Data<T> implements Comparable<Data> {
     public int compareTo(Data d) {
         if(d == null) return -1;
         
-        int dif = dataType.compareTo(d.dataType);
-        if(dif != 0) return dif;
+        int dif = accidentDate.compareTo(d.accidentDate);
         
-        dif = accidentDate.compareTo(d.accidentDate);
         if(dif != 0) return dif;
         return developmentDate.compareTo(d.developmentDate);
     }
 
     @Override
     public int hashCode() {
-        int hash = 31 + dataType.hashCode();
+        int hash = 31 + owner.hashCode();
         hash = 17 * hash + accidentDate.hashCode();
         return 17 * hash + developmentDate.hashCode();
     }
@@ -91,6 +90,6 @@ public class Data<T> implements Comparable<Data> {
     public String toString() {
         return String.format(
                "Data [%s; %tF; %tF; %f]", 
-               dataType, accidentDate, developmentDate, value);
+               owner, accidentDate, developmentDate, value);
     }
 }

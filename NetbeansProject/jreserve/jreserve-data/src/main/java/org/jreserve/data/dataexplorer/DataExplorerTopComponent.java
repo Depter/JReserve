@@ -321,7 +321,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     }
     
     
-    private List<Data> getSelectedTableData() {
+    private List<Data<ProjectDataType, Double>> getSelectedTableData() {
         int rows[] = table.getSelectedRows();
         if(rows.length > 0)
             return tableModel.getSelectedData(rows);
@@ -380,7 +380,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            List<Data> datas = getSelectedTableData();
+            List<Data<ProjectDataType, Double>> datas = getSelectedTableData();
             if(!datas.isEmpty() && confirmUser(datas.size()))
                 deleteData(datas);
         }
@@ -391,7 +391,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
             return DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION;
         }
         
-        private void deleteData(List<Data> datas) {
+        private void deleteData(List<Data<ProjectDataType, Double>> datas) {
             DataSource ds = new DataSource();
             ProjectDataType dt = getSelectedDataType();
             try {

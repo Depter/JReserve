@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.jreserve.data.Data;
+import org.jreserve.persistence.PersistentObject;
 
 /**
  *
@@ -72,9 +73,9 @@ public class TriangleCell<V> implements Comparable<TriangleCell> {
         return String.format(format, developmentBegin, developmentEnd);
     }
     
-    public <T> List<Data<T>> getRelevantData(List<Data<T>> values) {
-        List<Data<T>> result = new ArrayList<Data<T>>(values.size());
-        for(Data<T> data : values)
+    public <O extends PersistentObject, T> List<Data<O, T>> getRelevantData(List<Data<O, T>> values) {
+        List<Data<O, T>> result = new ArrayList<Data<O, T>>(values.size());
+        for(Data<O, T> data : values)
             if(isRelevant(data))
                 result.add(data);
         return result;

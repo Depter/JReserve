@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.data.Criteria;
+import org.jreserve.data.DataCriteria;
 import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
@@ -55,7 +55,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     private boolean isValid = false;
     
-    private volatile Criteria criteria;
+    private volatile DataCriteria<ProjectDataType> criteria;
     
     public NameSelectWizardPanel(boolean isTriangle) {
         this.isTrinagle = isTriangle;
@@ -233,18 +233,17 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
         wizard.putProperty(PROP_PROJECT, component.getProject());
         wizard.putProperty(PROP_PROJECT_ELEMENT, component.getProjectElement());
         wizard.putProperty(PROP_DATA_DESCRIPTION, component.getDescription());
-        criteria = new Criteria(component.getClaimType());
-        criteria.setDataType(component.getDataType());
+        criteria = new DataCriteria(component.getDataType());
         component.showProgressBar();
     }
 
     @Override
     public void validate() throws WizardValidationException {
-        List<Data<Double>> datas = loadDatas();
+        List<Data<ProjectDataType, Double>> datas = loadDatas();
         setDatas(datas);
     }
     
-    private List<Data<Double>> loadDatas() throws WizardValidationException {
+    private List<Data<ProjectDataType, Double>> loadDatas() throws WizardValidationException {
         DataSource ds = new DataSource();
         try {
             ds.open();
@@ -268,7 +267,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
         });
     }
     
-    private void setDatas(List<Data<Double>> datas) throws WizardValidationException {
+    private void setDatas(List<Data<ProjectDataType, Double>> datas) throws WizardValidationException {
         if(datas.isEmpty()) {
             stopProgressBar();
             String msg = Bundle.MSG_NameSelectWizardPanel_NoData();

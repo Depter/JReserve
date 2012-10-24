@@ -18,7 +18,7 @@ import org.jreserve.project.entities.Project;
 @Audited
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractData extends AbstractPersistentObject implements ProjectData {
+public abstract class AbstractDataStructure extends AbstractPersistentObject implements ProjectData {
     
     private final static int NAME_SIZE = 64;
     
@@ -36,10 +36,10 @@ public abstract class AbstractData extends AbstractPersistentObject implements P
     @Column(name="DESCRIPTION")
     private String description;
     
-    protected AbstractData() {
+    protected AbstractDataStructure() {
     }
     
-    public AbstractData(Project project,
+    public AbstractDataStructure(Project project,
             ProjectDataType dataType, String name) {
         initProject(project);
         initDataType(dataType);

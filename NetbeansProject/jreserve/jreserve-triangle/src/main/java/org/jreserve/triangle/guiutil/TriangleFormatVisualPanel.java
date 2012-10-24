@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.mvc.TriangleTableUtil;
 import org.jreserve.triangle.mvc.model.TriangleTable;
@@ -22,7 +23,7 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel implements Pro
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
     protected TriangleGeometry geometry;
-    protected List<Data<Double>> datas = new ArrayList<Data<Double>>();
+    protected List<Data<ProjectDataType, Double>> datas = new ArrayList<Data<ProjectDataType, Double>>();
     protected TriangleTable<Double> table;
     
     public TriangleFormatVisualPanel() {
@@ -95,7 +96,7 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel implements Pro
         return geometrySetting.getErrorMsg();
     }
     
-    public void setDatas(List<Data<Double>> datas) {
+    public void setDatas(List<Data<ProjectDataType, Double>> datas) {
         this.datas.clear();
         this.datas.addAll(datas);
         resetTable();

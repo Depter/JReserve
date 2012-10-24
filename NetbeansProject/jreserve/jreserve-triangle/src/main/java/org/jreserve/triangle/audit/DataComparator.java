@@ -2,7 +2,7 @@ package org.jreserve.triangle.audit;
 
 import java.util.Comparator;
 import org.jreserve.audit.JReserveRevisionEntity;
-import org.jreserve.triangle.entities.AbstractData;
+import org.jreserve.triangle.entities.AbstractDataStructure;
 
 /**
  *
@@ -30,8 +30,8 @@ public class DataComparator implements Comparator<Object[]> {
     }
     
     private int compareEntity(Object o1, Object o2) {
-        AbstractData d1 = (AbstractData) o1;
-        AbstractData d2 = (AbstractData) o2;
+        AbstractDataStructure d1 = (AbstractDataStructure) o1;
+        AbstractDataStructure d2 = (AbstractDataStructure) o2;
         return d1.getId().compareTo(d2.getId());
     }
     

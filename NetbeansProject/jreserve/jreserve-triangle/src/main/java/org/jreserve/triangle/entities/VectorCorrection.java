@@ -3,8 +3,8 @@ package org.jreserve.triangle.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
-import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
+import org.jreserve.persistence.PersistentObject;
 
 /**
  *
@@ -19,7 +19,7 @@ public class VectorCorrection implements Serializable {
     
     @Id
     @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="VECTOR_ID", referencedColumnName="ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
+    @JoinColumn(name="VECTOR_ID", referencedColumnName="ID", columnDefinition=PersistentObject.COLUMN_DEF)
     private Vector vector;
     
     @Id

@@ -16,7 +16,6 @@ import org.hibernate.envers.NotAudited;
 public abstract class AbstractPersistentObject implements PersistentObject, Serializable {
 
     public final static int ID_LENGTH = 36;
-    public final static String COLUMN_DEF = "varchar (36) not null";
     
     @Id
     @Column(name="ID", length=ID_LENGTH)

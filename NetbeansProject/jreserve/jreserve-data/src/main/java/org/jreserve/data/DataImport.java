@@ -67,8 +67,8 @@ public abstract class DataImport {
     
     protected abstract void processTable();
         
-    protected List<Data<Double>> getTableAsList() {
-        List<Data<Double>> result = new ArrayList<Data<Double>>();
+    protected List<Data<ProjectDataType, Double>> getTableAsList() {
+        List<Data<ProjectDataType, Double>> result = new ArrayList<Data<ProjectDataType, Double>>();
         for(Date accidentDate : table.getAccidentDates())
             result.addAll(table.getDatas(accidentDate));
         return result;
@@ -98,18 +98,17 @@ public abstract class DataImport {
         @Override
         protected void processTable() {
             deleteOldValues();
-            List<Data<Double>> datas = super.getTableAsList();
+            List<Data<ProjectDataType, Double>> datas = super.getTableAsList();
             ds.saveClaimData(datas);
         }
         
         private void deleteOldValues() {
-            Criteria delete = createDeleteCriteria();
+            DataCriteria<ProjectDataType> delete = createDeleteCriteria();
             ds.clearData(delete);
         }
         
-        private Criteria createDeleteCriteria() {
-            return new Criteria(table.getClaimType())
-                    .setDataType(table.getDataType())
+        private DataCriteria<ProjectDataType> createDeleteCriteria() {
+            return new DataCriteria(table.getDataType())
                     .setFromAccidentDate(table.getFirstAccidnetDate())
                     .setToAccidentDate(table.getLastAccidentDate());
         }
@@ -123,26 +122,25 @@ public abstract class DataImport {
 
         @Override
         protected void processTable() {
-            List<Data<Double>> persisted = getPersistedData();
-            List<Data<Double>> newData = getNewData(persisted);
+            List<Data<ProjectDataType, Double>> persisted = getPersistedData();
+            List<Data<ProjectDataType, Double>> newData = getNewData(persisted);
             ds.saveClaimData(newData);
         }
         
-        private List<Data<Double>> getPersistedData() {
-            Criteria c = createCriteria();
+        private List<Data<ProjectDataType, Double>> getPersistedData() {
+            DataCriteria<ProjectDataType> c = createCriteria();
             return ds.getClaimData(c);
         }
         
-        private Criteria createCriteria() {
-            return new Criteria(table.getClaimType())
-                    .setDataType(table.getDataType())
+        private DataCriteria<ProjectDataType> createCriteria() {
+            return new DataCriteria<ProjectDataType>(table.getDataType())
                     .setFromAccidentDate(table.getFirstAccidnetDate())
                     .setToAccidentDate(table.getLastAccidentDate());
         }
         
-        private List<Data<Double>> getNewData(List<Data<Double>> persisted) {
-            List<Data<Double>> newData = getTableAsList();
-            for(Iterator<Data<Double>> it = newData.iterator(); it.hasNext();)
+        private List<Data<ProjectDataType, Double>> getNewData(List<Data<ProjectDataType, Double>> persisted) {
+            List<Data<ProjectDataType, Double>> newData = getTableAsList();
+            for(Iterator<Data<ProjectDataType, Double>> it = newData.iterator(); it.hasNext();)
                 if(persisted.contains(it.next()))
                     it.remove();
             return newData;

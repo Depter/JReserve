@@ -18,7 +18,7 @@ import org.jreserve.project.entities.Project;
 @Audited
 @Entity
 @Table(name="VECTOR", schema="JRESERVE")
-public class Vector extends AbstractData implements Serializable {
+public class Vector extends AbstractDataStructure implements Serializable {
 
     public final static int POSITION = 200;
     

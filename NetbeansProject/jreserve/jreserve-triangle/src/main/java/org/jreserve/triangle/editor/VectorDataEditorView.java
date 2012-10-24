@@ -8,6 +8,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.VectorProjectElement;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -124,14 +125,14 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     @Override
     public void finnished(DataLoader loader) {
         try {
-            List<Data<Double>> datas = loader.getData();
+            List<Data<ProjectDataType, Double>> datas = loader.getData();
             setData(datas);
         } catch (RuntimeException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
     
-    private void setData(List<Data<Double>> datas) {
+    private void setData(List<Data<ProjectDataType, Double>> datas) {
         super.setDatas(datas);
     }
 

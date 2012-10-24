@@ -203,12 +203,12 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
         return table;
     }
     
-    private Data getData(DataDummy dummy, ProjectDataType dt, DateFormat df, DoubleParser dp) {
+    private Data<ProjectDataType, Double> getData(DataDummy dummy, ProjectDataType dt, DateFormat df, DoubleParser dp) {
         try {
             Date accident = df.parse(dummy.getAccident());
             Date development = df.parse(dummy.getDevelopment());
             double value = dp.parse(dummy.getValue());
-            return new Data(dt, accident, development, value);
+            return new Data<ProjectDataType, Double>(dt, accident, development, value);
         } catch (ParseException ex) {
             Exceptions.printStackTrace(ex);
             return null;

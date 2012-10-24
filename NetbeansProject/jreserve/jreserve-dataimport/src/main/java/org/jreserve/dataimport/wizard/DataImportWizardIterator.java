@@ -9,6 +9,7 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.dataimport.DataImportWizard;
 import org.openide.WizardDescriptor;
 import org.openide.WizardDescriptor.Panel;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -73,11 +74,15 @@ class DataImportWizardIterator implements WizardDescriptor.Iterator{
 
     @Override
     public void nextPanel() {
-        checkHasNext();
-        if(index == 0)
-            setImportPanels();
-        index++;
-        descriptor.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, index);
+        try {
+            checkHasNext();
+            if(index == 0)
+                setImportPanels();
+            index++;
+            descriptor.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, index);
+        } catch (Throwable ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
     
     private void checkHasNext() {
