@@ -1,6 +1,7 @@
 package org.jreserve.triangle.guiutil;
 
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -19,14 +20,15 @@ public class VectorFormatVisualPanel extends TriangleFormatVisualPanel {
         geometrySetting.setSymmetricMonths(false);
         geometrySetting.setSymmetricEnabled(false);
         geometrySetting.setDevelopmentPeriodCount(1);
+        setDevelopmentMonthsInStep();
+        geometrySetting.addPropertyChangeListener(new MonthCountAdapter());
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        super.propertyChange(evt);
-        geometrySetting.setDevelopmentMonthsPerStep(getDevelopmentMonthCount());
+    private void setDevelopmentMonthsInStep() {
+        int months = getDevelopmentMonthCount();
+        geometrySetting.setDevelopmentMonthsPerStep(months);
     }
-
+    
     private int getDevelopmentMonthCount() {
         if(geometry == null)
             return 0;
@@ -62,5 +64,13 @@ public class VectorFormatVisualPanel extends TriangleFormatVisualPanel {
         if(from < 0 || end < 0 || end < from)
             return 0;
         return end - from;
+    }
+    
+    private class MonthCountAdapter implements PropertyChangeListener {
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            setDevelopmentMonthsInStep();
+        }
     }
 }

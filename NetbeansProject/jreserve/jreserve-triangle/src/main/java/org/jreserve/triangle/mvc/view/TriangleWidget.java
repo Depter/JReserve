@@ -2,11 +2,10 @@ package org.jreserve.triangle.mvc.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.Serializable;
 import java.util.Date;
 import javax.swing.*;
@@ -28,7 +27,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.TriangleWidget.Digits=Digits:"
 })
-public class TriangleWidget extends JPanel implements Serializable, ActionListener, ChangeListener, TableModelListener, ComponentListener {
+public class TriangleWidget extends JPanel implements Serializable {
     
     private final static Dimension INTERNAL_SPACIN = new Dimension(0, 0);
     private final static String DEVELOPMENT_PERIOD_STRUCTURE_ACTION = "DEVELOPMENT_PERIOD_STRUCTURE_ACTION";
@@ -48,6 +47,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
     private JToolBar toolBar;
     private ToolBarToggleButton cummulatedButton;
     private ToolBarToggleButton notCummulatedButton;
+    private ActionHandler actionHandler = new ActionHandler();
     
     private TriangleTableModel tableModel;
     private JTable table;
@@ -57,7 +57,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
     
     public TriangleWidget() {
         initComponent();
-        super.addComponentListener(this);
+        super.addComponentListener(new ResizeListener());
     }
     
     private void initComponent() {
@@ -77,7 +77,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         spinner.setMinimumSize(size);
         spinner.setMaximumSize(size);
         spinner.setPreferredSize(size);
-        spinner.addChangeListener(this);
+        spinner.addChangeListener(new DecimalListener());
         toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
         toolBar.add(spinner);
         
@@ -111,7 +111,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         Icon i = ImageUtilities.loadImageIcon(DEVELOPMENT_PERIOD_STRUCTURE_ICON, false);
         JToggleButton button = new ToolBarToggleButton(i);
         button.setActionCommand(DEVELOPMENT_PERIOD_STRUCTURE_ACTION);
-        button.addActionListener(this);
+        button.addActionListener(actionHandler);
         button.setSelected(true);
         group.add(button);
         return button;
@@ -121,7 +121,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         Icon i = ImageUtilities.loadImageIcon(CALENDAR_PERIOD_STRUCTURE_ICON, false);
         JToggleButton button = new ToolBarToggleButton(i);
         button.setActionCommand(CALENDAR_PERIOD_STRUCTURE_ACTION);
-        button.addActionListener(this);
+        button.addActionListener(actionHandler);
         button.setSelected(false);
         group.add(button);
         return button;
@@ -131,7 +131,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         Icon i = ImageUtilities.loadImageIcon(NOT_CUMMULATED_ICON, false);
         notCummulatedButton = new ToolBarToggleButton(i);
         notCummulatedButton.setActionCommand(NOT_CUMMULATED_ACTION);
-        notCummulatedButton.addActionListener(this);
+        notCummulatedButton.addActionListener(actionHandler);
         notCummulatedButton.setSelected(true);
         group.add(notCummulatedButton);
         return notCummulatedButton;
@@ -141,7 +141,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         Icon i = ImageUtilities.loadImageIcon(CUMMULATED_ICON, false);
         cummulatedButton = new ToolBarToggleButton(i);
         cummulatedButton.setActionCommand(CUMMULATED_ACTION);
-        cummulatedButton.addActionListener(this);
+        cummulatedButton.addActionListener(actionHandler    );
         cummulatedButton.setSelected(false);
         group.add(cummulatedButton);
         return cummulatedButton;
@@ -158,7 +158,7 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         tableModel.setColumnRenderer(dateRenderer);
         table.setFillsViewportHeight(false);
         table.setIntercellSpacing(INTERNAL_SPACIN);
-        table.getModel().addTableModelListener(this);
+        table.getModel().addTableModelListener(new TableListener());
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
         scroll = new JScrollPane(table);
@@ -166,9 +166,9 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         return scroll;
     }
     
-    @Override
-    public void setLayout(LayoutManager layout) {
-    }
+//    @Override
+//    public void setLayout(LayoutManager layout) {
+//    }
     
     public void setShowsToolbar(boolean showsToolBar) {
         toolBar.setVisible(showsToolBar);
@@ -176,28 +176,6 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
     
     public boolean getShowsToolbar() {
         return toolBar.isVisible();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
-        if(command.equals(CUMMULATED_ACTION)) {
-            tableModel.setCummulated(true);
-        } else if(command.equals(NOT_CUMMULATED_ACTION)) {
-            tableModel.setCummulated(false);
-        } else if(command.equals(CALENDAR_PERIOD_STRUCTURE_ACTION)) {
-            tableModel.setModelType(TriangleTableModel.ModelType.CALENDAR);
-        } else if(command.equals(DEVELOPMENT_PERIOD_STRUCTURE_ACTION)) {
-            tableModel.setModelType(TriangleTableModel.ModelType.DEVELOPMENT);
-        }
-        
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        int value = spinner.getIntValue();
-        doubleRenderer.setFractionDigits(value);
-        tableModel.fireRowsChanged();
     }
     
     public boolean isCummulated() {
@@ -213,32 +191,9 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
         cummulatedButton.setSelected(cummulated);
         notCummulatedButton.setSelected(!cummulated);
     }
-
-    @Override
-    public void tableChanged(TableModelEvent e) {
-        for(int c=0, count=table.getColumnCount(); c<count; c++) {
-            TableColumn column = table.getColumnModel().getColumn(c);
-            column.setMinWidth(DEFAULT_COLUMN_WIDTH);
-        }
-    }
-
-    @Override
-    public void componentResized(ComponentEvent e) {
-        int width = getWidth();
-        if(scroll.getWidth() > width)
-            scroll.setSize(width, scroll.getHeight());
-    }
-
-    @Override
-    public void componentMoved(ComponentEvent e) {
-    }
-
-    @Override
-    public void componentShown(ComponentEvent e) {
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent e) {
+    
+    public TriangleTable getTableAt(int layer) {
+        return tableModel.getTableAt(layer);
     }
     
     public void addTable(TriangleTable table) {
@@ -251,5 +206,50 @@ public class TriangleWidget extends JPanel implements Serializable, ActionListen
     
     public void removeTable(int layer) {
         tableModel.removeTable(layer);
+    }
+    
+    private class ResizeListener extends ComponentAdapter {
+        @Override
+        public void componentResized(ComponentEvent e) {
+            int width = getWidth();
+            if(scroll.getWidth() > width)
+                scroll.setSize(width, scroll.getHeight());
+        }
+    }
+    
+    private class TableListener implements TableModelListener {
+        @Override
+        public void tableChanged(TableModelEvent e) {
+            for(int c=0, count=table.getColumnCount(); c<count; c++) {
+                TableColumn column = table.getColumnModel().getColumn(c);
+                column.setMinWidth(DEFAULT_COLUMN_WIDTH);
+            }
+        }
+    }
+    
+    private class ActionHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String command = e.getActionCommand();
+            if(command.equals(CUMMULATED_ACTION)) {
+                tableModel.setCummulated(true);
+            } else if(command.equals(NOT_CUMMULATED_ACTION)) {
+                tableModel.setCummulated(false);
+            } else if(command.equals(CALENDAR_PERIOD_STRUCTURE_ACTION)) {
+                tableModel.setModelType(TriangleTableModel.ModelType.CALENDAR);
+            } else if(command.equals(DEVELOPMENT_PERIOD_STRUCTURE_ACTION)) {
+                tableModel.setModelType(TriangleTableModel.ModelType.DEVELOPMENT);
+            }
+
+        }
+    }
+    
+    private class DecimalListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            int value = spinner.getIntValue();
+            doubleRenderer.setFractionDigits(value);
+            tableModel.fireRowsChanged();
+        }
     }
 }

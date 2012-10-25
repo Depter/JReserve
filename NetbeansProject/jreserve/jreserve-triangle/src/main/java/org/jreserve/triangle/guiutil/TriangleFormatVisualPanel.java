@@ -3,7 +3,6 @@ package org.jreserve.triangle.guiutil;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -13,18 +12,19 @@ import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.mvc.TriangleTableUtil;
 import org.jreserve.triangle.mvc.model.TriangleTable;
 import org.jreserve.triangle.mvc.model.TriangleTableFactory;
+import org.jreserve.triangle.mvc.view.TriangleWidget;
 
 /**
  *
  * @author Peter Decsi
  */
-public class TriangleFormatVisualPanel extends javax.swing.JPanel implements PropertyChangeListener {
+public class TriangleFormatVisualPanel extends javax.swing.JPanel {
 
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
     protected TriangleGeometry geometry;
-    protected List<Data<ProjectDataType, Double>> datas = new ArrayList<Data<ProjectDataType, Double>>();
-    protected TriangleTable<Double> table;
+    //protected List<Data<ProjectDataType, Double>> datas = new ArrayList<Data<ProjectDataType, Double>>();
+    //protected TriangleTable<Double> table;
     
     public TriangleFormatVisualPanel() {
         initComponents();
@@ -34,16 +34,12 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel implements Pro
     protected void componentsInitialized() {
     }
     
-    public TriangleGeometry getGeometry() {
-        return geometrySetting.getGeometry();
+    public GeometrySettingPanel getGeometrySetting() {
+        return geometrySetting;
     }
     
-    public TriangleTable<Double> getTable() {
-        return table;
-    }
-    
-    public void setAccidentStart(Date start) {
-        geometrySetting.setAccidentStartDate(start);
+    public TriangleWidget getTriangleWidget() {
+        return triangle;
     }
     
     public void addChangeListener(ChangeListener listener) {
@@ -53,33 +49,6 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel implements Pro
     
     public void removeChangeListener(ChangeListener listener) {
         listeners.remove(listener);
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        String property = evt.getPropertyName();
-        if(GeometrySettingPanel.PROPERTY_TRIANGLE_GEOMETRY.equals(property)) {
-            setGeometry();
-            fireChangeEvent();
-        }
-    }
-    
-    private void setGeometry() {
-        Object value = geometrySetting.getClientProperty(GeometrySettingPanel.PROPERTY_TRIANGLE_GEOMETRY);
-        geometry = (TriangleGeometry) value;
-        resetTable();
-    }
-    
-    private void resetTable() {
-        this.table = null;
-        if(geometry != null)
-            createTable();
-        triangle.setTable(table, 0);
-    }
-    
-    private void createTable() {
-        table = new TriangleTableFactory<Double>(geometry).buildTable();
-        TriangleTableUtil.setValues(table, datas);
     }
     
     private void fireChangeEvent() {
@@ -96,11 +65,11 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel implements Pro
         return geometrySetting.getErrorMsg();
     }
     
-    public void setDatas(List<Data<ProjectDataType, Double>> datas) {
-        this.datas.clear();
-        this.datas.addAll(datas);
-        resetTable();
-    }
+//    public void setDatas(List<Data<ProjectDataType, Double>> datas) {
+//        this.datas.clear();
+//        this.datas.addAll(datas);
+//        resetTable();
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -119,7 +88,7 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel implements Pro
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setLayout(new java.awt.GridBagLayout());
 
-        geometrySetting.addPropertyChangeListener(this);
+        geometrySetting.addPropertyChangeListener(new GeometryListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -145,6 +114,35 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel implements Pro
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
     protected org.jreserve.triangle.guiutil.GeometrySettingPanel geometrySetting;
-    private org.jreserve.triangle.mvc.view.TriangleWidget triangle;
+    protected org.jreserve.triangle.mvc.view.TriangleWidget triangle;
     // End of variables declaration//GEN-END:variables
+
+    private class GeometryListener implements PropertyChangeListener {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            String property = evt.getPropertyName();
+            if(GeometrySettingPanel.PROPERTY_TRIANGLE_GEOMETRY.equals(property)) {
+                setGeometry();
+                fireChangeEvent();
+            }
+        }
+    
+        private void setGeometry() {
+            Object value = geometrySetting.getClientProperty(GeometrySettingPanel.PROPERTY_TRIANGLE_GEOMETRY);
+            geometry = (TriangleGeometry) value;
+            resetTable();
+        }
+    
+        private void resetTable() {
+            table = null;
+            if(geometry != null)
+                createTable();
+            triangle.setTable(table, 0);
+        }
+
+        private void createTable() {
+            table = new TriangleTableFactory<Double>(geometry).buildTable();
+            TriangleTableUtil.setValues(table, datas);
+        }
+    }
 }

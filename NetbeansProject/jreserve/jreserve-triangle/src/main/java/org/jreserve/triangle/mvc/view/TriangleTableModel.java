@@ -194,6 +194,10 @@ class TriangleTableModel implements TableModel, ChangeListener {
         }
     }
     
+    public TriangleTable getTableAt(int layer) {
+        return model.get
+    }
+    
     public void addTable(TriangleTable table) {
         model.addTable(table);
     }

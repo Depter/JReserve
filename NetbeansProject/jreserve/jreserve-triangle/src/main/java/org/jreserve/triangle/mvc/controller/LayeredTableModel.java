@@ -12,12 +12,12 @@ import org.jreserve.triangle.mvc.model.TriangleTable;
  * @author Peter Decsi
  * @version 1.0
  */
-public class LayeredTableModel<V> implements TriangleTableModel<V> {
+public class LayeredTableModel implements TriangleTableModel {
 
     private TriangleTableModelFactory modelFactory;
     
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
-    private List<TriangleTableModel<V>> layers = new ArrayList<TriangleTableModel<V>>();
+    private List<TriangleTableModel> layers = new ArrayList<TriangleTableModel>();
     
     public LayeredTableModel(TriangleTableModelFactory modelFactory) {
         checkModelFactory(modelFactory);
@@ -31,20 +31,20 @@ public class LayeredTableModel<V> implements TriangleTableModel<V> {
 
     public void setModelType(TriangleTableModelFactory factory) {
         checkModelFactory(factory);
-        List<TriangleTableModel<V>> oldList = new ArrayList<TriangleTableModel<V>>(layers);
+        List<TriangleTableModel> oldList = new ArrayList<TriangleTableModel>(layers);
         createNewModels(oldList);
         fireChange();
     }
     
-    private void createNewModels(List<TriangleTableModel<V>> oldList) {
+    private void createNewModels(List<TriangleTableModel> oldList) {
         layers.clear();
-        for(TriangleTableModel<V> oldModel : oldList)
+        for(TriangleTableModel oldModel : oldList)
             createNewModel(oldModel);
     }
     
-    private void createNewModel(TriangleTableModel<V> oldModel) {
-        TriangleTable<V> table = oldModel.getTable();
-        TriangleTableModel<V> model = modelFactory.createModel(table);
+    private void createNewModel(TriangleTableModel oldModel) {
+        TriangleTable table = oldModel.getTable();
+        TriangleTableModel model = modelFactory.createModel(table);
         layers.add(model);
     }
     

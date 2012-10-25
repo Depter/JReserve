@@ -25,8 +25,9 @@ import org.openide.util.NbBundle.Messages;
 public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, ChangeListener {
 
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
-    protected TriangleFormatVisualPanel panel;
     private boolean isValid = false;
+    
+    protected TriangleFormatVisualPanel panel;
     protected WizardDescriptor wizard;
 
     @Override
@@ -57,7 +58,7 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
     private void setFirstDate(List<Data<ProjectDataType, Double>> datas) {
         Date start = getFirstDate(datas);
         if(start != null)
-            panel.setAccidentStart(start);
+            panel.geometrySetting.setAccidentStartDate(start);
     }
     
     private Date getFirstDate(List<Data<ProjectDataType, Double>> datas) {
@@ -113,6 +114,7 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
     }
 
     private boolean validateTable() {
+        panel.triangle.gett
         TriangleTable<Double> table = panel.getTable();
         if (table == null || !validTable(table)) {
             showError(Bundle.LBL_DataFormatWizardPanel_NoData());
