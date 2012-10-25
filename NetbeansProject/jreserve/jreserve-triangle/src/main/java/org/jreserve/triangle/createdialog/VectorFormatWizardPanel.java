@@ -127,7 +127,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         }
         
         private void readPanel() {
-            TriangleGeometry triangle = panel.getGeometry();
+            TriangleGeometry triangle = panel.getTriangleWidget().getTriangleGeometry();
             Date start = triangle.getAccidentStart();
             int periods = triangle.getAccidentPeriods();
             int months = triangle.getMonthInAccident();

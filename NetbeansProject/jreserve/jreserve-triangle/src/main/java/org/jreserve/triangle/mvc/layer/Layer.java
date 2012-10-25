@@ -1,24 +1,39 @@
 package org.jreserve.triangle.mvc.layer;
 
-import java.util.Date;
-import org.jreserve.triangle.mvc.model.TriangleTable;
+import java.util.ArrayList;
+import java.util.List;
+import org.jreserve.data.Data;
+import org.jreserve.persistence.PersistentObject;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class Layer<V> {
+public abstract class Layer<O extends PersistentObject, V> {
 
     private Layer previousLayer;
     private Layer nextLayer;
     private boolean editable;
     private boolean visible;
     
-    private TriangleTable<V> table;
+    protected List<Data<O, V>> datas = new ArrayList<Data<O, V>>();
     
-    public Layer(TriangleTable<V> table) {
-        this.table = table;
+    public Layer() {
+        this.datas.addAll(datas);
+    }
+    
+    public Layer(List<Data<O, V>> datas) {
+        this.datas.addAll(datas);
+    }
+    
+    public List<Data<O, V>> getData() {
+        return new ArrayList<Data<O, V>>(datas);
+    }
+    
+    public void setData(List<Data<O,V>> datas) {
+        this.datas.clear();
+        this.datas.addAll(datas);
     }
     
     Layer next() {
@@ -37,16 +52,9 @@ public class Layer<V> {
         this.previousLayer = layer;
     }
     
-    public boolean hasValueAt(Date accident, Date development) {
-        return table.getCell(accident, development) != null;
-    }
+    public abstract Object getValue(LayerCriteria criteria);
     
-    public Object getValue(LayerCriteria criteria) {
-        return null;
-    }
-    
-    public void setValue(LayerCriteria criteria, Object value) {
-    }
+    public abstract void setValue(LayerCriteria criteria, Object value);
     
     public boolean isEditable() {
         return editable;

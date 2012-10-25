@@ -10,10 +10,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.persistence.PersistentObject;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.guiutil.TriangleFormatVisualPanel;
+import org.jreserve.triangle.mvc.layer.DoubleLayer;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -28,6 +30,9 @@ import org.openide.util.Lookup;
  */
 public class TriangleDataEditorView extends TriangleFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, DataLoader.Callback<Triangle> {
     
+    private final static int CORRECTION_LAYER = 0;
+    private final static int VALUE_LAYER = 1;
+    
     private JToolBar toolBar = new JToolBar();
     private TriangleProjectElement element;
     private MultiViewElementCallback callBack;
@@ -37,6 +42,7 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
         this.element = element;
         super.addChangeListener(this);
         initGeometry();
+        initLayers();
         startLoader();
     }
     
@@ -96,6 +102,11 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
         int aMonth = geometry.getMonthInAccident();
         int dMonth = geometry.getMonthInDevelopment();
         return aMonth == dMonth;
+    }
+    
+    private void initLayers() {
+        triangle.addLayer(new DoubleLayer(true, true));
+        triangle.addLayer(new DoubleLayer(false, true));
     }
     
     private void startLoader() {
@@ -165,15 +176,16 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
     }
     
     private void setData(List<Data<ProjectDataType, Double>> datas) {
-        super.setDatas(datas);
+        triangle.getLayerAt(VALUE_LAYER).setData(datas);
     }
     
     private void setCorrections(List<Data<Triangle, Double>> corrections) {
+        triangle.getLayerAt(CORRECTION_LAYER).setData(corrections);
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        TriangleGeometry triangleGeometry = super.getGeometry();
+        TriangleGeometry triangleGeometry = geometrySetting.getGeometry();
         if(triangleGeometry != null)
             element.setProperty(TriangleProjectElement.GEOMETRY_PROPERTY, triangleGeometry);
     }

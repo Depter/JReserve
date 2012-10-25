@@ -1,6 +1,7 @@
 package org.jreserve.triangle.editor;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -10,9 +11,11 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.triangle.VectorProjectElement;
+import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
 import org.jreserve.triangle.guiutil.VectorFormatVisualPanel;
+import org.jreserve.triangle.mvc.layer.DoubleLayer;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -26,6 +29,9 @@ import org.openide.util.Lookup;
  */
 public class VectorDataEditorView extends VectorFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, DataLoader.Callback<Vector> {
     
+    private final static int CORRECTION_LAYER = 0;
+    private final static int VALUE_LAYER = 1;
+    
     private JToolBar toolBar = new JToolBar();
     private VectorProjectElement element;
     private MultiViewElementCallback callBack;
@@ -35,6 +41,7 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
         this.element = element;
         super.addChangeListener(this);
         initGeometry();
+        initLayers();
         startLoader();
     }
     
@@ -46,23 +53,20 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     }
     
     private void initBegin(VectorGeometry geometry) {
-        //geometrySetting.setSymmetricFromDate(true);
-        //geometrySetting.setSymmetricFromDateEnabled(false);
         geometrySetting.setAccidentStartDate(geometry.getAccidentStart());
     }
     
     private void initPeriods(VectorGeometry geometry) {
-        //geometrySetting.setSymmetricPeriods(false);
-        //geometrySetting.setSymmetricPeriodsEnabled(false);
         geometrySetting.setAccidentPeriodCount(geometry.getAccidentPeriods());
-        //geometrySetting.setDevelopmentPeriodCount(1);
     }
     
     private void initMonths(VectorGeometry geometry) {
-        //geometrySetting.setSymmetricMonths(false);
-        //geometrySetting.setSymmetricMonthsEnabled(false);
         geometrySetting.setAccidentMonthsPerStep(geometry.getMonthInAccident());
-        //geometrySetting.setDevelopmentMonthsPerStep(geometry.getMonthInAccident());
+    }
+    
+    private void initLayers() {
+        triangle.addLayer(new DoubleLayer(true, true));
+        triangle.addLayer(new DoubleLayer(false, true));
     }
     
     private void startLoader() {
@@ -132,16 +136,31 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     }
     
     private void setData(List<Data<ProjectDataType, Double>> datas) {
-        super.setDatas(datas);
+        triangle.getLayerAt(VALUE_LAYER).setData(datas);
     }
     
     private void setCorrections(List<Data<Vector, Double>> corrections) {
+        triangle.getLayerAt(CORRECTION_LAYER).setData(corrections);
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        VectorGeometry triangleGeometry = super.getGeometry();
+        VectorGeometry triangleGeometry = getGeometry();
         if(triangleGeometry != null)
             element.setProperty(VectorProjectElement.GEOMETRY_PROPERTY, triangleGeometry);
+    }
+    
+    private VectorGeometry getGeometry() {
+        TriangleGeometry geometry = geometrySetting.getGeometry();
+        if(geometry == null)
+            return null;
+        return getGeometry(geometry);
+    }
+    
+    private VectorGeometry getGeometry(TriangleGeometry geometry) {
+        Date start = geometry.getAccidentStart();
+        int periods = geometry.getAccidentPeriods();
+        int months = geometry.getMonthInAccident();
+        return new VectorGeometry(start, periods, months);
     }
 }

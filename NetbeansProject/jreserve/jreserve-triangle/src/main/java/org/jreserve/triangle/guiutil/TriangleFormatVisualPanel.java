@@ -6,12 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.data.Data;
-import org.jreserve.data.ProjectDataType;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.mvc.TriangleTableUtil;
-import org.jreserve.triangle.mvc.model.TriangleTable;
-import org.jreserve.triangle.mvc.model.TriangleTableFactory;
 import org.jreserve.triangle.mvc.view.TriangleWidget;
 
 /**
@@ -23,8 +18,6 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel {
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
     protected TriangleGeometry geometry;
-    //protected List<Data<ProjectDataType, Double>> datas = new ArrayList<Data<ProjectDataType, Double>>();
-    //protected TriangleTable<Double> table;
     
     public TriangleFormatVisualPanel() {
         initComponents();
@@ -64,12 +57,6 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel {
     public String getErrorMsg() {
         return geometrySetting.getErrorMsg();
     }
-    
-//    public void setDatas(List<Data<ProjectDataType, Double>> datas) {
-//        this.datas.clear();
-//        this.datas.addAll(datas);
-//        resetTable();
-//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -130,19 +117,7 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel {
         private void setGeometry() {
             Object value = geometrySetting.getClientProperty(GeometrySettingPanel.PROPERTY_TRIANGLE_GEOMETRY);
             geometry = (TriangleGeometry) value;
-            resetTable();
-        }
-    
-        private void resetTable() {
-            table = null;
-            if(geometry != null)
-                createTable();
-            triangle.setTable(table, 0);
-        }
-
-        private void createTable() {
-            table = new TriangleTableFactory<Double>(geometry).buildTable();
-            TriangleTableUtil.setValues(table, datas);
+            triangle.setTriangleGeometry(geometry);
         }
     }
 }

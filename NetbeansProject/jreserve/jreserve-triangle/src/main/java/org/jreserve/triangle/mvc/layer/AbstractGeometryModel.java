@@ -2,7 +2,6 @@ package org.jreserve.triangle.mvc.layer;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import org.jreserve.triangle.entities.TriangleGeometry;
 
 /**
@@ -13,13 +12,17 @@ import org.jreserve.triangle.entities.TriangleGeometry;
 abstract class AbstractGeometryModel implements GeometryModel {
 
     protected TriangleGeometry geometry;
-    protected List<AxisCell> rows;
-    protected List<AxisCell> columns;
     private Calendar calendar = Calendar.getInstance();
+    private boolean cummulated = false;
     
     @Override
     public void setTriangleGeometry(TriangleGeometry geometry) {
         this.geometry = geometry;
+    }
+    
+    @Override
+    public TriangleGeometry getTriangleGeometry() {
+        return geometry;
     }
 
     @Override
@@ -38,7 +41,7 @@ abstract class AbstractGeometryModel implements GeometryModel {
 
     @Override
     public Object getRowName(int row) {
-        return rows.get(row).begin;
+        return getAccidentBegin(row);
     }
 
     protected Date getAccidentBegin(int row) {
@@ -77,13 +80,23 @@ abstract class AbstractGeometryModel implements GeometryModel {
     }
     
     @Override
-    public LayerCriteria createCriteria(int row, int column) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    protected static class AxisCell {
-        private Date begin;
-        private Date end;
+    public boolean isCummulated() {
+        return cummulated;
     }
     
+    @Override
+    public void setCummulated(boolean cummulated) {
+        this.cummulated = cummulated;
+    }
+    
+    @Override
+    public LayerCriteria createCriteria(int row, int column) {
+        Date accidentFrom = getAccidentBegin(row);
+        Date accidentTo = getAccidentBegin(row+1);
+        Date developmentFrom = getDevelopmentBegin(accidentFrom, cummulated? 1 : column);
+        Date developmentEnd = getDevelopmentBegin(accidentFrom, column+1);
+        return new LayerCriteria()
+                .setAccidentFrom(accidentFrom).setAccidentEnd(accidentTo)
+                .setDevelopmentFrom(developmentFrom).setDevelopmentEnd(developmentEnd);
+    }
 }

@@ -1,6 +1,7 @@
 package org.jreserve.triangle.mvc.layer;
 
 import java.util.Date;
+import org.jreserve.data.Data;
 
 /**
  *
@@ -37,6 +38,25 @@ public class LayerCriteria {
         return this;
     }
     
+    public boolean acceptsData(Data data) {
+        return withinAccident(data.getAccidentDate()) && 
+               withinDevelopment(data.getDevelopmentDate());
+    }
     
+    private boolean withinAccident(Date accident) {
+        if(accidentFrom != null && accident.before(accidentFrom))
+            return false;
+        if(accidentEnd != null && !accident.before(accidentEnd))
+            return false;
+        return true;
+    }
+    
+    private boolean withinDevelopment(Date development) {
+        if(developmentFrom != null && development.before(developmentFrom))
+            return false;
+        if(developmentEnd != null && !development.before(developmentEnd))
+            return false;
+        return true;
+    }
     
 }

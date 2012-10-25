@@ -124,7 +124,7 @@ class TriangleFormatWizardPanel extends DataFormatWizardPanel implements WizardD
         }
         
         private void readPanel() {
-            geometry = panel.getGeometry();
+            geometry = panel.getTriangleWidget().getTriangleGeometry();
         }
         
     }

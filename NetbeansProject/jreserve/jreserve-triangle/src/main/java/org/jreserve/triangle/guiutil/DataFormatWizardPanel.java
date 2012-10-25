@@ -8,8 +8,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.triangle.mvc.model.TriangleRow;
-import org.jreserve.triangle.mvc.model.TriangleTable;
+import org.jreserve.triangle.mvc.layer.DoubleLayer;
+import org.jreserve.triangle.mvc.layer.Layer;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
@@ -51,7 +51,7 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
         this.wizard = wizard;
         List<Data<ProjectDataType, Double>> datas = (List<Data<ProjectDataType, Double>>) wizard.getProperty(NameSelectWizardPanel.PROP_DATA);
         setFirstDate(datas);
-        panel.setDatas(datas);
+        panel.triangle.addLayer(createLayer(datas));
         validate();
     }
     
@@ -71,6 +71,13 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
         return first;
     }
 
+    private Layer createLayer(List<Data<ProjectDataType, Double>> datas) {
+        DoubleLayer<ProjectDataType> layer = new DoubleLayer<ProjectDataType>(datas);
+        layer.setVisible(true);
+        layer.setEditable(false);
+        return layer;
+    }
+    
     @Override
     public void storeSettings(WizardDescriptor data) {
     }
@@ -114,30 +121,25 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
     }
 
     private boolean validateTable() {
-        panel.triangle.gett
-        TriangleTable<Double> table = panel.getTable();
-        if (table == null || !validTable(table)) {
+        double[][] values = panel.triangle.flatten();
+        if (values == null || !validTable(values)) {
             showError(Bundle.LBL_DataFormatWizardPanel_NoData());
             return false;
         }
         return true;
     }
 
-    private boolean validTable(TriangleTable<Double> table) {
-        for (int r = 0, count = table.getRowCount(); r < count; r++) {
-            if (validRow(table.getRow(r))) {
+    private boolean validTable(double[][] values) {
+        for (double[] row : values)
+            if (validRow(row))
                 return true;
-            }
-        }
         return false;
     }
 
-    private boolean validRow(TriangleRow<Double> row) {
-        for (int c = 0, count = row.getCellCount(); c < count; c++) {
-            Double value = row.getValue(c);
-            if(value != null && !Double.isNaN(value))
+    private boolean validRow(double[] row) {
+        for (double value : row)
+            if(!Double.isNaN(value))
                 return true;
-        }
         return false;
     }
 

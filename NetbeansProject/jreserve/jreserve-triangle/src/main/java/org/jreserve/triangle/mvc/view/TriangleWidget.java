@@ -16,7 +16,10 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import org.jreserve.resources.ToolBarToggleButton;
-import org.jreserve.triangle.mvc.model.TriangleTable;
+import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.mvc.layer.GeometryModel;
+import org.jreserve.triangle.mvc.layer.Layer;
+import org.jreserve.triangle.mvc.layer.LayeredTriangleModel;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
@@ -49,7 +52,8 @@ public class TriangleWidget extends JPanel implements Serializable {
     private ToolBarToggleButton notCummulatedButton;
     private ActionHandler actionHandler = new ActionHandler();
     
-    private TriangleTableModel tableModel;
+    //private TriangleTableModel tableModel;
+    private LayeredTriangleModel tableModel = new LayeredTriangleModel();
     private JTable table;
     private JScrollPane scroll;
     
@@ -148,7 +152,6 @@ public class TriangleWidget extends JPanel implements Serializable {
     }
     
     private JScrollPane getTable() {
-        tableModel = new TriangleTableModel();
         table = new JTable(tableModel);
         doubleRenderer = new DoubleTriangleTableRenderer(tableModel);
         table.getTableHeader().setDefaultRenderer(new TriangleWidgetHeaderRenderer());
@@ -178,6 +181,14 @@ public class TriangleWidget extends JPanel implements Serializable {
         return toolBar.isVisible();
     }
     
+    public void setTriangleGeometry(TriangleGeometry geometry) {
+        tableModel.setTriangleGeometry(geometry);
+    }
+    
+    public TriangleGeometry getTriangleGeometry() {
+        return tableModel.getTriangleGeometry();
+    }
+    
     public boolean isCummulated() {
         return tableModel.isCummulated();
     }
@@ -192,20 +203,32 @@ public class TriangleWidget extends JPanel implements Serializable {
         notCummulatedButton.setSelected(!cummulated);
     }
     
-    public TriangleTable getTableAt(int layer) {
-        return tableModel.getTableAt(layer);
+    public Layer getLayerAt(int position) {
+        return tableModel.getLayer(position);
     }
     
-    public void addTable(TriangleTable table) {
-        tableModel.addTable(table);
+    public void addLayer(Layer layer) {
+        tableModel.addLayer(layer);
     }
     
-    public void setTable(TriangleTable table, int layer) {
-        tableModel.setTable(table, layer);
-    } 
+    public void addLayer(int position, Layer layer) {
+        tableModel.addLayer(position, layer);
+    }
     
-    public void removeTable(int layer) {
-        tableModel.removeTable(layer);
+    public void setLayer(int position, Layer layer) {
+        tableModel.setLayer(position, layer);
+    }
+    
+    public void removeLayer(Layer layer) {
+        tableModel.removeLayer(layer);
+    }
+    
+    public void removeLayer(int position) {
+        tableModel.removeLayer(position);
+    }
+    
+    public double[][] flatten() {
+        return tableModel.flattenValues();
     }
     
     private class ResizeListener extends ComponentAdapter {
@@ -236,11 +259,10 @@ public class TriangleWidget extends JPanel implements Serializable {
             } else if(command.equals(NOT_CUMMULATED_ACTION)) {
                 tableModel.setCummulated(false);
             } else if(command.equals(CALENDAR_PERIOD_STRUCTURE_ACTION)) {
-                tableModel.setModelType(TriangleTableModel.ModelType.CALENDAR);
+                tableModel.setModelType(GeometryModel.ModelType.CALENDAR);
             } else if(command.equals(DEVELOPMENT_PERIOD_STRUCTURE_ACTION)) {
-                tableModel.setModelType(TriangleTableModel.ModelType.DEVELOPMENT);
+                tableModel.setModelType(GeometryModel.ModelType.DEVELOPMENT);
             }
-
         }
     }
     
@@ -249,7 +271,14 @@ public class TriangleWidget extends JPanel implements Serializable {
         public void stateChanged(ChangeEvent e) {
             int value = spinner.getIntValue();
             doubleRenderer.setFractionDigits(value);
-            tableModel.fireRowsChanged();
+            fireRowsChanged(tableModel.getRowCount());
+        }
+        
+        private void fireRowsChanged(int rowCount) {
+            if(rowCount > 0) {
+                TableModelEvent evt = new TableModelEvent(tableModel, 0, rowCount-1);
+                table.tableChanged(evt);
+            }
         }
     }
 }

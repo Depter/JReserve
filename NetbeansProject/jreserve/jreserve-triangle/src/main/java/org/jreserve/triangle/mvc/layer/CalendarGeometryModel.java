@@ -23,7 +23,8 @@ public class CalendarGeometryModel extends AbstractGeometryModel {
 
     @Override
     public boolean hasCellAt(int row, int column) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Date accidentBegin = super.getAccidentBegin(row);
+        Date developmentBegin = super.getDevelopmentBegin(column);
+        return !developmentBegin.before(accidentBegin);
     }
-
 }
