@@ -16,11 +16,11 @@ import org.openide.nodes.Node;
  * @author Peter Decsi
  * @version 1.0
  */
-public class AbstractProjectElementDeletable implements Deletable {
+public class AbstractProjectElementDeletable<T> implements Deletable {
     
-    protected ProjectElement element;
+    protected ProjectElement<T> element;
     
-    public AbstractProjectElementDeletable(ProjectElement element) {
+    public AbstractProjectElementDeletable(ProjectElement<T> element) {
         this.element = element;
     }
 

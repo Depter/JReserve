@@ -5,7 +5,7 @@ import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.project.system.management.PersistentDeletable;
+import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.openide.nodes.Node;
@@ -15,9 +15,9 @@ import org.openide.nodes.Node;
  * @author Peter Decsi
  * @version 1.0
  */
-class ClaimTypeElement extends ProjectElement<ClaimType> {
+public class ClaimTypeElement extends ProjectElement<ClaimType> {
     
-    ClaimTypeElement(ClaimType claimType) {
+    public ClaimTypeElement(ClaimType claimType) {
         super(claimType);
         properties.put(NAME_PROPERTY, claimType.getName());
         initLookupContent();
@@ -42,10 +42,10 @@ class ClaimTypeElement extends ProjectElement<ClaimType> {
         super.setProperty(property, value);
     }
     
-    private class ClaimTypeDeletable extends PersistentDeletable {
+    private class ClaimTypeDeletable extends PersistentObjectDeletable<ClaimType> {
 
         private ClaimTypeDeletable() {
-            super(ClaimTypeElement.this);
+            super(ClaimTypeElement.this, "ClaimType");
         }
         
         @Override

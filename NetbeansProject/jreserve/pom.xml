@@ -70,6 +70,7 @@
         <module>jreserve-dataimport</module>
         <module>jreserve-dataimport-clipboardtable</module>
         <module>jreserve-locale-settings</module>
+        <module>jreserve-apc-sample</module>
   </modules>
 
     <properties>

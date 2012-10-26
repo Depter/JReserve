@@ -4,23 +4,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.jreserve.data.DataCriteria;
+import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.query.DataLogUtil;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.project.system.management.PersistentDeletable;
+import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.openide.nodes.Node;
 
 /**
  *
  * @author Peter Decsi
  */
-class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
+public class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
     
     private final static Logger logger = Logger.getLogger(ProjectDataTypeDeletable.class.getName());
 
     public final static int POSITION = 100;
     
-    ProjectDatTypeProjectElement(ProjectDataType dataType) {
+    public ProjectDatTypeProjectElement(ProjectDataType dataType) {
         super(dataType);
         super.addToLookup(new ProjectDataTypeDeletable());
     }
@@ -40,44 +42,39 @@ class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
         return POSITION;
     }
     
-    private class ProjectDataTypeDeletable extends PersistentDeletable {
-        
-        private final static String DELETE_CLAIMS = 
-            "delete from ClaimValue c where c.dataType.id= :dataTypeId";
+    private class ProjectDataTypeDeletable extends PersistentObjectDeletable<ProjectDataType> {
         private final static String DELETE_LOG = 
             "delete from DataLog l where l.dataType.id= :dataTypeId";
         
         private final String id;
         
         private ProjectDataTypeDeletable() {
-            super(ProjectDatTypeProjectElement.this);
+            super(ProjectDatTypeProjectElement.this, "ProjectDataType");
             id = ProjectDatTypeProjectElement.this.getValue().getId();
         }
 
         @Override
-        protected void deleteEntity(Session session) {
+        protected void cleanUpBeforeEntity(Session session) {
             DataLogUtil.logDeletion(session, ProjectDatTypeProjectElement.this.getValue());
-            super.deleteEntity(session);
+            deleteData(session);
+            logDeletion();
         }
         
-        @Override
-        protected void cleanUpAfterEntity(Session session) {
+        private void deleteData(Session session) {
             deleteDataLog(session);
-            deleteClaims(session);
+            DataSource ds = new DataSource(session);
+            DataCriteria criteria = new DataCriteria(ProjectDatTypeProjectElement.this.getValue());
+            clearAllData(ds, criteria);
         }
         
         private void deleteDataLog(Session session) {
             Query query = session.createQuery(DELETE_LOG);
             query.setParameter("dataTypeId", id);
-            logDeletion();
             query.executeUpdate();
         }
         
-        private void deleteClaims(Session session) {
-            Query query = session.createQuery(DELETE_CLAIMS);
-            query.setParameter("dataTypeId", id);
-            logDeletion();
-            query.executeUpdate();
+        private void clearAllData(DataSource ds, DataCriteria criteria) {
+            ds.clearData(criteria);
         }
     
         private void logDeletion() {
@@ -85,6 +82,6 @@ class ProjectDatTypeProjectElement extends ProjectElement<ProjectDataType> {
             String msg = "Deleted claim data/data log from '%s'/'%d - %s.";
             msg = String.format(msg, dt.getClaimType().getName(), dt.getDbId(), dt.getName());
             logger.log(Level.FINE, msg);
-        }        
+        }
     }
 }

@@ -20,7 +20,8 @@ public interface ElementCreatorWizard {
         PROJECT,
         DATA,
         ESTIMATE,
-        BOOTSTRAP
+        BOOTSTRAP,
+        OTHER
     };
     
     public String getDescription();

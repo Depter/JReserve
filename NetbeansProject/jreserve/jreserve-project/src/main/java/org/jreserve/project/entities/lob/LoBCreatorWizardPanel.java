@@ -9,10 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.hibernate.Session;
 import org.jreserve.persistence.SessionFactory;
-import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.LoB;
+import org.jreserve.project.factories.LoBFactory;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.RootElement;
 import org.openide.NotificationLineSupport;
@@ -158,9 +157,18 @@ class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDe
     @Override
     public void validate() throws WizardValidationException {
         ProjectElement parent = RootElement.getDefault();
-        LoB lob = createLoB();
-        ProjectElement child = new LoBElement(lob);
-        parent.addChild(getIndex(parent.getChildren(), lob.getName()), child);
+        String name = getLoBName();
+        ProjectElement child = createLob(name);
+        parent.addChild(getIndex(parent.getChildren(), name), child);
+    }
+    
+    private ProjectElement createLob(String name) throws WizardValidationException {
+        try {
+            return new LoBFactory(name, true).getResult();
+        } catch (Exception ex) { 
+            logger.log(Level.SEVERE, String.format("Unable to create LoB with name '%s'!", name), ex);
+            throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
+        }
     }
     
     private int getIndex(List<ProjectElement> children, String name) {
@@ -177,27 +185,5 @@ class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDe
             return childName.compareToIgnoreCase(name) < 0;
         }
         return false;
-    }
-    
-    private LoB createLoB() throws WizardValidationException {
-        try {
-            LoB lob = new LoBCreator().getResult();
-            logger.log(Level.INFO, "LoB created: \"{0}\"", lob.getName());
-            return lob;
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, String.format("Unable to create LoB with name '%s'!", getLoBName()), ex);
-            throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
-        }
-    }
-    
-    private class LoBCreator extends SessionTask<LoB> {
-        
-        @Override
-        protected LoB doTask() throws Exception {
-            LoB lob = new LoB(getLoBName());
-            session.persist(lob);
-            return lob;
-        }
-    
     }
 }

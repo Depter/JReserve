@@ -6,7 +6,7 @@ import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.editor.ProjectEditor;
-import org.jreserve.project.system.management.PersistentDeletable;
+import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.netbeans.api.actions.Openable;
@@ -63,20 +63,21 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         getValue().setDescription(newDescription);
     }
     
-    private class ProjectDeletable extends PersistentDeletable {
+    private class ProjectDeletable extends PersistentObjectDeletable<Project> {
 
         private Project project;
+        private ClaimType claimType;
         
         private ProjectDeletable() {
-            super(ProjectElement.this);
+            super(ProjectElement.this, "Project");
             this.project = getValue();
+            claimType = project.getClaimType();
         }
         
         @Override
         protected void cleanUpAfterEntity(Session session) {
             closeEditor();
-            ClaimType ct = project.getClaimType();
-            ct.removeProject(project);
+            claimType.removeProject(project);
         }
         
         private void closeEditor() {

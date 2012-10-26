@@ -159,6 +159,12 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
+                <configuration>
+                    <publicPackages>
+                        <publicPackage>org.jreserve.triangle.entities</publicPackage>
+                        <publicPackage>org.jreserve.triangle.factories</publicPackage>
+                    </publicPackages>
+                </configuration>
             </plugin>
 
             <plugin>

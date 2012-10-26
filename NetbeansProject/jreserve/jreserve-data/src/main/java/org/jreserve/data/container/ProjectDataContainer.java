@@ -12,6 +12,13 @@ import org.jreserve.project.system.ProjectElement;
  */
 public class ProjectDataContainer {
 
+    public static ProjectElement<ProjectDataContainer> createContainer(Project project) {
+        ProjectDataContainer container = new ProjectDataContainer(project);
+        ProjectDataContainerElement child = new ProjectDataContainerElement(container);
+        container.setMyElement(child);
+        return child;
+    }
+    
     private Project project;
     private ProjectElement<ProjectDataContainer> myElement;
     

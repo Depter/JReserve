@@ -11,6 +11,15 @@ public abstract class SessionTask<T> {
 
     protected Session session;
     private Transaction tx;
+    private final boolean openSession;
+    
+    public SessionTask() {
+        this(true);
+    }
+    
+    public SessionTask(boolean openSession) {
+        this.openSession = openSession;
+    }
     
     public T getResult() throws Exception {
         try {
@@ -26,29 +35,35 @@ public abstract class SessionTask<T> {
         }
     }
     
-    private void beginTransaction() {
-        session = SessionFactory.openSession();
-        tx = session.beginTransaction();
+    protected void beginTransaction() {
+        initSession();
+        if(openSession)
+            tx = session.beginTransaction();
+    }
+    
+    protected void initSession() {
+        session = openSession? SessionFactory.openSession() : 
+                SessionFactory.getCurrentSession();
     }
     
     protected abstract T doTask() throws Exception;
     
-    private void comit() {
-        if(tx != null) {
+    protected void comit() {
+        if(tx != null && openSession) {
             tx.commit();
             tx = null;
         }
     }
     
-    private void rollback() {
-        if(tx != null) {
+    protected void rollback() {
+        if(tx != null && openSession) {
             tx.rollback();
             tx = null;
         }
     }
     
-    private void close() {
-        if(session != null) {
+    protected void close() {
+        if(session != null && openSession) {
             session.close();
             session = null;
         }

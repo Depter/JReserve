@@ -21,7 +21,8 @@ import org.openide.util.lookup.Lookups;
     "LBL_ElementCategory_project=Project",
     "LBL_ElementCategory_data=Data",
     "LBL_ElementCategory_estimate=Estimate",
-    "LBL_ElementCategory_bootstrap=Bootstrap"
+    "LBL_ElementCategory_bootstrap=Bootstrap",
+    "LBL_ElementCategory_other=Other"
 })
 public class ElementCategoryUtil {
     
@@ -46,6 +47,9 @@ public class ElementCategoryUtil {
         
         roots.put(Category.BOOTSTRAP, CATEGORY_ROOT+"Bootstrap");
         names.put(Category.BOOTSTRAP, Bundle.LBL_ElementCategory_bootstrap());
+        
+        roots.put(Category.OTHER, CATEGORY_ROOT+"Other");
+        names.put(Category.OTHER, Bundle.LBL_ElementCategory_other());
     }
     
     public static String getDisplayName(Category category) {

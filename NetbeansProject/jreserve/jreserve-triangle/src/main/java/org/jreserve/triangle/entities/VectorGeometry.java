@@ -92,6 +92,10 @@ public class VectorGeometry implements Serializable, Cloneable  {
                monthInAccident == g.monthInAccident;
     }
     
+    public VectorGeometry copy() {
+        return new VectorGeometry(accidentStart, accidentPeriods, monthInAccident);
+    }
+    
     @Override
     public String toString() {
         return String.format("Geometry [%tF; %d; %d]",

@@ -9,11 +9,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.entities.Project;
+import org.jreserve.project.factories.ProjectFactory;
 import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -189,8 +188,8 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
     public void validate() throws WizardValidationException {
         ClaimType ct = getClaimType();
         org.jreserve.project.system.ProjectElement parent = getParentElement();
-        Project project = createProject(ct);
-        parent.addChild(new ProjectElement(project));
+        org.jreserve.project.system.ProjectElement child = createProject(ct, getName());
+        parent.addChild(child);
     }
     
     private org.jreserve.project.system.ProjectElement getParentElement() {
@@ -198,41 +197,14 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
         return (org.jreserve.project.system.ProjectElement) parent;
     }
     
-    private Project createProject(ClaimType ct) throws WizardValidationException {
+    private org.jreserve.project.system.ProjectElement createProject(ClaimType ct, String name) throws WizardValidationException {
         try {
-            Project project = new ProjectCreator(ct).getResult();
-            logger.log(Level.INFO, "Project \"{0}\" created.", project.getPath());
-            return project;
+            ProjectFactory factory = new ProjectFactory(ct, name, true);
+            factory.setDescription((String) panel.getClientProperty(DESCRIPTION_VALUE));
+            return factory.getResult();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, String.format("Unable to create Project '%s' in ClaimType '%s'!", getName(), ct.getPath()), ex);
+            logger.log(Level.SEVERE, String.format("Unable to create Project '%s' in ClaimType '%s'!", name, ct.getPath()), ex);
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
-        }
-    }
-    
-    private class ProjectCreator extends SessionTask<Project> {
-
-        private ClaimType ct;
-        
-        private ProjectCreator(ClaimType ct) {
-            this.ct = ct;
-        }
-        
-        @Override
-        protected Project doTask() throws Exception {
-            session.merge(ct);
-        
-            Project project = new Project(getName());
-            setDescription(project);
-            ct.addProject(project);
-            session.persist(project);
-        
-            return project;
-        }
-    
-        private void setDescription(Project project) {
-            String description = (String) panel.getClientProperty(DESCRIPTION_VALUE);
-            if(description != null)
-                project.setDescription(description);
         }
     }
     

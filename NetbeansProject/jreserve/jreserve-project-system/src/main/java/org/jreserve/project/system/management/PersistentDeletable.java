@@ -2,6 +2,7 @@ package org.jreserve.project.system.management;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.system.ProjectElement;
@@ -10,11 +11,11 @@ import org.jreserve.project.system.ProjectElement;
  *
  * @author Peter Decsi
  */
-public class PersistentDeletable extends AbstractProjectElementDeletable {
+public abstract class PersistentDeletable<T> extends AbstractProjectElementDeletable<T> {
     
     protected final static Logger logger = Logger.getLogger(PersistentDeletable.class.getName());
 
-    public PersistentDeletable(ProjectElement element) {
+    public PersistentDeletable(ProjectElement<T> element) {
         super(element);
     }
     
@@ -30,16 +31,26 @@ public class PersistentDeletable extends AbstractProjectElementDeletable {
     }
     
     protected void deleteEntity(Session session) {
-        Object entity = element.getValue();
+        T entity = element.getValue();
         logger.log(Level.INFO, "Deleting entity: \"{0}\".", entity);
         try {
-            session.delete(element.getValue());
+            cleanUpBeforeEntity(session);
+            deleteEntity(session, entity);
             cleanUpAfterEntity(session);
         } catch (RuntimeException ex) {
             logger.log(Level.SEVERE, String.format("Unable to delete entity '%s'!", entity), ex);
             throw ex;
         }
     }
+    
+    protected void cleanUpBeforeEntity(Session session) {
+    }
+    
+    protected void deleteEntity(Session session, T entity) {
+        createQuery(session, entity).executeUpdate();
+    }
+    
+    protected abstract Query createQuery(Session session, T entity);
     
     protected void cleanUpAfterEntity(Session session) {
     }

@@ -9,12 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.hibernate.Session;
-import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.persistence.SessionFactory;
-import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
+import org.jreserve.project.factories.ClaimTypeFactory;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.openide.WizardDescriptor;
@@ -156,11 +153,10 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
     
     @Override
     public void validate() throws WizardValidationException {
-        LoB lob = getLoB();
         ProjectElement parent = getParentElement();
-        ClaimType ct = createClaimType(lob);
-        ProjectElement child = new ClaimTypeElement(ct);
-        parent.addChild(getIndex(parent.getChildren(), ct.getName()), child);
+        String name = getName();
+        ProjectElement child = createClaimType(getLoB(), name);
+        parent.addChild(getIndex(parent.getChildren(), name), child);
     }
     
     private ProjectElement getParentElement() {
@@ -168,13 +164,11 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
         return (ProjectElement) parent;
     }
     
-    private ClaimType createClaimType(LoB lob) throws WizardValidationException {
+    private ProjectElement createClaimType(LoB lob, String name) throws WizardValidationException {
         try {
-            ClaimType ct = new ClaimTypeCreator(lob).getResult();
-            logger.log(Level.INFO, "ClaimType \"{0}\" created.", ct.getPath());
-            return ct;
+            return new ClaimTypeFactory(lob, name, false).getResult();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, String.format("Unable to create ClaimType '%s' in LoB '%s'!", getName(), lob.getPath()), ex);
+            logger.log(Level.SEVERE, String.format("Unable to create ClaimType '%s' in LoB '%s'!", name, lob.getPath()), ex);
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());
         }
     }
@@ -193,24 +187,6 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
             return childName.compareToIgnoreCase(name) < 0;
         }
         return false;
-    }
-    
-    private class ClaimTypeCreator extends SessionTask<ClaimType> {
-        
-        private LoB lob;
-        
-        private ClaimTypeCreator(LoB lob) {
-            this.lob = lob;
-        }
-        
-        @Override
-        protected ClaimType doTask() throws Exception {
-            ClaimType ct = new ClaimType(getName());
-            lob.addClaimType(ct);
-            session.persist(ct);
-            return ct;
-        }
-    
     }
     
     private class PanelListener implements PropertyChangeListener {

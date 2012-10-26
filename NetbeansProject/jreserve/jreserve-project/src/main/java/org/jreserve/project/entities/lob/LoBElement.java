@@ -3,7 +3,7 @@ package org.jreserve.project.entities.lob;
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.project.system.management.PersistentDeletable;
+import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.openide.nodes.Node;
@@ -18,12 +18,12 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - the new name",
     "MSG.LoBElement.nameexists=Name \"{0}\" is already exists!"
 })
-class LoBElement extends ProjectElement<LoB> {
+public class LoBElement extends ProjectElement<LoB> {
     
-    LoBElement(LoB lob) {
+    public LoBElement(LoB lob) {
         super(lob);
         properties.put(NAME_PROPERTY, lob.getName());
-        super.addToLookup(new PersistentDeletable(this));
+        super.addToLookup(new PersistentObjectDeletable(this, "LoB"));
         super.addToLookup(new RenameableProjectElement(this));
         super.addToLookup(new AuditableProjectElement(this));
         new LobSavable();
