@@ -30,11 +30,13 @@ public class SampleBuilder extends SessionTask<ProjectElement<LoB>> {
     
     final static int INCURRED = 100;
     final static int PAID = 200;
-    final static int BURNING_COST = 300;
+    final static int NUMBER = 300;
+    final static int BURNING_COST = 400;
     
     private final static DataTypeDummy[] PDT_DUMMIES = {
         new DataTypeDummy(INCURRED, "Incurred", true),
         new DataTypeDummy(PAID, "Paid", true),
+        new DataTypeDummy(NUMBER, "Claim count", true),
         new DataTypeDummy(BURNING_COST, "Burning cost", false)
     };
     

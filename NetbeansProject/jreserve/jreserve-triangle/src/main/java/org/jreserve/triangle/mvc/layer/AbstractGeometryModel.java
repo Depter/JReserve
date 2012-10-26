@@ -43,6 +43,11 @@ abstract class AbstractGeometryModel implements GeometryModel {
     public Object getRowName(int row) {
         return getAccidentBegin(row);
     }
+    
+    @Override
+    public Class getRowTitleClass() {
+        return Date.class;
+    }
 
     protected Date getAccidentBegin(int row) {
         calendar.setTime(geometry.getAccidentStart());
@@ -54,7 +59,7 @@ abstract class AbstractGeometryModel implements GeometryModel {
     protected Date getAccidentEnd() {
         calendar.setTime(geometry.getAccidentStart());
         int periods = geometry.getAccidentPeriods();
-        int amount = geometry.getMonthInAccident() * (periods + 1);
+        int amount = geometry.getMonthInAccident() * periods;
         calendar.add(Calendar.MONTH, amount);
         return calendar.getTime();
     }
@@ -74,7 +79,7 @@ abstract class AbstractGeometryModel implements GeometryModel {
     protected Date getDevelopmentEnd() {
         calendar.setTime(geometry.getDevelopmentStart());
         int periods = geometry.getDevelopmentPeriods();
-        int amount = geometry.getMonthInDevelopment() * (periods + 1);
+        int amount = geometry.getMonthInDevelopment() * periods;
         calendar.add(Calendar.MONTH, amount);
         return calendar.getTime();
     }

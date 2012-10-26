@@ -12,7 +12,7 @@ public class DevelopmentGeometryModel extends AbstractGeometryModel {
     @Override
     public Object getColumnTitle(int column) {
         if(column == 0)
-            return null;
+            return Bundle.LBL_GeometryModel_FirstColumnTitle();
         return column;
     }
 

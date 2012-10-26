@@ -52,7 +52,22 @@ public abstract class Layer<O extends PersistentObject, V> {
         this.previousLayer = layer;
     }
     
-    public abstract Object getValue(LayerCriteria criteria);
+    public Object getValue(LayerCriteria criteria) {
+        List<Data<O, V>> filtered = filterData(criteria);
+        if(filtered.isEmpty())
+            return null;
+        return getValue(filtered);
+    }
+    
+    private List<Data<O, V>> filterData(LayerCriteria criteria) {
+        List<Data<O, V>> result = new ArrayList<Data<O, V>>();
+        for(Data<O, V> data : datas)
+            if(criteria.acceptsData(data))
+                result.add(data);
+        return result;
+    }
+    
+    protected abstract Object getValue(List<Data<O, V>> filtered);
     
     public abstract void setValue(LayerCriteria criteria, Object value);
     

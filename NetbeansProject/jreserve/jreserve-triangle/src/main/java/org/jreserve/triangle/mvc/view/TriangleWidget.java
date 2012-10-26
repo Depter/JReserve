@@ -8,6 +8,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
@@ -15,6 +16,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
+import org.jreserve.data.Data;
 import org.jreserve.resources.ToolBarToggleButton;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.mvc.layer.GeometryModel;
@@ -225,6 +227,14 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     public void removeLayer(int position) {
         tableModel.removeLayer(position);
+    }
+    
+    public List<Data> getData(int position) {
+        return tableModel.getData(position);
+    }
+    
+    public void setData(int position, List<Data> data) {
+        tableModel.setData(position, data);
     }
     
     public double[][] flatten() {

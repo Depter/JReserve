@@ -9,8 +9,6 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
-import org.jreserve.data.ProjectDataType;
-import org.jreserve.persistence.PersistentObject;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -175,12 +173,12 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
         }
     }
     
-    private void setData(List<Data<ProjectDataType, Double>> datas) {
-        triangle.getLayerAt(VALUE_LAYER).setData(datas);
+    private void setData(List<Data> datas) {
+        triangle.setData(VALUE_LAYER, datas);
     }
     
-    private void setCorrections(List<Data<Triangle, Double>> corrections) {
-        triangle.getLayerAt(CORRECTION_LAYER).setData(corrections);
+    private void setCorrections(List<Data> corrections) {
+        triangle.setData(CORRECTION_LAYER, corrections);
     }
 
     @Override

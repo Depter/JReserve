@@ -1,10 +1,12 @@
 package org.jreserve.triangle.mvc.layer;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import org.jreserve.data.Data;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.mvc.view.ColumnRenderer;
 
@@ -62,9 +64,19 @@ public class LayeredTriangleModel implements TableModel {
             fireLayerRemoved(layer);
     }
     
+    public List<Data> getData(int position) {
+        return layers.get(position).getData();
+    }
+    
+    public void setData(int position, List<Data> data) {
+        Layer layer = layers.get(position);
+        layer.setData(data);
+        fireDataChanged();
+    }
+    
     public void setTriangleGeometry(TriangleGeometry geoemtry) {
         this.geometry.setTriangleGeometry(geoemtry);
-        fireDataChanged();
+        fireStructureChanged();
     }
     
     public TriangleGeometry getTriangleGeometry() {
@@ -79,10 +91,11 @@ public class LayeredTriangleModel implements TableModel {
     }
     
     private void initGeometryModel() {
-        TriangleGeometry tg = geometry.getTriangleGeometry();
-        geometry = modelType.createModel();
-        geometry.setTriangleGeometry(tg);
-        fireDataChanged();
+        GeometryModel newGeometry = modelType.createModel();
+        newGeometry.setTriangleGeometry(geometry.getTriangleGeometry());
+        newGeometry.setCummulated(geometry.isCummulated());
+        geometry = newGeometry;
+        fireStructureChanged();
     }
     
     public GeometryModel.ModelType getModelType() {
@@ -123,8 +136,8 @@ public class LayeredTriangleModel implements TableModel {
     @Override
     public Class<?> getColumnClass(int column) {
         if(column == 0)
-            return geometry.getColumnTitleClass();
-        return Object.class;
+            return Date.class;
+        return Double.class;
     }
 
     @Override
@@ -155,6 +168,8 @@ public class LayeredTriangleModel implements TableModel {
     public Object getValueAt(int row, int column) {
         if(column == 0)
             return geometry.getRowName(row);
+        if(!hasValueAt(row, column))
+            return null;
         LayerCriteria criteria = geometry.createCriteria(row, column);
         return getValue(criteria);
     }
@@ -212,6 +227,11 @@ public class LayeredTriangleModel implements TableModel {
     private void fireEvent(TableModelEvent evt) {
         for(TableModelListener listener : new ArrayList<TableModelListener>(listeners))
             listener.tableChanged(evt);
+    }
+    
+    private void fireStructureChanged() {
+        TableModelEvent evt = new TableModelEvent(this, TableModelEvent.HEADER_ROW);
+        fireEvent(evt);
     }
 
     

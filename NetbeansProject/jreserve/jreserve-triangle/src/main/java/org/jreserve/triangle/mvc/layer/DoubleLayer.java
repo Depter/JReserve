@@ -30,14 +30,12 @@ public class DoubleLayer<O extends PersistentObject> extends  Layer<O, Double> {
     }
     
     @Override
-    public Object getValue(LayerCriteria criteria) {
+    protected Object getValue(List<Data<O, Double>> filtered) {
         double sum = 0d;
-        for(Data<O, Double> data : datas) {
-            if(criteria.acceptsData(data)) {
-                sum = add(sum, data);
-                if(Double.isNaN(sum))
-                    break;
-            }
+        for(Data<O, Double> data : filtered) {
+            sum = add(sum, data);
+            if(Double.isNaN(sum))
+                break;
         }
         return sum;
     }

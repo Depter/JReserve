@@ -19,6 +19,8 @@ public interface GeometryModel {
     
     public Object getRowName(int row);
     
+    public Class getRowTitleClass();
+    
     public Object getColumnTitle(int column);
     
     public Class getColumnTitleClass();
