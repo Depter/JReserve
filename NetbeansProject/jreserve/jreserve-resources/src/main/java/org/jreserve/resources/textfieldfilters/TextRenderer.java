@@ -8,4 +8,6 @@ package org.jreserve.resources.textfieldfilters;
 public interface TextRenderer<T> {
 
     public String toString(T value);
+    
+    public T parse(String str);
 }

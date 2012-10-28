@@ -14,7 +14,9 @@ import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
 import org.jreserve.triangle.guiutil.VectorFormatVisualPanel;
-import org.jreserve.triangle.guiutil.mvc2.data.DoubleLayer;
+import org.jreserve.triangle.mvc.data.DoubleLayer;
+import org.jreserve.triangle.mvc.view.DoubleTextEditor;
+import org.jreserve.triangle.mvc.view.LayerTextEditor;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -39,6 +41,7 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     public VectorDataEditorView(VectorProjectElement element) {
         this.element = element;
         super.addChangeListener(this);
+        super.triangle.setLayerEditor(new DoubleTextEditor(new EditorCallback()));
         initGeometry();
         initLayers();
         startLoader();
@@ -162,5 +165,12 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
         int periods = geometry.getAccidentPeriods();
         int months = geometry.getMonthInAccident();
         return new VectorGeometry(start, periods, months);
+    }
+    
+    private class EditorCallback implements LayerTextEditor.Callback {
+        @Override
+        public void editingStopped(LayerTextEditor editor) {
+            
+        }    
     }
 }

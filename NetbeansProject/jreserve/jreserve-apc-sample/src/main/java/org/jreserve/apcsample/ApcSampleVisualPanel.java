@@ -7,6 +7,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.WizardDescriptor;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -52,6 +53,12 @@ public class ApcSampleVisualPanel extends javax.swing.JPanel implements Document
     void stopWorking() {
         progressPanel.setVisible(false);
         pBar.setIndeterminate(false);
+    }
+    
+    void setProgressMsg(String msg) {
+        if(msg == null)
+            msg = NbBundle.getMessage(ApcSampleVisualPanel.class, "LBL.ApcSampleVisualPanel.Progress");
+        progressLabel.setText(msg);
     }
     
     /**

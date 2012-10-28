@@ -9,9 +9,8 @@ import org.jreserve.localesettings.util.LocaleSettings;
 /**
  *
  * @author Peter Decsi
- * @version 1.0
  */
-class DecimalSpinner extends JSpinner {
+public class DecimalSpinner extends JSpinner {
 
     DecimalSpinner() {
         super(createModel());

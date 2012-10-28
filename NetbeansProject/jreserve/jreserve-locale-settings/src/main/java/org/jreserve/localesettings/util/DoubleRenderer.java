@@ -23,6 +23,8 @@ public class DoubleRenderer implements TextRenderer<Double> {
     }
     
     private DecimalFormat format;
+    private char grouping;
+    private char decimal;
     private String nan;
     
     public DoubleRenderer() {
@@ -33,6 +35,8 @@ public class DoubleRenderer implements TextRenderer<Double> {
         this.format = format;
         this.format.setMinimumFractionDigits(format.getMaximumFractionDigits());
         nan = format.getDecimalFormatSymbols().getNaN();
+        this.grouping = format.getDecimalFormatSymbols().getGroupingSeparator();
+        this.decimal = format.getDecimalFormatSymbols().getDecimalSeparator();
     }
     
     public int getFractionDigits() {
@@ -55,5 +59,18 @@ public class DoubleRenderer implements TextRenderer<Double> {
         if(Double.isNaN(value))
             return nan;
         return format.format(value);
+    }
+
+    @Override
+    public Double parse(String str) {
+        if(str == null)
+            return null;
+        StringBuilder sb = new StringBuilder();
+        for(char ch : str.toCharArray()) {
+            if(grouping == ch)
+                continue;
+            sb.append(ch==decimal? '.' : ch);
+        }
+        return Double.parseDouble(sb.toString());
     }
 }

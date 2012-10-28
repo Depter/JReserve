@@ -49,7 +49,7 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="org.jreserve.triangle.guiutil.mvc2.view.TriangleWidget" name="triangle">
+    <Component class="org.jreserve.triangle.mvc.view.TriangleWidget" name="triangle">
       <Properties>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[400, 200]"/>

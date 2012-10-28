@@ -1,6 +1,7 @@
 package org.jreserve.localesettings.util;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import javax.swing.table.TableCellRenderer;
 import org.jreserve.resources.textfieldfilters.ClassTableRenderer;
@@ -38,5 +39,14 @@ public class DateRenderer implements TextRenderer<Date> {
         if(value == null)
             return null;
         return format.format(value);
+    }
+
+    @Override
+    public Date parse(String str) {
+        try {
+            return format.parse(str);
+        } catch (ParseException ex) {
+            throw new IllegalArgumentException(ex);
+        }
     }
 }

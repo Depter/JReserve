@@ -2,6 +2,7 @@ package org.jreserve.triangle.editor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -13,7 +14,13 @@ import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.guiutil.TriangleFormatVisualPanel;
-import org.jreserve.triangle.guiutil.mvc2.data.DoubleLayer;
+import org.jreserve.triangle.mvc.data.DoubleLayer;
+import org.jreserve.triangle.mvc.data.Layer;
+import org.jreserve.triangle.mvc.data.LayerCriteria;
+import org.jreserve.triangle.mvc.view.CorrectionRenderer;
+import org.jreserve.triangle.mvc.view.DoubleTextEditor;
+import org.jreserve.triangle.mvc.view.LayerTextEditor;
+import org.jreserve.triangle.mvc.view.TriangleDoubleUtil;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -38,6 +45,8 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
     
     public TriangleDataEditorView(TriangleProjectElement element) {
         this.element = element;
+        super.triangle.setLayerEditor(new DoubleTextEditor(new EditorCallback()));
+        triangle.setLayerRenderer(CORRECTION_LAYER, new CorrectionRenderer());
         super.addChangeListener(this);
         initGeometry();
         initLayers();
@@ -187,5 +196,65 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
         TriangleGeometry triangleGeometry = geometrySetting.getGeometry();
         if(triangleGeometry != null)
             element.setProperty(TriangleProjectElement.GEOMETRY_PROPERTY, triangleGeometry);
+    }
+    
+    private class EditorCallback implements LayerTextEditor.Callback {
+
+        @Override
+        public void editingStopped(LayerTextEditor editor) {
+            Double value = (Double) editor.getEditorComponentValue();
+            int row = editor.getEditedRow();
+            int column = editor.getEditedColumn();
+            
+            if(value == null)
+                removeCorrection(row, column);
+            else
+                setCorrection(value, row, column);
+        }
+        
+        private void removeCorrection(int row, int column) {
+            LayerCriteria criteria = triangle.createCellCriteria(row, column);
+            Layer layer = triangle.getLayerAt(CORRECTION_LAYER);
+            triangle.setDatas(CORRECTION_LAYER, getFilteredDatas(layer, criteria));
+        }
+    
+        private void setCorrection(Double value, int row, int column) {
+            double v = getUncummulatedValue(value, row, column);
+            LayerCriteria criteria = triangle.createCellCriteria(row, column);
+            Layer layer = triangle.getLayerAt(CORRECTION_LAYER);
+            setCorrection(layer, criteria, v);
+        }
+        
+        private double getUncummulatedValue(double value, int row, int column) {
+            if(triangle.isCummulated() && !Double.isNaN(value)) {
+                Object prev = triangle.getValueAt(row, column-1);
+                double p = TriangleDoubleUtil.getTableValue(prev);
+                if(!Double.isNaN(p))
+                    value -= p;
+            }
+            return value;
+        }
+        
+        private void setCorrection(Layer layer, LayerCriteria criteria, double v) {
+            List<Data> datas = getFilteredDatas(layer, criteria);
+            datas.add(createCorrection(criteria, v));
+            triangle.setDatas(CORRECTION_LAYER, datas);
+        }
+        
+        private List<Data> getFilteredDatas(Layer layer, LayerCriteria criteria) {
+            List<Data> datas = layer.getDatas();
+            for(Iterator<Data> it=datas.iterator(); it.hasNext();) {
+                if(criteria.acceptsData(it.next()))
+                    it.remove();
+            }
+            return datas;
+        }
+        
+        private Data createCorrection(LayerCriteria criteria, double v) {
+            Date accident = criteria.getAccidentFrom();
+            Date development = criteria.getDevelopmentFrom();
+            Triangle t = element.getValue();
+            return new Data(t, accident, development, v);
+        }
     }
 }

@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -19,17 +18,17 @@ import javax.swing.table.TableColumn;
 import org.jreserve.data.Data;
 import org.jreserve.resources.ToolBarToggleButton;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.mvc.layer.GeometryModel;
-import org.jreserve.triangle.mvc.layer.Layer;
-import org.jreserve.triangle.mvc.layer.LayeredTriangleModel;
+import org.jreserve.triangle.mvc.data.Layer;
+import org.jreserve.triangle.mvc.data.LayerCriteria;
+import org.jreserve.triangle.mvc.model.TriangleModel;
 import org.openide.util.ImageUtilities;
-import org.openide.util.NbBundle.Messages;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Peter Decsi
  */
-@Messages({
+@NbBundle.Messages({
     "LBL.TriangleWidget.Digits=Digits:"
 })
 public class TriangleWidget extends JPanel implements Serializable {
@@ -54,12 +53,8 @@ public class TriangleWidget extends JPanel implements Serializable {
     private ToolBarToggleButton notCummulatedButton;
     private ActionHandler actionHandler = new ActionHandler();
     
-    //private TriangleTableModel tableModel;
-    private LayeredTriangleModel tableModel = new LayeredTriangleModel();
-    private JTable table;
+    private TriangleTable table;
     private JScrollPane scroll;
-    
-    private DoubleTriangleTableRenderer doubleRenderer;
     
     public TriangleWidget() {
         initComponent();
@@ -154,15 +149,7 @@ public class TriangleWidget extends JPanel implements Serializable {
     }
     
     private JScrollPane getTable() {
-        table = new JTable(tableModel);
-        
-        doubleRenderer = new DoubleTriangleTableRenderer(tableModel);
-        table.getTableHeader().setDefaultRenderer(new TriangleWidgetHeaderRenderer());
-        table.setDefaultRenderer(Double.class, doubleRenderer);
-        
-        DateTriangleTableRenderer dateRenderer = new DateTriangleTableRenderer(table);
-        table.setDefaultRenderer(Date.class, dateRenderer);
-        tableModel.setColumnRenderer(dateRenderer);
+        table = new TriangleTable();
         
         table.setFillsViewportHeight(false);
         table.setIntercellSpacing(INTERNAL_SPACIN);
@@ -174,9 +161,13 @@ public class TriangleWidget extends JPanel implements Serializable {
         return scroll;
     }
     
-//    @Override
-//    public void setLayout(LayoutManager layout) {
-//    }
+    public void setLayerRenderer(int layer, DefaultRenderer renderer) {
+        table.setLayerRenderer(layer, renderer);
+    }
+
+    public void setLayerEditor(LayerTextEditor editor) {
+        table.setLayerEditor(editor);
+    }
     
     public void setShowsToolbar(boolean showsToolBar) {
         toolBar.setVisible(showsToolBar);
@@ -187,20 +178,20 @@ public class TriangleWidget extends JPanel implements Serializable {
     }
     
     public void setTriangleGeometry(TriangleGeometry geometry) {
-        tableModel.setTriangleGeometry(geometry);
+        table.setTriangleGeometry(geometry);
     }
     
     public TriangleGeometry getTriangleGeometry() {
-        return tableModel.getTriangleGeometry();
+        return table.getTriangleGeometry();
     }
     
     public boolean isCummulated() {
-        return tableModel.isCummulated();
+        return table.isCummulated();
     }
     
     public void setCummulated(boolean cummulated) {
         selectCummulatedButton(cummulated);
-        tableModel.setCummulated(cummulated);
+        table.setCummulated(cummulated);
     }
     
     private void selectCummulatedButton(boolean cummulated) {
@@ -209,39 +200,47 @@ public class TriangleWidget extends JPanel implements Serializable {
     }
     
     public Layer getLayerAt(int position) {
-        return tableModel.getLayer(position);
+        return table.getLayer(position);
     }
     
     public void addLayer(Layer layer) {
-        tableModel.addLayer(layer);
+        table.addLayer(layer);
     }
     
     public void addLayer(int position, Layer layer) {
-        tableModel.addLayer(position, layer);
+        table.addLayer(position, layer);
     }
     
     public void setLayer(int position, Layer layer) {
-        tableModel.setLayer(position, layer);
+        table.setLayer(position, layer);
     }
     
     public void removeLayer(Layer layer) {
-        tableModel.removeLayer(layer);
+        table.removeLayer(layer);
     }
     
     public void removeLayer(int position) {
-        tableModel.removeLayer(position);
+        table.removeLayer(position);
     }
     
-    public List<Data> getData(int position) {
-        return tableModel.getData(position);
+    public List<Data> getDatas(int position) {
+        return table.getDatas(position);
     }
     
-    public void setData(int position, List<Data> data) {
-        tableModel.setData(position, data);
+    public void setDatas(int position, List<Data> data) {
+        table.setDatas(position, data);
     }
     
     public double[][] flatten() {
-        return tableModel.flattenValues();
+        return table.flattenValues();
+    }
+    
+    public Object getValueAt(int row, int column) {
+        return table.getValueAt(row, column);
+    }
+    
+    public LayerCriteria createCellCriteria(int row, int column) {
+        return table.createCellCriteria(row, column);
     }
     
     private class ResizeListener extends ComponentAdapter {
@@ -268,13 +267,13 @@ public class TriangleWidget extends JPanel implements Serializable {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
             if(command.equals(CUMMULATED_ACTION)) {
-                tableModel.setCummulated(true);
+                table.setCummulated(true);
             } else if(command.equals(NOT_CUMMULATED_ACTION)) {
-                tableModel.setCummulated(false);
+                table.setCummulated(false);
             } else if(command.equals(CALENDAR_PERIOD_STRUCTURE_ACTION)) {
-                tableModel.setModelType(GeometryModel.ModelType.CALENDAR);
+                table.setModelType(TriangleModel.ModelType.CALENDAR);
             } else if(command.equals(DEVELOPMENT_PERIOD_STRUCTURE_ACTION)) {
-                tableModel.setModelType(GeometryModel.ModelType.DEVELOPMENT);
+                table.setModelType(TriangleModel.ModelType.DEVELOPMENT);
             }
         }
     }
@@ -283,15 +282,13 @@ public class TriangleWidget extends JPanel implements Serializable {
         @Override
         public void stateChanged(ChangeEvent e) {
             int value = spinner.getIntValue();
-            doubleRenderer.setFractionDigits(value);
-            fireRowsChanged(tableModel.getRowCount());
+            table.setFractionDigits(value);
+            fireRowsChanged();
         }
         
-        private void fireRowsChanged(int rowCount) {
-            if(rowCount > 0) {
-                TableModelEvent evt = new TableModelEvent(tableModel, 0, rowCount-1);
-                table.tableChanged(evt);
-            }
+        private void fireRowsChanged() {
+            TableModelEvent evt = new TableModelEvent(table.getModel());
+            table.tableChanged(evt);
         }
     }
 }

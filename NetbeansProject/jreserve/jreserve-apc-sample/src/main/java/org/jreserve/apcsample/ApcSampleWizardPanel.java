@@ -3,6 +3,8 @@ package org.jreserve.apcsample;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -24,10 +26,13 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "MSG.ApcSampleWizardPanel.NameEmpty=Field 'Name' is empty!",
     "# {0} - name",
-    "MSG.ApcSampleWizardPanel.NameExists=Name \"{0}\" already exists!"
+    "MSG.ApcSampleWizardPanel.NameExists=Name \"{0}\" already exists!",
+    "MSG.ApcSampleWizardPanel.Error=Unable to create sample!"
 })
 public class ApcSampleWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor>, ChangeListener {
 
+    private final static Logger logger = Logger.getLogger(ApcSampleWizardPanel.class.getName());
+    
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     private boolean isValid = false;
     private ApcSampleVisualPanel panel;
@@ -130,7 +135,7 @@ public class ApcSampleWizardPanel implements WizardDescriptor.AsynchronousValida
     @Override
     public void prepareValidation() {
         String name = panel.getSampleName();
-        builder = new SampleBuilder(name);
+        builder = new SampleBuilder(name, panel);
     }
 
     @Override
@@ -144,8 +149,10 @@ public class ApcSampleWizardPanel implements WizardDescriptor.AsynchronousValida
             tx.commit();
         } catch (Exception ex) {
             tx.rollback();
-            //TODO log
-            throw new WizardValidationException(panel, "Unable to create sample.", "Unable to create sample.");
+            logger.log(Level.SEVERE, "Unable to create APC sample!", ex);
+            throw new WizardValidationException(panel, "Unable to create sample.", Bundle.MSG_ApcSampleWizardPanel_Error());
+        } finally {
+            panel.stopWorking();
         }
     }
     
