@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hibernate.Session;
 import org.jreserve.data.DataType;
 import org.jreserve.data.DataTypeUtil;
 import org.jreserve.data.ProjectDataType;
@@ -19,7 +20,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @version 1.0
  */
 @ServiceProvider(service=ProjectSystemCreationListener.class, position=100)
-public class ProjectDataTypeInstaller extends SessionTask<Void> implements ProjectSystemCreationListener {
+public class ProjectDataTypeInstaller implements SessionTask.Task<Void>, ProjectSystemCreationListener {
     
     private final static Logger logger = Logger.getLogger(ProjectDataTypeInstaller.class.getName());
     
@@ -34,7 +35,7 @@ public class ProjectDataTypeInstaller extends SessionTask<Void> implements Proje
     public void created(ProjectElement element) {
         this.claimTypeElement = element;
         try {
-            super.getResult();
+            SessionTask.openCurrentSession(this).executeTasks();
         } catch(Exception ex) {
             logger.log(Level.SEVERE, "Unable to load data types for element: "+element, ex);
         } finally {
@@ -43,19 +44,18 @@ public class ProjectDataTypeInstaller extends SessionTask<Void> implements Proje
     }
 
     @Override
-    protected Void doTask() throws Exception {
-        ClaimType claimType = getClaimType();
-        saveValues(claimType);
-        return null;
+    public void doWork(Session session) throws Exception {
+        ClaimType claimType = getClaimType(session);
+        saveValues(session, claimType);
     }
     
-    private ClaimType getClaimType() {
+    private ClaimType getClaimType(Session session) {
         ClaimType claimType = (ClaimType) claimTypeElement.getValue();
         String id = claimType.getId();
         return (ClaimType) session.load(ClaimType.class, id);
     }
     
-    private void saveValues(ClaimType claimType) {
+    private void saveValues(Session session, ClaimType claimType) {
         List<ProjectDataType> types = createDefaultValues(claimType);
         for(ProjectDataType type : types) {
             session.persist(type);
@@ -68,5 +68,10 @@ public class ProjectDataTypeInstaller extends SessionTask<Void> implements Proje
         for(DataType dt : DataTypeUtil.getDataTypes())
             result.add(new ProjectDataType(claimType, dt));
         return result;
+    }
+
+    @Override
+    public Void getResult() {
+        return null;
     }
 }

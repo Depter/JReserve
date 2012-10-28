@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.container.ProjectDataContainer;
 import org.jreserve.persistence.SessionTask;
@@ -56,7 +57,7 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
     public void validate() throws WizardValidationException {
         synchronized(lock) {
             try {
-                Vector vector = new VectorCreator().getResult();
+                Vector vector = SessionTask.withOpenSession(new VectorCreator());
                 addProjectElement(vector);
                 clearProperties();
             } catch (Exception ex) {
@@ -87,14 +88,14 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         return (ProjectDataContainer) v;
     }
     
-    private class VectorCreator extends SessionTask<Vector> {
+    private class VectorCreator extends SessionTask.AbstractTask<Vector> {
 
         @Override
-        protected Vector doTask() throws Exception {
+        public void doWork(Session session) throws Exception {
             Project project = (Project) session.get(Project.class, vectorData.project.getId());
             Vector vector = createVector(project);
             session.persist(vector);
-            return vector;
+            result = vector;
         }
     
         private Vector createVector(Project project) {

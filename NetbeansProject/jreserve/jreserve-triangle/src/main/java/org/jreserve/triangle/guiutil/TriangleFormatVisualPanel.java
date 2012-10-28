@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.mvc.view.TriangleWidget;
+import org.jreserve.triangle.guiutil.mvc2.view.TriangleWidget;
 
 /**
  *
@@ -70,7 +70,7 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel {
 
         geometrySetting = new org.jreserve.triangle.guiutil.GeometrySettingPanel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
-        triangle = new org.jreserve.triangle.mvc.view.TriangleWidget();
+        triangle = new org.jreserve.triangle.guiutil.mvc2.view.TriangleWidget();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setLayout(new java.awt.GridBagLayout());
@@ -101,7 +101,7 @@ public class TriangleFormatVisualPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
     protected org.jreserve.triangle.guiutil.GeometrySettingPanel geometrySetting;
-    protected org.jreserve.triangle.mvc.view.TriangleWidget triangle;
+    protected org.jreserve.triangle.guiutil.mvc2.view.TriangleWidget triangle;
     // End of variables declaration//GEN-END:variables
 
     private class GeometryListener implements PropertyChangeListener {

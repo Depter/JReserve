@@ -14,7 +14,7 @@ import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
 import org.jreserve.triangle.guiutil.VectorFormatVisualPanel;
-import org.jreserve.triangle.mvc.layer.DoubleLayer;
+import org.jreserve.triangle.guiutil.mvc2.data.DoubleLayer;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -64,8 +64,9 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     }
     
     private void initLayers() {
-        triangle.addLayer(new DoubleLayer(true, true));
-        triangle.addLayer(new DoubleLayer(false, true));
+        Vector vector = element.getValue();
+        triangle.addLayer(new DoubleLayer(vector, true));
+        triangle.addLayer(new DoubleLayer(vector.getDataType(), false));
     }
     
     private void startLoader() {
@@ -127,19 +128,19 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     @Override
     public void finnished(DataLoader loader) {
         try {
-            setData(loader.getData());
             setCorrections(loader.getCorrections());
+            setData(loader.getData());
         } catch (RuntimeException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
     
-    private void setData(List<Data> datas) {
-        triangle.setData(VALUE_LAYER, datas);
+    private void setCorrections(List<Data> corrections) {
+        triangle.setDatas(CORRECTION_LAYER, corrections);
     }
     
-    private void setCorrections(List<Data> corrections) {
-        triangle.setData(CORRECTION_LAYER, corrections);
+    private void setData(List<Data> datas) {
+        triangle.setDatas(VALUE_LAYER, datas);
     }
 
     @Override

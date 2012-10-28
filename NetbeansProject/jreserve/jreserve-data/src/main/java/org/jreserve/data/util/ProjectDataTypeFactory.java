@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hibernate.Session;
 import org.jreserve.data.DataType;
 import org.jreserve.data.DataTypeUtil;
 import org.jreserve.data.ProjectDataType;
@@ -19,7 +20,7 @@ import org.jreserve.project.system.ProjectElement;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ProjectDataTypeFactory extends SessionTask<List<ProjectElement<ProjectDataType>>>{
+public class ProjectDataTypeFactory extends SessionTask.AbstractTask<List<ProjectElement<ProjectDataType>>>{
 
     private final static Logger logger = Logger.getLogger(ProjectDataTypeFactory.class.getName());
     
@@ -33,26 +34,24 @@ public class ProjectDataTypeFactory extends SessionTask<List<ProjectElement<Proj
     private final List<DataTypeDummy> dummies;
     private final ClaimType claimType;
     
-    public ProjectDataTypeFactory(ClaimType claimType, DataTypeDummy[] dummies, boolean openSession) {
-        this(claimType, Arrays.asList(dummies), openSession);
+    public ProjectDataTypeFactory(ClaimType claimType, DataTypeDummy[] dummies) {
+        this(claimType, Arrays.asList(dummies));
     }
     
-    public ProjectDataTypeFactory(ClaimType claimType, List<DataTypeDummy> dummies, boolean openSession) {
-        super(openSession);
+    public ProjectDataTypeFactory(ClaimType claimType, List<DataTypeDummy> dummies) {
         this.claimType = claimType;
         this.dummies = new ArrayList<DataTypeDummy>(dummies);
         Collections.sort(dummies);
     }
-    
+
     @Override
-    protected List<ProjectElement<ProjectDataType>> doTask() throws Exception {
-        List<ProjectElement<ProjectDataType>> result = new ArrayList<ProjectElement<ProjectDataType>>();
+    public void doWork(Session session) throws Exception {
+        result = new ArrayList<ProjectElement<ProjectDataType>>();
         for(DataTypeDummy dummy : dummies)
-            result.add(createDataType(dummy));
-        return result;
+            result.add(createDataType(session, dummy));
     }
 
-    private ProjectElement<ProjectDataType> createDataType(DataTypeDummy dummy) {
+    private ProjectElement<ProjectDataType> createDataType(Session session, DataTypeDummy dummy) {
         ProjectDataType dt = dummy.createDataType(claimType);
         session.persist(dt);
         logger.log(Level.INFO, "Data type created: \"{0}\"", dt);

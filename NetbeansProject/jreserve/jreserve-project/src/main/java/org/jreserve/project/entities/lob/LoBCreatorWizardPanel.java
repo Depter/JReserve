@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.persistence.SessionFactory;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.factories.LoBFactory;
 import org.jreserve.project.system.ProjectElement;
@@ -164,7 +165,7 @@ class LoBCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDe
     
     private ProjectElement createLob(String name) throws WizardValidationException {
         try {
-            return new LoBFactory(name, true).getResult();
+            return SessionTask.withOpenSession(new LoBFactory(name));
         } catch (Exception ex) { 
             logger.log(Level.SEVERE, String.format("Unable to create LoB with name '%s'!", name), ex);
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());

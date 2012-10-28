@@ -3,6 +3,7 @@ package org.jreserve.triangle.createdialog;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.container.ProjectDataContainer;
 import org.jreserve.persistence.SessionTask;
@@ -53,7 +54,7 @@ class TriangleFormatWizardPanel extends DataFormatWizardPanel implements WizardD
     public void validate() throws WizardValidationException {
         synchronized(lock) {
             try {
-                Triangle triangle = new TriangleCreator().getResult();
+                Triangle triangle = SessionTask.withOpenSession(new TriangleCreator());
                 addProjectElement(triangle);
                 clearProperties();
             } catch (Exception ex) {
@@ -84,14 +85,14 @@ class TriangleFormatWizardPanel extends DataFormatWizardPanel implements WizardD
         return (ProjectDataContainer) v;
     }
     
-    private class TriangleCreator extends SessionTask<Triangle> {
-        
+    private class TriangleCreator extends SessionTask.AbstractTask<Triangle> {
+
         @Override
-        protected Triangle doTask() throws Exception {
+        public void doWork(Session session) throws Exception {
             Project project = (Project) session.get(Project.class, triangleData.project.getId());
             Triangle triangle = createTriangle(project);
             session.persist(triangle);
-            return triangle;
+            result = triangle;
         }
     
         private Triangle createTriangle(Project project) {

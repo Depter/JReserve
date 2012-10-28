@@ -6,13 +6,15 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.RootElement;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.WeakListeners;
 
 /**
  *
@@ -133,14 +135,24 @@ public class ApcSampleWizardPanel implements WizardDescriptor.AsynchronousValida
 
     @Override
     public void validate() throws WizardValidationException {
+        Transaction tx = null;
         try {
             panel.startWorking();
-            ProjectElement element = builder.getResult();
+            tx = beginTransaction();
+            ProjectElement element = builder.createLoB();
             addElement(element);
+            tx.commit();
         } catch (Exception ex) {
+            tx.rollback();
             //TODO log
             throw new WizardValidationException(panel, "Unable to create sample.", "Unable to create sample.");
         }
+    }
+    
+    private Transaction beginTransaction() {
+        Session session = SessionFactory.getCurrentSession();
+        Transaction tx = session.beginTransaction();
+        return tx;
     }
     
     private void addElement(final ProjectElement element) {

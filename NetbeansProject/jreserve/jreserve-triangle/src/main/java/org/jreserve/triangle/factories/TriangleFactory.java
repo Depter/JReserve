@@ -2,6 +2,7 @@ package org.jreserve.triangle.factories;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.Project;
@@ -15,7 +16,7 @@ import org.jreserve.triangle.entities.TriangleGeometry;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleFactory extends SessionTask<ProjectElement<Triangle>> {
+public class TriangleFactory extends SessionTask.AbstractTask<ProjectElement<Triangle>> {
 
     private final static Logger logger = Logger.getLogger(TriangleFactory.class.getName());
     
@@ -26,8 +27,7 @@ public class TriangleFactory extends SessionTask<ProjectElement<Triangle>> {
     
     private String description;
     
-    public TriangleFactory(Project project, ProjectDataType dataType, String name,  TriangleGeometry geometry, boolean openSession) {
-        super(openSession);
+    public TriangleFactory(Project project, ProjectDataType dataType, String name,  TriangleGeometry geometry) {
         this.project = project;
         this.dataType = dataType;
         this.name = name;
@@ -37,13 +37,13 @@ public class TriangleFactory extends SessionTask<ProjectElement<Triangle>> {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     @Override
-    protected ProjectElement<Triangle> doTask() throws Exception {
+    public void doWork(Session session) throws Exception {
         Triangle triangle = createTriangle();
         session.persist(triangle);
         logger.log(Level.INFO, "Triangle created: \"{0}\"", triangle);
-        return new TriangleProjectElement(triangle);
+        result = new TriangleProjectElement(triangle);
     }
     
     private Triangle createTriangle() {
@@ -52,5 +52,4 @@ public class TriangleFactory extends SessionTask<ProjectElement<Triangle>> {
         triangle.setDescription(description);
         return triangle;
     }
-
 }

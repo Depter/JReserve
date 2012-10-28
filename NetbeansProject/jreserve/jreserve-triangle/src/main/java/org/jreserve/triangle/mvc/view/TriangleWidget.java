@@ -155,12 +155,15 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     private JScrollPane getTable() {
         table = new JTable(tableModel);
+        
         doubleRenderer = new DoubleTriangleTableRenderer(tableModel);
         table.getTableHeader().setDefaultRenderer(new TriangleWidgetHeaderRenderer());
         table.setDefaultRenderer(Double.class, doubleRenderer);
+        
         DateTriangleTableRenderer dateRenderer = new DateTriangleTableRenderer(table);
         table.setDefaultRenderer(Date.class, dateRenderer);
         tableModel.setColumnRenderer(dateRenderer);
+        
         table.setFillsViewportHeight(false);
         table.setIntercellSpacing(INTERNAL_SPACIN);
         table.getModel().addTableModelListener(new TableListener());

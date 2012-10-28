@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.entities.Project;
@@ -199,9 +200,9 @@ class ProjectCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wiza
     
     private org.jreserve.project.system.ProjectElement createProject(ClaimType ct, String name) throws WizardValidationException {
         try {
-            ProjectFactory factory = new ProjectFactory(ct, name, true);
+            ProjectFactory factory = new ProjectFactory(ct, name);
             factory.setDescription((String) panel.getClientProperty(DESCRIPTION_VALUE));
-            return factory.getResult();
+            return SessionTask.withOpenSession(factory);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, String.format("Unable to create Project '%s' in ClaimType '%s'!", name, ct.getPath()), ex);
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());

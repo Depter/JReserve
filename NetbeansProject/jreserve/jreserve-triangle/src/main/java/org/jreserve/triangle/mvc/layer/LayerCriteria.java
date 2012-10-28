@@ -58,5 +58,4 @@ public class LayerCriteria {
             return false;
         return true;
     }
-    
 }

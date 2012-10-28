@@ -2,6 +2,7 @@ package org.jreserve.triangle.factories;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.Project;
@@ -15,7 +16,7 @@ import org.jreserve.triangle.entities.VectorGeometry;
  * @author Peter Decsi
  * @version 1.0
  */
-public class VectorFactory  extends SessionTask<ProjectElement<Vector>> {
+public class VectorFactory extends SessionTask.AbstractTask<ProjectElement<Vector>> {
 
     private final static Logger logger = Logger.getLogger(VectorFactory.class.getName());
     
@@ -26,8 +27,7 @@ public class VectorFactory  extends SessionTask<ProjectElement<Vector>> {
     
     private String description;
     
-    public VectorFactory(Project project, ProjectDataType dataType, String name, VectorGeometry geometry, boolean openSession) {
-        super(openSession);
+    public VectorFactory(Project project, ProjectDataType dataType, String name, VectorGeometry geometry) {
         this.project = project;
         this.dataType = dataType;
         this.name = name;
@@ -37,13 +37,13 @@ public class VectorFactory  extends SessionTask<ProjectElement<Vector>> {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     @Override
-    protected ProjectElement<Vector> doTask() throws Exception {
+    public void doWork(Session session) throws Exception {
         Vector vector = createVector();
         session.persist(vector);
         logger.log(Level.INFO, "Vector created: \"{0}\"", vector);
-        return new VectorProjectElement(vector);
+        result = new VectorProjectElement(vector);
     }
     
     private Vector createVector() {

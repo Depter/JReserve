@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.factories.ClaimTypeFactory;
@@ -166,7 +167,7 @@ class ClaimTypeCreatorWizardPanel implements WizardDescriptor.ValidatingPanel<Wi
     
     private ProjectElement createClaimType(LoB lob, String name) throws WizardValidationException {
         try {
-            return new ClaimTypeFactory(lob, name, false).getResult();
+            return SessionTask.withOpenSession(new ClaimTypeFactory(lob, name));
         } catch (Exception ex) {
             logger.log(Level.SEVERE, String.format("Unable to create ClaimType '%s' in LoB '%s'!", name, lob.getPath()), ex);
             throw new WizardValidationException(panel, ex.getMessage(), ex.getLocalizedMessage());

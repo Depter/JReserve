@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.datatypesetting.DTDummy;
 import org.jreserve.data.datatypesetting.DataTypePanel;
@@ -175,7 +176,7 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
             List<ProjectDataType> deleted = getDeleted();
             List<ProjectDataType> updated = updateList();
             if(!deleted.isEmpty() || !updated.isEmpty())
-                new Persister(deleted, updated).getResult();
+                SessionTask.openSession(new Persister(deleted, updated)).executeTasks();
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Unable to update ProjectDataTypes for ClaimType: "+claimType.getName(), ex);
         }
@@ -235,12 +236,11 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
         return updated;
     }    
     
-    private class Persister extends SessionTask<Void> {
+    private class Persister implements SessionTask.Task<Void> {
         
         private List<ProjectDataType> deleted;
         private List<ProjectDataType> updated;
         private List<Project> projects;
-//        private Session session;
         
         private Persister(List<ProjectDataType> deleted, List<ProjectDataType> updated) {
             this.deleted = deleted;
@@ -248,14 +248,13 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
         }
 
         @Override
-        protected Void doTask() throws Exception {
-            initialize();
+        public void doWork(Session session) throws Exception {
+            initialize(session);
             delete();
-            update();
-            return null;
+            update(session);
         }
         
-        private void initialize() {
+        private void initialize(Session session) {
             ClaimType ct = (ClaimType) session.load(ClaimType.class, claimType.getId());
             projects = ct.getProjects();
         }
@@ -271,24 +270,29 @@ class ProjectDataTypeDialog extends JPanel implements PropertyChangeListener, Ac
             d.delete();
         }
         
-        private void update() {
+        private void update(Session session) {
             for(ProjectDataType dt : updated) {
                 if(dt.getVersion() == null) {
-                    create(dt);
+                    create(session, dt);
                 } else {
-                    update(dt);
+                    update(session, dt);
                 }
             }
         }
         
-        private void create(ProjectDataType dt) {
+        private void create(Session session, ProjectDataType dt) {
             session.persist(dt);
             ProjectElement e = new ProjectDatTypeProjectElement(dt);
             element.addChild(e);
         }
         
-        private void update(ProjectDataType dt) {
+        private void update(Session session, ProjectDataType dt) {
             session.update(dt);
+        }
+
+        @Override
+        public Void getResult() {
+            return null;
         }
     }
 }

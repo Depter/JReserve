@@ -8,8 +8,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.triangle.mvc.layer.DoubleLayer;
-import org.jreserve.triangle.mvc.layer.Layer;
+import org.jreserve.triangle.guiutil.mvc2.data.DoubleLayer;
+import org.jreserve.triangle.guiutil.mvc2.data.Layer;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
@@ -50,8 +50,9 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
     public void readSettings(WizardDescriptor wizard) {
         this.wizard = wizard;
         List<Data<ProjectDataType, Double>> datas = (List<Data<ProjectDataType, Double>>) wizard.getProperty(NameSelectWizardPanel.PROP_DATA);
+        ProjectDataType dt = (ProjectDataType) wizard.getProperty(NameSelectWizardPanel.PROP_DATA_TYPE);
         setFirstDate(datas);
-        panel.triangle.addLayer(createLayer(datas));
+        panel.triangle.addLayer(createLayer(dt, datas));
         validate();
     }
     
@@ -71,10 +72,8 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
         return first;
     }
 
-    private Layer createLayer(List<Data<ProjectDataType, Double>> datas) {
-        DoubleLayer<ProjectDataType> layer = new DoubleLayer<ProjectDataType>(datas);
-        layer.setVisible(true);
-        layer.setEditable(false);
+    private Layer createLayer(ProjectDataType dt, List<Data<ProjectDataType, Double>> datas) {
+        DoubleLayer<ProjectDataType> layer = new DoubleLayer<ProjectDataType>(dt, datas);
         return layer;
     }
     
