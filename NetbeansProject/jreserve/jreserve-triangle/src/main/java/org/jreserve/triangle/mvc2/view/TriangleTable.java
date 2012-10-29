@@ -1,8 +1,11 @@
 package org.jreserve.triangle.mvc2.view;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import org.jreserve.data.Data;
@@ -22,6 +25,9 @@ public class TriangleTable extends JTable {
     private TriangleModel.ModelType type;
     private TriangleModel model;
     private TriangleCellRenderer renderer;
+    private TableCellRenderer headerRenderer;
+    private DoubleEditor editor;
+    private PopUpFactory popUpFactory;
     
     public TriangleTable() {
         this(ModelType.DEVELOPMENT);
@@ -32,6 +38,7 @@ public class TriangleTable extends JTable {
         createModel();
         createRenderers();
         formatTable();
+        setMouseListener();
     }
     
     private void createModel() {
@@ -40,16 +47,30 @@ public class TriangleTable extends JTable {
     }
     
     private void createRenderers() {
-        TableCellRenderer header = getTableHeader().getDefaultRenderer();
-        setDefaultRenderer(String.class, header);
+        headerRenderer = new HeaderRenderer();
+        setDefaultRenderer(String.class, headerRenderer);
+        getTableHeader().setDefaultRenderer(headerRenderer);
+        
         renderer = new TriangleCellRenderer();
         setDefaultRenderer(TriangleCell.class, renderer);
+        
+        editor = new DoubleEditor();
+        setDefaultEditor(TriangleCell.class, editor);
     }
     
     private void formatTable() {
         setShowGrid(false);
-        super.setRowMargin(0);
-        //super.setce
+        setRowMargin(0);
+        setRowSelectionAllowed(true);
+        setColumnSelectionAllowed(true);
+        setCellSelectionEnabled(true);
+        
+    }
+    
+    private void setMouseListener() {
+        //for(MouseListener listener : getMouseListeners())
+        //    removeMouseListener(listener);
+        addMouseListener(new MouseHandler());
     }
     
     public void setModelType(ModelType type) {
@@ -164,6 +185,36 @@ public class TriangleTable extends JTable {
                 return Double.NaN;
             Double value = cell.getValue();
             return value==null? Double.NaN : value;
+        }
+    }
+    
+    private class MouseHandler extends MouseAdapter {
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if(e.isPopupTrigger())
+                showPopUp(e);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if(e.isPopupTrigger())
+                showPopUp(e);
+        }
+        
+        private void showPopUp(MouseEvent e) {
+            if(popUpFactory != null) {
+                JPopupMenu menu = createPopUp(e);
+                if(menu != null)
+                    menu.show(TriangleTable.this, e.getX(), e.getY());
+            }
+        }
+        
+        private JPopupMenu createPopUp(MouseEvent e) {
+            Point p = e.getPoint();
+            int row = rowAtPoint(p);
+            int column = columnAtPoint(p);
+            return popUpFactory.createPopUp(TriangleTable.this, row, column);
         }
     }
 }

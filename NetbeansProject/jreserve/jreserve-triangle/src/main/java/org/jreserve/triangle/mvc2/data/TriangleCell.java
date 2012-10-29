@@ -20,7 +20,10 @@ public class TriangleCell {
     private Date developmentEnd;
     
     private List<Double> values = new ArrayList<Double>();
+    private Double displayValue = null;
+    
     private List<DataComment> comments;
+    
     
     public TriangleCell(Date aBegin, Date aEnd, Date dBegin, Date dEnd) {
         this.accidentBegin = aBegin;
@@ -33,6 +36,7 @@ public class TriangleCell {
         this.values.clear();
         for(List<Data<PersistentObject, Double>> dataList : datas)
             values.add(sum(dataList));
+        displayValue = getValue();
     }
     
     private Double sum(List<Data<PersistentObject, Double>> datas) {
@@ -96,17 +100,24 @@ public class TriangleCell {
         return null;
     }
     
+    public Double getDisplayValue() {
+        return displayValue;
+    }
+    
     public void setValue(int layer, Double value) {
         this.values.set(layer, value);
+        displayValue = getValue();
     }
     
     public void clearValue() {
         this.values.clear();
+        displayValue = getValue();
     }
     
     public void cummulate(TriangleCell previous) {
         checkSize(previous);
         cummulateWith(previous.values);
+        displayValue = add(displayValue, previous.displayValue);
     }
     
     private void checkSize(TriangleCell previous) {
@@ -133,6 +144,7 @@ public class TriangleCell {
     public void deCummulate(TriangleCell previous) {
         checkSize(previous);
         deCummulateWith(previous.values);
+        displayValue = subtract(displayValue, previous.displayValue);
     }
     
     private void deCummulateWith(List<Double> previous) {

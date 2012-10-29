@@ -321,5 +321,6 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
         TriangleCell cell = getCellAt(row, column - 1);
         if(cell != null && cell.getLayerCount() > editableLayer)
             cell.setValue(editableLayer, (Double) value);
-    }    
+        fireTableCellUpdated(row, column);
+    }        
 }

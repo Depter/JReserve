@@ -198,7 +198,7 @@ public class TriangleCellRenderer extends DefaultTableCellRenderer {
     }
     
     protected String getValue(TriangleCell cell) {
-        Double value = cell.getValue();
+        Double value = cell.getDisplayValue();
         if(value == null)
             return null;
         return valueRenderer.toString(value);
