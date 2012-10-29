@@ -1,6 +1,7 @@
 package org.jreserve.triangle.editor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -35,8 +37,8 @@ import org.openide.util.Lookup;
  */
 public class TriangleDataEditorView extends TriangleFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, DataLoader.Callback<Triangle> {
     
-    private final static int CORRECTION_LAYER = 0;
-    private final static int VALUE_LAYER = 1;
+    private final static int VALUE_LAYER = 0;
+    private final static int CORRECTION_LAYER = 1;
     
     private JToolBar toolBar = new JToolBar();
     private TriangleProjectElement element;
@@ -45,9 +47,8 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
     
     public TriangleDataEditorView(TriangleProjectElement element) {
         this.element = element;
-        super.triangle.setLayerEditor(new DoubleTextEditor(new EditorCallback()));
-        triangle.setLayerRenderer(CORRECTION_LAYER, new CorrectionRenderer());
         super.addChangeListener(this);
+        super.triangle.setEditableLayer(CORRECTION_LAYER);
         initGeometry();
         initLayers();
         startLoader();
@@ -112,9 +113,8 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
     }
     
     private void initLayers() {
-        Triangle t = element.getValue();
-        triangle.addLayer(new DoubleLayer(t, true));
-        triangle.addLayer(new DoubleLayer(t.getDataType(), false));
+        triangle.addValueLayer(new ArrayList<Data<ProjectDataType, Double>>());
+        triangle.addValueLayer(new ArrayList<Data<Triangle, Double>>());
     }
     
     private void startLoader() {
@@ -176,19 +176,19 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
     @Override
     public void finnished(DataLoader loader) {
         try {
-            setCorrections(loader.getCorrections());
             setData(loader.getData());
+            setCorrections(loader.getCorrections());
         } catch (RuntimeException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
     
-    private void setCorrections(List<Data> corrections) {
-        triangle.setDatas(CORRECTION_LAYER, corrections);
+    private void setData(List<Data<Triangle, Double>> datas) {
+        triangle.setValueLayer(VALUE_LAYER, datas);
     }
     
-    private void setData(List<Data> datas) {
-        triangle.setDatas(VALUE_LAYER, datas);
+    private void setCorrections(List<Data<Triangle, Double>> corrections) {
+        triangle.setValueLayer(CORRECTION_LAYER, corrections);
     }
 
     @Override
@@ -198,63 +198,4 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
             element.setProperty(TriangleProjectElement.GEOMETRY_PROPERTY, triangleGeometry);
     }
     
-    private class EditorCallback implements LayerTextEditor.Callback {
-
-        @Override
-        public void editingStopped(LayerTextEditor editor) {
-            Double value = (Double) editor.getEditorComponentValue();
-            int row = editor.getEditedRow();
-            int column = editor.getEditedColumn();
-            
-            if(value == null)
-                removeCorrection(row, column);
-            else
-                setCorrection(value, row, column);
-        }
-        
-        private void removeCorrection(int row, int column) {
-            LayerCriteria criteria = triangle.createCellCriteria(row, column);
-            Layer layer = triangle.getLayerAt(CORRECTION_LAYER);
-            triangle.setDatas(CORRECTION_LAYER, getFilteredDatas(layer, criteria));
-        }
-    
-        private void setCorrection(Double value, int row, int column) {
-            double v = getUncummulatedValue(value, row, column);
-            LayerCriteria criteria = triangle.createCellCriteria(row, column);
-            Layer layer = triangle.getLayerAt(CORRECTION_LAYER);
-            setCorrection(layer, criteria, v);
-        }
-        
-        private double getUncummulatedValue(double value, int row, int column) {
-            if(triangle.isCummulated() && !Double.isNaN(value)) {
-                Object prev = triangle.getValueAt(row, column-1);
-                double p = TriangleDoubleUtil.getTableValue(prev);
-                if(!Double.isNaN(p))
-                    value -= p;
-            }
-            return value;
-        }
-        
-        private void setCorrection(Layer layer, LayerCriteria criteria, double v) {
-            List<Data> datas = getFilteredDatas(layer, criteria);
-            datas.add(createCorrection(criteria, v));
-            triangle.setDatas(CORRECTION_LAYER, datas);
-        }
-        
-        private List<Data> getFilteredDatas(Layer layer, LayerCriteria criteria) {
-            List<Data> datas = layer.getDatas();
-            for(Iterator<Data> it=datas.iterator(); it.hasNext();) {
-                if(criteria.acceptsData(it.next()))
-                    it.remove();
-            }
-            return datas;
-        }
-        
-        private Data createCorrection(LayerCriteria criteria, double v) {
-            Date accident = criteria.getAccidentFrom();
-            Date development = criteria.getDevelopmentFrom();
-            Triangle t = element.getValue();
-            return new Data(t, accident, development, v);
-        }
-    }
 }

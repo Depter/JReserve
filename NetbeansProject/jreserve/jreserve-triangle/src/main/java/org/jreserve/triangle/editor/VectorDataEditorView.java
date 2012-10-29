@@ -1,6 +1,7 @@
 package org.jreserve.triangle.editor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.Action;
@@ -9,6 +10,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.triangle.VectorProjectElement;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
@@ -41,7 +43,7 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     public VectorDataEditorView(VectorProjectElement element) {
         this.element = element;
         super.addChangeListener(this);
-        super.triangle.setLayerEditor(new DoubleTextEditor(new EditorCallback()));
+        super.triangle.setEditableLayer(CORRECTION_LAYER);
         initGeometry();
         initLayers();
         startLoader();
@@ -67,9 +69,8 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     }
     
     private void initLayers() {
-        Vector vector = element.getValue();
-        triangle.addLayer(new DoubleLayer(vector, true));
-        triangle.addLayer(new DoubleLayer(vector.getDataType(), false));
+        triangle.addValueLayer(new ArrayList<Data<ProjectDataType, Double>>());
+        triangle.addValueLayer(new ArrayList<Data<Vector, Double>>());
     }
     
     private void startLoader() {
@@ -131,19 +132,19 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     @Override
     public void finnished(DataLoader loader) {
         try {
-            setCorrections(loader.getCorrections());
             setData(loader.getData());
+            setCorrections(loader.getCorrections());
         } catch (RuntimeException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
     
-    private void setCorrections(List<Data> corrections) {
-        triangle.setDatas(CORRECTION_LAYER, corrections);
+    private void setData(List<Data<ProjectDataType, Double>> datas) {
+        triangle.setValueLayer(VALUE_LAYER, datas);
     }
     
-    private void setData(List<Data> datas) {
-        triangle.setDatas(VALUE_LAYER, datas);
+    private void setCorrections(List<Data<Vector, Double>> corrections) {
+        triangle.setValueLayer(CORRECTION_LAYER, corrections);
     }
 
     @Override

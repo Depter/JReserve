@@ -1,12 +1,14 @@
 package org.jreserve.triangle.mvc.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -16,6 +18,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import org.jreserve.data.Data;
+import org.jreserve.persistence.PersistentObject;
 import org.jreserve.resources.ToolBarToggleButton;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.mvc.data.Layer;
@@ -53,7 +56,7 @@ public class TriangleWidget extends JPanel implements Serializable {
     private ToolBarToggleButton notCummulatedButton;
     private ActionHandler actionHandler = new ActionHandler();
     
-    private TriangleTable table;
+    private org.jreserve.triangle.mvc2.view.TriangleTable table;
     private JScrollPane scroll;
     
     public TriangleWidget() {
@@ -149,7 +152,7 @@ public class TriangleWidget extends JPanel implements Serializable {
     }
     
     private JScrollPane getTable() {
-        table = new TriangleTable();
+        table = new org.jreserve.triangle.mvc2.view.TriangleTable();
         
         table.setFillsViewportHeight(false);
         table.setIntercellSpacing(INTERNAL_SPACIN);
@@ -161,13 +164,13 @@ public class TriangleWidget extends JPanel implements Serializable {
         return scroll;
     }
     
-    public void setLayerRenderer(int layer, DefaultRenderer renderer) {
-        table.setLayerRenderer(layer, renderer);
-    }
-
-    public void setLayerEditor(LayerTextEditor editor) {
-        table.setLayerEditor(editor);
-    }
+//    public void setLayerRenderer(int layer, DefaultRenderer renderer) {
+//        table.setLayerRenderer(layer, renderer);
+//    }
+//
+//    public void setLayerEditor(LayerTextEditor editor) {
+//        table.setLayerEditor(editor);
+//    }
     
     public void setShowsToolbar(boolean showsToolBar) {
         toolBar.setVisible(showsToolBar);
@@ -199,49 +202,85 @@ public class TriangleWidget extends JPanel implements Serializable {
         notCummulatedButton.setSelected(!cummulated);
     }
     
-    public Layer getLayerAt(int position) {
-        return table.getLayer(position);
+    public <T extends PersistentObject> void addValueLayer(List<Data<T, Double>> datas) {
+        table.addValueLayer(escapeData(datas));
     }
     
-    public void addLayer(Layer layer) {
-        table.addLayer(layer);
+    private <T extends PersistentObject> List<Data<PersistentObject, Double>> escapeData(List<Data<T, Double>> datas) {
+        List<Data<PersistentObject, Double>> escaped = new ArrayList<Data<PersistentObject, Double>>(datas.size());
+        for(Data<T, Double> data : datas)
+            escaped.add((Data<PersistentObject, Double>) data);
+        return escaped;
     }
     
-    public void addLayer(int position, Layer layer) {
-        table.addLayer(position, layer);
+    public <T extends PersistentObject> void setValueLayer(int layer, List<Data<T, Double>> datas) {
+        List<Data<PersistentObject, Double>> escaped = escapeData(datas);
+        table.setValueLayer(layer, escaped);
     }
     
-    public void setLayer(int position, Layer layer) {
-        table.setLayer(position, layer);
+    public void setLayerBackground(int layer, Color color) {
+        table.setLayerBackground(layer, color);
     }
     
-    public void removeLayer(Layer layer) {
-        table.removeLayer(layer);
+    public void setLayerForeground(int layer, Color color) {
+        table.setLayerForeground(layer, color);
     }
     
-    public void removeLayer(int position) {
-        table.removeLayer(position);
+    public void setLayerColor(int layer, Color bg, Color fg) {
+        table.setLayerColor(layer, bg, fg);
     }
     
-    public List<Data> getDatas(int position) {
-        return table.getDatas(position);
-    }
-    
-    public void setDatas(int position, List<Data> data) {
-        table.setDatas(position, data);
+    public void setEditableLayer(int layer) {
+        table.setEditableLayer(layer);
     }
     
     public double[][] flatten() {
-        return table.flattenValues();
+        return table.flatten();
     }
     
-    public Object getValueAt(int row, int column) {
-        return table.getValueAt(row, column);
-    }
+//    public Layer getLayerAt(int position) {
+//        return table.getLayer(position);
+//    }
     
-    public LayerCriteria createCellCriteria(int row, int column) {
-        return table.createCellCriteria(row, column);
-    }
+//    public void addLayer(Layer layer) {
+//        table.addLayer(layer);
+//    }
+    
+//    public void addLayer(int position, Layer layer) {
+//        table.addLayer(position, layer);
+//    }
+    
+//    public void setLayer(int position, Layer layer) {
+//        table.setLayer(position, layer);
+//    }
+    
+//    public void removeLayer(Layer layer) {
+//        table.removeLayer(layer);
+//    }
+//    
+//    public void removeLayer(int position) {
+//        table.removeLayer(position);
+//    }
+//    
+//    public List<Data> getDatas(int position) {
+//        return table.getDatas(position);
+//    }
+//    
+//    public void setDatas(int position, List<Data> data) {
+//        table.setDatas(position, data);
+//    }
+//    
+//    public double[][] flatten() {
+//        return table.flattenValues();
+//    }
+//    
+//    public Object getValueAt(int row, int column) {
+//        return table.getValueAt(row, column);
+//    }
+//    
+//    public LayerCriteria createCellCriteria(int row, int column) {
+//        return table.createCellCriteria(row, column);
+//    }
     
     private class ResizeListener extends ComponentAdapter {
         @Override
@@ -271,9 +310,9 @@ public class TriangleWidget extends JPanel implements Serializable {
             } else if(command.equals(NOT_CUMMULATED_ACTION)) {
                 table.setCummulated(false);
             } else if(command.equals(CALENDAR_PERIOD_STRUCTURE_ACTION)) {
-                table.setModelType(TriangleModel.ModelType.CALENDAR);
+                table.setModelType(org.jreserve.triangle.mvc2.model.TriangleModel.ModelType.CALENDAR);
             } else if(command.equals(DEVELOPMENT_PERIOD_STRUCTURE_ACTION)) {
-                table.setModelType(TriangleModel.ModelType.DEVELOPMENT);
+                table.setModelType(org.jreserve.triangle.mvc2.model.TriangleModel.ModelType.DEVELOPMENT);
             }
         }
     }

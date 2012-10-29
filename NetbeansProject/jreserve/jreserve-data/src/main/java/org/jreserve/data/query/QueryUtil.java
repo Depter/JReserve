@@ -1,7 +1,7 @@
 package org.jreserve.data.query;
 
 import org.jreserve.data.entities.ClaimValue;
-import org.jreserve.data.entities.DataComment;
+import org.jreserve.data.DataComment;
 import org.jreserve.data.entities.DataCorrection;
 
 /**
