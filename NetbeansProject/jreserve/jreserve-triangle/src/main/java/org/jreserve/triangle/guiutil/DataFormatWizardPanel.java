@@ -8,8 +8,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.triangle.mvc.data.DoubleLayer;
-import org.jreserve.triangle.mvc.data.Layer;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
@@ -70,11 +68,6 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
                 first = date;
         }
         return first;
-    }
-
-    private Layer createLayer(ProjectDataType dt, List<Data<ProjectDataType, Double>> datas) {
-        DoubleLayer<ProjectDataType> layer = new DoubleLayer<ProjectDataType>(dt, datas);
-        return layer;
     }
     
     @Override
