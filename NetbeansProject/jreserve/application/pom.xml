@@ -122,6 +122,12 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-triangle-widget</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-locale-settings</artifactId>
             <version>${project.version}</version>
         </dependency>
