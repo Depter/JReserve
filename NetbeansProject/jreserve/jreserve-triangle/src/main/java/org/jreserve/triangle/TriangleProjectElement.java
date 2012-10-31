@@ -2,13 +2,17 @@ package org.jreserve.triangle;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
+import org.hibernate.Query;
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
+import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.triangle.editor.Editor;
 import org.jreserve.triangle.entities.Triangle;
+import org.jreserve.triangle.entities.TriangleCorrection;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.netbeans.api.actions.Openable;
 import org.openide.nodes.Node;
@@ -32,11 +36,14 @@ import org.openide.windows.TopComponent;
     "# {0} - name",
     "# {1} - old geometry",
     "# {2} - new geometry",
-    "LOG.TriangleProjectElement.GeometryChange=Geometry of triangle \"{0}\" changed {1} => {2}."
+    "LOG.TriangleProjectElement.GeometryChange=Geometry of triangle \"{0}\" changed {1} => {2}.",
+    "MSG.TriangleProjectElement.UndoRedo.Geometry=geometry change",
+    "MSG.TriangleProjectElement.UndoRedo.Correction=correction change"
 })
 public class TriangleProjectElement extends ProjectElement<Triangle> {
     
     public final static String GEOMETRY_PROPERTY = "TRIANGLE_GEOMETRY_PROPERTY";
+    public final static String CORRECTION_PROPERTY = "TRIANGLE_CORRECTION_PROPERTY";
     
     public TriangleProjectElement(Triangle triangle) {
         super(triangle);
@@ -55,6 +62,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         super.addToLookup(new TriangleOpenable());
         super.addToLookup(new RenameableProjectElement(this));
         super.addToLookup(new AuditableProjectElement(this));
+        super.addToLookup(new TriangleUndoRedo());
         new TriangleSavable();
     }
 
@@ -76,11 +84,14 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             getValue().setDescription((String) value);
         else if(GEOMETRY_PROPERTY.equals(property))
             getValue().setGeometry((TriangleGeometry) value);
+        else if(CORRECTION_PROPERTY.equals(property))
+            getValue().setCorrections((List<TriangleCorrection>) value);
         super.setProperty(property, value);
     }
     
     private class TriangleSavable extends PersistentSavable<Triangle> {
-
+        
+        
         public TriangleSavable() {
             super(TriangleProjectElement.this);
         }
@@ -91,22 +102,57 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             originalProperties.put(NAME_PROPERTY, triangle.getName());
             originalProperties.put(DESCRIPTION_PROPERTY, triangle.getDescription());
             originalProperties.put(GEOMETRY_PROPERTY, triangle.getGeometry());
-        }        
+            originalProperties.put(CORRECTION_PROPERTY, triangle.getCorrections());
+        }
         
         @Override
-        protected boolean isChanged(Object o1, Object o2) {
-            if(super.isChanged(o1, o2)) {
-                if((o1 instanceof TriangleGeometry) || (o2 instanceof TriangleGeometry))
-                    return isChanged((TriangleGeometry) o1, (TriangleGeometry) o2);
-                return true;
+        protected boolean isChanged(String property, Object o1, Object o2) {
+            if(GEOMETRY_PROPERTY.equals(property)) {
+                return isChanged((TriangleGeometry) o1, (TriangleGeometry) o2);
+            } else if(CORRECTION_PROPERTY.equals(property)) {
+                return isChanged((List<TriangleCorrection>) o1, (List<TriangleCorrection>) o2);
+            } else {
+                return super.isChanged(property, o1, o2);
             }
-            return false;
         }
         
         private boolean isChanged(TriangleGeometry g1, TriangleGeometry g2) {
             if(g1==null) return g2!=null;
             if(g2==null) return true;
             return !g1.isEqualGeometry(g2);
+        }
+        
+        private boolean isChanged(List<TriangleCorrection> c1, List<TriangleCorrection> c2) {
+            if(getSize(c1) != getSize(c2)) return true;
+            //if both size is 0, but one is empty aother is null => not changed
+            if(c1 == null || c2 == null) return false;
+            
+            for(TriangleCorrection c : c1)
+                if(!c2.contains(c))
+                    return true;
+            return false;
+        }
+        
+        private int getSize(List list) {
+            return list==null? 0 : list.size();
+        }
+
+        @Override
+        protected void saveEntity() {
+            //saveCorrections();
+            super.saveEntity();
+        }
+        
+        private void saveCorrections() {
+            deleteCorrections();
+            for(TriangleCorrection correction : element.getValue().getCorrections())
+                session.persist(correction);
+        }
+        
+        private void deleteCorrections() {
+            Query query = session.createQuery("delete from TriangleCorrection c where c.triangle.id = :triangleId");
+            query.setString("triangleId", element.getValue().getId());
+            query.executeUpdate();
         }
     }
     
@@ -151,6 +197,24 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
                     return;
             editor = null;
         }
+    }
+    
+    private class TriangleUndoRedo extends ProjectElementUndoRedo {
+        
+        private TriangleUndoRedo() {
+            super(TriangleProjectElement.this);
+        }
+
+        @Override
+        protected String getPropertyName(String property) {
+            if(GEOMETRY_PROPERTY.equals(property))
+                return Bundle.MSG_TriangleProjectElement_UndoRedo_Geometry();
+            else if(CORRECTION_PROPERTY.equals(property))
+                return Bundle.MSG_TriangleProjectElement_UndoRedo_Correction();
+            else
+                return super.getPropertyName(property);
+        }
+        
     }
     
 }

@@ -3,6 +3,8 @@ package org.jreserve.triangle.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.hibernate.envers.Audited;
+import org.jreserve.data.Data;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistentObject;
 
@@ -13,6 +15,7 @@ import org.jreserve.persistence.PersistentObject;
  */
 @EntityRegistration
 @Entity
+@Audited
 @IdClass(VectorCorrectionPk.class)
 @Table(name="VECTOR_CORRECTION", schema="JRESERVE")
 public class VectorCorrection implements Serializable {
@@ -66,6 +69,10 @@ public class VectorCorrection implements Serializable {
         this.correction = correction;
     }
     
+    public Data<Vector, Double> toData() {
+        return new Data<Vector, Double>(vector, accidentDate, accidentDate, correction);
+    }
+    
     @Override
     public boolean equals(Object o) {
         if(o instanceof VectorCorrection)
@@ -74,14 +81,12 @@ public class VectorCorrection implements Serializable {
     }
     
     private boolean equals(VectorCorrection o) {
-        return vector.equals(o.vector) &&
-               accidentDate.equals(o.accidentDate);
+        return accidentDate.equals(o.accidentDate);
     }
     
     @Override
     public int hashCode() {
-        int hash = 31 + vector.hashCode();
-        return 17 * hash + accidentDate.hashCode();
+        return 31 + accidentDate.hashCode();
     }
     
     @Override

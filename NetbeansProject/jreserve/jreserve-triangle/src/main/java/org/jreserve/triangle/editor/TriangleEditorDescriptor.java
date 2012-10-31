@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.VectorProjectElement;
-import org.jreserve.triangle.entities.AbstractDataStructure;
+import org.jreserve.triangle.entities.DataStructure;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.openide.util.HelpCtx;
@@ -42,12 +42,12 @@ class TriangleEditorDescriptor implements MultiViewDescription, Serializable {
         return descriptor;
     }
 
-    private ProjectElement<? extends AbstractDataStructure> element;
+    private ProjectElement<? extends DataStructure> element;
     private String name;
     private Image img;
     private String prefferedId;
     
-    TriangleEditorDescriptor(ProjectElement<? extends AbstractDataStructure> element) {
+    TriangleEditorDescriptor(ProjectElement<? extends DataStructure> element) {
         this.element = element;
     }
     

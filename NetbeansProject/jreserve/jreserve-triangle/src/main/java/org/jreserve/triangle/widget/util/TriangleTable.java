@@ -11,10 +11,11 @@ import javax.swing.table.TableCellRenderer;
 import org.jreserve.data.Data;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.widget.PopUpFactory;
+import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
 import org.jreserve.triangle.widget.data.TriangleCell;
 import org.jreserve.triangle.widget.model.TriangleModel;
 import org.jreserve.triangle.widget.model.TriangleModel.ModelType;
-import org.jreserve.triangle.widget.PopUpFactory;
 
 /**
  *
@@ -69,8 +70,6 @@ public class TriangleTable extends JTable {
     }
     
     private void setMouseListener() {
-        //for(MouseListener listener : getMouseListeners())
-        //    removeMouseListener(listener);
         addMouseListener(new MouseHandler());
     }
     
@@ -81,16 +80,13 @@ public class TriangleTable extends JTable {
     
     private void initModel() {
         TriangleModel newModel = type.createModel();
-        
-        for(List<Data<PersistentObject, Double>> datas : model.getValues())
-            newModel.addValues(datas);
-        newModel.addComments(model.getComments());
-        newModel.setCummulated(model.isCummulated());
-        newModel.setTriangleGeometry(model.getTriangleGeometry());
-        newModel.setEditableLayer(model.getEditableLayer());
-        
+        newModel.copyStateFrom(model);
         this.model = newModel;
         setModel(newModel);
+    }
+    
+    public void setFractionDigits(int digits) {
+        renderer.setFractionDigits(digits);
     }
     
     public ModelType getModelType() {
@@ -113,8 +109,12 @@ public class TriangleTable extends JTable {
         return model.isCummulated();
     }
     
-    public void setFractionDigits(int digits) {
-        renderer.setFractionDigits(digits);
+    public void addTriangleWidgetListener(TriangleWidgetListener listener) {
+        model.addTriangleWidgetListener(listener);
+    }
+    
+    public void removeTriangleWidgetListener(TriangleWidgetListener listener) {
+        model.removeTriangleWidgetListener(listener);
     }
     
     public void addValueLayer(List<Data<PersistentObject, Double>> datas) {
@@ -139,6 +139,10 @@ public class TriangleTable extends JTable {
     
     public void setEditableLayer(int layer) {
         model.setEditableLayer(layer);
+    }
+    
+    public <T extends PersistentObject> List<Data<T, Double>> getLayer(T owner, int layerIndex) {
+        return model.getLayer(owner, layerIndex);
     }
     
     public double[][] flatten() {
@@ -184,7 +188,7 @@ public class TriangleTable extends JTable {
         private double getCellValue(TriangleCell cell) {
             if(cell == null)
                 return Double.NaN;
-            Double value = cell.getValue();
+            Double value = cell.getDisplayValue();
             return value==null? Double.NaN : value;
         }
     }

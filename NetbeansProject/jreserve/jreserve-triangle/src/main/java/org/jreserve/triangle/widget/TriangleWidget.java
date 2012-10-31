@@ -21,7 +21,9 @@ import org.jreserve.data.Data;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.resources.ToolBarToggleButton;
 import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.widget.data.TriangleCell;
 import org.jreserve.triangle.widget.util.DecimalSpinner;
+import org.jreserve.triangle.widget.util.TriangleTable;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
@@ -54,7 +56,7 @@ public class TriangleWidget extends JPanel implements Serializable {
     private ToolBarToggleButton notCummulatedButton;
     private ActionHandler actionHandler = new ActionHandler();
     
-    private org.jreserve.triangle.widget.util.TriangleTable table;
+    private TriangleTable table;
     private JScrollPane scroll;
     
     public TriangleWidget() {
@@ -162,20 +164,20 @@ public class TriangleWidget extends JPanel implements Serializable {
         return scroll;
     }
     
-//    public void setLayerRenderer(int layer, DefaultRenderer renderer) {
-//        table.setLayerRenderer(layer, renderer);
-//    }
-//
-//    public void setLayerEditor(LayerTextEditor editor) {
-//        table.setLayerEditor(editor);
-//    }
-    
     public void setShowsToolbar(boolean showsToolBar) {
         toolBar.setVisible(showsToolBar);
     }
     
     public boolean getShowsToolbar() {
         return toolBar.isVisible();
+    }
+    
+    public void addTriangleWidgetListener(TriangleWidgetListener listener) {
+        table.addTriangleWidgetListener(listener);
+    }
+    
+    public void removeTriangleWidgetListener(TriangleWidgetListener listener) {
+        table.removeTriangleWidgetListener(listener);
     }
     
     public void setTriangleGeometry(TriangleGeometry geometry) {
@@ -232,53 +234,13 @@ public class TriangleWidget extends JPanel implements Serializable {
         table.setEditableLayer(layer);
     }
     
+    public <T extends PersistentObject> List<Data<T, Double>> getLayer(T owner, int layerIndex) {
+        return table.getLayer(owner, layerIndex);
+    }
+    
     public double[][] flatten() {
         return table.flatten();
     }
-    
-//    public Layer getLayerAt(int position) {
-//        return table.getLayer(position);
-//    }
-    
-//    public void addLayer(Layer layer) {
-//        table.addLayer(layer);
-//    }
-    
-//    public void addLayer(int position, Layer layer) {
-//        table.addLayer(position, layer);
-//    }
-    
-//    public void setLayer(int position, Layer layer) {
-//        table.setLayer(position, layer);
-//    }
-    
-//    public void removeLayer(Layer layer) {
-//        table.removeLayer(layer);
-//    }
-//    
-//    public void removeLayer(int position) {
-//        table.removeLayer(position);
-//    }
-//    
-//    public List<Data> getDatas(int position) {
-//        return table.getDatas(position);
-//    }
-//    
-//    public void setDatas(int position, List<Data> data) {
-//        table.setDatas(position, data);
-//    }
-//    
-//    public double[][] flatten() {
-//        return table.flattenValues();
-//    }
-//    
-//    public Object getValueAt(int row, int column) {
-//        return table.getValueAt(row, column);
-//    }
-//    
-//    public LayerCriteria createCellCriteria(int row, int column) {
-//        return table.createCellCriteria(row, column);
-//    }
     
     private class ResizeListener extends ComponentAdapter {
         @Override
@@ -327,5 +289,10 @@ public class TriangleWidget extends JPanel implements Serializable {
             TableModelEvent evt = new TableModelEvent(table.getModel());
             table.tableChanged(evt);
         }
+    }
+    
+    public static interface TriangleWidgetListener {
+        
+        public void cellEdited(TriangleCell cell, int layer, Double oldValue, Double newValue);
     }
 }

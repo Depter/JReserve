@@ -5,13 +5,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.hibernate.Session;
-import org.jreserve.data.Data;
-import org.jreserve.data.DataCriteria;
-import org.jreserve.data.DataSource;
-import org.jreserve.data.ProjectDataType;
+import org.jreserve.data.*;
+import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.Project;
-import org.jreserve.triangle.entities.AbstractDataStructure;
+import org.jreserve.triangle.entities.DataStructure;
+import org.jreserve.triangle.entities.Triangle;
+import org.jreserve.triangle.entities.Vector;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle.Messages;
@@ -25,7 +25,7 @@ import org.openide.util.RequestProcessor;
     "# {0} - name",
     "MSG.DataLoader.Loading=Loading data for \"{0}\"..."
 })
-public class DataLoader<T extends AbstractDataStructure> implements Runnable {
+public class DataLoader<T extends DataStructure> implements Runnable {
     
     private final static Logger logger = Logger.getLogger(DataLoader.class.getName());
 
@@ -42,10 +42,9 @@ public class DataLoader<T extends AbstractDataStructure> implements Runnable {
     private DataSource dataSource;
     
     private volatile List<Data<ProjectDataType, Double>> datas = null;
-    private volatile List<Data<T, Double>> corrections = null;
     
     private volatile RuntimeException ex = null;
-
+    
     DataLoader(T data, Callback<T> callback) {
         this.callback = callback;
         this.dataStructure = data;
@@ -87,7 +86,6 @@ public class DataLoader<T extends AbstractDataStructure> implements Runnable {
 
     private void loadData() {
         this.datas = dataSource.getClaimData(new DataCriteria<ProjectDataType>(dataType));
-        this.corrections = dataSource.getCorrections(new DataCriteria<T>(dataStructure));
     }
 
     private void closeSession() {
@@ -114,18 +112,12 @@ public class DataLoader<T extends AbstractDataStructure> implements Runnable {
             throw ex;
         return datas;
     }
-    
-    public List<Data<T, Double>> getCorrections() {
-        if(ex != null)
-            throw ex;
-        return corrections;
-    }
 
     void cancel() {
         task.cancel();
     }
     
-    public static interface Callback<T extends AbstractDataStructure> {
+    public static interface Callback<T extends DataStructure> {
         public void finnished(DataLoader<T> loader);
     }
 }

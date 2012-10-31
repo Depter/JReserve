@@ -110,7 +110,9 @@ public class TriangleCellRenderer extends DefaultTableCellRenderer {
     }
     
     protected Color getBgNotSelected(JTable table, TriangleCell cell, boolean isSelected, boolean hasFocus, int row, int column) {
-        return table.getBackground();
+        int layer = cell.getDisplayedLayer();
+        Color color = layerBgs.get(layer);
+        return color==null? table.getBackground() : color;
     }
     
     protected boolean isDropLocation(JTable table, int row, int column) {
@@ -155,7 +157,9 @@ public class TriangleCellRenderer extends DefaultTableCellRenderer {
     }
     
     protected Color getFgNotSelected(JTable table, TriangleCell cell, boolean isSelected, boolean hasFocus, int row, int column) {
-        return table.getForeground();
+        int layer = cell.getDisplayedLayer();
+        Color color = layerFgs.get(layer);
+        return color==null? table.getForeground() : color;
     }
     
     protected Font getFont(JTable table, TriangleCell cell, boolean isSelected, boolean hasFocus, int row, int column) {

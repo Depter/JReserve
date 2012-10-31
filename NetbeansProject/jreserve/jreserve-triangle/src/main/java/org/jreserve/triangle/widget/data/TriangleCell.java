@@ -1,6 +1,9 @@
 package org.jreserve.triangle.widget.data;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import org.jreserve.data.Data;
 import org.jreserve.data.DataComment;
 import org.jreserve.persistence.PersistentObject;
@@ -11,8 +14,6 @@ import org.jreserve.persistence.PersistentObject;
  * @version 1.0
  */
 public class TriangleCell {
-
-    private final static Comparator<DataComment> COMMENT_COMPARATOR = new CommentComparator();
     
     private Date accidentBegin;
     private Date accidentEnd;
@@ -20,7 +21,7 @@ public class TriangleCell {
     private Date developmentEnd;
     
     private List<Double> values = new ArrayList<Double>();
-    private Double displayValue = null;
+    private int displayLayer = -1;
     
     private List<DataComment> comments;
     
@@ -31,23 +32,77 @@ public class TriangleCell {
         this.developmentBegin = dBegin;
         this.developmentEnd = dEnd;
     }
-    
-    public void setValue(List<List<Data<PersistentObject, Double>>> datas) {
-        this.values.clear();
-        for(List<Data<PersistentObject, Double>> dataList : datas)
-            values.add(sum(dataList));
-        displayValue = getValue();
+
+    public Date getAccidentBegin() {
+        return accidentBegin;
+    }
+
+    public Date getAccidentEnd() {
+        return accidentEnd;
+    }
+
+    public Date getDevelopmentBegin() {
+        return developmentBegin;
+    }
+
+    public Date getDevelopmentEnd() {
+        return developmentEnd;
     }
     
-    private Double sum(List<Data<PersistentObject, Double>> datas) {
-        Double sum = null;
-        for(Data<? extends PersistentObject, Double> data : datas)
-            if(acceptsData(data))
-                sum = add(sum, data.getValue());
-        return sum;
+    public <T extends PersistentObject> Data<T, Double> getData(T owner, int layer) {
+        Double value = values.get(layer);
+        if(value == null)
+            return null;
+        return new Data<T, Double>(owner, accidentBegin, developmentBegin, value);
     }
     
-    private boolean acceptsData(Data data) {
+    public int getLayerCount() {
+        return values.size();
+    }
+    
+    public Double getValueAt(int layer) {
+        return values.get(layer);
+    }
+    
+    public void setValueAt(int layer, Double value) {
+        this.values.set(layer, value);
+        setDisplayLayer();
+    }
+    
+    private void setDisplayLayer() {
+        for(int i=0, size=values.size(); i<size; i++) 
+            if(values.get(i) != null)
+                displayLayer = i;
+    }
+    
+    public int getDisplayedLayer() {
+        return displayLayer;
+    }
+    
+    public Double getDisplayValue() {
+        if(displayLayer < 0)
+            return null;
+        return values.get(displayLayer);
+    }
+    
+    void clear() {
+        displayLayer = -1;
+        values.clear();
+    }
+    
+    void setValues(List<Double> values) {
+        clear();
+        if(values != null && !values.isEmpty()) {
+            this.values.addAll(values);
+            setDisplayLayer();
+        }
+    }
+    
+    List<Double> getValues() {
+        return new ArrayList<Double>(values);
+    }
+    
+    boolean acceptsData(Data data) {
         return accidentAccepts(data.getAccidentDate()) &&
                developmentAccepts(data.getDevelopmentDate());
     }
@@ -64,110 +119,7 @@ public class TriangleCell {
         return date.before(developmentEnd);
     }
     
-    private Double add(Double sum, Double v) {
-        if(v == null) { 
-            return sum;
-        } else if(sum == null || Double.isNaN(sum) || Double.isNaN(v)) {
-            return v;
-        } else {
-            return sum + v;
-        }
-    }
-    
-    public int getLayerCount() {
-        return values.size();
-    }
-    
-    public Double getValueAt(int layer) {
-        return values.get(layer);
-    }
-    
-    public int getTopValueLayer() {
-        int size = values.size();
-        for(int l=size-1; l>=0; l--)
-            if(values.get(l) != null)
-                return l;
-        return -1;
-    }
-    
-    public Double getValue() {
-        int size = values.size();
-        for(int l=size-1; l>=0; l--) {
-            Double value = values.get(l);
-            if(value != null)
-                return value;
-        }
-        return null;
-    }
-    
-    public Double getDisplayValue() {
-        return displayValue;
-    }
-    
-    public void setValue(int layer, Double value) {
-        this.values.set(layer, value);
-        displayValue = getValue();
-    }
-    
-    public void clearValue() {
-        this.values.clear();
-        displayValue = getValue();
-    }
-    
-    public void cummulate(TriangleCell previous) {
-        checkSize(previous);
-        cummulateWith(previous.values);
-        displayValue = add(displayValue, previous.displayValue);
-    }
-    
-    private void checkSize(TriangleCell previous) {
-        int mySize = values.size();
-        int prevSize = previous.values.size();
-        if(mySize != prevSize)
-            throwDifferentSizeException(mySize, prevSize);
-    }
-    
-    private void throwDifferentSizeException(int mySize, int prevSize) {
-        String msg = "Different value sizes! this=%d, previous=%d";
-        msg = String.format(msg, mySize, prevSize);
-        throw new IllegalArgumentException(msg);
-    }
-    
-    private void cummulateWith(List<Double> previous) {
-        for(int i=0, length=values.size(); i<length; i++) {
-            Double v = values.get(i);
-            Double p = previous.get(i);
-            values.set(i, add(v, p));
-        }
-    }
-    
-    public void deCummulate(TriangleCell previous) {
-        checkSize(previous);
-        deCummulateWith(previous.values);
-        displayValue = subtract(displayValue, previous.displayValue);
-    }
-    
-    private void deCummulateWith(List<Double> previous) {
-        for(int i=0, length=values.size(); i<length; i++) {
-            Double v = values.get(i);
-            Double p = previous.get(i);
-            values.set(i, subtract(v, p));
-        }
-    }
-    
-    private Double subtract(Double a, Double b) {
-        if(b == null) 
-            return a;
-        if(a == null)
-            return b==null? null : -b;
-        if(Double.isNaN(a) || Double.isNaN(b))
-            return Double.NaN;
-        return a - b;
-    }
-    
     public void addComment(Data<? extends PersistentObject, DataComment> data) {
-        if(data == null)
-            throw new NullPointerException("Comment data is null!");
         if(acceptsData(data))
             addComment(data.getValue());
     }
@@ -177,28 +129,11 @@ public class TriangleCell {
             throw new NullPointerException("Comment is null!");
         if(!comments.contains(comment)) {
             comments.add(comment);
-            Collections.sort(comments, COMMENT_COMPARATOR);
+            Collections.sort(comments, CommentComparator.INSTANCE);
         }
     }
     
     public void clearComments() {
         comments.clear();
-    }
-    
-    private static class CommentComparator implements Comparator<DataComment> {
-
-        @Override
-        public int compare(DataComment o1, DataComment o2) {
-            int dif = compare(o1.getCreationDate(), o2.getCreationDate());
-            if(dif != 0)
-                return dif;
-            return compare(o1.getUserName(), o2.getUserName());
-        }
-    
-        private <T extends Comparable<T>> int compare(T c1, T c2) {
-            if(c1==null)
-                return c2==null? 0 : 1;
-            return c2==null? -1 : c1.compareTo(c2);
-        }
     }
 }

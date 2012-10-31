@@ -96,7 +96,7 @@ import org.jreserve.triangle.widget.data.TriangleCell;
     
     private String getStringValue(Object value) {
         if(value instanceof TriangleCell)
-            return getStringValue(((TriangleCell) value).getValue());
+            return getStringValue(((TriangleCell) value).getDisplayValue());
         return null;
     }
     

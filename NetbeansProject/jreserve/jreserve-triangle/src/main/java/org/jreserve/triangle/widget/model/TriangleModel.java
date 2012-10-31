@@ -6,6 +6,8 @@ import org.jreserve.data.Data;
 import org.jreserve.data.DataComment;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.widget.TriangleWidget;
+import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
 import org.jreserve.triangle.widget.data.TriangleCell;
 
 /**
@@ -52,6 +54,16 @@ public interface TriangleModel extends TableModel {
     public void setEditableLayer(int layer);
     
     public int getEditableLayer();
+    
+    public void addTriangleWidgetListener(TriangleWidgetListener listener);
+    
+    public void removeTriangleWidgetListener(TriangleWidgetListener listener);
+    
+    public List<TriangleWidgetListener> getTriangleWidgetListeners();
+    
+    public void copyStateFrom(TriangleModel model);
+    
+    public <T extends PersistentObject> List<Data<T, Double>> getLayer(T owner, int layerIndex);
     
     public static enum ModelType {
         CALENDAR {

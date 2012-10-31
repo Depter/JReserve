@@ -14,11 +14,11 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.triangle.VectorProjectElement;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
+import org.jreserve.triangle.entities.VectorCorrection;
 import org.jreserve.triangle.entities.VectorGeometry;
 import org.jreserve.triangle.guiutil.VectorFormatVisualPanel;
-import org.jreserve.triangle.mvc.data.DoubleLayer;
-import org.jreserve.triangle.mvc.view.DoubleTextEditor;
-import org.jreserve.triangle.mvc.view.LayerTextEditor;
+import org.jreserve.triangle.widget.TriangleWidget;
+import org.jreserve.triangle.widget.data.TriangleCell;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -30,7 +30,7 @@ import org.openide.util.Lookup;
  *
  * @author Peter Decsi
  */
-public class VectorDataEditorView extends VectorFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, DataLoader.Callback<Vector> {
+public class VectorDataEditorView extends VectorFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, TriangleWidget.TriangleWidgetListener, DataLoader.Callback<Vector> {
     
     private final static int CORRECTION_LAYER = 0;
     private final static int VALUE_LAYER = 1;
@@ -44,6 +44,7 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
         this.element = element;
         super.addChangeListener(this);
         super.triangle.setEditableLayer(CORRECTION_LAYER);
+        super.triangle.addTriangleWidgetListener(this);
         initGeometry();
         initLayers();
         startLoader();
@@ -133,10 +134,17 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     public void finnished(DataLoader loader) {
         try {
             setData(loader.getData());
-            setCorrections(loader.getCorrections());
+            setCorrections(getCorrectionData());
         } catch (RuntimeException ex) {
             Exceptions.printStackTrace(ex);
         }
+    }
+        
+    private List<Data<Vector, Double>> getCorrectionData() {
+        List<Data<Vector, Double>> datas = new ArrayList<Data<Vector, Double>>();
+        for(VectorCorrection tc : element.getValue().getCorrections())
+            datas.add(tc.toData());
+        return datas;
     }
     
     private void setData(List<Data<ProjectDataType, Double>> datas) {
@@ -167,11 +175,36 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
         int months = geometry.getMonthInAccident();
         return new VectorGeometry(start, periods, months);
     }
+
+    @Override
+    public void cellEdited(TriangleCell cell, int layer, Double oldValue, Double newValue) {
+        if(layer==CORRECTION_LAYER && !equals(oldValue, newValue))
+            updateCorrections();
+    }
     
-    private class EditorCallback implements LayerTextEditor.Callback {
-        @Override
-        public void editingStopped(LayerTextEditor editor) {
-            
-        }    
+    private boolean equals(Double d1, Double d2) {
+        if(d1 == d2) return true;
+        if(d1 == null) return d2 != null;
+        if(d2 == null) return false;
+        return d1.equals(d2);
+    }
+    
+    private void updateCorrections() {
+        List<Data<Vector, Double>> datas = triangle.getLayer(element.getValue(), CORRECTION_LAYER);
+        List<VectorCorrection> corrections = getCorrections(datas);
+        element.setProperty(VectorProjectElement.CORRECTION_PROPERTY, corrections);
+    }
+    
+    private List<VectorCorrection> getCorrections(List<Data<Vector, Double>> datas) {
+        List<VectorCorrection> corrections = new ArrayList<VectorCorrection>(datas.size());
+        for(Data<Vector, Double> data : datas)
+            corrections.add(getCorrection(data));
+        return corrections;
+    }
+    
+    private VectorCorrection getCorrection(Data<Vector, Double> data) {
+        VectorCorrection tc = new VectorCorrection(data.getOwner(), data.getAccidentDate());
+        tc.setCorrection(data.getValue());
+        return tc;
     }
 }

@@ -3,6 +3,8 @@ package org.jreserve.triangle.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.hibernate.envers.Audited;
+import org.jreserve.data.Data;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistentObject;
 
@@ -13,6 +15,7 @@ import org.jreserve.persistence.PersistentObject;
  */
 @EntityRegistration
 @Entity
+@Audited
 @IdClass(TriangleCorrectionPk.class)
 @Table(name="TRIANGLE_CORRECTION", schema="JRESERVE")
 public class TriangleCorrection implements Serializable {
@@ -21,7 +24,7 @@ public class TriangleCorrection implements Serializable {
          "End date '%tF' is before start date '%tF'!";
     
     @Id
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade=CascadeType.ALL, optional=false)
     @JoinColumn(name="TRIANGLE_ID", referencedColumnName="ID", columnDefinition=PersistentObject.COLUMN_DEF)
     private Triangle triangle;
     
@@ -44,7 +47,7 @@ public class TriangleCorrection implements Serializable {
     public TriangleCorrection(Triangle triangle, Date accidentDate, Date developmentDate) {
         initTriangle(triangle);
         initAccidentDate(accidentDate);
-        initDevelopmentDate(accidentDate);
+        initDevelopmentDate(developmentDate);
     }
     
     private void initTriangle(Triangle triangle) {
@@ -63,7 +66,7 @@ public class TriangleCorrection implements Serializable {
         if(date == null)
             throw new NullPointerException("Development date is null!");
         checkAfterStart(date);
-        this.accidentDate = date;
+        this.developmentDate = date;
     }
     
     private void checkAfterStart(Date end) {
@@ -93,6 +96,10 @@ public class TriangleCorrection implements Serializable {
         this.correction = correction;
     }
     
+    public Data<Triangle, Double> toData() {
+        return new Data<Triangle, Double>(triangle, accidentDate, developmentDate, correction);
+    }
+    
     @Override
     public boolean equals(Object o) {
         if(o instanceof TriangleCorrection)
@@ -101,15 +108,13 @@ public class TriangleCorrection implements Serializable {
     }
     
     private boolean equals(TriangleCorrection o) {
-        return triangle.equals(o.triangle) &&
-               accidentDate.equals(o.accidentDate) &&
+        return accidentDate.equals(o.accidentDate) &&
                developmentDate.equals(o.developmentDate);
     }
     
     @Override
     public int hashCode() {
-        int hash = 31 + triangle.hashCode();
-        hash = 17 * hash + accidentDate.hashCode();
+        int hash = 31 + accidentDate.hashCode();
         return 17 * hash + developmentDate.hashCode();
     }
     

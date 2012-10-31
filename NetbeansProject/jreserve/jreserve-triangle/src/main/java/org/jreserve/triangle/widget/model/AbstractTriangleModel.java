@@ -7,7 +7,10 @@ import org.jreserve.data.Data;
 import org.jreserve.data.DataComment;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.widget.TriangleWidget;
+import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
 import org.jreserve.triangle.widget.data.TriangleCell;
+import org.jreserve.triangle.widget.data.TriangleCellUtil;
 
 /**
  *
@@ -24,6 +27,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     
     protected List<List<Data<PersistentObject, Double>>> values = new ArrayList<List<Data<PersistentObject, Double>>>();
     protected List<Data<PersistentObject, DataComment>> comments = new ArrayList<Data<PersistentObject, DataComment>>();
+    private List<TriangleWidgetListener> listeners = new ArrayList<TriangleWidgetListener>();
     
     private TriangleCell[][] cells = new TriangleCell[0][];
     
@@ -45,9 +49,9 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
             this.cummulated = isCummulated;
             
             if(cummulated)
-                cummulate();
+                TriangleCellUtil.cummulate(cells);
             else
-                deCummulate();
+                TriangleCellUtil.deCummulate(cells);
         }
         fireTableDataChanged();
     }
@@ -94,44 +98,9 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     protected abstract TriangleCell[][] createCells();
 
     private void fillCellValues() {
-        for(TriangleCell[] row : cells)
-            setCellValues(row);
+        TriangleCellUtil.setCellValues(cells, values);
         if(cummulated)
-            cummulate();
-    }
-    
-    private void setCellValues(TriangleCell[] row) {
-        for(TriangleCell cell : row)
-            if(cell != null)
-                cell.setValue(values);
-    }
-    
-    private void cummulate() {
-        for(TriangleCell[] row : cells)
-            cummulateRow(row);
-    }
-    
-    private void cummulateRow(TriangleCell[] row) {
-        TriangleCell prev = null;
-        for(TriangleCell cell : row) {
-            if(cell != null && prev != null)
-                cell.cummulate(prev);
-            prev = cell;
-        }
-    }
-    
-    private void deCummulate() {
-        for(TriangleCell[] row : cells)
-            deCummulateRow(row);
-    }
-    
-    private void deCummulateRow(TriangleCell[] row) {
-        for(int i=row.length-1; i>0; i--) {
-            TriangleCell cell = row[i];
-            TriangleCell prev = row[i-1];
-            if(cell != null && prev != null)
-                cell.deCummulate(prev);
-        }
+            TriangleCellUtil.cummulate(cells);
     }
     
     private void fillCellComments() {
@@ -158,16 +127,8 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     }
     
     private void refillCellValues() {
-        clearCellValues();
         fillCellValues();
         fireTableDataChanged();
-    }
-    
-    private void clearCellValues() {
-        for(TriangleCell[] row : cells)
-            for(TriangleCell cell : row)
-                if(cell != null)
-                    cell.clearValue();
     }
     
     private void checkDatas(List datas) {
@@ -320,7 +281,62 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
             return;
         TriangleCell cell = getCellAt(row, column - 1);
         if(cell != null && cell.getLayerCount() > editableLayer)
-            cell.setValue(editableLayer, (Double) value);
-        fireTableCellUpdated(row, column);
-    }        
+            editValue(cell, (Double) value);
+    }
+    
+    private void editValue(TriangleCell cell, Double value) {
+        Double old = cell.getValueAt(editableLayer);
+        cell.setValueAt(editableLayer, value);
+        fireTableCellUpdated(editableLayer, editableLayer);
+        fireEdited(cell, old, value);
+    }
+    
+    private void fireEdited(TriangleCell cell, Double old, Double current) {
+        for(TriangleWidgetListener l : new ArrayList<TriangleWidgetListener>(listeners))
+            l.cellEdited(cell, editableLayer, old, current);
+    }
+    
+    @Override
+    public void addTriangleWidgetListener(TriangleWidgetListener listener) {
+        if(!listeners.contains(listener))
+            listeners.add(listener);
+    }
+    
+    @Override
+    public void removeTriangleWidgetListener(TriangleWidget.TriangleWidgetListener listener) {
+        listeners.remove(listener);
+    }
+    
+    @Override
+    public List<TriangleWidgetListener> getTriangleWidgetListeners() {
+        return new ArrayList<TriangleWidgetListener>(listeners);
+    }
+    
+    @Override
+    public void copyStateFrom(TriangleModel model) {
+        for(List<Data<PersistentObject, Double>> datas : model.getValues())
+            addValues(datas);
+        addComments(model.getComments());
+        setCummulated(model.isCummulated());
+        setTriangleGeometry(model.getTriangleGeometry());
+        setEditableLayer(model.getEditableLayer());
+        
+        listeners.clear();
+        listeners.addAll(model.getTriangleWidgetListeners());
+    }
+    
+    public <T extends PersistentObject> List<Data<T, Double>> getLayer(T owner, int layerIndex) {
+        List<Data<T, Double>> layer = new ArrayList<Data<T, Double>>();
+        for(TriangleCell[] row : cells)
+            for(TriangleCell cell : row)
+                addData(owner, layer, layerIndex, cell);
+        return layer;
+    }
+    
+    private <T extends PersistentObject> void addData(T owner, List<Data<T, Double>> layer, int layerIndex, TriangleCell cell) {
+        if(cell == null) return;
+        Data<T, Double> data = cell.getData(owner, layerIndex);
+        if(data != null)
+            layer.add(data);
+    }
 }

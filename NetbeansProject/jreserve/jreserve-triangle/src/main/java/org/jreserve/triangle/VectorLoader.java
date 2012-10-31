@@ -21,7 +21,7 @@ import org.jreserve.triangle.entities.Vector;
 public class VectorLoader extends AbstractProjectElementFactory<Vector> {
 
     private final static String QUERY = 
-          "SELECT v FROM Vector v WHERE v.project.id = :projectId";
+          "SELECT v FROM Vector v WHERE v.meta.project.id = :projectId";
     
     private final static Comparator<Vector> COMPARATOR = new Comparator<Vector>() {
         @Override

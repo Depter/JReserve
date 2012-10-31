@@ -10,18 +10,18 @@ import java.util.Date;
  */
 public class TriangleCorrectionPk implements Serializable {
 
-    private long triangle;
+    private String triangle;
     private Date accidentDate;
     private Date developmentDate;
     
     protected TriangleCorrectionPk() {
     }
 
-    public long getTriangle() {
+    public String getTriangle() {
         return triangle;
     }
 
-    public void setTriangle(long triangle) {
+    public void setTriangle(String triangle) {
         this.triangle = triangle;
     }
 
@@ -56,7 +56,7 @@ public class TriangleCorrectionPk implements Serializable {
     
     @Override
     public int hashCode() {
-        int hash = 31 + (int) triangle;
+        int hash = 31 + triangle.hashCode();
         hash = 17 * hash + accidentDate.hashCode();
         return 17 * hash + developmentDate.hashCode();
     }

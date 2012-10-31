@@ -12,7 +12,7 @@ import org.hibernate.envers.NotAudited;
  */
 @Audited
 @Entity
-@Inheritance(strategy= InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class AbstractPersistentObject implements PersistentObject, Serializable {
 
     public final static int ID_LENGTH = 36;

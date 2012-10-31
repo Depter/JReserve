@@ -61,10 +61,10 @@ public abstract class AbstractProjectElementSavable<T> extends AbstractSavable i
     protected boolean isChanged(String property) {
         Object original = originalProperties.get(property);
         Object current = element.getProperty(property);
-        return isChanged(original, current);
+        return isChanged(property, original, current);
     }
 
-    protected boolean isChanged(Object o1, Object o2) {
+    protected boolean isChanged(String property, Object o1, Object o2) {
         if(o1 == null)
             return !(o2 == null);
         return !o1.equals(o2);
@@ -94,9 +94,16 @@ public abstract class AbstractProjectElementSavable<T> extends AbstractSavable i
         saveElement();
         initOriginalProperties();
         unregisterSavable();
+        clearUndoRedo();
     }
     
     protected abstract void saveElement() throws IOException;
+    
+    private void clearUndoRedo() {
+        ProjectElementUndoRedo ur = element.getLookup().lookup(ProjectElementUndoRedo.class);
+        if(ur != null)
+            ur.clear();
+    }
     
     @Override
     protected String findDisplayName() {
@@ -136,5 +143,10 @@ public abstract class AbstractProjectElementSavable<T> extends AbstractSavable i
     public int hashCode() {
         Object value = element.getValue();
         return value==null? 0 : value.hashCode();
+    }
+    
+    public void undo() {
+        for(String property : originalProperties.keySet())
+            element.setProperty(property, originalProperties.get(property));
     }
 }

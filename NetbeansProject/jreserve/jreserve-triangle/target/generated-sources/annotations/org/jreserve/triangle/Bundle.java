@@ -72,5 +72,19 @@ class Bundle {
     static String LOG_VectorProjectElement_NameChange(Object old_name, Object new_name) {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LOG.VectorProjectElement.NameChange", old_name, new_name);
     }
+    /**
+     * @return <i>correction change</i>
+     * @see TriangleProjectElement
+     */
+    static String MSG_TriangleProjectElement_UndoRedo_Correction() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleProjectElement.UndoRedo.Correction");
+    }
+    /**
+     * @return <i>geometry change</i>
+     * @see TriangleProjectElement
+     */
+    static String MSG_TriangleProjectElement_UndoRedo_Geometry() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleProjectElement.UndoRedo.Geometry");
+    }
     private void Bundle() {}
 }

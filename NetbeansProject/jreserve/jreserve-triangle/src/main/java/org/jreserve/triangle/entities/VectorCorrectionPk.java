@@ -10,17 +10,17 @@ import java.util.Date;
  */
 public class VectorCorrectionPk implements Serializable {
 
-    private long vector;
+    private String vector;
     private Date accidentDate;
     
     protected VectorCorrectionPk() {
     }
 
-    public long getVector() {
+    public String getVector() {
         return vector;
     }
 
-    public void setVector(long vectorId) {
+    public void setVector(String vectorId) {
         this.vector = vectorId;
     }
 
@@ -46,7 +46,7 @@ public class VectorCorrectionPk implements Serializable {
     
     @Override
     public int hashCode() {
-        int hash = 31 + (int) vector;
+        int hash = 31 + vector.hashCode();
         return 17 * hash + accidentDate.hashCode();
     }
     

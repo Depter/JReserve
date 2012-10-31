@@ -93,11 +93,11 @@ public class AbstractProjectElementSavableTest {
     
     @Test
     public void testChanged_O1O2() {
-        assertFalse(savable.isChanged("bela", "bela"));
-        assertFalse(savable.isChanged(null, null));
-        assertTrue(savable.isChanged("bela", null));
-        assertTrue(savable.isChanged(null, "bela"));
-        assertTrue(savable.isChanged(new Object(), new Object()));
+        assertFalse(savable.isChanged(ProjectElement.NAME_PROPERTY, "bela", "bela"));
+        assertFalse(savable.isChanged(ProjectElement.NAME_PROPERTY, null, null));
+        assertTrue(savable.isChanged(ProjectElement.NAME_PROPERTY, "bela", null));
+        assertTrue(savable.isChanged(ProjectElement.NAME_PROPERTY, null, "bela"));
+        assertTrue(savable.isChanged(ProjectElement.NAME_PROPERTY, new Object(), new Object()));
     }
     
     @Test

@@ -10,8 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.data.container.ProjectDataContainer;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.triangle.TriangleProjectElement;
-import org.jreserve.triangle.entities.AbstractDataStructure;
+import org.jreserve.triangle.entities.DataStructure;
 import org.netbeans.api.actions.Savable;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -30,7 +29,7 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     
     private final static String ERR_IMG = "org/netbeans/modules/dialogs/error.gif";
 
-    private ProjectElement<? extends AbstractDataStructure> element;
+    private ProjectElement<? extends DataStructure> element;
     private JToolBar toolBar = new JToolBar();
     private MultiViewElementCallback callBack;
     private InputValidator validator = new InputValidator();
@@ -38,7 +37,7 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
     
     private Result<Savable> savableResult;
     
-    public TriangleEditorView(ProjectElement<? extends AbstractDataStructure> element) {
+    public TriangleEditorView(ProjectElement<? extends DataStructure> element) {
         this.element = element;
         initComponents();
         savableResult = element.getLookup().lookupResult(Savable.class);
@@ -112,7 +111,7 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
 
         descriptionText.setColumns(20);
         descriptionText.setRows(5);
-        descriptionText.setText(element.getValue().getDescription());
+        descriptionText.setText((String) element.getProperty(ProjectElement.DESCRIPTION_PROPERTY));
         descriptionText.getDocument().addDocumentListener(this);
         descriptionScroll.setViewportView(descriptionText);
 
@@ -180,7 +179,8 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
 
     @Override
     public UndoRedo getUndoRedo() {
-        return UndoRedo.NONE;
+        UndoRedo ur = element.getLookup().lookup(UndoRedo.class);
+        return ur!=null? ur : UndoRedo.NONE;
     }
 
     @Override
@@ -190,6 +190,7 @@ public class TriangleEditorView extends javax.swing.JPanel implements MultiViewE
 
     @Override
     public CloseOperationState canCloseElement() {
+        
         return CloseOperationState.STATE_OK;
     }
 

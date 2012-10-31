@@ -19,7 +19,7 @@
     <Component class="javax.swing.JLabel" name="fromLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/jreserve/triangle/guiutil/Bundle.properties" key="LBL.AxisGeometryPanel.Begin" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/jreserve/triangle/widget/Bundle.properties" key="LBL.AxisGeometryPanel.Begin" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Constraints>
@@ -31,7 +31,7 @@
     <Component class="javax.swing.JLabel" name="toLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/jreserve/triangle/guiutil/Bundle.properties" key="LBL.AxisGeometryPanel.Periods" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/jreserve/triangle/widget/Bundle.properties" key="LBL.AxisGeometryPanel.Periods" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Constraints>
@@ -43,7 +43,7 @@
     <Component class="javax.swing.JLabel" name="stepLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/jreserve/triangle/guiutil/Bundle.properties" key="LBL.AxisGeometryPanel.Steps" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/jreserve/triangle/widget/Bundle.properties" key="LBL.AxisGeometryPanel.Steps" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Constraints>
