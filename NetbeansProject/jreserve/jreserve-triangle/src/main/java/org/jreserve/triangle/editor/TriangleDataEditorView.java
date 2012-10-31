@@ -1,6 +1,8 @@
 package org.jreserve.triangle.editor;
 
 import java.awt.Color;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,13 +27,14 @@ import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.WeakListeners;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleDataEditorView extends TriangleFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, TriangleWidgetListener, DataLoader.Callback<Triangle> {
+public class TriangleDataEditorView extends TriangleFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, PropertyChangeListener, TriangleWidgetListener, DataLoader.Callback<Triangle> {
     
     private final static int VALUE_LAYER = 0;
     private final static int CORRECTION_LAYER = 1;
@@ -44,11 +47,10 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
     
     public TriangleDataEditorView(TriangleProjectElement element) {
         this.element = element;
-        super.addChangeListener(this);
         super.triangle.setEditableLayer(CORRECTION_LAYER);
-        super.triangle.addTriangleWidgetListener(this);
         initGeometry();
         initLayers();
+        addListeners();
         startLoader();
     }
     
@@ -114,6 +116,12 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
         triangle.addValueLayer(new ArrayList<Data<ProjectDataType, Double>>());
         triangle.addValueLayer(new ArrayList<Data<Triangle, Double>>());
         triangle.setLayerBackground(CORRECTION_LAYER, CORRECTION_BG);
+    }
+    
+    private void addListeners() {
+        triangle.addTriangleWidgetListener(this);
+        super.addChangeListener(this);
+        element.addPropertyChangeListener(WeakListeners.propertyChange(this, element));
     }
     
     private void startLoader() {
@@ -234,5 +242,10 @@ public class TriangleDataEditorView extends TriangleFormatVisualPanel implements
         TriangleCorrection tc = new TriangleCorrection(data.getOwner(), data.getAccidentDate(), data.getDevelopmentDate());
         tc.setCorrection(data.getValue());
         return tc;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

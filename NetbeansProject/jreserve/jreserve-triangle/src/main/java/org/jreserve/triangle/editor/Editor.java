@@ -29,8 +29,9 @@ public class Editor {
     }
     
     private static TopComponent createTopComponent(MultiViewDescription[] desc, String name) {
-        CloseHandler handler = new CloseHandler();
-        TopComponent tc = MultiViewFactory.createMultiView(desc, desc[0], handler);
+        //CloseHandler handler = new CloseHandler();
+        //TopComponent tc = MultiViewFactory.createMultiView(desc, desc[0], handler);
+        TopComponent tc = MultiViewFactory.createMultiView(desc, desc[0]);
         tc.setHtmlDisplayName("<html>"+name+"</html>");
         return tc;
     }

@@ -206,6 +206,18 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         }
 
         @Override
+        protected boolean isChange(PropertyChangeEvent evt) {
+            if(GEOMETRY_PROPERTY.equals(evt.getPropertyName()))
+                return isChnage((TriangleGeometry) evt.getOldValue(), (TriangleGeometry) evt.getNewValue());
+            return super.isChange(evt);
+        }
+        
+        private boolean isChnage(TriangleGeometry g1, TriangleGeometry g2) {
+            if(g1 == null) return g2 != null;
+            return !g1.isEqualGeometry(g2);
+        }
+        
+        @Override
         protected String getPropertyName(String property) {
             if(GEOMETRY_PROPERTY.equals(property))
                 return Bundle.MSG_TriangleProjectElement_UndoRedo_Geometry();

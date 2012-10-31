@@ -40,8 +40,15 @@ public class ProjectElementUndoRedo implements PropertyChangeListener, UndoRedo 
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(!myChange)
+        if(!myChange && isChange(evt))
             addChange(evt);
+    }
+    
+    protected boolean isChange(PropertyChangeEvent evt) {
+        Object o1 = evt.getOldValue();
+        Object o2 = evt.getNewValue();
+        if(o1==null) return o2 != null;
+        return !o1.equals(o2);
     }
     
     private void addChange(PropertyChangeEvent evt) {
@@ -116,11 +123,12 @@ public class ProjectElementUndoRedo implements PropertyChangeListener, UndoRedo 
 
     @Override
     public String getUndoPresentationName() {
-        if(eventIndex < 0)
-            return null;
-        Event evt = events.get(eventIndex);
-        String propName = getPropertyName(evt.property);
-        return Bundle.MSG_ProjectElementUndoRedo_Undo(propName);
+        return "";
+//        if(eventIndex < 0)
+//            return null;
+//        Event evt = events.get(eventIndex);
+//        String propName = getPropertyName(evt.property);
+//        return Bundle.MSG_ProjectElementUndoRedo_Undo(propName);
     }
     
     protected String getPropertyName(String property) {
@@ -133,11 +141,12 @@ public class ProjectElementUndoRedo implements PropertyChangeListener, UndoRedo 
 
     @Override
     public String getRedoPresentationName() {
-        if(eventIndex < 0)
-            return null;
-        Event evt = events.get(eventIndex);
-        String propName = getPropertyName(evt.property);
-        return Bundle.MSG_ProjectElementUndoRedo_Redo(propName);
+        return "";
+//        if(eventIndex < 0)
+//            return null;
+//        Event evt = events.get(eventIndex);
+//        String propName = getPropertyName(evt.property);
+//        return Bundle.MSG_ProjectElementUndoRedo_Redo(propName);
     }
 
     public void clear() {
