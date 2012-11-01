@@ -16,7 +16,7 @@ import org.jreserve.persistence.PersistenceUtil;
 @EntityRegistration
 @Entity
 @Table(name="VECTOR_COMMENT", schema="JRESERVE")
-public class VectorComment extends AbstractPersistentObject {
+public class VectorComment extends AbstractPersistentObject implements Comment {
     private final static long serialVersionUID = 1L;
     
     private final static int NAME_SIZE = 64;
@@ -78,6 +78,7 @@ public class VectorComment extends AbstractPersistentObject {
         return vector;
     }
     
+    @Override
     public String getUserName() {
         return userName;
     }
@@ -86,10 +87,12 @@ public class VectorComment extends AbstractPersistentObject {
         return accidentDate;
     }
 
+    @Override
     public Date getCreationDate() {
         return creationDate;
     }
 
+    @Override
     public String getCommentText() {
         return commentText;
     }

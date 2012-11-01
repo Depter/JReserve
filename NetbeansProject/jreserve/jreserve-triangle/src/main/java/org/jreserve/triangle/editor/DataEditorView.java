@@ -21,6 +21,8 @@ import org.openide.awt.UndoRedo;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.WeakListeners;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -41,6 +43,7 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
     
     private boolean userChanging = true;
     private PropertyChangeListener elementListener;
+    private Lookup lookup;
     
     DataEditorView(ProjectElement<T> element) {
         this.element = element;
@@ -51,6 +54,7 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
         addListeners();
         userChanging = true;
         startLoader();
+        lookup = new ProxyLookup(element.getLookup(), triangle.getLookup());
     }
     
     private void initComponents() {
@@ -112,7 +116,6 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
         geometrySetting.addPropertyChangeListener(new GeometryListener());
         triangle.addTriangleWidgetListener(new TriangleListener());
         
-        //elementListener = WeakListeners.propertyChange(new ElementListener(), element);
         elementListener = new ElementListener();
         element.addPropertyChangeListener(elementListener);
     }
@@ -125,7 +128,7 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
     
     @Override
     public Lookup getLookup() {
-        return element.getLookup();
+        return lookup;
     }
     
     @Override

@@ -25,6 +25,7 @@ import org.jreserve.triangle.widget.data.TriangleCell;
 import org.jreserve.triangle.widget.util.DecimalSpinner;
 import org.jreserve.triangle.widget.util.TriangleTable;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -240,6 +241,10 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     public double[][] flatten() {
         return table.flatten();
+    }
+
+    public Lookup getLookup() {
+        return table.getLookup();
     }
     
     private class ResizeListener extends ComponentAdapter {

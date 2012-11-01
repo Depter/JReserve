@@ -3,14 +3,20 @@ package org.jreserve.triangle.widget.util;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Polygon;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import org.jreserve.localesettings.util.DoubleRenderer;
+import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.widget.data.TriangleCell;
 
 /**
@@ -18,10 +24,12 @@ import org.jreserve.triangle.widget.data.TriangleCell;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleCellRenderer extends DefaultTableCellRenderer {
+public class TriangleCellRenderer extends JLabel implements TableCellRenderer {
 
     private final static Border EMPTY_BORDER = BorderFactory.createEmptyBorder(1, 1, 1, 1);
-    
+    private final static Color COLOR_REMARK = Color.RED;
+    private final static int REMARK_SIZE = 6;
+
     private Map<Integer, Color> layerBgs = new HashMap<Integer, Color>();
     private Map<Integer, Color> layerFgs = new HashMap<Integer, Color>();
     
@@ -35,8 +43,10 @@ public class TriangleCellRenderer extends DefaultTableCellRenderer {
     protected Border focusedNotSelected =  UIManager.getBorder("Table.focusCellHighlightBorder");
     protected Border selected = createCellBorder();
     protected Border notSelected = selected;
+    protected boolean hasRemark;
     
     public TriangleCellRenderer() {
+        setOpaque(true);
     }
     
     public void setFractionDigits(int digits) {
@@ -58,6 +68,7 @@ public class TriangleCellRenderer extends DefaultTableCellRenderer {
         setBackground(getEmptyBackground(table));
         super.setBorder(EMPTY_BORDER);
         super.setText(null);
+        hasRemark = false;
     }
     
     private Color getEmptyBackground(JTable table) {
@@ -75,6 +86,7 @@ public class TriangleCellRenderer extends DefaultTableCellRenderer {
         super.setFont(getFont(table, cell, isSelected, hasFocus, row, column));
         super.setBorder(getBorder(table, cell, isSelected, hasFocus, row, column));
         super.setText(getValue(cell));
+        createToolTip(cell);
     }
     
     protected Color getBackground(JTable table, TriangleCell cell, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -234,4 +246,64 @@ public class TriangleCellRenderer extends DefaultTableCellRenderer {
         setLayerForeground(layer, fg);
     }
     
+    private void createToolTip(TriangleCell cell) {
+        Comment[] comments = {new DummyComment(), new DummyComment()};
+        java.util.List<Comment> list = java.util.Arrays.asList(comments);
+        setToolTipText(CommentRenderer.renderComments(list));
+        hasRemark = true;
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if(hasRemark)
+            paintRemark(g);
+    }
+    
+    private void paintRemark(Graphics g) {
+        int size = getTriangleSize();
+        Polygon triangle = createTriangle(size);
+        
+        Color oldColor = g.getColor();
+        g.setColor(COLOR_REMARK);
+        g.fillPolygon(triangle);
+        g.setColor(oldColor);
+    }
+    
+    private int getTriangleSize() {
+        java.awt.Dimension dim = super.getSize();
+        int size = REMARK_SIZE;
+        if(size > dim.width)
+            size = dim.width;
+        if(size > dim.height)
+            size = dim.height;
+        return size;
+    }
+    
+    private Polygon createTriangle(int size) {
+        java.awt.Dimension dim = getSize();
+        int x[] = {dim.width - size, dim.width, dim.width     };
+        int y[] = {0, 0, size};
+        return new Polygon(x, y, 3);
+    }
+    
+    private static class DummyComment implements Comment {
+
+        @Override
+        public String getUserName() {
+            return "Bela";
+        }
+
+        @Override
+        public Date getCreationDate() {
+            return new java.util.Date();
+        }
+
+        @Override
+        public String getCommentText() {
+            return "This is the beginning of a very very long comment, "+
+                         "which should be splittet to more rows.";
+        }
+    
+    }
 } 

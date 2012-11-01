@@ -16,7 +16,7 @@ import org.jreserve.persistence.PersistenceUtil;
 @EntityRegistration
 @Entity
 @Table(name="TRIANGLE_COMMENT", schema="JRESERVE")
-public class TriangleComment extends AbstractPersistentObject {
+public class TriangleComment extends AbstractPersistentObject implements Comment {
     private final static long serialVersionUID = 1L;
     
     private final static int NAME_SIZE = 64;
@@ -89,6 +89,7 @@ public class TriangleComment extends AbstractPersistentObject {
         return triangle;
     }
     
+    @Override
     public String getUserName() {
         return userName;
     }
@@ -97,10 +98,12 @@ public class TriangleComment extends AbstractPersistentObject {
         return accidentDate;
     }
 
+    @Override
     public Date getCreationDate() {
         return creationDate;
     }
 
+    @Override
     public String getCommentText() {
         return commentText;
     }
