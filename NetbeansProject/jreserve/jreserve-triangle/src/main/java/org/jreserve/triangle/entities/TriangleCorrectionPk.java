@@ -10,18 +10,18 @@ import java.util.Date;
  */
 public class TriangleCorrectionPk implements Serializable {
 
-    private String triangle;
+    private Triangle triangle;
     private Date accidentDate;
     private Date developmentDate;
     
     protected TriangleCorrectionPk() {
     }
 
-    public String getTriangle() {
+    public Triangle getTriangle() {
         return triangle;
     }
 
-    public void setTriangle(String triangle) {
+    public void setTriangle(Triangle triangle) {
         this.triangle = triangle;
     }
 
@@ -49,7 +49,7 @@ public class TriangleCorrectionPk implements Serializable {
     }
     
     private boolean equals(TriangleCorrectionPk o) {
-        return triangle == o.triangle &&
+        return triangle.equals(o.triangle) &&
                accidentDate.equals(o.accidentDate) &&
                developmentDate.equals(o.developmentDate);
     }

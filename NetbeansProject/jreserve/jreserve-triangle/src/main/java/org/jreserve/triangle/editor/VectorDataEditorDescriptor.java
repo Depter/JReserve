@@ -54,6 +54,6 @@ public class VectorDataEditorDescriptor implements MultiViewDescription, Seriali
 
     @Override
     public MultiViewElement createElement() {
-        return new VectorDataEditorView(element);
+        return new VectorDataEditorView(element);   
     }
 }

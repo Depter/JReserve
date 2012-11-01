@@ -51,6 +51,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         super.setProperty(NAME_PROPERTY, vector.getName());
         super.setProperty(DESCRIPTION_PROPERTY, vector.getDescription());
         super.setProperty(GEOMETRY_PROPERTY, vector.getGeometry());
+        super.setProperty(CORRECTION_PROPERTY, vector.getCorrections());
     }
     
     private void initLookup() {

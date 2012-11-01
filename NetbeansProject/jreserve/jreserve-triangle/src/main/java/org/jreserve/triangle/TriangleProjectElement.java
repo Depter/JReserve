@@ -55,6 +55,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         super.setProperty(NAME_PROPERTY, triangle.getName());
         super.setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         super.setProperty(GEOMETRY_PROPERTY, triangle.getGeometry());
+        super.setProperty(CORRECTION_PROPERTY, triangle.getCorrections());
     }
     
     private void initLookup() {

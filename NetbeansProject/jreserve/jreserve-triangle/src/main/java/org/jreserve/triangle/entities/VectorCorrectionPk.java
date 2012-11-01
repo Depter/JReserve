@@ -10,18 +10,18 @@ import java.util.Date;
  */
 public class VectorCorrectionPk implements Serializable {
 
-    private String vector;
+    private Vector vector;
     private Date accidentDate;
     
     protected VectorCorrectionPk() {
     }
 
-    public String getVector() {
+    public Vector getVector() {
         return vector;
     }
 
-    public void setVector(String vectorId) {
-        this.vector = vectorId;
+    public void setVector(Vector vector) {
+        this.vector = vector;
     }
 
     public Date getAccidentDate() {

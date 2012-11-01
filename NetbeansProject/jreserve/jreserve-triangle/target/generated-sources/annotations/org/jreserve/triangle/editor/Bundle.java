@@ -3,6 +3,14 @@ package org.jreserve.triangle.editor;
 @javax.annotation.Generated(value="org.netbeans.modules.openide.util.NbBundleProcessor")
 class Bundle {
     /**
+     * @param name name
+     * @return <i>Save "</i>{@code name}<i>"?</i>
+     * @see Editor
+     */
+    static String LBL_Editor_Save_Title(Object name) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.Editor.Save.Title", name);
+    }
+    /**
      * @return <i>Geometry</i>
      * @see TriangleDataEditorDescriptor
      */

@@ -5,13 +5,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.hibernate.Session;
-import org.jreserve.data.*;
-import org.jreserve.persistence.PersistentObject;
+import org.jreserve.data.Data;
+import org.jreserve.data.DataCriteria;
+import org.jreserve.data.DataSource;
+import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.Project;
 import org.jreserve.triangle.entities.DataStructure;
-import org.jreserve.triangle.entities.Triangle;
-import org.jreserve.triangle.entities.Vector;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle.Messages;
@@ -32,7 +32,6 @@ public class DataLoader<T extends DataStructure> implements Runnable {
     private final ProgressHandle handle;
     private final RequestProcessor.Task task;
     
-    private T dataStructure;
     private Project project;
     private ProjectDataType dataType;
     private final String name;
@@ -47,7 +46,6 @@ public class DataLoader<T extends DataStructure> implements Runnable {
     
     DataLoader(T data, Callback<T> callback) {
         this.callback = callback;
-        this.dataStructure = data;
         this.project = data.getProject();
         this.dataType = data.getDataType();
         this.name = data.getName();

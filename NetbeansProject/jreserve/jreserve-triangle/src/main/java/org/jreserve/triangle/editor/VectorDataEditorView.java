@@ -1,60 +1,42 @@
 package org.jreserve.triangle.editor;
 
-import java.io.Serializable;
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JToolBar;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.jreserve.data.Data;
-import org.jreserve.data.ProjectDataType;
+import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.VectorProjectElement;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorCorrection;
 import org.jreserve.triangle.entities.VectorGeometry;
-import org.jreserve.triangle.guiutil.VectorFormatVisualPanel;
-import org.jreserve.triangle.widget.TriangleWidget;
-import org.jreserve.triangle.widget.data.TriangleCell;
-import org.netbeans.core.spi.multiview.CloseOperationState;
-import org.netbeans.core.spi.multiview.MultiViewElement;
-import org.netbeans.core.spi.multiview.MultiViewElementCallback;
-import org.openide.awt.UndoRedo;
-import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
-public class VectorDataEditorView extends VectorFormatVisualPanel implements MultiViewElement, Serializable, ChangeListener, TriangleWidget.TriangleWidgetListener, DataLoader.Callback<Vector> {
-    
-    private final static int CORRECTION_LAYER = 0;
-    private final static int VALUE_LAYER = 1;
-    
-    private JToolBar toolBar = new JToolBar();
-    private VectorProjectElement element;
-    private MultiViewElementCallback callBack;
-    private DataLoader<Vector> loader;
-    
-    public VectorDataEditorView(VectorProjectElement element) {
-        this.element = element;
-        super.addChangeListener(this);
-        super.triangle.setEditableLayer(CORRECTION_LAYER);
-        super.triangle.addTriangleWidgetListener(this);
-        initGeometry();
-        initLayers();
-        startLoader();
+public class VectorDataEditorView extends DataEditorMultiviewElement<Vector> {
+
+    public VectorDataEditorView(ProjectElement<Vector> element) {
+        super(element);
     }
     
-    private void initGeometry() {
+    @Override
+    protected void initGeometry() {
+        initSymmetry();
         VectorGeometry vectorGeometry = element.getValue().getGeometry();
         initBegin(vectorGeometry);
         initPeriods(vectorGeometry);
         initMonths(vectorGeometry);
+    }
+    
+    private void initSymmetry() {
+        geometrySetting.setSymmetricFromDate(true);
+        geometrySetting.setSymmetricPeriods(false);
+        geometrySetting.setSymmetricMonths(false);
+        geometrySetting.setSymmetricEnabled(false);
     }
     
     private void initBegin(VectorGeometry geometry) {
@@ -63,113 +45,30 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     
     private void initPeriods(VectorGeometry geometry) {
         geometrySetting.setAccidentPeriodCount(geometry.getAccidentPeriods());
+        geometrySetting.setDevelopmentPeriodCount(1);
     }
     
     private void initMonths(VectorGeometry geometry) {
         geometrySetting.setAccidentMonthsPerStep(geometry.getMonthInAccident());
     }
-    
-    private void initLayers() {
-        triangle.addValueLayer(new ArrayList<Data<ProjectDataType, Double>>());
-        triangle.addValueLayer(new ArrayList<Data<Vector, Double>>());
-    }
-    
-    private void startLoader() {
-        loader = new DataLoader<Vector>(element.getValue(), this);
-        loader.start();
-    }
-    
-    @Override
-    public JComponent getVisualRepresentation() {
-        return this;
-    }
 
     @Override
-    public JComponent getToolbarRepresentation() {
-        return toolBar;
-    }
-
-    @Override
-    public Action[] getActions() {
-        if(callBack == null)
-            return new Action[0];
-        return callBack.createDefaultActions();
-    }
-
-    @Override
-    public Lookup getLookup() {
-        return element.getLookup();
-    }
-    
-    @Override 
-    public void componentClosed() {
-        if(loader != null) {
-            loader.cancel();
-            loader = null;
-        }
-    }
-
-    @Override public void componentOpened() {}
-    @Override public void componentShowing() {}
-    @Override public void componentHidden() {}
-    @Override public void componentActivated() {}
-    @Override public void componentDeactivated() {}
-
-    @Override
-    public UndoRedo getUndoRedo() {
-        return UndoRedo.NONE;
-    }
-
-    @Override
-    public void setMultiViewCallback(MultiViewElementCallback mvec) {
-        this.callBack = mvec;
-    }
-
-    @Override
-    public CloseOperationState canCloseElement() {
-        return CloseOperationState.STATE_OK;
-    }
-
-    @Override
-    public void finnished(DataLoader loader) {
-        try {
-            setData(loader.getData());
-            setCorrections(getCorrectionData());
-        } catch (RuntimeException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-    }
-        
-    private List<Data<Vector, Double>> getCorrectionData() {
+    protected List<Data<Vector, Double>> getCorrectionData() {
         List<Data<Vector, Double>> datas = new ArrayList<Data<Vector, Double>>();
         for(VectorCorrection tc : element.getValue().getCorrections())
             datas.add(tc.toData());
         return datas;
     }
-    
-    private void setData(List<Data<ProjectDataType, Double>> datas) {
-        triangle.setValueLayer(VALUE_LAYER, datas);
-    }
-    
-    private void setCorrections(List<Data<Vector, Double>> corrections) {
-        triangle.setValueLayer(CORRECTION_LAYER, corrections);
-    }
 
     @Override
-    public void stateChanged(ChangeEvent e) {
-        VectorGeometry triangleGeometry = getGeometry();
-        if(triangleGeometry != null)
-            element.setProperty(VectorProjectElement.GEOMETRY_PROPERTY, triangleGeometry);
+    protected void setElementGeometry(TriangleGeometry geometry) {
+        VectorGeometry vg = getVectorGeometry(geometry);
+        element.setProperty(VectorProjectElement.GEOMETRY_PROPERTY, vg);
     }
     
-    private VectorGeometry getGeometry() {
-        TriangleGeometry triangleGeometry = geometrySetting.getGeometry();
-        if(triangleGeometry == null)
+    private VectorGeometry getVectorGeometry(TriangleGeometry geometry) {
+        if(geometry == null)
             return null;
-        return getGeometry(triangleGeometry);
-    }
-    
-    private VectorGeometry getGeometry(TriangleGeometry geometry) {
         Date start = geometry.getAccidentStart();
         int periods = geometry.getAccidentPeriods();
         int months = geometry.getMonthInAccident();
@@ -177,20 +76,21 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
     }
 
     @Override
-    public void cellEdited(TriangleCell cell, int layer, Double oldValue, Double newValue) {
-        if(layer==CORRECTION_LAYER && !equals(oldValue, newValue))
-            updateCorrections();
+    protected TriangleGeometry getElementGeometry() {
+        VectorGeometry geometry = element.getValue().getGeometry();
+        if(geometry == null)
+            return null;
+        return new TriangleDummy(geometry);
     }
-    
-    private boolean equals(Double d1, Double d2) {
-        if(d1 == d2) return true;
-        if(d1 == null) return d2 != null;
-        if(d2 == null) return false;
-        return d1.equals(d2);
+
+    @Override
+    protected boolean isGeometryChanged(PropertyChangeEvent evt) {
+        String property = evt.getPropertyName();
+        return VectorProjectElement.GEOMETRY_PROPERTY.equals(property);
     }
-    
-    private void updateCorrections() {
-        List<Data<Vector, Double>> datas = triangle.getLayer(element.getValue(), CORRECTION_LAYER);
+
+    @Override
+    protected void updateCorrections(List<Data<Vector, Double>> datas) {
         List<VectorCorrection> corrections = getCorrections(datas);
         element.setProperty(VectorProjectElement.CORRECTION_PROPERTY, corrections);
     }
@@ -206,5 +106,61 @@ public class VectorDataEditorView extends VectorFormatVisualPanel implements Mul
         VectorCorrection tc = new VectorCorrection(data.getOwner(), data.getAccidentDate());
         tc.setCorrection(data.getValue());
         return tc;
+    }
+    
+    private static class TriangleDummy extends TriangleGeometry {
+    
+        private VectorGeometry geometry;
+        
+        TriangleDummy(VectorGeometry geometry) {
+        }
+
+        @Override
+        public TriangleGeometry copy() {
+            return this;
+        }
+
+        @Override
+        public int getDevelopmentPeriods() {
+            return 1;
+        }
+
+        @Override
+        public Date getDevelopmentStart() {
+            return geometry.getAccidentStart();
+        }
+
+        @Override
+        public int getMonthInDevelopment() {
+            return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public boolean isEqualGeometry(TriangleGeometry g) {
+            if(this == g) return true;
+            if(g instanceof TriangleDummy)
+                return geometry.isEqualGeometry(((TriangleDummy)g).geometry);
+            return false;
+        }
+
+        @Override
+        public int getAccidentPeriods() {
+            return geometry.getAccidentPeriods();
+        }
+
+        @Override
+        public Date getAccidentStart() {
+            return geometry.getAccidentStart();
+        }
+
+        @Override
+        public int getMonthInAccident() {
+            return geometry.getMonthInAccident();
+        }
+
+        @Override
+        public boolean isEqualGeometry(VectorGeometry g) {
+            return geometry.isEqualGeometry(g);
+        }
     }
 }

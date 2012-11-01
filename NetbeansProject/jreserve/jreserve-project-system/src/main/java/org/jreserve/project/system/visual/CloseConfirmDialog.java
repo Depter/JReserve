@@ -1,17 +1,15 @@
 package org.jreserve.project.system.visual;
 
-import java.awt.BorderLayout;
-import java.awt.Frame;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Icon;
-import javax.swing.JDialog;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
 import org.netbeans.api.actions.Savable;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.view.ListView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -26,44 +24,93 @@ import org.openide.windows.WindowManager;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CloseConfirmDialog extends javax.swing.JPanel implements ExplorerManager.Provider, ActionListener {
+public class CloseConfirmDialog extends JDialog implements ActionListener {
+    
+    private ListView savableList;
+    private JPanel buttonPanel;
+    private JButton cancelButton;
+    private JButton discardAllButton;
+    private JButton saveAllButton;
 
-    public static boolean canClose(Lookup lookup) {
-        CloseConfirmDialog content = new CloseConfirmDialog(lookup);
-        showDialog(content);
-        return !content.cancelled;
-    }
-    
-    private static void showDialog(CloseConfirmDialog content) {
-        Frame owner = WindowManager.getDefault().getMainWindow();
-        String title = org.openide.util.NbBundle.getMessage(CloseConfirmDialog.class, "LBL.CloseConfirmForm.Title");
-        JDialog dialog = new JDialog(owner, title, true);
-        dialog.getContentPane().add(content, BorderLayout.CENTER);
-        content.dialog = dialog;
-        dialog.pack();
-        dialog.setVisible(true);
-    }
-    
     private final ExplorerManager em = new ExplorerManager();
+    private Lookup lookup;
+    protected java.util.List<Savable> savables = new ArrayList<Savable>();
     
-    private boolean cancelled = true;
-    private List<Savable> savables;
-    
-    private JDialog dialog;
-    
-    private CloseConfirmDialog(Lookup lookup) {
-        savables = new ArrayList<Savable>(lookup.lookupAll(Savable.class));
-        initManager();
+    public CloseConfirmDialog(Lookup lookup, String title) {
+        super(WindowManager.getDefault().getMainWindow(), title, true);
+        this.lookup = lookup;
         initComponents();
+        centerDialog();
+    }
+    
+    private void initComponents() {
+        JPanel panel = new ContentPanel();
+        panel.setLayout(new BorderLayout(15, 0));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        
+        buttonPanel = new javax.swing.JPanel();
+        saveAllButton = new javax.swing.JButton();
+        discardAllButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+
+        savableList = new ListView();
+        savableList.setBorder(new LineBorder(Color.BLACK, 1, true));
+        panel.add(savableList, BorderLayout.CENTER);
+
+        buttonPanel.setLayout(new GridBagLayout());
+
+        saveAllButton.setText(org.openide.util.NbBundle.getMessage(CloseConfirmDialog.class, "LBL.CloseConfirmForm.Button.Save")); // NOI18N
+        saveAllButton.addActionListener(this);
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.gridx=0; gc.gridy=0;
+        gc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gc.insets = new java.awt.Insets(0, 0, 5, 0);
+        buttonPanel.add(saveAllButton, gc);
+
+        discardAllButton.setText(org.openide.util.NbBundle.getMessage(CloseConfirmDialog.class, "LBL.CloseConfirmForm.Button.Discard")); // NOI18N
+        discardAllButton.addActionListener(this);
+        gc.gridy = 1;
+        buttonPanel.add(discardAllButton, gc);
+        
+        gc = new java.awt.GridBagConstraints();
+        gc.gridy = 2;
+        gc.fill = java.awt.GridBagConstraints.VERTICAL;
+        gc.weighty=1d;
+        buttonPanel.add(Box.createVerticalGlue(), gc);
+
+        cancelButton.setText(org.openide.util.NbBundle.getMessage(CloseConfirmDialog.class, "LBL.CloseConfirmForm.Button.Cancel")); // NOI18N
+        cancelButton.addActionListener(this);
+        gc.gridy = 3;
+        gc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gc.weighty=0d;
+        buttonPanel.add(cancelButton, gc);
+
+        panel.add(buttonPanel, java.awt.BorderLayout.LINE_END);
+        
+        JPanel contents = (JPanel) getContentPane();
+        contents.setLayout(new BorderLayout());
+        contents.add(panel, BorderLayout.CENTER);
+        pack();
+        setPreferredSize(new Dimension(300, 170));
+    }
+    
+    private void centerDialog() {
+        Window owner = getOwner();
+        Point p = owner.getLocation();
+        Dimension ownerSize = owner.getSize();
+        Dimension size = getSize();
+        int x = p.x + (ownerSize.width - size.width) / 2;
+        int y = p.y + (ownerSize.height - size.height) / 2;
+        setLocation(x, y);
     }
 
-    private void initManager() {
-        em.setRootContext(new AbstractNode(new SavableChildren()));
-    }
-    
     @Override
-    public ExplorerManager getExplorerManager() {
-        return em;
+    public void setVisible(boolean visible) {
+        savables = new ArrayList<Savable>(lookup.lookupAll(Savable.class));
+        if(savables.isEmpty())
+            return;
+        em.setRootContext(new AbstractNode(new SavableChildren()));
+        super.setVisible(visible);
     }
 
     @Override
@@ -74,14 +121,14 @@ public class CloseConfirmDialog extends javax.swing.JPanel implements ExplorerMa
         } else if(discardAllButton == source) {
             discard();
         } else if(cancelButton == source) {
-            cancel();
+            dispose();
         }
     }
     
     private void save() {
-        Node[] selected = getSelectedNodes();
         try {
-            saveNodes(selected);
+            for(Node node : getSelectedNodes())
+                save(((SavableNode) node).savable);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } finally {
@@ -96,104 +143,29 @@ public class CloseConfirmDialog extends javax.swing.JPanel implements ExplorerMa
         return em.getRootContext().getChildren().getNodes();
     }
     
-    private void saveNodes(Node[] nodes) throws IOException {
-        for(Node node : nodes) {
-            Savable s = ((SavableNode) node).savable;
-            s.save();
-            savables.remove(s);
-        }
+    protected void save(Savable savable) throws IOException {
+        savable.save();
+        savables.remove(savable);
     }
     
     private void reinitDialog() {
         if(savables.isEmpty()) {
-            dialog.dispose();
-            cancelled = false;
+            dispose();
         } else {
-            initManager();
+            em.setRootContext(new AbstractNode(new SavableChildren()));
         }
     }
     
     private void discard() {
-        Node[] selected = getSelectedNodes();
-        discardNodes(selected);
+        for(Node node : getSelectedNodes())
+            discard(((SavableNode)node).savable);
         reinitDialog();
     }
     
-    private void discardNodes(Node[] nodes) {
-        for(Node node : nodes) {
-            Savable s = ((SavableNode) node).savable;
-            savables.remove(s);
-        }
+    protected void discard(Savable savable) {
+        savables.remove(savable);
     }
-    
-    private void cancel() {
-        dialog.dispose();
-    }
-    
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-
-        savableList = new org.openide.explorer.view.ListView();
-        buttonPanel = new javax.swing.JPanel();
-        saveAllButton = new javax.swing.JButton();
-        discardAllButton = new javax.swing.JButton();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
-        cancelButton = new javax.swing.JButton();
-
-        setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        setLayout(new java.awt.BorderLayout(15, 0));
-
-        savableList.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        add(savableList, java.awt.BorderLayout.CENTER);
-
-        buttonPanel.setLayout(new java.awt.GridBagLayout());
-
-        saveAllButton.setText(org.openide.util.NbBundle.getMessage(CloseConfirmDialog.class, "LBL.CloseConfirmForm.Button.Save")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        buttonPanel.add(saveAllButton, gridBagConstraints);
-
-        discardAllButton.setText(org.openide.util.NbBundle.getMessage(CloseConfirmDialog.class, "LBL.CloseConfirmForm.Button.Discard")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        buttonPanel.add(discardAllButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.weighty = 1.0;
-        buttonPanel.add(filler1, gridBagConstraints);
-
-        cancelButton.setText(org.openide.util.NbBundle.getMessage(CloseConfirmDialog.class, "LBL.CloseConfirmForm.Button.Cancel")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        buttonPanel.add(cancelButton, gridBagConstraints);
-
-        add(buttonPanel, java.awt.BorderLayout.LINE_END);
-    }// </editor-fold>//GEN-END:initComponents
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel buttonPanel;
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JButton discardAllButton;
-    private javax.swing.Box.Filler filler1;
-    private org.openide.explorer.view.ListView savableList;
-    private javax.swing.JButton saveAllButton;
-    // End of variables declaration//GEN-END:variables
-    
+   
     private class SavableChildren extends Children.Keys<Savable> {
 
         @Override
@@ -232,4 +204,12 @@ public class CloseConfirmDialog extends javax.swing.JPanel implements ExplorerMa
             return getIcon(type);
         }
     }
+    
+    private class ContentPanel extends JPanel implements ExplorerManager.Provider {
+        @Override
+        public ExplorerManager getExplorerManager() {
+            return em;
+        }
+    }
+
 }

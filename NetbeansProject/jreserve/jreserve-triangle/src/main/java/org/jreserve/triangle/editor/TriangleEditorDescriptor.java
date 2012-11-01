@@ -78,7 +78,7 @@ class TriangleEditorDescriptor implements MultiViewDescription, Serializable {
 
     @Override
     public MultiViewElement createElement() {
-        return new TriangleEditorView(element);
+        return new EditorView(element);
     }
 
 }

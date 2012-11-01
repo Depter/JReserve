@@ -205,7 +205,7 @@ public class TriangleCellRenderer extends DefaultTableCellRenderer {
         Double value = cell.getDisplayValue();
         if(value == null)
             return null;
-        return valueRenderer.toString(value);
+        return " "+valueRenderer.toString(value);
     }
     
     private static Border createCellBorder() {
