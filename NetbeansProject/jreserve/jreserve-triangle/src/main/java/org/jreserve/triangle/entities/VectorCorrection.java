@@ -21,7 +21,7 @@ import org.jreserve.persistence.PersistentObject;
 public class VectorCorrection implements Serializable {
     
     @Id
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(optional=false)
     @JoinColumn(name="VECTOR_ID", referencedColumnName="ID", columnDefinition=PersistentObject.COLUMN_DEF)
     private Vector vector;
     

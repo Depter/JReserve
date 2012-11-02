@@ -21,7 +21,7 @@ public class TriangleComment extends AbstractPersistentObject implements Comment
     
     private final static int NAME_SIZE = 64;
     
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(optional=false)
     @JoinColumn(name="TRIANGLE_ID", referencedColumnName="ID", nullable=false)
     private Triangle triangle;
     
@@ -96,6 +96,10 @@ public class TriangleComment extends AbstractPersistentObject implements Comment
 
     public Date getAccidentDate() {
         return accidentDate;
+    }
+    
+    public Date getDevelopmentDate() {
+        return developmentDate;
     }
 
     @Override

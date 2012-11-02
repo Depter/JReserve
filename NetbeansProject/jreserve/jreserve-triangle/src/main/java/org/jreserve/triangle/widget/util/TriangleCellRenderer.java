@@ -247,10 +247,10 @@ public class TriangleCellRenderer extends JLabel implements TableCellRenderer {
     }
     
     private void createToolTip(TriangleCell cell) {
-        Comment[] comments = {new DummyComment(), new DummyComment()};
-        java.util.List<Comment> list = java.util.Arrays.asList(comments);
-        setToolTipText(CommentRenderer.renderComments(list));
-        hasRemark = true;
+        hasRemark = cell.hasComments();
+        java.util.List<Comment> list = cell.getComments();
+        if(!list.isEmpty())
+            setToolTipText(CommentRenderer.renderComments(list));
     }
     
     @Override

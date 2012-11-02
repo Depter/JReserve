@@ -35,6 +35,10 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
     @OneToMany(fetch=FetchType.EAGER, mappedBy="triangle", orphanRemoval=true, cascade=CascadeType.ALL)
     private Set<TriangleCorrection> corrections = new HashSet<TriangleCorrection>();
     
+    @NotAudited
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="triangle", orphanRemoval=true, cascade=CascadeType.ALL)
+    private Set<TriangleComment> comments = new HashSet<TriangleComment>();
+    
     protected Triangle() {
     }
     
@@ -74,6 +78,36 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
         String msg = "Correction belongs to another triangle '%s' instead of '%s'!";
         msg = String.format(msg, this, correction.getTriangle());
         throw new IllegalArgumentException(msg);
+    }
+    
+    public List<TriangleComment> getComments() {
+        return new ArrayList<TriangleComment>(comments);
+    }
+    
+    public void setComments(List<TriangleComment> comments) {
+        if(comments != null)
+            checkMyComments(comments);
+        this.comments.clear();
+        if(comments != null)
+            this.comments.addAll(comments);
+    }
+    
+    private void checkMyComments(List<TriangleComment> comments) {
+        for(TriangleComment comment : comments)
+            if(!equals(comment.getTriangle()))
+                throwOtherTriangleException(comment);
+    }
+    
+    private void throwOtherTriangleException(TriangleComment comment) {
+        String msg = "Comment belongs to another triangle '%s' instead of '%s'!";
+        msg = String.format(msg, this, comment.getTriangle());
+        throw new IllegalArgumentException(msg);
+    }
+    
+    public void addComment(TriangleComment comment) {
+        if(!equals(comment.getTriangle()))
+            throwOtherTriangleException(comment);
+        this.comments.add(comment);
     }
     
     @Override

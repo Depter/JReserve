@@ -7,10 +7,8 @@ import java.util.List;
 import org.jreserve.data.Data;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.VectorProjectElement;
-import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.entities.Vector;
-import org.jreserve.triangle.entities.VectorCorrection;
-import org.jreserve.triangle.entities.VectorGeometry;
+import org.jreserve.triangle.entities.*;
+import org.jreserve.triangle.widget.WidgetData;
 
 /**
  *
@@ -106,6 +104,18 @@ public class VectorDataEditorView extends DataEditorMultiviewElement<Vector> {
         VectorCorrection tc = new VectorCorrection(data.getOwner(), data.getAccidentDate());
         tc.setCorrection(data.getValue());
         return tc;
+    }
+
+    @Override
+    protected List<WidgetData<Comment>> getComments() {
+        List<WidgetData<Comment>> comments = new ArrayList<WidgetData<Comment>>();
+        for(VectorComment comment : element.getValue().getComments())
+            comments.add(new WidgetData<Comment>(comment.getAccidentDate(), comment.getAccidentDate(), comment));
+        return comments;
+    }
+
+    @Override
+    protected void updateComments(List<WidgetData<Comment>> comments) {
     }
     
     private static class TriangleDummy extends TriangleGeometry {

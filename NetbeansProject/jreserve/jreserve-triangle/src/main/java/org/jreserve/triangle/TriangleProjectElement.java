@@ -3,7 +3,6 @@ package org.jreserve.triangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
-import org.hibernate.Query;
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
@@ -12,6 +11,7 @@ import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.triangle.editor.Editor;
 import org.jreserve.triangle.entities.Triangle;
+import org.jreserve.triangle.entities.TriangleComment;
 import org.jreserve.triangle.entities.TriangleCorrection;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.netbeans.api.actions.Openable;
@@ -44,6 +44,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     
     public final static String GEOMETRY_PROPERTY = "TRIANGLE_GEOMETRY_PROPERTY";
     public final static String CORRECTION_PROPERTY = "TRIANGLE_CORRECTION_PROPERTY";
+    public final static String COMMENT_PROPERTY = "TRIANGLE_COMMENT_PROPERTY";
     
     public TriangleProjectElement(Triangle triangle) {
         super(triangle);
@@ -56,6 +57,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         super.setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         super.setProperty(GEOMETRY_PROPERTY, triangle.getGeometry());
         super.setProperty(CORRECTION_PROPERTY, triangle.getCorrections());
+        super.setProperty(COMMENT_PROPERTY, triangle.getComments());
     }
     
     private void initLookup() {
@@ -87,6 +89,8 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             getValue().setGeometry((TriangleGeometry) value);
         else if(CORRECTION_PROPERTY.equals(property))
             getValue().setCorrections((List<TriangleCorrection>) value);
+        else if(COMMENT_PROPERTY.equals(property))
+            getValue().setComments((List<TriangleComment>) value);
         super.setProperty(property, value);
     }
     
@@ -112,6 +116,8 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
                 return isChanged((TriangleGeometry) o1, (TriangleGeometry) o2);
             } else if(CORRECTION_PROPERTY.equals(property)) {
                 return isChanged((List<TriangleCorrection>) o1, (List<TriangleCorrection>) o2);
+            } else if(COMMENT_PROPERTY.equals(property)) {
+                return isChanged((List<TriangleComment>) o1, (List<TriangleComment>) o2);
             } else {
                 return super.isChanged(property, o1, o2);
             }
@@ -123,12 +129,12 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             return !g1.isEqualGeometry(g2);
         }
         
-        private boolean isChanged(List<TriangleCorrection> c1, List<TriangleCorrection> c2) {
+        private boolean isChanged(List c1, List c2) {
             if(getSize(c1) != getSize(c2)) return true;
             //if both size is 0, but one is empty aother is null => not changed
             if(c1 == null || c2 == null) return false;
             
-            for(TriangleCorrection c : c1)
+            for(Object c : c1)
                 if(!c2.contains(c))
                     return true;
             return false;
@@ -136,24 +142,6 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         
         private int getSize(List list) {
             return list==null? 0 : list.size();
-        }
-
-        @Override
-        protected void saveEntity() {
-            //saveCorrections();
-            super.saveEntity();
-        }
-        
-        private void saveCorrections() {
-            deleteCorrections();
-            for(TriangleCorrection correction : element.getValue().getCorrections())
-                session.persist(correction);
-        }
-        
-        private void deleteCorrections() {
-            Query query = session.createQuery("delete from TriangleCorrection c where c.triangle.id = :triangleId");
-            query.setString("triangleId", element.getValue().getId());
-            query.executeUpdate();
         }
     }
     

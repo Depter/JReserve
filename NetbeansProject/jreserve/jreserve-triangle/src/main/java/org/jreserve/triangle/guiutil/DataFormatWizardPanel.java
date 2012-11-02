@@ -50,7 +50,7 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
         List<Data<ProjectDataType, Double>> datas = (List<Data<ProjectDataType, Double>>) wizard.getProperty(NameSelectWizardPanel.PROP_DATA);
         ProjectDataType dt = (ProjectDataType) wizard.getProperty(NameSelectWizardPanel.PROP_DATA_TYPE);
         setFirstDate(datas);
-        panel.triangle.addValueLayer(datas);
+        panel.triangle.addDataValueLayer(datas);
         validate();
     }
     

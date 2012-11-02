@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import org.jreserve.data.Data;
-import org.jreserve.data.DataComment;
-import org.jreserve.persistence.PersistentObject;
+import org.jreserve.triangle.entities.Comment;
+import org.jreserve.triangle.widget.WidgetData;
 
 /**
  *
@@ -23,7 +22,7 @@ public class TriangleCell {
     private List<Double> values = new ArrayList<Double>();
     private int displayLayer = -1;
     
-    private List<DataComment> comments;
+    private List<Comment> comments = new ArrayList<Comment>();
     
     
     public TriangleCell(Date aBegin, Date aEnd, Date dBegin, Date dEnd) {
@@ -49,11 +48,11 @@ public class TriangleCell {
         return developmentEnd;
     }
     
-    public <T extends PersistentObject> Data<T, Double> getData(T owner, int layer) {
+    public WidgetData<Double> getData(int layer) {
         Double value = values.get(layer);
         if(value == null)
             return null;
-        return new Data<T, Double>(owner, accidentBegin, developmentBegin, value);
+        return new WidgetData<Double>(accidentBegin, developmentBegin, value);
     }
     
     public int getLayerCount() {
@@ -102,9 +101,9 @@ public class TriangleCell {
         return new ArrayList<Double>(values);
     }
     
-    boolean acceptsData(Data data) {
-        return accidentAccepts(data.getAccidentDate()) &&
-               developmentAccepts(data.getDevelopmentDate());
+    boolean acceptsData(WidgetData data) {
+        return accidentAccepts(data.getAccident()) &&
+               developmentAccepts(data.getDevelopment());
     }
     
     private boolean accidentAccepts(Date date) {
@@ -119,12 +118,12 @@ public class TriangleCell {
         return date.before(developmentEnd);
     }
     
-    public void addComment(Data<? extends PersistentObject, DataComment> data) {
+    public void addComment(WidgetData<Comment> data) {
         if(acceptsData(data))
             addComment(data.getValue());
     }
     
-    private void addComment(DataComment comment) {
+    private void addComment(Comment comment) {
         if(comment == null)
             throw new NullPointerException("Comment is null!");
         if(!comments.contains(comment)) {
@@ -135,5 +134,13 @@ public class TriangleCell {
     
     public void clearComments() {
         comments.clear();
+    }
+    
+    public List<Comment> getComments() {
+        return new ArrayList<Comment>(comments);
+    }
+    
+    public boolean hasComments() {
+        return !comments.isEmpty();
     }
 }

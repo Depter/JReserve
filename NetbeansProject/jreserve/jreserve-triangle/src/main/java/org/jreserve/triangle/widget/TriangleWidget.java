@@ -20,6 +20,7 @@ import javax.swing.table.TableColumn;
 import org.jreserve.data.Data;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.resources.ToolBarToggleButton;
+import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.data.TriangleCell;
 import org.jreserve.triangle.widget.util.DecimalSpinner;
@@ -27,6 +28,8 @@ import org.jreserve.triangle.widget.util.TriangleTable;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -59,9 +62,11 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     private TriangleTable table;
     private JScrollPane scroll;
+    private Lookup lookup;
     
     public TriangleWidget() {
         initComponent();
+        lookup = new ProxyLookup(Lookups.singleton(this), table.getLookup());
         super.addComponentListener(new ResizeListener());
     }
     
@@ -181,6 +186,10 @@ public class TriangleWidget extends JPanel implements Serializable {
         table.removeTriangleWidgetListener(listener);
     }
     
+    public void setPopUpActionPath(String path) {
+        table.setPopUpActionPath(path);
+    }
+    
     public void setTriangleGeometry(TriangleGeometry geometry) {
         table.setTriangleGeometry(geometry);
     }
@@ -203,20 +212,52 @@ public class TriangleWidget extends JPanel implements Serializable {
         notCummulatedButton.setSelected(!cummulated);
     }
     
-    public <T extends PersistentObject> void addValueLayer(List<Data<T, Double>> datas) {
+    public void addValueLayer(List<WidgetData<Double>> datas) {
+        table.addValueLayer(datas);
+    }
+    
+    public <T extends PersistentObject> void addDataValueLayer(List<Data<T, Double>> datas) {
         table.addValueLayer(escapeData(datas));
     }
     
-    private <T extends PersistentObject> List<Data<PersistentObject, Double>> escapeData(List<Data<T, Double>> datas) {
-        List<Data<PersistentObject, Double>> escaped = new ArrayList<Data<PersistentObject, Double>>(datas.size());
+    private <T extends PersistentObject> List<WidgetData<Double>> escapeData(List<Data<T, Double>> datas) {
+        List<WidgetData<Double>> escaped = new ArrayList<WidgetData<Double>>(datas.size());
         for(Data<T, Double> data : datas)
-            escaped.add((Data<PersistentObject, Double>) data);
+            escaped.add(new WidgetData<Double>(data.getAccidentDate(), data.getDevelopmentDate(), data.getValue()));
         return escaped;
     }
     
-    public <T extends PersistentObject> void setValueLayer(int layer, List<Data<T, Double>> datas) {
-        List<Data<PersistentObject, Double>> escaped = escapeData(datas);
+    public void setValueLayer(int layer, List<WidgetData<Double>> datas) {
+        table.setValueLayer(layer, datas);
+    }
+    
+    public <T extends PersistentObject> void setDataValueLayer(int layer, List<Data<T, Double>> datas) {
+        List<WidgetData<Double>> escaped = escapeData(datas);
         table.setValueLayer(layer, escaped);
+    }
+    
+    public List<WidgetData<Double>> getValueLayer(int layer) {
+        return table.getValueLayer(layer);
+    }
+    
+    public void removeComment(WidgetData<Comment> comments) {
+        table.removeComment(comments);
+    }
+    
+    public void setComments(List<WidgetData<Comment>> comments) {
+        table.setComments(comments);
+    }
+    
+    public void addComments(List<WidgetData<Comment>> comments) {
+        table.addComments(comments);
+    }
+    
+    public void addComment(WidgetData<Comment> comment) {
+        table.addComment(comment);
+    }
+    
+    public List<WidgetData<Comment>> getComments() {
+        return table.getComments();
     }
     
     public void setLayerBackground(int layer, Color color) {
@@ -235,8 +276,9 @@ public class TriangleWidget extends JPanel implements Serializable {
         table.setEditableLayer(layer);
     }
     
-    public <T extends PersistentObject> List<Data<T, Double>> getLayer(T owner, int layerIndex) {
-        return table.getLayer(owner, layerIndex);
+    public void refreshTableData() {
+        javax.swing.event.TableModelEvent evt = new javax.swing.event.TableModelEvent(table.getModel());
+        table.tableChanged(evt);
     }
     
     public double[][] flatten() {
@@ -244,7 +286,7 @@ public class TriangleWidget extends JPanel implements Serializable {
     }
 
     public Lookup getLookup() {
-        return table.getLookup();
+        return lookup;
     }
     
     private class ResizeListener extends ComponentAdapter {
@@ -299,5 +341,7 @@ public class TriangleWidget extends JPanel implements Serializable {
     public static interface TriangleWidgetListener {
         
         public void cellEdited(TriangleCell cell, int layer, Double oldValue, Double newValue);
+        
+        public void commentsChanged();
     }
 }

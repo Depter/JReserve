@@ -3,6 +3,20 @@ package org.jreserve.triangle.editor;
 @javax.annotation.Generated(value="org.netbeans.modules.openide.util.NbBundleProcessor")
 class Bundle {
     /**
+     * @return <i>Add comment</i>
+     * @see AddTriangleCommentAction
+     */
+    static String CTL_AddTriangleCommentAction() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL.AddTriangleCommentAction");
+    }
+    /**
+     * @return <i>Delete comments</i>
+     * @see DeleteTriangleCommentAction
+     */
+    static String CTL_DeleteTriangleCommentAction() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL.DeleteTriangleCommentAction");
+    }
+    /**
      * @param name name
      * @return <i>Save "</i>{@code name}<i>"?</i>
      * @see Editor

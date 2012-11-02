@@ -3,12 +3,11 @@ package org.jreserve.triangle.widget.model;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import org.jreserve.data.Data;
-import org.jreserve.data.DataComment;
-import org.jreserve.persistence.PersistentObject;
+import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.TriangleWidget;
 import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
+import org.jreserve.triangle.widget.WidgetData;
 import org.jreserve.triangle.widget.data.TriangleCell;
 import org.jreserve.triangle.widget.data.TriangleCellUtil;
 
@@ -25,8 +24,8 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     protected AxisModel rowModel = AxisModel.EMPTY;
     protected AxisModel columnModel = AxisModel.EMPTY;
     
-    protected List<List<Data<PersistentObject, Double>>> values = new ArrayList<List<Data<PersistentObject, Double>>>();
-    protected List<Data<PersistentObject, DataComment>> comments = new ArrayList<Data<PersistentObject, DataComment>>();
+    protected List<List<WidgetData<Double>>> values = new ArrayList<List<WidgetData<Double>>>();
+    protected List<WidgetData<Comment>> comments = new ArrayList<WidgetData<Comment>>();
     private List<TriangleWidgetListener> listeners = new ArrayList<TriangleWidgetListener>();
     
     private TriangleCell[][] cells = new TriangleCell[0][];
@@ -110,7 +109,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     }
 
     private void fillCellComments(TriangleCell cell) {
-        for(Data<? extends PersistentObject, DataComment> comment : comments)
+        for(WidgetData<Comment> comment : comments)
             cell.addComment(comment);
     }
     
@@ -120,7 +119,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     }
 
     @Override
-    public void addValues(List<Data<PersistentObject, Double>> datas) {
+    public void addValues(List<WidgetData<Double>> datas) {
         checkDatas(datas);
         values.add(datas);
         refillCellValues();
@@ -141,31 +140,31 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     private void checkData(Object o) {
         if(o == null)
             throw new IllegalArgumentException("List contains null values!");
-        if(((Data)o).getValue() == null)
+        if(((WidgetData)o).getValue() == null)
             throw new IllegalArgumentException("List contains data elements, with null values!");
     }
 
     @Override
-    public void addValues(int layer, List<Data<PersistentObject, Double>> datas) {
+    public void addValues(int layer, List<WidgetData<Double>> datas) {
         checkDatas(datas);
         values.add(layer, datas);
         refillCellValues();
     }
 
     @Override
-    public void setValues(int layer, List<Data<PersistentObject, Double>> datas) {
+    public void setValues(int layer, List<WidgetData<Double>> datas) {
         checkDatas(datas);
         values.set(layer, datas);
         refillCellValues();
     }
     
     @Override
-    public List<List<Data<PersistentObject, Double>>> getValues() {
+    public List<List<WidgetData<Double>>> getValues() {
         return values;
     }
 
     @Override
-    public List<Data<PersistentObject, Double>> getValues(int layer) {
+    public List<WidgetData<Double>> getValues(int layer) {
         return values.get(layer);
     }
 
@@ -174,9 +173,17 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
         values.remove(layer);
         refillCellValues();
     }
+    
+    @Override
+    public void setComments(List<WidgetData<Comment>> comments) {
+        checkDatas(comments);
+        this.comments.clear();
+        this.comments.addAll(comments);
+        refillCellComments();
+    }
 
     @Override
-    public void addComments(List<Data<PersistentObject, DataComment>> comments) {
+    public void addComments(List<WidgetData<Comment>> comments) {
         checkDatas(comments);
         this.comments.addAll(comments);
         refillCellComments();
@@ -196,21 +203,23 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     }
 
     @Override
-    public void addComment(Data<PersistentObject, DataComment> comment) {
+    public void addComment(WidgetData<Comment> comment) {
         checkData(comment);
         comments.add(comment);
         refillCellComments();
+        fireCommentsChanged();
     }
 
     @Override
-    public List<Data<PersistentObject, DataComment>> getComments() {
-        return new ArrayList<Data<PersistentObject, DataComment>>(comments);
+    public List<WidgetData<Comment>> getComments() {
+        return new ArrayList<WidgetData<Comment>>(comments);
     }
 
     @Override
-    public void removeComment(Data<PersistentObject, DataComment> comment) {
+    public void removeComment(WidgetData<Comment> comment) {
         comments.remove(comment);
         refillCellComments();
+        fireCommentsChanged();
     }
     
     @Override
@@ -287,6 +296,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     private void editValue(TriangleCell cell, Double value) {
         Double old = cell.getValueAt(editableLayer);
         cell.setValueAt(editableLayer, value);
+        values.set(editableLayer, TriangleCellUtil.extractValues(cells, editableLayer));
         fireTableCellUpdated(editableLayer, editableLayer);
         fireEdited(cell, old, value);
     }
@@ -294,6 +304,11 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     private void fireEdited(TriangleCell cell, Double old, Double current) {
         for(TriangleWidgetListener l : new ArrayList<TriangleWidgetListener>(listeners))
             l.cellEdited(cell, editableLayer, old, current);
+    }
+    
+    private void fireCommentsChanged() {
+        for(TriangleWidgetListener l : new ArrayList<TriangleWidgetListener>(listeners))
+            l.commentsChanged();
     }
     
     @Override
@@ -314,7 +329,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     
     @Override
     public void copyStateFrom(TriangleModel model) {
-        for(List<Data<PersistentObject, Double>> datas : model.getValues())
+        for(List<WidgetData<Double>> datas : model.getValues())
             addValues(datas);
         addComments(model.getComments());
         setCummulated(model.isCummulated());
@@ -323,20 +338,5 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
         
         listeners.clear();
         listeners.addAll(model.getTriangleWidgetListeners());
-    }
-    
-    public <T extends PersistentObject> List<Data<T, Double>> getLayer(T owner, int layerIndex) {
-        List<Data<T, Double>> layer = new ArrayList<Data<T, Double>>();
-        for(TriangleCell[] row : cells)
-            for(TriangleCell cell : row)
-                addData(owner, layer, layerIndex, cell);
-        return layer;
-    }
-    
-    private <T extends PersistentObject> void addData(T owner, List<Data<T, Double>> layer, int layerIndex, TriangleCell cell) {
-        if(cell == null) return;
-        Data<T, Double> data = cell.getData(owner, layerIndex);
-        if(data != null)
-            layer.add(data);
     }
 }

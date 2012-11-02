@@ -11,17 +11,17 @@ import javax.swing.JPanel;
 import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.DataStructure;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.GeometrySettingPanel;
 import org.jreserve.triangle.widget.TriangleWidget;
 import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
+import org.jreserve.triangle.widget.WidgetData;
 import org.jreserve.triangle.widget.data.TriangleCell;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.WeakListeners;
-import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
@@ -36,7 +36,7 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
     private final static Color CORRECTION_BG = new Color(235, 204, 204);
     
     protected GeometrySettingPanel geometrySetting;
-    private TriangleWidget triangle;
+    protected TriangleWidget triangle;
     
     protected ProjectElement<T> element;
     private DataLoader<T> loader;
@@ -106,8 +106,8 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
     }
     
     private void initLayers() {
-        triangle.addValueLayer(new ArrayList<Data<ProjectDataType, Double>>());
-        triangle.addValueLayer(new ArrayList<Data<T, Double>>());
+        triangle.addValueLayer(new ArrayList<WidgetData<Double>>());
+        triangle.addValueLayer(new ArrayList<WidgetData<Double>>());
         triangle.setLayerBackground(CORRECTION_LAYER, CORRECTION_BG);
         triangle.setEditableLayer(CORRECTION_LAYER);
     }
@@ -155,25 +155,26 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
     
     protected abstract void updateCorrections(List<Data<T, Double>> datas);
     
+    protected abstract List<WidgetData<Comment>> getComments();
+    
+    protected abstract void updateComments(List<WidgetData<Comment>> comments);
+    
     private class LoaderCallback implements DataLoader.Callback<T> {
 
         @Override
         public void finnished(DataLoader<T> loader) {
             try {
-                setData(loader.getData());
+                triangle.setDataValueLayer(VALUE_LAYER, loader.getData());
                 setCorrections();
+                triangle.setComments(getComments());
             } catch (RuntimeException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
     
-        private void setData(List<Data<ProjectDataType, Double>> datas) {
-            triangle.setValueLayer(VALUE_LAYER, datas);
-        }
-    
         private void setCorrections() {
             List<Data<T, Double>> corrections = getCorrectionData();
-            triangle.setValueLayer(CORRECTION_LAYER, corrections);
+            triangle.setDataValueLayer(CORRECTION_LAYER, corrections);
         }
     }
     
@@ -226,16 +227,30 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
         @Override
         public void cellEdited(TriangleCell cell, int layer, Double oldValue, Double newValue) {
             if(layer==CORRECTION_LAYER && !equals(oldValue, newValue)) {
-                List<Data<T, Double>> datas = triangle.getLayer(element.getValue(), CORRECTION_LAYER);
-                triangle.setValueLayer(CORRECTION_LAYER, datas);
+                List<WidgetData<Double>> values = triangle.getValueLayer(CORRECTION_LAYER);
+                triangle.setValueLayer(CORRECTION_LAYER, values);
+                List<Data<T, Double>> datas = getCorrections(element.getValue(), values);
                 updateCorrections(datas);
             }
+        }
+        
+        private List<Data<T, Double>> getCorrections(T owner, List<WidgetData<Double>> values) {
+            List<Data<T, Double>> datas = new ArrayList<Data<T, Double>>(values.size());
+            for(WidgetData<Double> value : values)
+                datas.add(new Data<T, Double>(owner, value.getAccident(), value.getDevelopment(), value.getValue()));
+            return datas;
         }
     
         private boolean equals(Double d1, Double d2) {
             if(d1 == null) return d2 == null;
             if(d2 == null) return false;
             return d1.equals(d2);
+        }
+
+        @Override
+        public void commentsChanged() {
+            List<WidgetData<Comment>> comments = triangle.getComments();
+            updateComments(comments);
         }
     }
     

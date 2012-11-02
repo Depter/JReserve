@@ -36,6 +36,10 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
     @OneToMany(fetch=FetchType.EAGER, mappedBy="vector", cascade=CascadeType.ALL)
     private Set<VectorCorrection> corrections = new HashSet<VectorCorrection>();
     
+    @NotAudited
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="vector", cascade=CascadeType.ALL)
+    private Set<VectorComment> comments = new HashSet<VectorComment>();
+    
     protected Vector() {
     }
     
@@ -74,6 +78,30 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
     private void throwOtherTriangleException(VectorCorrection correction) {
         String msg = "Correction belongs to another vector '%s' instead of '%s'!";
         msg = String.format(msg, this, correction.getVector());
+        throw new IllegalArgumentException(msg);
+    }
+    
+    public List<VectorComment> getComments() {
+        return new ArrayList<VectorComment>(comments);
+    }
+    
+    public void setComments(List<VectorComment> comments) {
+        if(comments != null)
+            checkMyComments(comments);
+        this.comments.clear();
+        if(comments != null)
+            this.comments.addAll(comments);
+    }
+    
+    private void checkMyComments(List<VectorComment> comments) {
+        for(VectorComment comment : comments)
+            if(!equals(comment.getVector()))
+                throwOtherTriangleException(comment);
+    }
+    
+    private void throwOtherTriangleException(VectorComment comments) {
+        String msg = "Comment belongs to another vector '%s' instead of '%s'!";
+        msg = String.format(msg, this, comments.getVector());
         throw new IllegalArgumentException(msg);
     }
     

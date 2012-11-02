@@ -9,7 +9,7 @@ import org.jreserve.triangle.entities.Comment;
  */
 class CommentRenderer {
 
-    private final static int MAX_ROW_WIDTH = 40;
+    final static int MAX_ROW_WIDTH = 40;
     private final static String TITLE = "%tF / %s:";
     
     static String renderComments(List<? extends Comment> comments) {

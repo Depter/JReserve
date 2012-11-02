@@ -24,7 +24,7 @@ public class TriangleCorrection implements Serializable {
          "End date '%tF' is before start date '%tF'!";
     
     @Id
-    @ManyToOne(cascade=CascadeType.ALL, optional=false)
+    @ManyToOne(optional=false)
     @JoinColumn(name="TRIANGLE_ID", referencedColumnName="ID", columnDefinition=PersistentObject.COLUMN_DEF)
     private Triangle triangle;
     

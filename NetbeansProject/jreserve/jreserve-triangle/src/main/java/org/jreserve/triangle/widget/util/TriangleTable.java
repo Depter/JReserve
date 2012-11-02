@@ -13,12 +13,11 @@ import javax.swing.ToolTipManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
-import org.jreserve.data.Data;
-import org.jreserve.persistence.PersistentObject;
 import org.jreserve.resources.ActionUtil;
+import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.widget.PopUpFactory;
 import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
+import org.jreserve.triangle.widget.WidgetData;
 import org.jreserve.triangle.widget.data.TriangleCell;
 import org.jreserve.triangle.widget.model.TriangleModel;
 import org.jreserve.triangle.widget.model.TriangleModel.ModelType;
@@ -42,7 +41,6 @@ public class TriangleTable extends JTable implements Lookup.Provider {
     private TableCellRenderer headerRenderer;
     private DoubleEditor editor;
     private String popUpActionPath;
-    //private PopUpFactory popUpFactory;
     
     private InstanceContent content = new InstanceContent();
     private Lookup lookup = new AbstractLookup(content);
@@ -93,6 +91,13 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         getColumnModel().getSelectionModel().addListSelectionListener(listener);
     }
     
+    public void setPopUpActionPath(String path) {
+        if(path == null || path.trim().length()==0)
+            this.popUpActionPath = null;
+        else
+            this.popUpActionPath = path;
+    }
+    
     public void setModelType(ModelType type) {
         this.type = type!=null? type : ModelType.DEVELOPMENT;
         initModel();
@@ -137,12 +142,36 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         model.removeTriangleWidgetListener(listener);
     }
     
-    public void addValueLayer(List<Data<PersistentObject, Double>> datas) {
+    public void addValueLayer(List<WidgetData<Double>> datas) {
         model.addValues(datas);
     }
     
-    public void setValueLayer(int layer, List<Data<PersistentObject, Double>> datas) {
+    public void setValueLayer(int layer, List<WidgetData<Double>> datas) {
         model.setValues(layer, datas);
+    }
+    
+    public List<WidgetData<Double>> getValueLayer(int layer) {
+        return model.getValues(layer);
+    }
+    
+    public void removeComment(WidgetData<Comment> comments) {
+        model.removeComment(comments);
+    }
+    
+    public void setComments(List<WidgetData<Comment>> comments) {
+        model.setComments(comments);
+    }
+    
+    public void addComments(List<WidgetData<Comment>> comments) {
+        model.addComments(comments);
+    }
+    
+    public void addComment(WidgetData<Comment> comment) {
+        model.addComment(comment);
+    }
+    
+    public List<WidgetData<Comment>> getComments() {
+        return model.getComments();
     }
     
     public void setLayerBackground(int layer, Color color) {
@@ -161,10 +190,6 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         model.setEditableLayer(layer);
     }
     
-    public <T extends PersistentObject> List<Data<T, Double>> getLayer(T owner, int layerIndex) {
-        return model.getLayer(owner, layerIndex);
-    }
-    
     public double[][] flatten() {
         TriangleCell[][] cells = model.getCells();
         Flattener flattener = new Flattener(cells);
@@ -175,8 +200,6 @@ public class TriangleTable extends JTable implements Lookup.Provider {
     public Lookup getLookup() {
         return lookup;
     }
-    
-    
     
     private static class Flattener {
         
@@ -205,7 +228,6 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         } 
         
         private int getLastIndex(TriangleCell[] row) {
-            int cCount = row.length;
             for(int c=row.length-1; c>=0; c--)
                 if(row[c] != null)
                     return c;

@@ -1,10 +1,11 @@
 Manifest-Version: 1.0
+OpenIDE-Module-Layer: org/jreserve/triangle/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/triangle/Bundle.propert
  ies
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20121101
-OpenIDE-Module-Build-Version: 201211012302
+OpenIDE-Module-Implementation-Version: 1.0-20121102
+OpenIDE-Module-Build-Version: 201211021617
 OpenIDE-Module: org.jreserve.jreserve.triangle
 OpenIDE-Module-Public-Packages: org.jreserve.triangle.entities.*, org.
  jreserve.triangle.factories.*

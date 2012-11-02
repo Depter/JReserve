@@ -21,7 +21,7 @@ public class VectorComment extends AbstractPersistentObject implements Comment {
     
     private final static int NAME_SIZE = 64;
     
-    @ManyToOne(cascade= CascadeType.ALL)
+    @ManyToOne(optional=false)
     @JoinColumn(name="VECTOR_ID", referencedColumnName="ID", nullable=false)
     private Vector vector;
     
