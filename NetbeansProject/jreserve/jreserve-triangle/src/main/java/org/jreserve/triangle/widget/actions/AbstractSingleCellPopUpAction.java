@@ -14,14 +14,21 @@ public abstract class AbstractSingleCellPopUpAction extends AbstractPopUpAction 
     private Result<TriangleCell> cResult;
     
     protected TriangleCell cell;
+     
+    protected AbstractSingleCellPopUpAction() {
+    }
     
+    protected AbstractSingleCellPopUpAction(Lookup lookup) {
+        super(lookup);
+    }
+   
     @Override
     protected void init(Lookup lookup) {
         if(cResult != null)
             return;
-        
         cResult = lookup.lookupResult(TriangleCell.class);
         cResult.addLookupListener(this);
+        super.init(lookup);
     }
     
     @Override

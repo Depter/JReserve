@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import org.jreserve.localesettings.util.DoubleRenderer;
 import org.jreserve.triangle.entities.Comment;
@@ -251,6 +250,8 @@ public class TriangleCellRenderer extends JLabel implements TableCellRenderer {
         java.util.List<Comment> list = cell.getComments();
         if(!list.isEmpty())
             setToolTipText(CommentRenderer.renderComments(list));
+        else
+            setToolTipText(null);
     }
     
     @Override

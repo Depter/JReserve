@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
@@ -14,6 +15,7 @@ import org.jreserve.persistence.PersistenceUtil;
  * @version 1.0
  */
 @EntityRegistration
+@Audited
 @Entity
 @Table(name="VECTOR_COMMENT", schema="JRESERVE")
 public class VectorComment extends AbstractPersistentObject implements Comment {

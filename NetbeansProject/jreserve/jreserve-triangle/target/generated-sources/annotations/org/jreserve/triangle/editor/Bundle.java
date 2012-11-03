@@ -10,11 +10,25 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL.AddTriangleCommentAction");
     }
     /**
+     * @return <i>Add comment</i>
+     * @see AddVectorCommentAction
+     */
+    static String CTL_AddVectorCommentAction() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL.AddVectorCommentAction");
+    }
+    /**
      * @return <i>Delete comments</i>
      * @see DeleteTriangleCommentAction
      */
     static String CTL_DeleteTriangleCommentAction() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL.DeleteTriangleCommentAction");
+    }
+    /**
+     * @return <i>Delete comments</i>
+     * @see DeleteVectorCommentAction
+     */
+    static String CTL_DeleteVectorCommentAction() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL.DeleteVectorCommentAction");
     }
     /**
      * @param name name

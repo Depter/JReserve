@@ -201,6 +201,48 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         return lookup;
     }
     
+    public String getClipboardString() {
+        int columns = model.getColumnCount();
+        StringBuilder sb = new StringBuilder();
+        appendHeader(columns, sb);
+        appendTable(columns, sb);
+        return sb.toString();
+    }
+    
+    private void appendHeader(int columns, StringBuilder sb) {
+        for(int c=0; c<columns; c++) {
+            if(c!=0) sb.append('\t');
+            sb.append(model.getColumnName(c));
+        }
+    }
+    
+    private void appendTable(int columns, StringBuilder sb) {
+        for(int r=0, rows=model.getRowCount(); r<rows; r++) {
+            sb.append('\n');
+            appendRow(columns, r, sb);
+        }
+    }
+    
+    private void appendRow(int columns, int row, StringBuilder sb) {
+        for(int c=0; c<columns; c++) {
+            if(c != 0) sb.append('\t');
+            Object value = model.getValueAt(row, c);
+            appendValue(c, value, sb);
+        }
+    } 
+    
+    private void appendValue(int column, Object value, StringBuilder sb) {
+        if(value == null)
+            return;
+        if(column == 0) {
+            sb.append(value);
+        } else {
+            String str = renderer.getValue((TriangleCell) value);
+            if(str != null)
+                sb.append(str.trim());
+        }
+    }
+    
     private static class Flattener {
         
         private TriangleCell[][] cells;

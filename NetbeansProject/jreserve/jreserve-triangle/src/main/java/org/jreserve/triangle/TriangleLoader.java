@@ -21,7 +21,7 @@ import org.jreserve.triangle.entities.Triangle;
 public class TriangleLoader extends AbstractProjectElementFactory<Triangle> {
 
     private final static String QUERY = 
-          "SELECT t FROM Triangle t WHERE t.meta.project.id = :projectId";
+          "SELECT t FROM Triangle t WHERE t.project.id = :projectId";
     
     private final static Comparator<Triangle> COMPARATOR = new Comparator<Triangle>() {
         @Override

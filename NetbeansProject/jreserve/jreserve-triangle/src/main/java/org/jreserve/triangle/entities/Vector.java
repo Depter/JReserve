@@ -26,6 +26,10 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
 
     public final static int POSITION = 200;
     
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
+    private Project project;
+    
     @Embedded
     private MetaData meta;
     
@@ -44,7 +48,14 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
     }
     
     public Vector(Project project, ProjectDataType dataType, String name) {
-        meta = new MetaData(project, dataType, name);
+        this.meta = new MetaData(dataType, name);
+        initProject(project);
+    }
+    
+    private void initProject(Project project) {
+        if(project == null)
+            throw new NullPointerException("Project is null!");
+        this.project = project;
     }
     
     public VectorGeometry getGeometry() {
@@ -117,9 +128,10 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
 
     @Override
     public Project getProject() {
-        return meta.getProject();
+        return project;
     }
 
+    @Override
     public ProjectDataType getDataType() {
         return meta.getDataType();
     }

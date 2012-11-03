@@ -7,11 +7,7 @@ import java.util.List;
 import org.jreserve.data.Data;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.TriangleProjectElement;
-import org.jreserve.triangle.entities.Comment;
-import org.jreserve.triangle.entities.Triangle;
-import org.jreserve.triangle.entities.TriangleComment;
-import org.jreserve.triangle.entities.TriangleCorrection;
-import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.entities.*;
 import org.jreserve.triangle.widget.WidgetData;
 
 /**
@@ -136,11 +132,5 @@ class TriangleDataEditorView extends DataEditorMultiviewElement<Triangle> {
         for(TriangleComment comment : element.getValue().getComments())
             comments.add(new WidgetData<Comment>(comment.getAccidentDate(), comment.getDevelopmentDate(), comment));
         return comments;
-    }
-
-    @Override
-    protected void updateComments(List<WidgetData<Comment>> comments) {
-        List<TriangleComment> original = element.getValue().getComments();
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

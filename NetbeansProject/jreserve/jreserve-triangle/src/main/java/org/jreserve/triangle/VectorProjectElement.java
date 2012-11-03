@@ -3,7 +3,6 @@ package org.jreserve.triangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
-import org.hibernate.Query;
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
@@ -11,6 +10,7 @@ import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.triangle.editor.Editor;
 import org.jreserve.triangle.entities.Vector;
+import org.jreserve.triangle.entities.VectorComment;
 import org.jreserve.triangle.entities.VectorCorrection;
 import org.jreserve.triangle.entities.VectorGeometry;
 import org.netbeans.api.actions.Openable;
@@ -40,6 +40,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
     
     public final static String GEOMETRY_PROPERTY = "VECTOR_GEOMETRY_PROPERTY";
     public final static String CORRECTION_PROPERTY = "VECTOR_CORRECTION_PROPERTY";
+    public final static String COMMENT_PROPERTY = "VECTOR_COMMENT_PROPERTY";
     
     public VectorProjectElement(Vector vector) {
         super(vector);
@@ -52,6 +53,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         super.setProperty(DESCRIPTION_PROPERTY, vector.getDescription());
         super.setProperty(GEOMETRY_PROPERTY, vector.getGeometry());
         super.setProperty(CORRECTION_PROPERTY, vector.getCorrections());
+        super.setProperty(COMMENT_PROPERTY, vector.getComments());
     }
     
     private void initLookup() {
@@ -82,6 +84,8 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             getValue().setGeometry((VectorGeometry) value);
         else if(CORRECTION_PROPERTY.equals(property))
             getValue().setCorrections((List<VectorCorrection>) value);
+        else if(COMMENT_PROPERTY.equals(property))
+            getValue().setComments((List<VectorComment>) value);
         super.setProperty(property, value);
     }
     
@@ -98,6 +102,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             originalProperties.put(DESCRIPTION_PROPERTY, vector.getDescription());
             originalProperties.put(GEOMETRY_PROPERTY, vector.getGeometry());
             originalProperties.put(CORRECTION_PROPERTY, vector.getCorrections());
+            originalProperties.put(COMMENT_PROPERTY, vector.getComments());
         }        
         
         @Override
@@ -106,6 +111,8 @@ public class VectorProjectElement extends ProjectElement<Vector> {
                 return isChanged((VectorGeometry) o1, (VectorGeometry) o2);
             } else if(CORRECTION_PROPERTY.equals(property)) {
                 return isChanged((List<VectorCorrection>) o1, (List<VectorCorrection>) o2);
+            } else if(COMMENT_PROPERTY.equals(property)) {
+                return isChanged((List<VectorComment>) o1, (List<VectorComment>) o2);
             } else {
                 return super.isChanged(property, o1, o2);
             }
@@ -117,12 +124,12 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             return !g1.isEqualGeometry(g2);
         }
         
-        private boolean isChanged(List<VectorCorrection> c1, List<VectorCorrection> c2) {
+        private boolean isChanged(List c1, List c2) {
             if(getSize(c1) != getSize(c2)) return true;
             //if both size is 0, but one is empty aother is null => not changed
             if(c1 == null || c2 == null) return false;
             
-            for(VectorCorrection c : c1)
+            for(Object c : c1)
                 if(!c2.contains(c))
                     return true;
             return false;
@@ -134,20 +141,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
 
         @Override
         protected void saveEntity() {
-            saveCorrections();
             super.saveEntity();
-        }
-        
-        private void saveCorrections() {
-            deleteCorrections();
-            for(VectorCorrection correction : element.getValue().getCorrections())
-                session.persist(correction);
-        }
-        
-        private void deleteCorrections() {
-            Query query = session.createQuery("delete from VectorCorrection where triangle.id = :triangleId");
-            query.setString("triangleId", element.getValue().getId());
-            query.executeUpdate();
         }
     }
     

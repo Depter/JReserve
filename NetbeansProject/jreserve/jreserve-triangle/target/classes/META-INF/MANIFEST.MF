@@ -4,8 +4,8 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/triangle/Bundle.propert
  ies
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20121102
-OpenIDE-Module-Build-Version: 201211021617
+OpenIDE-Module-Implementation-Version: 1.0-20121103
+OpenIDE-Module-Build-Version: 201211030110
 OpenIDE-Module: org.jreserve.jreserve.triangle
 OpenIDE-Module-Public-Packages: org.jreserve.triangle.entities.*, org.
  jreserve.triangle.factories.*
@@ -18,9 +18,9 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
  15.1, org.openide.nodes > 7.28.1, org.openide.dialogs > 7.25.1, org.o
  penide.windows > 6.55.1, org.openide.awt > 7.46.1, org.netbeans.modul
  es.settings/1 > 1.35.1, org.netbeans.core.multiview/1 > 1.29.1, org.n
- etbeans.api.progress/1 > 1.28.1, org.jreserve.jreserve.persistence > 
- 1.0, org.jreserve.jreserve.audit > 1.0, org.jreserve.jreserve.project
- .system > 1.0, org.jreserve.jreserve.project > 1.0, org.jreserve.jres
- erve.data > 1.0, org.jreserve.jreserve.resources > 1.0, org.jreserve.
- jreserve.locale.settings > 1.0
+ etbeans.api.progress/1 > 1.28.1, org.openide.actions > 6.26.1, org.jr
+ eserve.jreserve.persistence > 1.0, org.jreserve.jreserve.audit > 1.0,
+  org.jreserve.jreserve.project.system > 1.0, org.jreserve.jreserve.pr
+ oject > 1.0, org.jreserve.jreserve.data > 1.0, org.jreserve.jreserve.
+ resources > 1.0, org.jreserve.jreserve.locale.settings > 1.0
 

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.widget.WidgetData;
 import org.jreserve.triangle.widget.util.AddCommentDialog;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -11,6 +12,13 @@ import org.jreserve.triangle.widget.util.AddCommentDialog;
  * @version 1.0
  */
 public abstract class AddCommentAction extends AbstractSingleCellPopUpAction {
+    
+    protected AddCommentAction() {
+    }
+    
+    protected AddCommentAction(Lookup lkp) {
+        super(lkp);
+    }
     
     @Override
     public void actionPerformed(ActionEvent e) {

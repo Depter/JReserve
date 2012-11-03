@@ -15,10 +15,13 @@ import org.jreserve.triangle.widget.WidgetData;
  * @author Peter Decsi
  * @version 1.0
  */
-public class VectorDataEditorView extends DataEditorMultiviewElement<Vector> {
+class VectorDataEditorView extends DataEditorMultiviewElement<Vector> {
+    
+    private final static String POPUP_PATH = "JReserve/Popup/VectorDataEditor";
 
-    public VectorDataEditorView(ProjectElement<Vector> element) {
+    VectorDataEditorView(ProjectElement<Vector> element) {
         super(element);
+        super.triangle.setPopUpActionPath(POPUP_PATH);
     }
     
     @Override
@@ -113,16 +116,13 @@ public class VectorDataEditorView extends DataEditorMultiviewElement<Vector> {
             comments.add(new WidgetData<Comment>(comment.getAccidentDate(), comment.getAccidentDate(), comment));
         return comments;
     }
-
-    @Override
-    protected void updateComments(List<WidgetData<Comment>> comments) {
-    }
     
     private static class TriangleDummy extends TriangleGeometry {
     
         private VectorGeometry geometry;
         
         TriangleDummy(VectorGeometry geometry) {
+            this.geometry = geometry;
         }
 
         @Override

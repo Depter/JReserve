@@ -5,8 +5,10 @@ import java.util.Date;
 import javax.persistence.*;
 import org.hibernate.envers.Audited;
 import org.jreserve.data.Data;
+import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistentObject;
+import org.jreserve.persistence.IdGenerator;
 
 /**
  *
@@ -16,7 +18,6 @@ import org.jreserve.persistence.PersistentObject;
 @EntityRegistration
 @Entity
 @Audited
-@IdClass(TriangleCorrectionPk.class)
 @Table(name="TRIANGLE_CORRECTION", schema="JRESERVE")
 public class TriangleCorrection implements Serializable {
     
@@ -24,16 +25,17 @@ public class TriangleCorrection implements Serializable {
          "End date '%tF' is before start date '%tF'!";
     
     @Id
+    @Column(name="ID", length=AbstractPersistentObject.ID_LENGTH)
+    private String id = IdGenerator.getId();
+    
     @ManyToOne(optional=false)
     @JoinColumn(name="TRIANGLE_ID", referencedColumnName="ID", columnDefinition=PersistentObject.COLUMN_DEF)
     private Triangle triangle;
     
-    @Id
     @Column(name="ACCIDENT_DATE", nullable=false)
     @Temporal(TemporalType.DATE)
     private Date accidentDate;
     
-    @Id
     @Column(name="DEVELOPMENT_DATE", nullable=false)
     @Temporal(TemporalType.DATE)
     private Date developmentDate;

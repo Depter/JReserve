@@ -9,7 +9,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box.Filler;
 import javax.swing.JPanel;
 import org.jreserve.data.Data;
-import org.jreserve.data.ProjectDataType;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.DataStructure;
@@ -157,8 +156,6 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
     
     protected abstract List<WidgetData<Comment>> getComments();
     
-    protected abstract void updateComments(List<WidgetData<Comment>> comments);
-    
     private class LoaderCallback implements DataLoader.Callback<T> {
 
         @Override
@@ -249,8 +246,6 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
 
         @Override
         public void commentsChanged() {
-            List<WidgetData<Comment>> comments = triangle.getComments();
-            updateComments(comments);
         }
     }
     

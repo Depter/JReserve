@@ -1,6 +1,7 @@
 package org.jreserve.triangle.editor;
 
 import java.util.List;
+import javax.swing.Action;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleComment;
@@ -22,7 +23,8 @@ import org.openide.util.NbBundle;
     id = "org.jreserve.triangle.editor.DeleteTriangleCommentAction"
 )
 @ActionRegistration(
-    displayName="#CTL.DeleteTriangleCommentAction"
+    displayName="#CTL.DeleteTriangleCommentAction",
+    lazy=true
 )
 @ActionReferences({
     @ActionReference(path = "JReserve/Popup/TriangleDataEditor", position = 200)
@@ -36,13 +38,22 @@ public class DeleteTriangleCommentAction extends DeleteCommentsAction {
 
     private TriangleProjectElement element;
     
+    public DeleteTriangleCommentAction() {
+        putValue(NAME, NbBundle.getMessage(DeleteTriangleCommentAction.class, "CTL.DeleteTriangleCommentAction"));
+    }
+    
+    public DeleteTriangleCommentAction(Lookup lookup) {
+        super(lookup);
+        putValue(NAME, NbBundle.getMessage(DeleteTriangleCommentAction.class, "CTL.DeleteTriangleCommentAction"));
+    }
+    
     @Override
     protected void init(Lookup lookup) {
         if(tResult != null)
             return;
-        
         tResult = lookup.lookupResult(TriangleProjectElement.class);
         tResult.addLookupListener(this);
+        super.init(lookup);
     }
     
     @Override
@@ -62,5 +73,10 @@ public class DeleteTriangleCommentAction extends DeleteCommentsAction {
         List<TriangleComment> tcs = (List<TriangleComment>) element.getProperty(TriangleProjectElement.COMMENT_PROPERTY);
         tcs.removeAll(comments);
         element.setProperty(TriangleProjectElement.COMMENT_PROPERTY, tcs);
+    }
+
+    @Override
+    public Action createContextAwareInstance(Lookup lkp) {
+        return new DeleteTriangleCommentAction(lkp);
     }
 }

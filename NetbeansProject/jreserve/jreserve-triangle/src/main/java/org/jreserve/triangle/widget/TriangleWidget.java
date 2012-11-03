@@ -3,6 +3,9 @@ package org.jreserve.triangle.widget;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -17,17 +20,21 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
+import javax.swing.text.DefaultEditorKit;
 import org.jreserve.data.Data;
 import org.jreserve.persistence.PersistentObject;
+import org.jreserve.resources.ToolBarButton;
 import org.jreserve.resources.ToolBarToggleButton;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.data.TriangleCell;
 import org.jreserve.triangle.widget.util.DecimalSpinner;
 import org.jreserve.triangle.widget.util.TriangleTable;
+import org.openide.actions.CopyAction;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -68,6 +75,7 @@ public class TriangleWidget extends JPanel implements Serializable {
         initComponent();
         lookup = new ProxyLookup(Lookups.singleton(this), table.getLookup());
         super.addComponentListener(new ResizeListener());
+        registerCopyAction();
     }
     
     private void initComponent() {
@@ -111,6 +119,11 @@ public class TriangleWidget extends JPanel implements Serializable {
         
         toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
         toolBar.add(createCummulatedButton(group));
+        
+        ToolBarButton copyButton = new ToolBarButton(SystemAction.get(CopyAction.class));
+        toolBar.addSeparator();
+        toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
+        toolBar.add(copyButton);
         
         toolBar.setVisible(true);
         toolBar.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
@@ -168,6 +181,13 @@ public class TriangleWidget extends JPanel implements Serializable {
         scroll = new JScrollPane(table);
         scroll.setBorder(BorderFactory.createEmptyBorder());
         return scroll;
+    }
+    
+    private void registerCopyAction() {
+        KeyStroke stroke = KeyStroke.getKeyStroke("control C");
+        getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, DefaultEditorKit.copyAction);
+        table.getInputMap().put(stroke, DefaultEditorKit.copyAction);
+        getActionMap().put(DefaultEditorKit.copyAction, new CopyDataAction());
     }
     
     public void setShowsToolbar(boolean showsToolBar) {
@@ -344,4 +364,16 @@ public class TriangleWidget extends JPanel implements Serializable {
         
         public void commentsChanged();
     }
+    
+    private class CopyDataAction extends AbstractAction {
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String str = table.getClipboardString();
+            StringSelection text = new StringSelection(str);
+            Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+            cb.setContents(text, null);
+        }
+    }
+    
 }

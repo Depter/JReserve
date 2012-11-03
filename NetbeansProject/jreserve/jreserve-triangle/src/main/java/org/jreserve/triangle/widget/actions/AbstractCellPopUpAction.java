@@ -16,13 +16,20 @@ public abstract class AbstractCellPopUpAction extends AbstractPopUpAction {
     
     protected List<TriangleCell> cells = new ArrayList<TriangleCell>();
     
+    protected AbstractCellPopUpAction() {
+    }
+    
+    protected AbstractCellPopUpAction(Lookup lookup) {
+        super(lookup);
+    }
+    
     @Override
     protected void init(Lookup lookup) {
         if(cResult != null)
             return;
-        
         cResult = lookup.lookupResult(TriangleCell.class);
         cResult.addLookupListener(this);
+        super.init(lookup);
     }
     
     @Override

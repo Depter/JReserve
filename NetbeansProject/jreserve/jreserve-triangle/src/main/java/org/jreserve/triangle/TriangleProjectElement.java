@@ -108,6 +108,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             originalProperties.put(DESCRIPTION_PROPERTY, triangle.getDescription());
             originalProperties.put(GEOMETRY_PROPERTY, triangle.getGeometry());
             originalProperties.put(CORRECTION_PROPERTY, triangle.getCorrections());
+            originalProperties.put(COMMENT_PROPERTY, triangle.getComments());
         }
         
         @Override

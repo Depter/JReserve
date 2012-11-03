@@ -99,6 +99,72 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleAuditor.TypeName");
     }
     /**
+     * @return <i>Changed.</i>
+     * @see TriangleCommentAuditor
+     */
+    static String MSG_TriangleCommentAuditor_Change() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCommentAuditor.Change");
+    }
+    /**
+     * @return <i>Created.</i>
+     * @see TriangleCommentAuditor
+     */
+    static String MSG_TriangleCommentAuditor_Created() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCommentAuditor.Created");
+    }
+    /**
+     * @return <i>Deleted.</i>
+     * @see TriangleCommentAuditor
+     */
+    static String MSG_TriangleCommentAuditor_Deleted() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCommentAuditor.Deleted");
+    }
+    /**
+     * @return <i>Comment</i>
+     * @see TriangleCommentAuditor
+     */
+    static String MSG_TriangleCommentAuditor_TypeName() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCommentAuditor.TypeName");
+    }
+    /**
+     * @param old_correction old correction
+     * @param new_correction new correction
+     * @param accident accident
+     * @param development development
+     * @return <i>Changed correction "</i>{@code old_correction}<i> => </i>{@code new_correction}<i>" from [{2, date, yyyy-MM-dd}]/[{3, date, yyyy-MM-dd}].</i>
+     * @see TriangleCorrectionAuditor
+     */
+    static String MSG_TriangleCorrectionAuditor_Change(Object old_correction, Object new_correction, Object accident, Object development) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCorrectionAuditor.Change", old_correction, new_correction, accident, development);
+    }
+    /**
+     * @param correction correction
+     * @param accident accident
+     * @param development development
+     * @return <i>Created correction "</i>{@code correction}<i>" for [{1, date, yyyy-MM-dd}]/[{2, date, yyyy-MM-dd}].</i>
+     * @see TriangleCorrectionAuditor
+     */
+    static String MSG_TriangleCorrectionAuditor_Created(Object correction, Object accident, Object development) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCorrectionAuditor.Created", correction, accident, development);
+    }
+    /**
+     * @param correction correction
+     * @param accident accident
+     * @param development development
+     * @return <i>Deleted correction "</i>{@code correction}<i>" from [{1, date, yyyy-MM-dd}]/[{2, date, yyyy-MM-dd}].</i>
+     * @see TriangleCorrectionAuditor
+     */
+    static String MSG_TriangleCorrectionAuditor_Deleted(Object correction, Object accident, Object development) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCorrectionAuditor.Deleted", correction, accident, development);
+    }
+    /**
+     * @return <i>Correction</i>
+     * @see TriangleCorrectionAuditor
+     */
+    static String MSG_TriangleCorrectionAuditor_TypeName() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCorrectionAuditor.TypeName");
+    }
+    /**
      * @return <i>Vector created</i>
      * @see VectorAuditor
      */
@@ -143,6 +209,69 @@ class Bundle {
      */
     static String MSG_VectorAuditor_TypeName() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorAuditor.TypeName");
+    }
+    /**
+     * @return <i>Changed.</i>
+     * @see VectorCommentAuditor
+     */
+    static String MSG_VectorCommentAuditor_Change() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCommentAuditor.Change");
+    }
+    /**
+     * @return <i>Created.</i>
+     * @see VectorCommentAuditor
+     */
+    static String MSG_VectorCommentAuditor_Created() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCommentAuditor.Created");
+    }
+    /**
+     * @return <i>Deleted.</i>
+     * @see VectorCommentAuditor
+     */
+    static String MSG_VectorCommentAuditor_Deleted() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCommentAuditor.Deleted");
+    }
+    /**
+     * @return <i>Comment</i>
+     * @see VectorCommentAuditor
+     */
+    static String MSG_VectorCommentAuditor_TypeName() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCommentAuditor.TypeName");
+    }
+    /**
+     * @param old_correction old correction
+     * @param new_correction new correction
+     * @param accident accident
+     * @return <i>Changed correction "</i>{@code old_correction}<i> => </i>{@code new_correction}<i>" from [{2, date, yyyy-MM-dd}].</i>
+     * @see VectorCorrectionAuditor
+     */
+    static String MSG_VectorCorrectionAuditor_Change(Object old_correction, Object new_correction, Object accident) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCorrectionAuditor.Change", old_correction, new_correction, accident);
+    }
+    /**
+     * @param correction correction
+     * @param accident accident
+     * @return <i>Created correction "</i>{@code correction}<i>" for [{1, date, yyyy-MM-dd}].</i>
+     * @see VectorCorrectionAuditor
+     */
+    static String MSG_VectorCorrectionAuditor_Created(Object correction, Object accident) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCorrectionAuditor.Created", correction, accident);
+    }
+    /**
+     * @param correction correction
+     * @param accident accident
+     * @return <i>Deleted correction "</i>{@code correction}<i>" from [{1, date, yyyy-MM-dd}].</i>
+     * @see VectorCorrectionAuditor
+     */
+    static String MSG_VectorCorrectionAuditor_Deleted(Object correction, Object accident) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCorrectionAuditor.Deleted", correction, accident);
+    }
+    /**
+     * @return <i>Correction</i>
+     * @see VectorCorrectionAuditor
+     */
+    static String MSG_VectorCorrectionAuditor_TypeName() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCorrectionAuditor.TypeName");
     }
     private void Bundle() {}
 }

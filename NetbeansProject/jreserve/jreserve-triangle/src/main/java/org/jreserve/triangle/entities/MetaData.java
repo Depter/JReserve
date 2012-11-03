@@ -17,10 +17,6 @@ public class MetaData implements Serializable {
     private final static int NAME_SIZE = 64;
     
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
-    private Project project;
-    
-    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="DATA_TYPE_ID", referencedColumnName="ID", nullable=false)
     private ProjectDataType dataType;
     
@@ -33,17 +29,9 @@ public class MetaData implements Serializable {
     protected MetaData() {
     }
     
-    MetaData(Project project,
-            ProjectDataType dataType, String name) {
-        initProject(project);
+    MetaData(ProjectDataType dataType, String name) {
         initDataType(dataType);
         initName(name);
-    }
-    
-    private void initProject(Project project) {
-        if(project == null)
-            throw new NullPointerException("Project is null!");
-        this.project = project;
     }
     
     private void initDataType(ProjectDataType dataType) {
@@ -55,10 +43,6 @@ public class MetaData implements Serializable {
     private void initName(String name) {
         PersistenceUtil.checkVarchar(name, NAME_SIZE);
         this.name = name;
-    }
-
-    public Project getProject() {
-        return project;
     }
 
     public ProjectDataType getDataType() {

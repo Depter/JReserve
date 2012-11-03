@@ -5,7 +5,9 @@ import java.util.Date;
 import javax.persistence.*;
 import org.hibernate.envers.Audited;
 import org.jreserve.data.Data;
+import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
+import org.jreserve.persistence.IdGenerator;
 import org.jreserve.persistence.PersistentObject;
 
 /**
@@ -16,16 +18,17 @@ import org.jreserve.persistence.PersistentObject;
 @EntityRegistration
 @Entity
 @Audited
-@IdClass(VectorCorrectionPk.class)
 @Table(name="VECTOR_CORRECTION", schema="JRESERVE")
 public class VectorCorrection implements Serializable {
     
     @Id
+    @Column(name="ID", length=AbstractPersistentObject.ID_LENGTH)
+    private String id = IdGenerator.getId();
+    
     @ManyToOne(optional=false)
     @JoinColumn(name="VECTOR_ID", referencedColumnName="ID", columnDefinition=PersistentObject.COLUMN_DEF)
     private Vector vector;
     
-    @Id
     @Column(name="ACCIDENT_DATE", nullable=false)
     @Temporal(TemporalType.DATE)
     private Date accidentDate;

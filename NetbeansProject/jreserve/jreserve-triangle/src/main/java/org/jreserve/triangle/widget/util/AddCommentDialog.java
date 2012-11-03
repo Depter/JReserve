@@ -6,11 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -78,11 +74,13 @@ public class AddCommentDialog extends JPanel implements ActionListener, Document
         scroll.setBorder(new LineBorder(Color.BLACK, 1, true));
         add(scroll, BorderLayout.CENTER);
         
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         okButton = new JButton(Bundle.LBL_AddCommentDialog_Ok());
         okButton.setEnabled(false);
         okButton.addActionListener(this);
         buttonPanel.add(okButton);
+        
+        buttonPanel.add(Box.createHorizontalStrut(5));
         
         cancelButton = new JButton(Bundle.LBL_AddCommentDialog_Cancel());
         cancelButton.addActionListener(this);

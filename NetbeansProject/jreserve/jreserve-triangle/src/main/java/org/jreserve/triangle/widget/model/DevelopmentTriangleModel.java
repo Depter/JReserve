@@ -33,8 +33,10 @@ public class DevelopmentTriangleModel extends AbstractTriangleModel {
     
     private TriangleCell[] createRow(List<Date> devBounds, Date aBegin, Date aEnd) {
         List<Date> columnBounds = createColumnBoundsForRow(devBounds, aBegin);
-        if(columnBounds.size() < 2)
+        if(columnBounds.size() < 1)
             return new TriangleCell[0];
+        if(columnBounds.size() < 2)
+            return createSingleCell(columnBounds, aBegin, aEnd);
         return createBoundedRow(columnBounds, aBegin, aEnd);
     }
     
@@ -57,5 +59,10 @@ public class DevelopmentTriangleModel extends AbstractTriangleModel {
         }
         
         return row;
+    }
+    
+    private TriangleCell[] createSingleCell(List<Date> columnBounds, Date aBegin, Date aEnd) {
+        TriangleCell cell = new TriangleCell(aBegin, aEnd, aBegin, columnBounds.get(0));
+        return new TriangleCell[]{cell};
     }
 }

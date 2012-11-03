@@ -4,25 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import org.jreserve.triangle.widget.TriangleWidget;
-import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
-import org.openide.util.Utilities;
+import org.openide.util.*;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractPopUpAction extends AbstractAction implements LookupListener {
+public abstract class AbstractPopUpAction extends AbstractAction implements LookupListener, ContextAwareAction {
     
     private Result<TriangleWidget> wResult;
     
     protected TriangleWidget widget;
+    private Lookup lookup;
     
     protected AbstractPopUpAction() {
-        init();
+        this(Utilities.actionsGlobalContext());
+    }
+    
+    protected AbstractPopUpAction(Lookup lookup) {
+        this.lookup = lookup;
     }
     
     @Override
@@ -32,7 +34,7 @@ public abstract class AbstractPopUpAction extends AbstractAction implements Look
     }
     
     private void init() {
-        init(Utilities.actionsGlobalContext());
+        init(lookup);
         resultChanged(null);
     }
     

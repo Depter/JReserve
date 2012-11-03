@@ -2,6 +2,7 @@ package org.jreserve.triangle.editor;
 
 import java.util.Date;
 import java.util.List;
+import javax.swing.Action;
 import org.jreserve.triangle.TriangleProjectElement;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleComment;
@@ -12,6 +13,7 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -19,13 +21,13 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  * @version 1.0
  */
-
 @ActionID(
     category = "JReserve/TriangleWidget/TriangleEditor",
     id = "org.jreserve.triangle.editor.AddTriangleCommentAction"
 )
 @ActionRegistration(
-    displayName="#CTL.AddTriangleCommentAction"
+    displayName="#CTL.AddTriangleCommentAction",
+    lazy=true
 )
 @ActionReferences({
     @ActionReference(path = "JReserve/Popup/TriangleDataEditor", position = 100)
@@ -36,16 +38,24 @@ import org.openide.util.NbBundle.Messages;
 public class AddTriangleCommentAction extends AddCommentAction {
     
     private Result<TriangleProjectElement> tResult;
-
     private TriangleProjectElement element;
+    
+    public AddTriangleCommentAction() {
+        putValue(NAME, NbBundle.getMessage(AddTriangleCommentAction.class, "CTL.AddTriangleCommentAction"));
+    }
+    
+    public AddTriangleCommentAction(Lookup lookup) {
+        super(lookup);
+        putValue(NAME, NbBundle.getMessage(AddTriangleCommentAction.class, "CTL.AddTriangleCommentAction"));
+    }
     
     @Override
     protected void init(Lookup lookup) {
         if(tResult != null)
             return;
-        
         tResult = lookup.lookupResult(TriangleProjectElement.class);
         tResult.addLookupListener(this);
+        super.init(lookup);
     }
     
     @Override
@@ -75,6 +85,11 @@ public class AddTriangleCommentAction extends AddCommentAction {
         String user = comment.getUserName();
         String text = comment.getCommentText();
         return new TriangleComment(element.getValue(), accident, development, user, text);
+    }
+
+    @Override
+    public Action createContextAwareInstance(Lookup lkp) {
+        return new AddTriangleCommentAction(lkp);
     }
 
 }

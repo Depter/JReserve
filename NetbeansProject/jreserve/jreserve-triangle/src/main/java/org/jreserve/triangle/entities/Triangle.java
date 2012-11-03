@@ -26,6 +26,11 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
 
     public final static int POSITION = 100;
     
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
+    private Project project;
+    
+    @Embedded
     private MetaData meta;
     
     @Embedded
@@ -43,7 +48,14 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
     }
     
     public Triangle(Project project, ProjectDataType dataType, String name) {
-        this.meta = new MetaData(project, dataType, name);
+        this.meta = new MetaData(dataType, name);
+        initProject(project);
+    }
+    
+    private void initProject(Project project) {
+        if(project == null)
+            throw new NullPointerException("Project is null!");
+        this.project = project;
     }
     
     public TriangleGeometry getGeometry() {
@@ -144,7 +156,6 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
 
     @Override
     public Project getProject() {
-        return meta.getProject();
+        return project;
     }
-    
 }

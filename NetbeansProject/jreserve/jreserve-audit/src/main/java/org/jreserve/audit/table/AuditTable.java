@@ -3,6 +3,8 @@ package org.jreserve.audit.table;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.InputMap;
 import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
@@ -17,8 +19,11 @@ import org.jreserve.audit.Auditor;
 import org.jreserve.audit.util.AuditorRegistry;
 import org.jreserve.localesettings.util.LocaleSettings;
 import org.jreserve.persistence.SessionFactory;
+import org.openide.util.Exceptions;
 
 public class AuditTable extends javax.swing.JPanel {
+    
+    private final static Logger logger = Logger.getLogger(AuditTable.class.getName());
     
     private AuditChangeLoader loader = null;
     private Auditable auditable;
@@ -144,6 +149,10 @@ public class AuditTable extends javax.swing.JPanel {
                     return Collections.EMPTY_LIST;
                 openAuditReader();
                 return getAuditElements();
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Unable to get audits for: {0}!", value);
+                Exceptions.printStackTrace(ex);
+                throw ex;
             } finally {
                 closeSession();
             }
