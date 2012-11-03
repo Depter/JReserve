@@ -43,7 +43,12 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Peter Decsi
  */
 @NbBundle.Messages({
-    "LBL.TriangleWidget.Digits=Digits:"
+    "LBL.TriangleWidget.Digits=Digits:",
+    "LBL.TriangleWidget.ToolTip.Development=Development periods",
+    "LBL.TriangleWidget.ToolTip.Calendar=Calendar periods",
+    "LBL.TriangleWidget.ToolTip.Cummulate=Cummulate",
+    "LBL.TriangleWidget.ToolTip.Deummulate=Decummulate",
+    "LBL.TriangleWidget.ToolTip.ClipboardCopy=Copy to clipboard"
 })
 public class TriangleWidget extends JPanel implements Serializable {
     
@@ -121,6 +126,7 @@ public class TriangleWidget extends JPanel implements Serializable {
         toolBar.add(createCummulatedButton(group));
         
         ToolBarButton copyButton = new ToolBarButton(SystemAction.get(CopyAction.class));
+        copyButton.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_ClipboardCopy());
         toolBar.addSeparator();
         toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
         toolBar.add(copyButton);
@@ -136,6 +142,7 @@ public class TriangleWidget extends JPanel implements Serializable {
         button.setActionCommand(DEVELOPMENT_PERIOD_STRUCTURE_ACTION);
         button.addActionListener(actionHandler);
         button.setSelected(true);
+        button.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_Development());
         group.add(button);
         return button;
     }
@@ -146,6 +153,7 @@ public class TriangleWidget extends JPanel implements Serializable {
         button.setActionCommand(CALENDAR_PERIOD_STRUCTURE_ACTION);
         button.addActionListener(actionHandler);
         button.setSelected(false);
+        button.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_Calendar());
         group.add(button);
         return button;
     }
@@ -156,6 +164,7 @@ public class TriangleWidget extends JPanel implements Serializable {
         notCummulatedButton.setActionCommand(NOT_CUMMULATED_ACTION);
         notCummulatedButton.addActionListener(actionHandler);
         notCummulatedButton.setSelected(true);
+        notCummulatedButton.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_Deummulate());
         group.add(notCummulatedButton);
         return notCummulatedButton;
     }
@@ -166,6 +175,7 @@ public class TriangleWidget extends JPanel implements Serializable {
         cummulatedButton.setActionCommand(CUMMULATED_ACTION);
         cummulatedButton.addActionListener(actionHandler    );
         cummulatedButton.setSelected(false);
+        cummulatedButton.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_Cummulate());
         group.add(cummulatedButton);
         return cummulatedButton;
     }

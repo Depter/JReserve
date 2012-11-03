@@ -10,6 +10,41 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.TriangleWidget.Digits");
     }
     /**
+     * @return <i>Calendar periods</i>
+     * @see TriangleWidget
+     */
+    static String LBL_TriangleWidget_ToolTip_Calendar() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.TriangleWidget.ToolTip.Calendar");
+    }
+    /**
+     * @return <i>Copy to clipboard</i>
+     * @see TriangleWidget
+     */
+    static String LBL_TriangleWidget_ToolTip_ClipboardCopy() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.TriangleWidget.ToolTip.ClipboardCopy");
+    }
+    /**
+     * @return <i>Cummulate</i>
+     * @see TriangleWidget
+     */
+    static String LBL_TriangleWidget_ToolTip_Cummulate() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.TriangleWidget.ToolTip.Cummulate");
+    }
+    /**
+     * @return <i>Decummulate</i>
+     * @see TriangleWidget
+     */
+    static String LBL_TriangleWidget_ToolTip_Deummulate() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.TriangleWidget.ToolTip.Deummulate");
+    }
+    /**
+     * @return <i>Development periods</i>
+     * @see TriangleWidget
+     */
+    static String LBL_TriangleWidget_ToolTip_Development() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.TriangleWidget.ToolTip.Development");
+    }
+    /**
      * @return <i>Field 'Begin' in group 'Accident' is invalid!</i>
      * @see GeometrySettingPanel
      */

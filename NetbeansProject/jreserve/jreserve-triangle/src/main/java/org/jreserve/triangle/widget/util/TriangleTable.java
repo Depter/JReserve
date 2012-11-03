@@ -6,10 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.Action;
-import javax.swing.JPopupMenu;
-import javax.swing.JTable;
-import javax.swing.ToolTipManager;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
@@ -309,7 +306,9 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         private JPopupMenu createPopUp() {
             JPopupMenu popUp = new JPopupMenu();
             for(Action action : ActionUtil.actionsForPath(popUpActionPath)) {
-                if(action instanceof Presenter.Popup)
+                if(action == null)
+                    popUp.add(new JSeparator());
+                else if(action instanceof Presenter.Popup)
                     popUp.add(((Presenter.Popup)action).getPopupPresenter());
                 else
                     popUp.add(action);
@@ -371,4 +370,5 @@ public class TriangleTable extends JTable implements Lookup.Provider {
                 content.remove(cell);
         }
     }
+
 }

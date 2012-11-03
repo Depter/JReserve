@@ -31,6 +31,13 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL.DeleteVectorCommentAction");
     }
     /**
+     * @return <i>Smooth</i>
+     * @see TriangleSmoothingAction
+     */
+    static String CTL_TriangleSmoothingAction() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL.TriangleSmoothingAction");
+    }
+    /**
      * @param name name
      * @return <i>Save "</i>{@code name}<i>"?</i>
      * @see Editor

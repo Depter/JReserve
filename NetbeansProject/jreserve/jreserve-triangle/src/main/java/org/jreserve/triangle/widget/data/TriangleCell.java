@@ -14,6 +14,8 @@ import org.jreserve.triangle.widget.WidgetData;
  */
 public class TriangleCell {
     
+    private int row;
+    private int column;
     private Date accidentBegin;
     private Date accidentEnd;
     private Date developmentBegin;
@@ -25,13 +27,23 @@ public class TriangleCell {
     private List<Comment> comments = new ArrayList<Comment>();
     
     
-    public TriangleCell(Date aBegin, Date aEnd, Date dBegin, Date dEnd) {
+    public TriangleCell(int row, int column, Date aBegin, Date aEnd, Date dBegin, Date dEnd) {
+        this.row = row;
+        this.column = column;
         this.accidentBegin = aBegin;
         this.accidentEnd = aEnd;
         this.developmentBegin = dBegin;
         this.developmentEnd = dEnd;
     }
 
+    public int getRow() {
+        return row;
+    }
+    
+    public int getColumn() {
+        return column;
+    }
+    
     public Date getAccidentBegin() {
         return accidentBegin;
     }

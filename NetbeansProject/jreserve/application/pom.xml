@@ -131,6 +131,12 @@
             <artifactId>jreserve-apc-sample</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-smoothing</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

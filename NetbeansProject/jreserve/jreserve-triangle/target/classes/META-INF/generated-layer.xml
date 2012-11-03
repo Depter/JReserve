@@ -2,79 +2,7 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
                             "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <folder name="Actions">
-        <folder name="JReserve">
-            <folder name="TriangleWidget">
-                <folder name="VectorEditor">
-                    <file name="org-jreserve-triangle-editor-AddVectorCommentAction.instance">
-                        <!--org.jreserve.triangle.editor.AddVectorCommentAction-->
-                        <attr
-                            bundlevalue="org.jreserve.triangle.editor.Bundle#CTL.AddVectorCommentAction" name="displayName"/>
-                        <attr
-                            methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
-                        <attr name="delegate" newvalue="org.jreserve.triangle.editor.AddVectorCommentAction"/>
-                        <attr boolvalue="false" name="noIconInMenu"/>
-                    </file>
-                    <file name="org-jreserve-triangle-editor-DeleteVectorCommentAction.instance">
-                        <!--org.jreserve.triangle.editor.DeleteVectorCommentAction-->
-                        <attr
-                            bundlevalue="org.jreserve.triangle.editor.Bundle#CTL.DeleteVectorCommentAction" name="displayName"/>
-                        <attr
-                            methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
-                        <attr name="delegate" newvalue="org.jreserve.triangle.editor.DeleteVectorCommentAction"/>
-                        <attr boolvalue="false" name="noIconInMenu"/>
-                    </file>
-                </folder>
-                <folder name="TriangleEditor">
-                    <file name="org-jreserve-triangle-editor-AddTriangleCommentAction.instance">
-                        <!--org.jreserve.triangle.editor.AddTriangleCommentAction-->
-                        <attr
-                            bundlevalue="org.jreserve.triangle.editor.Bundle#CTL.AddTriangleCommentAction" name="displayName"/>
-                        <attr
-                            methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
-                        <attr name="delegate" newvalue="org.jreserve.triangle.editor.AddTriangleCommentAction"/>
-                        <attr boolvalue="false" name="noIconInMenu"/>
-                    </file>
-                    <file name="org-jreserve-triangle-editor-DeleteTriangleCommentAction.instance">
-                        <!--org.jreserve.triangle.editor.DeleteTriangleCommentAction-->
-                        <attr
-                            bundlevalue="org.jreserve.triangle.editor.Bundle#CTL.DeleteTriangleCommentAction" name="displayName"/>
-                        <attr
-                            methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
-                        <attr name="delegate" newvalue="org.jreserve.triangle.editor.DeleteTriangleCommentAction"/>
-                        <attr boolvalue="false" name="noIconInMenu"/>
-                    </file>
-                </folder>
-            </folder>
-        </folder>
-    </folder>
     <folder name="JReserve">
-        <folder name="Popup">
-            <folder name="VectorDataEditor">
-                <file name="org-jreserve-triangle-editor-AddVectorCommentAction.shadow">
-                    <!--org.jreserve.triangle.editor.AddVectorCommentAction-->
-                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/VectorEditor/org-jreserve-triangle-editor-AddVectorCommentAction.instance"/>
-                    <attr intvalue="100" name="position"/>
-                </file>
-                <file name="org-jreserve-triangle-editor-DeleteVectorCommentAction.shadow">
-                    <!--org.jreserve.triangle.editor.DeleteVectorCommentAction-->
-                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/VectorEditor/org-jreserve-triangle-editor-DeleteVectorCommentAction.instance"/>
-                    <attr intvalue="200" name="position"/>
-                </file>
-            </folder>
-            <folder name="TriangleDataEditor">
-                <file name="org-jreserve-triangle-editor-AddTriangleCommentAction.shadow">
-                    <!--org.jreserve.triangle.editor.AddTriangleCommentAction-->
-                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/TriangleEditor/org-jreserve-triangle-editor-AddTriangleCommentAction.instance"/>
-                    <attr intvalue="100" name="position"/>
-                </file>
-                <file name="org-jreserve-triangle-editor-DeleteTriangleCommentAction.shadow">
-                    <!--org.jreserve.triangle.editor.DeleteTriangleCommentAction-->
-                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/TriangleEditor/org-jreserve-triangle-editor-DeleteTriangleCommentAction.instance"/>
-                    <attr intvalue="200" name="position"/>
-                </file>
-            </folder>
-        </folder>
         <folder name="Entities">
             <file name="org-jreserve-triangle-entities-VectorComment.entity">
                 <!--org.jreserve.triangle.entities.VectorComment-->

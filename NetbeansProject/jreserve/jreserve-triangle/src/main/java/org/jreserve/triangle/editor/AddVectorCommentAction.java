@@ -19,17 +19,6 @@ import org.openide.util.NbBundle;
  *
  * @author Peter Decsi
  */
-@ActionID(
-    category = "JReserve/TriangleWidget/VectorEditor",
-    id = "org.jreserve.triangle.editor.AddVectorCommentAction"
-)
-@ActionRegistration(
-    displayName="#CTL.AddVectorCommentAction", 
-    lazy=true
-)
-@ActionReferences({
-    @ActionReference(path = "JReserve/Popup/VectorDataEditor", position = 100)
-})
 @NbBundle.Messages({
     "CTL.AddVectorCommentAction=Add comment"
 })

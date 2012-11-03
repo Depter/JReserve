@@ -18,17 +18,17 @@ import org.openide.util.NbBundle;
  * @author Peter Decsi
  * @version 1.0
  */
-@ActionID(
-    category = "JReserve/TriangleWidget/TriangleEditor",
-    id = "org.jreserve.triangle.editor.DeleteTriangleCommentAction"
-)
-@ActionRegistration(
-    displayName="#CTL.DeleteTriangleCommentAction",
-    lazy=true
-)
-@ActionReferences({
-    @ActionReference(path = "JReserve/Popup/TriangleDataEditor", position = 200)
-})
+//@ActionID(
+//    category = "JReserve/TriangleWidget/TriangleEditor",
+//    id = "org.jreserve.triangle.editor.DeleteTriangleCommentAction"
+//)
+//@ActionRegistration(
+//    displayName="#CTL.DeleteTriangleCommentAction",
+//    lazy=true
+//)
+//@ActionReferences({
+//    @ActionReference(path = "JReserve/Popup/TriangleDataEditor", position = 200)
+//})
 @NbBundle.Messages({
     "CTL.DeleteTriangleCommentAction=Delete comments"
 })

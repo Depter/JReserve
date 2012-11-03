@@ -21,17 +21,6 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  * @version 1.0
  */
-@ActionID(
-    category = "JReserve/TriangleWidget/TriangleEditor",
-    id = "org.jreserve.triangle.editor.AddTriangleCommentAction"
-)
-@ActionRegistration(
-    displayName="#CTL.AddTriangleCommentAction",
-    lazy=true
-)
-@ActionReferences({
-    @ActionReference(path = "JReserve/Popup/TriangleDataEditor", position = 100)
-})
 @Messages({
     "CTL.AddTriangleCommentAction=Add comment"
 })

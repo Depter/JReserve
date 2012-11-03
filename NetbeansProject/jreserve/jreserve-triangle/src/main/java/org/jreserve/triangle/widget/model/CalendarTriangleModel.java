@@ -33,19 +33,19 @@ public class CalendarTriangleModel extends AbstractTriangleModel {
         
         TriangleCell[][] cells = new TriangleCell[rowCount][];
         for(int r=0; r<rowCount; r++)
-            cells[r] = createRow(rowBounds.get(r), rowBounds.get(r+1));
+            cells[r] = createRow(r, rowBounds.get(r), rowBounds.get(r+1));
         
         return cells;
     }
     
-    private TriangleCell[] createRow(Date aBegin, Date aEnd) {
+    private TriangleCell[] createRow(int rowIndex, Date aBegin, Date aEnd) {
         List<Date> columnBounds = ModelUtil.developmentBounds(geometry);
         if(columnBounds.size() < 2)
             return new TriangleCell[0];
-        return createRow(columnBounds, aBegin, aEnd);
+        return createRow(rowIndex, columnBounds, aBegin, aEnd);
     }
     
-    private TriangleCell[] createRow(List<Date> columnBounds, Date aBegin, Date aEnd) {
+    private TriangleCell[] createRow(int rowIndex, List<Date> columnBounds, Date aBegin, Date aEnd) {
         int cCount = columnBounds.size() - 1;
         TriangleCell[] row = new TriangleCell[cCount];
         
@@ -54,7 +54,7 @@ public class CalendarTriangleModel extends AbstractTriangleModel {
             Date dEnd = columnBounds.get(c+1);
             
             if(dEnd.after(aBegin))
-                row[c] = new TriangleCell(aBegin, aEnd, dBegin, dEnd);
+                row[c] = new TriangleCell(rowIndex, c, aBegin, aEnd, dBegin, dEnd);
         }
         
         return row;

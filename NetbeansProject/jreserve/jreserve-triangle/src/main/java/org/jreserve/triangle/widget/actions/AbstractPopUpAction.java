@@ -33,7 +33,7 @@ public abstract class AbstractPopUpAction extends AbstractAction implements Look
         return super.isEnabled();
     }
     
-    private void init() {
+    protected void init() {
         init(lookup);
         resultChanged(null);
     }
@@ -47,7 +47,8 @@ public abstract class AbstractPopUpAction extends AbstractAction implements Look
 
     @Override
     public void resultChanged(LookupEvent le) {
-        setEnabled(checkEnabled());
+        boolean enable = checkEnabled();
+        setEnabled(enable);
     }
     
     protected boolean checkEnabled() {

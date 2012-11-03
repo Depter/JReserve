@@ -17,17 +17,6 @@ import org.openide.util.NbBundle;
  *
  * @author Peter Decsi
  */
-@ActionID(
-    category = "JReserve/TriangleWidget/VectorEditor",
-    id = "org.jreserve.triangle.editor.DeleteVectorCommentAction"
-)
-@ActionRegistration(
-    displayName="#CTL.DeleteVectorCommentAction",
-    lazy=true
-)
-@ActionReferences({
-    @ActionReference(path = "JReserve/Popup/VectorDataEditor", position = 200)
-})
 @NbBundle.Messages({
     "CTL.DeleteVectorCommentAction=Delete comments"
 })

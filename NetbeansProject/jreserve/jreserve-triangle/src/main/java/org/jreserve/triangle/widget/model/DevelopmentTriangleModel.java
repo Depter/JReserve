@@ -26,18 +26,18 @@ public class DevelopmentTriangleModel extends AbstractTriangleModel {
         
         TriangleCell[][] cells = new TriangleCell[rowCount][];
         for(int r=0; r<rowCount; r++)
-            cells[r] = createRow(devBounds, rowBounds.get(r), rowBounds.get(r+1));
+            cells[r] = createRow(r, devBounds, rowBounds.get(r), rowBounds.get(r+1));
         
         return cells;
     }
     
-    private TriangleCell[] createRow(List<Date> devBounds, Date aBegin, Date aEnd) {
+    private TriangleCell[] createRow(int rowIndex, List<Date> devBounds, Date aBegin, Date aEnd) {
         List<Date> columnBounds = createColumnBoundsForRow(devBounds, aBegin);
         if(columnBounds.size() < 1)
             return new TriangleCell[0];
         if(columnBounds.size() < 2)
-            return createSingleCell(columnBounds, aBegin, aEnd);
-        return createBoundedRow(columnBounds, aBegin, aEnd);
+            return createSingleCell(rowIndex, columnBounds, aBegin, aEnd);
+        return createBoundedRow(rowIndex, columnBounds, aBegin, aEnd);
     }
     
      private List<Date> createColumnBoundsForRow(List<Date> bounds, Date rowBegin) {
@@ -48,21 +48,21 @@ public class DevelopmentTriangleModel extends AbstractTriangleModel {
         return result;
     }
     
-    private TriangleCell[] createBoundedRow(List<Date> columnBounds, Date aBegin, Date aEnd) {
+    private TriangleCell[] createBoundedRow(int rowIndex, List<Date> columnBounds, Date aBegin, Date aEnd) {
         int cCount = columnBounds.size() - 1;
         TriangleCell[] row = new TriangleCell[cCount];
         
         for(int c=0; c<cCount; c++) {
             Date dBegin = columnBounds.get(c);
             Date dEnd = columnBounds.get(c+1);
-            row[c] = new TriangleCell(aBegin, aEnd, dBegin, dEnd);
+            row[c] = new TriangleCell(rowIndex, c, aBegin, aEnd, dBegin, dEnd);
         }
         
         return row;
     }
     
-    private TriangleCell[] createSingleCell(List<Date> columnBounds, Date aBegin, Date aEnd) {
-        TriangleCell cell = new TriangleCell(aBegin, aEnd, aBegin, columnBounds.get(0));
+    private TriangleCell[] createSingleCell(int rowIndex, List<Date> columnBounds, Date aBegin, Date aEnd) {
+        TriangleCell cell = new TriangleCell(rowIndex, 0, aBegin, aEnd, aBegin, columnBounds.get(0));
         return new TriangleCell[]{cell};
     }
 }
