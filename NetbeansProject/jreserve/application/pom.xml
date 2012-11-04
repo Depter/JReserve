@@ -116,13 +116,19 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-locale-settings</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-triangle</artifactId>
             <version>${project.version}</version>
         </dependency>
         
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-locale-settings</artifactId>
+            <artifactId>jreserve-triangle-widget</artifactId>
             <version>${project.version}</version>
         </dependency>
         
@@ -135,6 +141,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-smoothing</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-smoothing-geometric</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -16,7 +16,7 @@ import org.openide.loaders.DataObject;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class RegistrationRegistry<T> {
+public abstract class RegistrationRegistry<T, V> {
 
     private final static Logger logger = Logger.getLogger(RegistrationRegistry.class.getName());
 
@@ -33,8 +33,10 @@ public abstract class RegistrationRegistry<T> {
     private void initialize() {
         logger.log(Level.FINE, "Loading values from \"{0}\"...", getDirectory());
         values = new ArrayList<T>();
-        for(FileObject file : getFiles())
-            loadAuditor(file);
+        for(FileObject file : getFiles()) {
+            V instance = loadInstance(file);
+            values.add(getValue(instance, file));
+        }
     }
     
     protected abstract String getDirectory();
@@ -48,15 +50,18 @@ public abstract class RegistrationRegistry<T> {
     
     protected abstract Comparator<FileObject> getFileComparator();
     
-    private void loadAuditor(FileObject file) {
+    protected V loadInstance(FileObject file) {
         try {
             DataObject data = DataObject.find(file);
             InstanceCookie cookie = data.getLookup().lookup(InstanceCookie.class);
-            T value = (T) cookie.instanceCreate();
+            V value = (V) cookie.instanceCreate();
             logger.log(Level.FINE, "Loaded instance: {0}", value.getClass().getName());
-            values.add(value);
+            return value;
         } catch (Exception ex) {
             logger.log(Level.WARNING, String.format("Unable to load instance from file: %s", file.getPath()), ex);
+            return null;
         } 
     }
+    
+    protected abstract T getValue(V instance, FileObject file);
 }

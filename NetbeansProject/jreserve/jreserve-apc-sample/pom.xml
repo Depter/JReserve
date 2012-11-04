@@ -50,6 +50,12 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-persistence</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-project-system</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -73,8 +79,8 @@
         </dependency>
         
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-persistence</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-management</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -71,7 +71,10 @@
         <module>jreserve-dataimport-clipboardtable</module>
         <module>jreserve-locale-settings</module>
         <module>jreserve-apc-sample</module>
-    <module>jreserve-smoothing</module>
+        <module>jreserve-triangle-widget</module>
+        <module>jreserve-triangle-management</module>
+        <module>jreserve-smoothing</module>
+        <module>jreserve-smoothing-geometric</module>
   </modules>
 
     <properties>

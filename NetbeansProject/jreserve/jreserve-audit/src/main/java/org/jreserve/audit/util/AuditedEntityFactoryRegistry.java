@@ -14,7 +14,7 @@ import org.openide.filesystems.FileObject;
  * @author Peter Decsi
  * @version 1.0
  */
-public class AuditedEntityFactoryRegistry extends RegistrationRegistry<AuditedEntityFactory> {
+public class AuditedEntityFactoryRegistry extends RegistrationRegistry<AuditedEntityFactory, AuditedEntityFactory> {
     
     private final static Comparator<FileObject> FILE_COMPARATOR = new Comparator<FileObject>() {
         @Override
@@ -52,5 +52,10 @@ public class AuditedEntityFactoryRegistry extends RegistrationRegistry<AuditedEn
     @Override
     protected Comparator<FileObject> getFileComparator() {
         return FILE_COMPARATOR;
+    }
+
+    @Override
+    protected AuditedEntityFactory getValue(AuditedEntityFactory instance, FileObject file) {
+        return instance;
     }
 }

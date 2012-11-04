@@ -16,8 +16,8 @@ import org.jreserve.project.factories.ClaimTypeFactory;
 import org.jreserve.project.factories.LoBFactory;
 import org.jreserve.project.factories.ProjectFactory;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.triangle.factories.TriangleFactory;
-import org.jreserve.triangle.factories.VectorFactory;
+import org.jreserve.triangle.management.factories.TriangleFactory;
+import org.jreserve.triangle.management.factories.VectorFactory;
 import org.openide.util.NbBundle.Messages;
 
 /**
