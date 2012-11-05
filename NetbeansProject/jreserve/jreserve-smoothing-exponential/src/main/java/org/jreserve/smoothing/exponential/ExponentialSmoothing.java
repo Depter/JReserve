@@ -5,7 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.smoothing.Smoothing;
+import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.smoothing.core.SmoothingCell;
 
 /**
  *
@@ -34,6 +35,15 @@ public class ExponentialSmoothing extends Smoothing {
     
     public double getAlpha() {
         return alpha;
+    }
+    
+    public void setAlpha(double alpha) {
+        this.alpha = alpha;
+    }
+
+    @Override
+    protected void addCell(SmoothingCell cell) {
+        super.addCell(cell);
     }
     
     @Override

@@ -8,6 +8,7 @@ import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.management.editor.Editor;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorComment;
@@ -41,6 +42,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
     public final static String GEOMETRY_PROPERTY = "VECTOR_GEOMETRY_PROPERTY";
     public final static String CORRECTION_PROPERTY = "VECTOR_CORRECTION_PROPERTY";
     public final static String COMMENT_PROPERTY = "VECTOR_COMMENT_PROPERTY";
+    public final static String SMOOTHING_PROPERTY = "VECTOR_SMOOTHING_PROPERTY";
     
     public VectorProjectElement(Vector vector) {
         super(vector);
@@ -54,6 +56,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         super.setProperty(GEOMETRY_PROPERTY, vector.getGeometry());
         super.setProperty(CORRECTION_PROPERTY, vector.getCorrections());
         super.setProperty(COMMENT_PROPERTY, vector.getComments());
+        super.setProperty(SMOOTHING_PROPERTY, vector.getSmoothings());
     }
     
     private void initLookup() {
@@ -86,6 +89,8 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             getValue().setCorrections((List<VectorCorrection>) value);
         else if(COMMENT_PROPERTY.equals(property))
             getValue().setComments((List<VectorComment>) value);
+        else if(SMOOTHING_PROPERTY.equals(property))
+            getValue().setSmoothings((List<Smoothing>) value);
         super.setProperty(property, value);
     }
     
@@ -103,6 +108,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             originalProperties.put(GEOMETRY_PROPERTY, vector.getGeometry());
             originalProperties.put(CORRECTION_PROPERTY, vector.getCorrections());
             originalProperties.put(COMMENT_PROPERTY, vector.getComments());
+            originalProperties.put(SMOOTHING_PROPERTY, vector.getSmoothings());
         }        
         
         @Override
@@ -113,6 +119,8 @@ public class VectorProjectElement extends ProjectElement<Vector> {
                 return isChanged((List<VectorCorrection>) o1, (List<VectorCorrection>) o2);
             } else if(COMMENT_PROPERTY.equals(property)) {
                 return isChanged((List<VectorComment>) o1, (List<VectorComment>) o2);
+            } else if(SMOOTHING_PROPERTY.equals(property)) {
+                return isChanged((List<Smoothing>) o1, (List<Smoothing>) o2);
             } else {
                 return super.isChanged(property, o1, o2);
             }

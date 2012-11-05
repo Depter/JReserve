@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Localizing-Bundle: org/jreserve/smoothing/Bundle.proper
+ ties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-20121105
+OpenIDE-Module-Build-Version: 201211052150
+OpenIDE-Module: org.jreserve.jreserve.smoothing.util
+OpenIDE-Module-Public-Packages: org.jreserve.smoothing.*, org.jreserve
+ .smoothing.actions.*
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
+OpenIDE-Module-Display-Category: org.jreserve
+OpenIDE-Module-Name: Smoothing Util
+OpenIDE-Module-Short-Description: <undefined>
+OpenIDE-Module-Long-Description: <undefined>
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
+ n/1 > 1.14.1, org.openide.filesystems > 7.62.1, org.openide.util > 8.
+ 25.1, org.openide.util.lookup > 8.15.1, org.openide.awt > 7.46.1, org
+ .jreserve.jreserve.persistence > 1.0, org.jreserve.jreserve.resources
+  > 1.0, org.jreserve.jreserve.smoothing.core > 1.0, org.jreserve.jres
+ erve.triangle.widget > 1.0
+

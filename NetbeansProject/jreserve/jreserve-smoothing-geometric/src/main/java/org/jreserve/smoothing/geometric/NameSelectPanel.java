@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.smoothing.Smoothing;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.SwingLoader;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;

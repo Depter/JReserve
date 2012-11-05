@@ -10,6 +10,8 @@ import javax.swing.Box.Filler;
 import javax.swing.JPanel;
 import org.jreserve.data.Data;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.smoothing.Smoother;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.DataStructure;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -160,6 +162,8 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
     
     protected abstract List<WidgetData<Comment>> getComments();
     
+    protected abstract List<Smoothing> getSmoothings();
+    
     private class LoaderCallback implements DataLoader.Callback<T> {
 
         @Override
@@ -167,6 +171,7 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
             try {
                 triangle.setDataValueLayer(TriangleCell.VALUE_LAYER, loader.getData());
                 setCorrections();
+                setSmoothings();
                 triangle.setComments(getComments());
             } catch (RuntimeException ex) {
                 Exceptions.printStackTrace(ex);
@@ -176,6 +181,12 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
         private void setCorrections() {
             List<Data<T, Double>> corrections = getCorrectionData();
             triangle.setDataValueLayer(TriangleCell.CORRECTION_LAYER, corrections);
+        }
+        
+        private void setSmoothings() {
+            Smoother smoother = new Smoother(triangle, TriangleCell.SMOOTHING_LAYER);
+            for(Smoothing smoothing : getSmoothings())
+                smoother.smooth(smoothing);
         }
     }
     

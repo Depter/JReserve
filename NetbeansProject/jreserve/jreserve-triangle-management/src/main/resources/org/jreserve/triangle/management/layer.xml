@@ -9,6 +9,10 @@
                     </file>
                     <file name="org-jreserve-triangle-management-editor-DeleteVectorCommentAction.instance">
                     </file>
+                    <file name="org-jreserve-triangle-management-editor-VectorSmoothingAction.instance">
+                    </file>
+                    <file name="org-jreserve-triangle-management-editor-DeleteVectorSmoothingAction.instance">
+                    </file>
                 </folder>
                 <folder name="TriangleEditor">
                     <file name="org-jreserve-triangle-management-editor-AddTriangleCommentAction.instance">
@@ -16,6 +20,8 @@
                     <file name="org-jreserve-triangle-management-editor-DeleteTriangleCommentAction.instance">
                     </file>
                     <file name="org-jreserve-triangle-management-editor-TriangleSmoothingAction.instance">
+                    </file>
+                    <file name="org-jreserve-triangle-management-editor-DeleteTriangleSmoothingAction.instance">
                     </file>
                 </folder>
             </folder>
@@ -28,6 +34,11 @@
                     <!--org.jreserve.triangle.management.editor.TriangleSmoothingAction-->
                     <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/TriangleEditor/org-jreserve-triangle-management-editor-TriangleSmoothingAction.instance"/>
                     <attr intvalue="50" name="position"/>
+                </file>
+                <file name="org-jreserve-triangle-management-editor-DeleteTriangleSmoothingAction.shadow">
+                    <!--org.jreserve.triangle.management.editor.DeleteTriangleSmoothingAction-->
+                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/TriangleEditor/org-jreserve-triangle-management-editor-DeleteTriangleSmoothingAction.instance"/>
+                    <attr intvalue="60" name="position"/>
                 </file>
                 <file name="org-jreserve-triangle-management-editor-AddTriangleCommentAction-separatorBefore.instance">
                     <!--org.jreserve.triangle.management.editor.AddTriangleCommentAction-->
@@ -42,6 +53,33 @@
                 <file name="org-jreserve-triangle-management-editor-DeleteTriangleCommentAction.shadow">
                     <!--org.jreserve.triangle.management.editor.DeleteTriangleCommentAction-->
                     <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/TriangleEditor/org-jreserve-triangle-management-editor-DeleteTriangleCommentAction.instance"/>
+                    <attr intvalue="200" name="position"/>
+                </file>
+            </folder>
+            <folder name="VectorDataEditor">
+                <file name="org-jreserve-triangle-management-editor-VectorSmoothingAction.shadow">
+                    <!--org.jreserve.triangle.management.editor.VectorSmoothingAction-->
+                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/VectorEditor/org-jreserve-triangle-management-editor-VectorSmoothingAction.instance"/>
+                    <attr intvalue="50" name="position"/>
+                </file>
+                <file name="org-jreserve-triangle-management-editor-DeleteVectorSmoothingAction.shadow">
+                    <!--org.jreserve.triangle.management.editor.DeleteVectorSmoothingAction-->
+                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/VectorEditor/org-jreserve-triangle-management-editor-DeleteVectorSmoothingAction.instance"/>
+                    <attr intvalue="60" name="position"/>
+                </file>
+                <file name="org-jreserve-triangle-management-editor-AddVectorCommentAction-separatorBefore.instance">
+                    <!--org.jreserve.triangle.management.editor.AddVectorCommentAction-->
+                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
+                    <attr intvalue="90" name="position"/>
+                </file>
+                <file name="org-jreserve-triangle-management-editor-AddVectorCommentAction.shadow">
+                    <!--org.jreserve.triangle.management.editor.AddVectorCommentAction-->
+                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/VectorEditor/org-jreserve-triangle-management-editor-AddVectorCommentAction.instance"/>
+                    <attr intvalue="100" name="position"/>
+                </file>
+                <file name="org-jreserve-triangle-management-editor-DeleteVectorCommentAction.shadow">
+                    <!--org.jreserve.triangle.management.editor.DeleteVectorCommentAction-->
+                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/VectorEditor/org-jreserve-triangle-management-editor-DeleteVectorCommentAction.instance"/>
                     <attr intvalue="200" name="position"/>
                 </file>
             </folder>

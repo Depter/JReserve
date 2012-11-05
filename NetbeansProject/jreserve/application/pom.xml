@@ -30,6 +30,13 @@
         </dependency>
         
         <dependency>
+            <artifactId>org-openide-filesystems</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-nbjunit</artifactId>
             <version>${netbeans.version}</version>
@@ -140,7 +147,7 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-smoothing</artifactId>
+            <artifactId>jreserve-smoothing-util</artifactId>
             <version>${project.version}</version>
         </dependency>
         

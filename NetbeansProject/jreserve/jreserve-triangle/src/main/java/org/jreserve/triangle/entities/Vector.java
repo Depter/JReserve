@@ -12,6 +12,7 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.Project;
+import org.jreserve.smoothing.core.Smoothing;
 
 /**
  *
@@ -37,11 +38,21 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
     private VectorGeometry geometry;
     
     @NotAudited
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="vector", cascade=CascadeType.ALL)
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="vector", orphanRemoval=true, cascade=CascadeType.ALL)
     private Set<VectorCorrection> corrections = new HashSet<VectorCorrection>();
     
     @NotAudited
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="vector", cascade=CascadeType.ALL)
+    @OneToMany(cascade= CascadeType.ALL)
+    @JoinTable(
+        name="VECTOR_SMOOTHING",
+        schema="JRESERVE",
+        joinColumns=@JoinColumn(name="VECTOR_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF),
+        inverseJoinColumns=@JoinColumn(name="SMOOTHING_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
+    )
+    private Set<Smoothing> smoothings = new HashSet<Smoothing>();
+    
+    @NotAudited
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="vector", orphanRemoval=true, cascade=CascadeType.ALL)
     private Set<VectorComment> comments = new HashSet<VectorComment>();
     
     protected Vector() {
@@ -114,6 +125,36 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
         String msg = "Comment belongs to another vector '%s' instead of '%s'!";
         msg = String.format(msg, this, comments.getVector());
         throw new IllegalArgumentException(msg);
+    }
+    
+    public List<Smoothing> getSmoothings() {
+        return new ArrayList<Smoothing>(smoothings);
+    }
+    
+    public void setSmoothings(List<Smoothing> smoothings) {
+        if(smoothings != null)
+            checkMySmoothings(smoothings);
+        this.smoothings.clear();
+        if(smoothings != null)
+            this.smoothings.addAll(smoothings);
+    }
+    
+    private void checkMySmoothings(List<Smoothing> smoothings) {
+        for(Smoothing smoothing : smoothings)
+            if(!getId().equals(smoothing.getOwner()))
+                throwOtherVectorException(smoothing);
+    }
+    
+    private void throwOtherVectorException(Smoothing smoothing) {
+        String msg = "Smoothing belongs to another vector '%s' instead of '%s'!";
+        msg = String.format(msg, this, smoothing.getOwner());
+        throw new IllegalArgumentException(msg);
+    }
+    
+    public void addSmoothing(Smoothing smoothing) {
+        if(!getId().equals(smoothing.getOwner()))
+            throwOtherVectorException(smoothing);
+        this.smoothings.add(smoothing);
     }
     
     @Override

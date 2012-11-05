@@ -40,9 +40,9 @@ public class TriangleLoader extends AbstractProjectElementFactory<Triangle> {
     @Override
     protected List<Triangle> getChildValues(Object value) {
         Project project = ((ProjectDataContainer) value).getProject();
-        List<Triangle> vectors = getTriangles(project);
-        Collections.sort(vectors, COMPARATOR);
-        return vectors;
+        List<Triangle> triangles = getTriangles(project);
+        Collections.sort(triangles, COMPARATOR);
+        return triangles;
     }
     
     private List<Triangle> getTriangles(Project project) {

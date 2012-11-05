@@ -297,8 +297,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
         if(column == 0 || editableLayer < 0)
             return false;
         TriangleCell cell = getCellAt(row, column -1);
-        return cell != null &&
-               cell.getLayerCount() > editableLayer;
+        return cell != null;// && cell.getLayerCount() > editableLayer;
     }
 
     @Override
@@ -306,7 +305,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
         if(column == 0 || editableLayer < 0)
             return;
         TriangleCell cell = getCellAt(row, column - 1);
-        if(cell != null && cell.getLayerCount() > editableLayer)
+        if(cell != null)// && cell.getLayerCount() > editableLayer)
             editValue(cell, (Double) value);
     }
     

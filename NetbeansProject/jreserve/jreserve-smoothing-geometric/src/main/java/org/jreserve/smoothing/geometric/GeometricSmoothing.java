@@ -5,8 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.smoothing.Smoothing;
-import org.jreserve.smoothing.SmoothingCell;
+import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.smoothing.core.SmoothingCell;
 
 /**
  *

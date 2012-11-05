@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import org.jreserve.data.Data;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.entities.*;
 import org.jreserve.triangle.management.TriangleProjectElement;
 import org.jreserve.triangle.widget.WidgetData;
@@ -132,5 +133,10 @@ class TriangleDataEditorView extends DataEditorMultiviewElement<Triangle> {
         for(TriangleComment comment : element.getValue().getComments())
             comments.add(new WidgetData<Comment>(comment.getAccidentDate(), comment.getDevelopmentDate(), comment));
         return comments;
+    }
+
+    @Override
+    protected List<Smoothing> getSmoothings() {
+        return element.getValue().getSmoothings();
     }
 }

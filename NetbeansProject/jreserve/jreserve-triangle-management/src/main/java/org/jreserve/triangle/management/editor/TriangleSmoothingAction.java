@@ -1,9 +1,10 @@
 package org.jreserve.triangle.management.editor;
 
 import java.awt.event.ActionEvent;
+import java.util.List;
 import javax.swing.Action;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.smoothing.Smoothing;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.actions.AddSmoothingAction;
 import org.jreserve.triangle.management.TriangleProjectElement;
 import org.openide.util.Lookup;
@@ -54,10 +55,6 @@ public class TriangleSmoothingAction extends AddSmoothingAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-    }
-
-    @Override
     public Action createContextAwareInstance(Lookup lkp) {
         TriangleSmoothingAction action = new TriangleSmoothingAction(lkp);
         action.init();
@@ -71,5 +68,8 @@ public class TriangleSmoothingAction extends AddSmoothingAction {
 
     @Override
     protected void smoothingCreated(Smoothing smoothing) {
+        List<Smoothing> smoothings = element.getValue().getSmoothings();
+        smoothings.add(smoothing);
+        element.setProperty(TriangleProjectElement.SMOOTHING_PROPERTY, smoothings);
     }
 }

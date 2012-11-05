@@ -73,9 +73,10 @@
         <module>jreserve-apc-sample</module>
         <module>jreserve-triangle-widget</module>
         <module>jreserve-triangle-management</module>
-        <module>jreserve-smoothing</module>
         <module>jreserve-smoothing-geometric</module>
         <module>jreserve-smoothing-exponential</module>
+        <module>jreserve-smoothing-util</module>
+    <module>jreserve-smoothing-core</module>
   </modules>
 
     <properties>

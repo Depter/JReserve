@@ -55,6 +55,12 @@
             <version>${project.version}</version>
         </dependency>
         
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-smoothing-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <!-- TEST SCOPE -->
         <dependency>
             <groupId>junit</groupId>

@@ -9,6 +9,7 @@ import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleComment;
 import org.jreserve.triangle.entities.TriangleCorrection;
@@ -45,6 +46,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     public final static String GEOMETRY_PROPERTY = "TRIANGLE_GEOMETRY_PROPERTY";
     public final static String CORRECTION_PROPERTY = "TRIANGLE_CORRECTION_PROPERTY";
     public final static String COMMENT_PROPERTY = "TRIANGLE_COMMENT_PROPERTY";
+    public final static String SMOOTHING_PROPERTY = "TRIANGLE_SMOOTHING_PROPERTY";
     
     public TriangleProjectElement(Triangle triangle) {
         super(triangle);
@@ -58,6 +60,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         super.setProperty(GEOMETRY_PROPERTY, triangle.getGeometry());
         super.setProperty(CORRECTION_PROPERTY, triangle.getCorrections());
         super.setProperty(COMMENT_PROPERTY, triangle.getComments());
+        super.setProperty(SMOOTHING_PROPERTY, triangle.getSmoothings());
     }
     
     private void initLookup() {
@@ -91,6 +94,8 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             getValue().setCorrections((List<TriangleCorrection>) value);
         else if(COMMENT_PROPERTY.equals(property))
             getValue().setComments((List<TriangleComment>) value);
+        else if(SMOOTHING_PROPERTY.equals(property))
+            getValue().setSmoothings((List<Smoothing>) value);
         super.setProperty(property, value);
     }
     
@@ -109,6 +114,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             originalProperties.put(GEOMETRY_PROPERTY, triangle.getGeometry());
             originalProperties.put(CORRECTION_PROPERTY, triangle.getCorrections());
             originalProperties.put(COMMENT_PROPERTY, triangle.getComments());
+            originalProperties.put(SMOOTHING_PROPERTY, triangle.getSmoothings());
         }
         
         @Override
@@ -119,6 +125,8 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
                 return isChanged((List<TriangleCorrection>) o1, (List<TriangleCorrection>) o2);
             } else if(COMMENT_PROPERTY.equals(property)) {
                 return isChanged((List<TriangleComment>) o1, (List<TriangleComment>) o2);
+            } else if(SMOOTHING_PROPERTY.equals(property)) {
+                return isChanged((List<Smoothing>) o1, (List<Smoothing>) o2);
             } else {
                 return super.isChanged(property, o1, o2);
             }

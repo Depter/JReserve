@@ -8,7 +8,7 @@ import org.jreserve.triangle.entities.Comment;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleCell {
+public class TriangleCell implements Comparable<TriangleCell> {
     
     public final static int VALUE_LAYER = 10;
     public final static int SMOOTHING_LAYER = 20;
@@ -207,5 +207,35 @@ public class TriangleCell {
     
     public boolean hasComments() {
         return !comments.isEmpty();
+    }
+
+    @Override
+    public int compareTo(TriangleCell o) {
+        if(o == null)
+            return -1;
+        int dif = row - o.row;
+        return dif!=0? dif : column-o.column;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof TriangleCell) {
+            TriangleCell cell = (TriangleCell) o;
+            return row==cell.row && column==cell.column;
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 31 + row;
+        return 17 * hash + column;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("TriangleCell [%tF (%d)]/[%tF (%d)]", 
+                accidentBegin, row, 
+                developmentBegin, column);
     }
 }

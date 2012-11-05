@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import org.jreserve.data.Data;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.entities.*;
 import org.jreserve.triangle.management.VectorProjectElement;
 import org.jreserve.triangle.widget.WidgetData;
@@ -116,6 +117,11 @@ class VectorDataEditorView extends DataEditorMultiviewElement<Vector> {
         for(VectorComment comment : element.getValue().getComments())
             comments.add(new WidgetData<Comment>(comment.getAccidentDate(), comment.getAccidentDate(), comment));
         return comments;
+    }
+
+    @Override
+    protected List<Smoothing> getSmoothings() {
+        return element.getValue().getSmoothings();
     }
     
     private static class TriangleDummy extends TriangleGeometry {

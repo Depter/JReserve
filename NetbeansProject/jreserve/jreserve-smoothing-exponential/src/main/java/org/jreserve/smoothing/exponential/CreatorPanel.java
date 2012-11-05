@@ -1,6 +1,7 @@
 package org.jreserve.smoothing.exponential;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,21 +10,55 @@ import java.awt.event.WindowListener;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import org.jreserve.localesettings.util.DoubleRenderer;
+import org.jreserve.localesettings.util.LocaleSettings;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.smoothing.Smoothing;
+import org.jreserve.resources.textfieldfilters.DoubleFilter;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.SwingLoader;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "LBL.CreatorPanel.Title=Exponential smoothing",
+    "LBL.CreatorPanel.Error.Name.Empty=Field 'Name' is empty!",
+    "LBL.CreatorPanel.Error.Name.Exists=Name already exists!",
+    "LBL.CreatorPanel.Error.Alpha.Empty=Field 'Alpha' is empty!",
+    "LBL.CreatorPanel.Error.Alpha.Invalid=Alpha must be between 0 and 1!"
+})
 public class CreatorPanel extends javax.swing.JPanel implements ActionListener, DocumentListener, WindowListener {
+    
+    public static ExponentialSmoothing create(PersistentObject owner, double[] input) {
+        CreatorPanel content = new CreatorPanel(owner, input);
+        createDialog(content);
+        content.dialog.setVisible(true);
+        return createSmoothing(owner, content);
+    }
+    
+    private static void createDialog(CreatorPanel panel) {
+        DialogDescriptor dd = new DialogDescriptor(panel, Bundle.LBL_CreatorPanel_Title());
+        dd.setOptions(new Object[0]);
+        panel.setDialog(DialogDisplayer.getDefault().createDialog(dd));
+        panel.dialog.pack();
+    }
+    
+    private static ExponentialSmoothing createSmoothing(PersistentObject owner, CreatorPanel content) {
+        if(content.name == null)
+            return null;
+        return new ExponentialSmoothing(owner, content.name, content.alpha);
+    }
     
     private final static Logger logger = Logger.getLogger(CreatorPanel.class.getName());
     
@@ -35,7 +70,7 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
     private Dialog dialog;
     
     private DoubleRenderer renderer = new DoubleRenderer();
-    private Smoothing smoothing = new ExponentialSmoothing(DEFAULT_ALPHA);
+    private ExponentialSmoothing smoothing = new ExponentialSmoothing(DEFAULT_ALPHA);
     private SmoothTableModel model = new SmoothTableModel();
     private boolean cancelled = false;
     
@@ -43,8 +78,14 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
     private List<Smoothing> smoothings;
     private CardLayout msgLayout;
     
+    private String name;
+    private double alpha;
+    
     public CreatorPanel(PersistentObject owner, double[] input) {
         model.input = input;
+        smoothing.setAlpha(0d);
+        model.setSmoothed(smoothing.smooth(input));
+        
         initComponents();
         msgLayout = (CardLayout) msgPanel.getLayout();
         checkInput();
@@ -81,14 +122,75 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
     }
     
     private void checkInput() {
+        boolean valid = checkNameValid() & checkAlphaValid();
+        okButton.setEnabled(valid);
+        if(valid)
+            showError(null);
+    }
+    
+    private boolean checkNameValid() {
+        String smoothingName = nameText.getText();
+        return checkNameNotNull(smoothingName) && checkNotExists(smoothingName);
+    }
+    
+    private boolean checkNameNotNull(String name) {
+        if(name == null || name.trim().length() == 0) {
+            showError(Bundle.LBL_CreatorPanel_Error_Name_Empty());
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean checkNotExists(String name) {
+        String trimmed = name.trim();
+        for(Smoothing s : smoothings)
+            if(s.getName().trim().equalsIgnoreCase(trimmed)) {
+                showError(Bundle.LBL_CreatorPanel_Error_Name_Exists());
+                return false;
+            }
+        return true;
+    }
+    
+    private boolean checkAlphaValid() {
+        String strAlpha = alphaText.getText();
+        if(checkAlphaNotNull(strAlpha) && checkAlphaValid(strAlpha)) {
+            smoothing.setAlpha(renderer.parse(alphaText.getText()));
+            model.setSmoothed(smoothing.smooth(model.input));
+            return true;
+        } else {
+            model.setSmoothed(null);
+            return false;
+        }
+    }
+    
+    private boolean checkAlphaNotNull(String alpha) {
+        if(alpha == null || alpha.trim().length() == 0) {
+            showError(Bundle.LBL_CreatorPanel_Error_Alpha_Empty());
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean checkAlphaValid(String strAlpha) {
+        double alpha = renderer.parse(strAlpha);
+        if(alpha < 0d || 1d < alpha) {
+            showError(Bundle.LBL_CreatorPanel_Error_Alpha_Invalid());
+            return false;
+        }
+        return true;
     }
     
     private void cancel() {
+        cancelled = true;
+        if(loader != null)
+            loader.cancel(true);
+        smoothing = null;
     }
         
     private void stopLoading() {
         msgLayout.show(msgPanel, CARD_MSG);
         nameText.setEnabled(true);
+        alphaText.setEnabled(true);
         pBar.setIndeterminate(false);
         loader = null;
     }
@@ -103,11 +205,12 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
     public void actionPerformed(ActionEvent evt) {
         Object source = evt.getSource();
         if(okButton == source) {
-            //name = nameText.getText();
+            name = nameText.getText();
+            alpha = renderer.parse(alphaText.getText());
         } else {
             cancel();
         }
-        //dialog.dispose();
+        dialog.dispose();
     }
 
     @Override
@@ -149,9 +252,11 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
         cancelButton = new javax.swing.JButton();
         centerPanel = new javax.swing.JPanel();
+        tableScroll = new javax.swing.JScrollPane();
+        table = new javax.swing.JTable();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        setLayout(new java.awt.BorderLayout());
+        setLayout(new java.awt.BorderLayout(15, 15));
 
         northPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -174,6 +279,7 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         northPanel.add(alphaLabel, gridBagConstraints);
 
         nameText.setText(null);
+        nameText.getDocument().addDocumentListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -184,6 +290,9 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         northPanel.add(nameText, gridBagConstraints);
 
         alphaText.setText(null);
+        alphaText.setDocument(new DoubleFilter(LocaleSettings.getDecimalSeparator()));
+        alphaText.setText("0");
+        alphaText.getDocument().addDocumentListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -232,16 +341,15 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
 
         add(soutPanel, java.awt.BorderLayout.SOUTH);
 
-        javax.swing.GroupLayout centerPanelLayout = new javax.swing.GroupLayout(centerPanel);
-        centerPanel.setLayout(centerPanelLayout);
-        centerPanelLayout.setHorizontalGroup(
-            centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 370, Short.MAX_VALUE)
-        );
-        centerPanelLayout.setVerticalGroup(
-            centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 162, Short.MAX_VALUE)
-        );
+        centerPanel.setLayout(new java.awt.BorderLayout());
+
+        tableScroll.setPreferredSize(new java.awt.Dimension(200, 200));
+
+        table.setModel(model);
+        table.setDefaultRenderer(Double.class, new DoubleCellRenderer());
+        tableScroll.setViewportView(table);
+
+        centerPanel.add(tableScroll, java.awt.BorderLayout.CENTER);
 
         add(centerPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -263,6 +371,8 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
     private javax.swing.JLabel pBarLabel;
     private javax.swing.JPanel pBarPanel;
     private javax.swing.JPanel soutPanel;
+    private javax.swing.JTable table;
+    private javax.swing.JScrollPane tableScroll;
     // End of variables declaration//GEN-END:variables
 
 
@@ -302,10 +412,9 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         public Object getValueAt(int row, int column) {
             if(column == 0)
                 return input[row];
-            return smoothed[row];
+            return smoothed==null? Double.NaN : smoothed[row];
         }
     }
-
 
     private class Loader extends SwingLoader {
         
@@ -329,4 +438,15 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         }
     }
 
+    private class DoubleCellRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if(value instanceof Double)
+                value = CreatorPanel.this.renderer.toString((Double) value);
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+    
+        
+    }
 }
