@@ -75,6 +75,7 @@
         <module>jreserve-triangle-management</module>
         <module>jreserve-smoothing</module>
         <module>jreserve-smoothing-geometric</module>
+        <module>jreserve-smoothing-exponential</module>
   </modules>
 
     <properties>

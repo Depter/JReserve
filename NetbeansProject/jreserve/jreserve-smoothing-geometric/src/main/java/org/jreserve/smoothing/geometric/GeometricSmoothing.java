@@ -6,6 +6,7 @@ import javax.persistence.Table;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.smoothing.Smoothing;
+import org.jreserve.smoothing.SmoothingCell;
 
 /**
  *
@@ -21,6 +22,11 @@ public class GeometricSmoothing extends Smoothing {
     
     protected GeometricSmoothing(PersistentObject owner, String name) {
         super(owner, name);
+    }
+
+    @Override
+    protected void addCell(SmoothingCell cell) {
+        super.addCell(cell);
     }
     
     @Override

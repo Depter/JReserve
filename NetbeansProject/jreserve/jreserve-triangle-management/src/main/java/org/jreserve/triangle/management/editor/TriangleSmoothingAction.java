@@ -2,8 +2,10 @@ package org.jreserve.triangle.management.editor;
 
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
+import org.jreserve.persistence.PersistentObject;
+import org.jreserve.smoothing.Smoothing;
+import org.jreserve.smoothing.actions.AddSmoothingAction;
 import org.jreserve.triangle.management.TriangleProjectElement;
-import org.jreserve.triangle.widget.actions.ContinuousSelectionAction;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
 import org.openide.util.NbBundle;
@@ -16,7 +18,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "CTL.TriangleSmoothingAction=Smooth"
 })
-public class TriangleSmoothingAction extends ContinuousSelectionAction {
+public class TriangleSmoothingAction extends AddSmoothingAction {
     
     private Result<TriangleProjectElement> tResult;
     private TriangleProjectElement element;
@@ -60,5 +62,14 @@ public class TriangleSmoothingAction extends ContinuousSelectionAction {
         TriangleSmoothingAction action = new TriangleSmoothingAction(lkp);
         action.init();
         return action;
+    }
+
+    @Override
+    protected PersistentObject getOwner() {
+        return element.getValue();
+    }
+
+    @Override
+    protected void smoothingCreated(Smoothing smoothing) {
     }
 }

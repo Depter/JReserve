@@ -30,9 +30,11 @@ import org.openide.util.lookup.ProxyLookup;
  */
 abstract class DataEditorView<T extends DataStructure> extends JPanel implements Lookup.Provider, UndoRedo.Provider {
     
-    private final static int VALUE_LAYER = 0;
-    private final static int CORRECTION_LAYER = 1;
+    //private final static int VALUE_LAYER = 0;
+    //private final static int CORRECTION_LAYER = 1;
     private final static Color CORRECTION_BG = new Color(235, 204, 204);
+    private final static Color VALUE_BG = Color.WHITE;
+    private final static Color SMOOTHING_BG = new Color(167, 191, 255);
     
     protected GeometrySettingPanel geometrySetting;
     protected TriangleWidget triangle;
@@ -107,8 +109,10 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
     private void initLayers() {
         triangle.addValueLayer(new ArrayList<WidgetData<Double>>());
         triangle.addValueLayer(new ArrayList<WidgetData<Double>>());
-        triangle.setLayerBackground(CORRECTION_LAYER, CORRECTION_BG);
-        triangle.setEditableLayer(CORRECTION_LAYER);
+        triangle.setLayerBackground(TriangleCell.VALUE_LAYER, VALUE_BG);
+        triangle.setLayerBackground(TriangleCell.SMOOTHING_LAYER, SMOOTHING_BG);
+        triangle.setLayerBackground(TriangleCell.CORRECTION_LAYER, CORRECTION_BG);
+        triangle.setEditableLayer(TriangleCell.CORRECTION_LAYER);
     }
     
     private void addListeners() {
@@ -161,7 +165,7 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
         @Override
         public void finnished(DataLoader<T> loader) {
             try {
-                triangle.setDataValueLayer(VALUE_LAYER, loader.getData());
+                triangle.setDataValueLayer(TriangleCell.VALUE_LAYER, loader.getData());
                 setCorrections();
                 triangle.setComments(getComments());
             } catch (RuntimeException ex) {
@@ -171,7 +175,7 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
     
         private void setCorrections() {
             List<Data<T, Double>> corrections = getCorrectionData();
-            triangle.setDataValueLayer(CORRECTION_LAYER, corrections);
+            triangle.setDataValueLayer(TriangleCell.CORRECTION_LAYER, corrections);
         }
     }
     
@@ -223,9 +227,9 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
 
         @Override
         public void cellEdited(TriangleCell cell, int layer, Double oldValue, Double newValue) {
-            if(layer==CORRECTION_LAYER && !equals(oldValue, newValue)) {
-                List<WidgetData<Double>> values = triangle.getValueLayer(CORRECTION_LAYER);
-                triangle.setValueLayer(CORRECTION_LAYER, values);
+            if(layer==TriangleCell.CORRECTION_LAYER && !equals(oldValue, newValue)) {
+                List<WidgetData<Double>> values = triangle.getValueLayer(TriangleCell.CORRECTION_LAYER);
+                triangle.setValueLayer(TriangleCell.CORRECTION_LAYER, values);
                 List<Data<T, Double>> datas = getCorrections(element.getValue(), values);
                 updateCorrections(datas);
             }

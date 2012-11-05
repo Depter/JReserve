@@ -1,5 +1,6 @@
 package org.jreserve.triangle.widget.model;
 
+import java.util.Date;
 import java.util.List;
 import javax.swing.table.TableModel;
 import org.jreserve.data.Data;
@@ -41,6 +42,8 @@ public interface TriangleModel extends TableModel {
     public List<WidgetData<Double>> getValues(int layer);
     
     public void removeValues(int layer);
+    
+    public TriangleCell getCellAt(Date accident, Date development);
     
     public void setComments(List<WidgetData<Comment>> comments);
     

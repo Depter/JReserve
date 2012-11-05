@@ -12,6 +12,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -267,6 +268,10 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     public List<WidgetData<Double>> getValueLayer(int layer) {
         return table.getValueLayer(layer);
+    }
+    
+    public TriangleCell getCellAt(Date accident, Date development) {
+        return table.getCellAt(accident, development);
     }
     
     public void removeComment(WidgetData<Comment> comments) {

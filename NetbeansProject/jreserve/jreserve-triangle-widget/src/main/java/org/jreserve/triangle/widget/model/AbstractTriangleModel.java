@@ -1,7 +1,6 @@
 package org.jreserve.triangle.widget.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import javax.swing.table.AbstractTableModel;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -25,6 +24,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     protected AxisModel columnModel = AxisModel.EMPTY;
     
     protected List<List<WidgetData<Double>>> values = new ArrayList<List<WidgetData<Double>>>();
+    
     protected List<WidgetData<Comment>> comments = new ArrayList<WidgetData<Comment>>();
     private List<TriangleWidgetListener> listeners = new ArrayList<TriangleWidgetListener>();
     
@@ -148,13 +148,20 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     @Override
     public void addValues(int layer, List<WidgetData<Double>> datas) {
         checkDatas(datas);
+        ensureLayerExists(layer-1);
         values.add(layer, datas);
         refillCellValues();
+    }
+    
+    private void ensureLayerExists(int layer) {
+        for(int i=values.size(); i<=layer; i++)
+            values.add(Collections.EMPTY_LIST);
     }
 
     @Override
     public void setValues(int layer, List<WidgetData<Double>> datas) {
         checkDatas(datas);
+        ensureLayerExists(layer);
         values.set(layer, datas);
         refillCellValues();
     }
@@ -166,7 +173,16 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
 
     @Override
     public List<WidgetData<Double>> getValues(int layer) {
-        return values.get(layer);
+        return new ArrayList<WidgetData<Double>>(values.get(layer));
+    }
+    
+    @Override
+    public TriangleCell getCellAt(Date accident, Date development) {
+        for(TriangleCell[] row : cells)
+            for(TriangleCell cell : row)
+                if(cell!= null && cell.acceptsDates(accident, development))
+                    return cell;
+        return null;
     }
 
     @Override

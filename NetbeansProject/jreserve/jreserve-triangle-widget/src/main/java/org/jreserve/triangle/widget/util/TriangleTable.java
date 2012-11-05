@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -149,6 +150,10 @@ public class TriangleTable extends JTable implements Lookup.Provider {
     
     public List<WidgetData<Double>> getValueLayer(int layer) {
         return model.getValues(layer);
+    }
+    
+    public TriangleCell getCellAt(Date accident, Date development) {
+        return model.getCellAt(accident, development);
     }
     
     public void removeComment(WidgetData<Comment> comments) {

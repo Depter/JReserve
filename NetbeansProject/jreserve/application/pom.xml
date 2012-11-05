@@ -149,6 +149,12 @@
             <artifactId>jreserve-smoothing-geometric</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-smoothing-exponential</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

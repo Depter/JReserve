@@ -7,10 +7,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jreserve-triangle-management</artifactId>
+    <artifactId>jreserve-smoothing-exponential</artifactId>
     <packaging>nbm</packaging>
 
-    <name>Triangle Management</name>
+    <name>Smoothing Exponential</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,19 +36,7 @@
         
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-api-progress</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-core-multiview</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-nodes</artifactId>
+            <artifactId>org-openide-util</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
         
@@ -59,62 +47,8 @@
         </dependency>
         
         <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util-lookup</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-awt</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-windows</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        
-        <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-persistence</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-project-system</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-project</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-audit</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-data</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-triangle</artifactId>
             <version>${project.version}</version>
         </dependency>
         
@@ -137,11 +71,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
-                <configuration>
-                    <publicPackages>
-                        <publicPackage>org.jreserve.triangle.management.factories</publicPackage>
-                    </publicPackages>
-                </configuration>
             </plugin>
 
             <plugin>
