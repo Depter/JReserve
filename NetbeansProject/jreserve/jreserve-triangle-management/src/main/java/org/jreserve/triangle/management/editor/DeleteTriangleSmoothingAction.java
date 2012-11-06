@@ -54,7 +54,7 @@ public class DeleteTriangleSmoothingAction extends AbstractPopUpAction implement
     
     private boolean initElement() {
         element = lookupOne(tResult);
-        return element != null && element.getValue().getSmoothings() != null;
+        return element != null && !element.getValue().getSmoothings().isEmpty();
     }
     
     @Override

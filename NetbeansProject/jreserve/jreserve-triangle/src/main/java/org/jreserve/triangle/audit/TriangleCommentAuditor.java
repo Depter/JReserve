@@ -1,5 +1,6 @@
 package org.jreserve.triangle.audit;
 
+import java.util.Date;
 import java.util.List;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.query.AuditEntity;
@@ -15,8 +16,12 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "MSG.TriangleCommentAuditor.TypeName=Comment",
-    "MSG.TriangleCommentAuditor.Created=Created.",
-    "MSG.TriangleCommentAuditor.Deleted=Deleted.",
+    "# {0} - accident",
+    "# {1} - development",
+    "MSG.TriangleCommentAuditor.Created=Created for {0, date, yyyy-MM-dd} / {1, date, yyyy-MM-dd}.",
+    "# {0} - accident",
+    "# {1} - development",
+    "MSG.TriangleCommentAuditor.Deleted=Deleted from {0, date, yyyy-MM-dd} / {1, date, yyyy-MM-dd}.",
     "MSG.TriangleCommentAuditor.Change=Changed."
 })
 @Auditor.Registration(200)
@@ -43,12 +48,16 @@ public class TriangleCommentAuditor extends AbstractAuditor<TriangleComment> {
 
     @Override
     protected String getAddChange(TriangleComment current) {
-        return Bundle.MSG_TriangleCommentAuditor_Created();
+        Date accident = current.getAccidentDate();
+        Date development = current.getDevelopmentDate();
+        return Bundle.MSG_TriangleCommentAuditor_Created(accident, development);
     }
 
     @Override
     protected String getDeleteChange(TriangleComment current) {
-        return Bundle.MSG_TriangleCommentAuditor_Deleted();
+        Date accident = current.getAccidentDate();
+        Date development = current.getDevelopmentDate();
+        return Bundle.MSG_TriangleCommentAuditor_Deleted(accident, development);
     }
 
     @Override

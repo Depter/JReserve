@@ -37,8 +37,20 @@
         </dependency>
         
         <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-persistence</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-audit</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -52,6 +64,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.smoothing.core</publicPackage>
+                        <publicPackage>org.jreserve.smoothing.audit</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

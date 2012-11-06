@@ -3,6 +3,9 @@ package org.jreserve.smoothing.geometric;
 import java.util.Arrays;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import org.hibernate.envers.AuditJoinTable;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.smoothing.core.Smoothing;
@@ -13,6 +16,7 @@ import org.jreserve.smoothing.core.SmoothingCell;
  * @author Peter Decsi
  */
 @EntityRegistration
+@Audited
 @Entity
 @Table(name="GEOMETRIC_SMOOTHING", schema="JRESERVE")
 public class GeometricSmoothing extends Smoothing {

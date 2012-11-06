@@ -1,5 +1,6 @@
 package org.jreserve.triangle.audit;
 
+import java.util.Date;
 import java.util.List;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.query.AuditEntity;
@@ -15,8 +16,10 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "MSG.VectorCommentAuditor.TypeName=Comment",
-    "MSG.VectorCommentAuditor.Created=Created.",
-    "MSG.VectorCommentAuditor.Deleted=Deleted.",
+    "# {0} - accident",
+    "MSG.VectorCommentAuditor.Created=Created for {0, date, yyyy-MM-dd}.",
+    "# {0} - accident",
+    "MSG.VectorCommentAuditor.Deleted=Deleted from {0, date, yyyy-MM-dd}.",
     "MSG.VectorCommentAuditor.Change=Changed."
 })
 @Auditor.Registration(200)
@@ -43,12 +46,14 @@ public class VectorCommentAuditor extends AbstractAuditor<VectorComment> {
 
     @Override
     protected String getAddChange(VectorComment current) {
-        return Bundle.MSG_VectorCommentAuditor_Created();
+        Date accident = current.getAccidentDate();
+        return Bundle.MSG_VectorCommentAuditor_Created(accident);
     }
 
     @Override
     protected String getDeleteChange(VectorComment current) {
-        return Bundle.MSG_VectorCommentAuditor_Deleted();
+        Date accident = current.getAccidentDate();
+        return Bundle.MSG_VectorCommentAuditor_Deleted(accident);
     }
 
     @Override

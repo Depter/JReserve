@@ -3,6 +3,9 @@ package org.jreserve.smoothing.exponential;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.smoothing.core.Smoothing;
@@ -14,10 +17,12 @@ import org.jreserve.smoothing.core.SmoothingCell;
  * @version 1.0
  */
 @EntityRegistration
+@Audited
 @Entity
 @Table(name="EXPONENTIAL_SMOOTHING", schema="JRESERVE")
 public class ExponentialSmoothing extends Smoothing {
     
+    @NotAudited
     @Column(name="ALPHA", nullable=false)
     private double alpha;
     

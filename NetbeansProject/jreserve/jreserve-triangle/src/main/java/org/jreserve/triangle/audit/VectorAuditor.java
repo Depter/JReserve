@@ -16,6 +16,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "MSG.VectorAuditor.Created=Vector created",
     "MSG.VectorAuditor.Deleted=Vector deleted",
+    "MSG.VectorAuditor.Saved=Saved. ",
     "# {0} - old name",
     "# {1} - new name",
     "MSG.VectorAuditor.NameChange=Vector name changed \"{0}\" => \"{1}\".",
@@ -61,7 +62,7 @@ public class VectorAuditor extends AbstractAuditor<Vector>{
 
     @Override
     protected String getChange(Vector previous, Vector current) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(Bundle.MSG_VectorAuditor_Saved());
         appendChange(sb, getNameChange(previous, current));
         appendChange(sb, getDescriptionChange(previous, current));
         appendChange(sb, getGeometryChange(previous, current));

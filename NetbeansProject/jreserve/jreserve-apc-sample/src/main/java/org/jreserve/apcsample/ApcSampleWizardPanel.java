@@ -148,7 +148,8 @@ public class ApcSampleWizardPanel implements WizardDescriptor.AsynchronousValida
             addElement(element);
             tx.commit();
         } catch (Exception ex) {
-            tx.rollback();
+            if(tx != null)
+                tx.rollback();
             logger.log(Level.SEVERE, "Unable to create APC sample!", ex);
             throw new WizardValidationException(panel, "Unable to create sample.", Bundle.MSG_ApcSampleWizardPanel_Error());
         } finally {

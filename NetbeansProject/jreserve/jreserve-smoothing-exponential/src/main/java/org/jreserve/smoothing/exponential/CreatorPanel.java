@@ -36,7 +36,9 @@ import org.openide.util.NbBundle.Messages;
     "LBL.CreatorPanel.Error.Name.Empty=Field 'Name' is empty!",
     "LBL.CreatorPanel.Error.Name.Exists=Name already exists!",
     "LBL.CreatorPanel.Error.Alpha.Empty=Field 'Alpha' is empty!",
-    "LBL.CreatorPanel.Error.Alpha.Invalid=Alpha must be between 0 and 1!"
+    "LBL.CreatorPanel.Error.Alpha.Invalid=Alpha must be between 0 and 1!",
+    "# {0} - count",
+    "LBL.CreatorPanel.DefaultName=Smooth {0}"
 })
 public class CreatorPanel extends javax.swing.JPanel implements ActionListener, DocumentListener, WindowListener {
     
@@ -189,10 +191,18 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         
     private void stopLoading() {
         msgLayout.show(msgPanel, CARD_MSG);
+        setDefaultName();
         nameText.setEnabled(true);
         alphaText.setEnabled(true);
         pBar.setIndeterminate(false);
         loader = null;
+    }
+    
+    private void setDefaultName() {
+        if(smoothings == null)
+            return;
+        int count = smoothings.size()+1;
+        nameText.setText(Bundle.LBL_CreatorPanel_DefaultName(count));
     }
     
     private void showError(String msg) {
@@ -346,6 +356,7 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         tableScroll.setPreferredSize(new java.awt.Dimension(200, 200));
 
         table.setModel(model);
+        table.setFillsViewportHeight(true);
         table.setDefaultRenderer(Double.class, new DoubleCellRenderer());
         tableScroll.setViewportView(table);
 

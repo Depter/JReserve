@@ -16,6 +16,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "MSG.TriangleAuditor.Created=Created",
     "MSG.TriangleAuditor.Deleted=Deleted",
+    "MSG.TriangleAuditor.Saved=Saved. ",
     "# {0} - old name",
     "# {1} - new name",
     "MSG.TriangleAuditor.NameChange=Name changed \"{0}\" => \"{1}\".",
@@ -25,7 +26,7 @@ import org.openide.util.NbBundle.Messages;
     "MSG.TriangleAuditor.GeometryChange=Geometry changed \"{0}\" => \"{1}\".",
     "MSG.TriangleAuditor.TypeName=Triangle"
 })
-@Auditor.Registration(100)
+@Auditor.Registration(50)
 public class TriangleAuditor extends AbstractAuditor<Triangle>{
 
     private final static String GEOMETRY_FORMAT = "[%tF, %d, %d] / [%tF, %d, %d]";
@@ -61,7 +62,7 @@ public class TriangleAuditor extends AbstractAuditor<Triangle>{
 
     @Override
     protected String getChange(Triangle previous, Triangle current) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(Bundle.MSG_TriangleAuditor_Saved());
         appendChange(sb, getNameChange(previous, current));
         appendChange(sb, getDescriptionChange(previous, current));
         appendChange(sb, getGeometryChange(previous, current));

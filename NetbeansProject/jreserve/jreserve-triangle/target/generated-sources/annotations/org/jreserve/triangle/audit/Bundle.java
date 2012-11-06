@@ -92,6 +92,13 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleAuditor.NameChange", old_name, new_name);
     }
     /**
+     * @return <i>Saved. </i>
+     * @see TriangleAuditor
+     */
+    static String MSG_TriangleAuditor_Saved() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleAuditor.Saved");
+    }
+    /**
      * @return <i>Triangle</i>
      * @see TriangleAuditor
      */
@@ -106,18 +113,22 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCommentAuditor.Change");
     }
     /**
-     * @return <i>Created.</i>
+     * @param accident accident
+     * @param development development
+     * @return <i>Created for {0, date, yyyy-MM-dd} / {1, date, yyyy-MM-dd}.</i>
      * @see TriangleCommentAuditor
      */
-    static String MSG_TriangleCommentAuditor_Created() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCommentAuditor.Created");
+    static String MSG_TriangleCommentAuditor_Created(Object accident, Object development) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCommentAuditor.Created", accident, development);
     }
     /**
-     * @return <i>Deleted.</i>
+     * @param accident accident
+     * @param development development
+     * @return <i>Deleted from {0, date, yyyy-MM-dd} / {1, date, yyyy-MM-dd}.</i>
      * @see TriangleCommentAuditor
      */
-    static String MSG_TriangleCommentAuditor_Deleted() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCommentAuditor.Deleted");
+    static String MSG_TriangleCommentAuditor_Deleted(Object accident, Object development) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.TriangleCommentAuditor.Deleted", accident, development);
     }
     /**
      * @return <i>Comment</i>
@@ -204,6 +215,13 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorAuditor.NameChange", old_name, new_name);
     }
     /**
+     * @return <i>Saved. </i>
+     * @see VectorAuditor
+     */
+    static String MSG_VectorAuditor_Saved() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorAuditor.Saved");
+    }
+    /**
      * @return <i>Vector</i>
      * @see VectorAuditor
      */
@@ -218,18 +236,20 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCommentAuditor.Change");
     }
     /**
-     * @return <i>Created.</i>
+     * @param accident accident
+     * @return <i>Created for {0, date, yyyy-MM-dd}.</i>
      * @see VectorCommentAuditor
      */
-    static String MSG_VectorCommentAuditor_Created() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCommentAuditor.Created");
+    static String MSG_VectorCommentAuditor_Created(Object accident) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCommentAuditor.Created", accident);
     }
     /**
-     * @return <i>Deleted.</i>
+     * @param accident accident
+     * @return <i>Deleted from {0, date, yyyy-MM-dd}.</i>
      * @see VectorCommentAuditor
      */
-    static String MSG_VectorCommentAuditor_Deleted() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCommentAuditor.Deleted");
+    static String MSG_VectorCommentAuditor_Deleted(Object accident) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.VectorCommentAuditor.Deleted", accident);
     }
     /**
      * @return <i>Comment</i>

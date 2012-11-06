@@ -28,7 +28,9 @@ import org.openide.util.NbBundle.Messages;
     "LBL.NameSelectPanel.Title=Select name",
     "MSG.NameSelectPanel.Name.Empty=Field 'Name' is empty!",
     "# {0} - name",
-    "MSG.NameSelectPanel.Name.Exists=Name \"{0}\" already exists!"
+    "MSG.NameSelectPanel.Name.Exists=Name \"{0}\" already exists!",
+    "# {0} - count",
+    "LBL.NameSelectPanel.DefaultName=Smooth {0}"
 })
 public class NameSelectPanel extends javax.swing.JPanel implements DocumentListener, ActionListener, WindowListener {
     
@@ -85,9 +87,17 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
         
     private void stopLoading() {
         msgLayout.show(msgPanel, CARD_MSG);
+        setDefaultName();
         nameText.setEnabled(true);
         pBar.setIndeterminate(false);
         loader = null;
+    }
+    
+    private void setDefaultName() {
+        if(smoothings == null)
+            return;
+        int count = smoothings.size()+1;
+        nameText.setText(Bundle.LBL_NameSelectPanel_DefaultName(count));
     }
     
     private void showError(String msg) {
