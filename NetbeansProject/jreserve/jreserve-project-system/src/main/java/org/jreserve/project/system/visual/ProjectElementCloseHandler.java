@@ -1,5 +1,6 @@
 package org.jreserve.project.system.visual;
 
+import org.jreserve.persistence.visual.CloseConfirmDialog;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.netbeans.api.actions.Savable;
@@ -55,6 +56,4 @@ public class ProjectElementCloseHandler extends CloseConfirmDialog implements Cl
         while(ur.canUndo())
             ur.undo();
     }
-
-
 }

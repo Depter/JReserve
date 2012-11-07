@@ -1,23 +1,22 @@
 package org.jreserve.triangle.management;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import org.jreserve.audit.AuditableProjectElement;
+import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
+import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.management.editor.Editor;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorComment;
 import org.jreserve.triangle.entities.VectorCorrection;
 import org.jreserve.triangle.entities.VectorGeometry;
-import org.netbeans.api.actions.Openable;
+import org.jreserve.triangle.management.editor.Editor;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.WeakListeners;
 import org.openide.windows.TopComponent;
 
 /**
@@ -64,6 +63,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         super.addToLookup(new VectorOpenable());
         super.addToLookup(new RenameableProjectElement(this));
         super.addToLookup(new AuditableProjectElement(this));
+        super.addToLookup(new VectorUndoRedo());
         new VectorSavable();
     }
 
@@ -153,46 +153,41 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         }
     }
     
-    private class VectorOpenable implements Openable, PropertyChangeListener {
-        
-        private TopComponent editor;
-        
-        VectorOpenable() {
-            TopComponent.Registry registry = TopComponent.getRegistry();
-            PropertyChangeListener listener = WeakListeners.propertyChange(this, TopComponent.getRegistry());
-            registry.addPropertyChangeListener(listener);
-        }
-        
+    private class VectorOpenable extends PersistentOpenable {
+
         @Override
-        public void open() {
-            createEditor();
-            openEditor();
+        protected TopComponent createComponent() {
+            return Editor.createTopComponent(VectorProjectElement.this);
         }
+    }
+    
+    
+    private class VectorUndoRedo extends ProjectElementUndoRedo {
         
-        private void createEditor() {
-            if(editor != null)
-                return;
-            editor = Editor.createTopComponent(VectorProjectElement.this);
-        }
-        
-        private void openEditor() {
-            if(!editor.isOpened())
-                editor.open();
-            editor.requestActive();
+        private VectorUndoRedo() {
+            super(VectorProjectElement.this);
         }
 
         @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            String property = evt.getPropertyName();
-            if(TopComponent.Registry.PROP_TC_CLOSED.equals(property))
-                checkEditorClosed();
+        protected boolean isChange(PropertyChangeEvent evt) {
+            if(GEOMETRY_PROPERTY.equals(evt.getPropertyName()))
+                return isChnage((VectorGeometry) evt.getOldValue(), (VectorGeometry) evt.getNewValue());
+            return super.isChange(evt);
         }
         
-        private void checkEditorClosed() {
-            for(TopComponent component : TopComponent.getRegistry().getOpened())
-                if(component == editor)
-                    return;
-            editor = null;
+        private boolean isChnage(VectorGeometry g1, VectorGeometry g2) {
+            if(g1 == null) return g2 != null;
+            return !g1.isEqualGeometry(g2);
         }
+        
+        @Override
+        protected String getPropertyName(String property) {
+            if(GEOMETRY_PROPERTY.equals(property))
+                return Bundle.MSG_TriangleProjectElement_UndoRedo_Geometry();
+            else if(CORRECTION_PROPERTY.equals(property))
+                return Bundle.MSG_TriangleProjectElement_UndoRedo_Correction();
+            else
+                return super.getPropertyName(property);
+        }   
     }
 }

@@ -1,9 +1,9 @@
 package org.jreserve.triangle.management;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import org.jreserve.audit.AuditableProjectElement;
+import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
@@ -15,10 +15,8 @@ import org.jreserve.triangle.entities.TriangleComment;
 import org.jreserve.triangle.entities.TriangleCorrection;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.management.editor.Editor;
-import org.netbeans.api.actions.Openable;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.WeakListeners;
 import org.openide.windows.TopComponent;
 
 /**
@@ -154,46 +152,11 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         }
     }
     
-    private class TriangleOpenable implements Openable, PropertyChangeListener {
-        
-        private TopComponent editor;
-        
-        TriangleOpenable() {
-            TopComponent.Registry registry = TopComponent.getRegistry();
-            PropertyChangeListener listener = WeakListeners.propertyChange(this, TopComponent.getRegistry());
-            registry.addPropertyChangeListener(listener);
-        }
-        
-        @Override
-        public void open() {
-            createEditor();
-            openEditor();
-        }
-        
-        private void createEditor() {
-            if(editor != null)
-                return;
-            editor = Editor.createTopComponent(TriangleProjectElement.this);
-        }
-        
-        private void openEditor() {
-            if(!editor.isOpened())
-                editor.open();
-            editor.requestActive();
-        }
+    private class TriangleOpenable extends PersistentOpenable {
 
         @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            String property = evt.getPropertyName();
-            if(TopComponent.Registry.PROP_TC_CLOSED.equals(property))
-                checkEditorClosed();
-        }
-        
-        private void checkEditorClosed() {
-            for(TopComponent component : TopComponent.getRegistry().getOpened())
-                if(component == editor)
-                    return;
-            editor = null;
+        protected TopComponent createComponent() {
+            return Editor.createTopComponent(TriangleProjectElement.this);
         }
     }
     
@@ -223,8 +186,6 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
                 return Bundle.MSG_TriangleProjectElement_UndoRedo_Correction();
             else
                 return super.getPropertyName(property);
-        }
-        
-    }
-    
+        }   
+    }    
 }

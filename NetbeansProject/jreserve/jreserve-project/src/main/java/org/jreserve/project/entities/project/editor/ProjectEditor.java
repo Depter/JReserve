@@ -1,6 +1,7 @@
 package org.jreserve.project.entities.project.editor;
 
 import org.jreserve.project.entities.project.ProjectElement;
+import org.jreserve.project.system.visual.ProjectElementCloseHandler;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
 import org.netbeans.core.spi.multiview.MultiViewFactory;
 import org.openide.windows.TopComponent;
@@ -15,7 +16,8 @@ public class ProjectEditor {
         MultiViewDescription[] desc = {
             new ProjectEditorDescriptor(element)
         };
-        TopComponent tc = MultiViewFactory.createCloneableMultiView(desc, desc[0]);
+        ProjectElementCloseHandler handler = new ProjectElementCloseHandler(element);
+        TopComponent tc = MultiViewFactory.createMultiView(desc, desc[0], handler);
         String name = element.getValue().getName();
         tc.setHtmlDisplayName("<html>"+name+"</html>");
         return tc;

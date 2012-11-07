@@ -60,6 +60,5 @@ abstract class DataEditorMultiviewElement<T extends DataStructure> extends DataE
     @Override
     public CloseOperationState canCloseElement() {
         return MultiViewFactory.createUnsafeCloseState("not-saved", null, null);
-        //return CloseOperationState.STATE_OK;
     }
 }

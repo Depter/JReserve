@@ -1,4 +1,4 @@
-package org.jreserve.project.system.visual;
+package org.jreserve.persistence.visual;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,6 +16,7 @@ import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.Lookups;
 import org.openide.windows.WindowManager;
 
@@ -24,7 +25,18 @@ import org.openide.windows.WindowManager;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CloseConfirmDialog extends JDialog implements ActionListener {
+@Messages({
+    "LBL.CloseConfirmForm.Button.Save=Save all",
+    "LBL.CloseConfirmForm.Button.Discard=Discard all",
+    "LBL.CloseConfirmForm.Button.Cancel=Cancel"
+})
+public class CloseConfirmDialog  extends JDialog implements ActionListener {
+    
+    public static boolean save(Lookup lookup, String title) {
+        CloseConfirmDialog dialog = new CloseConfirmDialog(lookup, title);
+        dialog.setVisible(true);
+        return dialog.savables.isEmpty();
+    }
     
     private ListView savableList;
     private JPanel buttonPanel;
@@ -59,7 +71,7 @@ public class CloseConfirmDialog extends JDialog implements ActionListener {
 
         buttonPanel.setLayout(new GridBagLayout());
 
-        saveAllButton.setText(org.openide.util.NbBundle.getMessage(CloseConfirmDialog.class, "LBL.CloseConfirmForm.Button.Save")); // NOI18N
+        saveAllButton.setText(Bundle.LBL_CloseConfirmForm_Button_Save());
         saveAllButton.addActionListener(this);
         GridBagConstraints gc = new GridBagConstraints();
         gc.gridx=0; gc.gridy=0;
@@ -67,7 +79,7 @@ public class CloseConfirmDialog extends JDialog implements ActionListener {
         gc.insets = new java.awt.Insets(0, 0, 5, 0);
         buttonPanel.add(saveAllButton, gc);
 
-        discardAllButton.setText(org.openide.util.NbBundle.getMessage(CloseConfirmDialog.class, "LBL.CloseConfirmForm.Button.Discard")); // NOI18N
+        discardAllButton.setText(Bundle.LBL_CloseConfirmForm_Button_Discard());
         discardAllButton.addActionListener(this);
         gc.gridy = 1;
         buttonPanel.add(discardAllButton, gc);
@@ -78,7 +90,7 @@ public class CloseConfirmDialog extends JDialog implements ActionListener {
         gc.weighty=1d;
         buttonPanel.add(Box.createVerticalGlue(), gc);
 
-        cancelButton.setText(org.openide.util.NbBundle.getMessage(CloseConfirmDialog.class, "LBL.CloseConfirmForm.Button.Cancel")); // NOI18N
+        cancelButton.setText(Bundle.LBL_CloseConfirmForm_Button_Cancel());
         cancelButton.addActionListener(this);
         gc.gridy = 3;
         gc.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -211,5 +223,4 @@ public class CloseConfirmDialog extends JDialog implements ActionListener {
             return em;
         }
     }
-
 }

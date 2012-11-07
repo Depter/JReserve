@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.jreserve.database.PersistenceDatabase;
 import org.jreserve.persistence.connection.HibernateUtil;
+import org.jreserve.persistence.visual.CloseConfirmDialog;
+import org.netbeans.api.actions.Savable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -28,7 +30,8 @@ import org.openide.util.NbBundle.Messages;
     @ActionReference(path = "JReserve/Popup/DatabaseRoot-Databases-Database", position = 220)
 })
 @Messages({
-    "CTL_DisconnectDatabaseAction=Disconnect database"
+    "CTL_DisconnectDatabaseAction=Disconnect database",
+    "LBL.DisconnectDatabaseAction.UnsavedTitle=Unsaved elements"
 })
 public class DisconnectDatabaseAction implements ActionListener {
     
@@ -41,6 +44,14 @@ public class DisconnectDatabaseAction implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        HibernateUtil.close(APP_CLOSING);
+        if(canClose())
+            HibernateUtil.close(APP_CLOSING);
+    }
+    
+    private boolean canClose() {
+        if(Savable.REGISTRY.lookupAll(Savable.class).isEmpty())
+            return true;
+        String title = Bundle.LBL_DisconnectDatabaseAction_UnsavedTitle();
+        return CloseConfirmDialog.save(Savable.REGISTRY, title);
     }
 }

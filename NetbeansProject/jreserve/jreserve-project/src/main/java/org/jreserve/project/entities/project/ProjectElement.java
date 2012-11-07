@@ -3,13 +3,14 @@ package org.jreserve.project.entities.project;
 import javax.swing.SwingUtilities;
 import org.hibernate.Session;
 import org.jreserve.audit.AuditableProjectElement;
+import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.editor.ProjectEditor;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
+import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
-import org.netbeans.api.actions.Openable;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
@@ -38,6 +39,7 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         addToLookup(new ProjectOpenable());
         addToLookup(new RenameableProjectElement(this));
         addToLookup(new AuditableProjectElement(this));
+        addToLookup(new ProjectElementUndoRedo(this));
         new ProjectSavable();
     }
     
@@ -82,15 +84,17 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         
         private void closeEditor() {
             ProjectOpenable openable = getLookup().lookup(ProjectOpenable.class);
-            if(openable != null && openable.editor != null)
-                closeEditor(openable.editor);
+            if(openable != null)
+                closeEditor(openable);
+//            if(openable != null && openable.editor != null)
+//                closeEditor(openable.editor);
         }
         
-        private void closeEditor(final TopComponent editor) {
+        private void closeEditor(final ProjectOpenable openable) {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    editor.close();
+                    openable.close();
                 }
             });
         }
@@ -110,17 +114,22 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         }
     }
     
-    private class ProjectOpenable implements Openable {
+    private class ProjectOpenable extends PersistentOpenable {
         
-        private TopComponent editor;
-        
+//        private TopComponent editor;
+//        
+//        @Override
+//        public void open() {
+//            if(editor == null)
+//                editor = ProjectEditor.createTopComponent(ProjectElement.this);
+//            if(!editor.isOpened())
+//                editor.open();
+//            editor.requestActive();
+//        }
+
         @Override
-        public void open() {
-            if(editor == null)
-                editor = ProjectEditor.createTopComponent(ProjectElement.this);
-            if(!editor.isOpened())
-                editor.open();
-            editor.requestActive();
+        protected TopComponent createComponent() {
+            return ProjectEditor.createTopComponent(ProjectElement.this);
         }
     }
 }

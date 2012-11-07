@@ -13,10 +13,11 @@ import org.netbeans.api.actions.Savable;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
+import org.netbeans.core.spi.multiview.MultiViewFactory;
 import org.openide.awt.UndoRedo;
-import org.openide.util.*;
 import org.openide.util.Lookup.Result;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.*;
 import org.openide.windows.TopComponent;
         
 /**
@@ -136,13 +137,13 @@ class ProjectEditorView extends JPanel implements MultiViewElement, DocumentList
 
     @Override
     public UndoRedo getUndoRedo() {
-        return UndoRedo.NONE;
+        UndoRedo ur = element.getLookup().lookup(UndoRedo.class);
+        return ur!=null? ur : UndoRedo.NONE;
     }
 
     @Override
     public CloseOperationState canCloseElement() {
-        //TODO check saveable
-        return CloseOperationState.STATE_OK;
+        return MultiViewFactory.createUnsafeCloseState("not-saved", null, null);
     }
 
     @Override

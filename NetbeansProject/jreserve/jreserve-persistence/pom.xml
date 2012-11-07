@@ -81,6 +81,12 @@
         
         <dependency>
             <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-awt</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-modules</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
@@ -106,6 +112,12 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-windows</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-explorer</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
         
@@ -148,6 +160,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.persistence</publicPackage>
+                        <publicPackage>org.jreserve.persistence.visual</publicPackage>
                         <publicPackage>javax.persistence</publicPackage>
                         <publicPackage>org.hibernate</publicPackage>
                         <publicPackage>org.hibernate.annotations</publicPackage>
