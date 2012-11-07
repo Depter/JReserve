@@ -162,6 +162,12 @@
             <artifactId>jreserve-smoothing-exponential</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-chart</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
