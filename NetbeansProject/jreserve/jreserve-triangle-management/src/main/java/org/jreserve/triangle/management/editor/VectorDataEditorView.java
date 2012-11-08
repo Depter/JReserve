@@ -14,17 +14,16 @@ import org.jreserve.triangle.widget.WidgetData;
 /**
  *
  * @author Peter Decsi
- * @version 1.0
  */
-class VectorDataEditorView extends DataEditorMultiviewElement<Vector> {
+public class VectorDataEditorView extends DataEditorView<Vector> {
     
     private final static String POPUP_PATH = "JReserve/Popup/VectorDataEditor";
 
     VectorDataEditorView(ProjectElement<Vector> element) {
-        super(element);
+        super(element, Editor.TRIANGLE_IMG);
         super.triangle.setPopUpActionPath(POPUP_PATH);
     }
-    
+
     @Override
     protected void initGeometry() {
         initSymmetry();

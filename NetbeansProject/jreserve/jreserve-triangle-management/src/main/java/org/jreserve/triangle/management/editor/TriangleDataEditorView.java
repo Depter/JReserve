@@ -14,17 +14,16 @@ import org.jreserve.triangle.widget.WidgetData;
 /**
  *
  * @author Peter Decsi
- * @version 1.0
  */
-class TriangleDataEditorView extends DataEditorMultiviewElement<Triangle> {
+class TriangleDataEditorView extends DataEditorView<Triangle> {
     
     private final static String POPUP_PATH = "JReserve/Popup/TriangleDataEditor";
 
     TriangleDataEditorView(ProjectElement<Triangle> element) {
-        super(element);
+        super(element, Editor.TRIANGLE_IMG);
         super.triangle.setPopUpActionPath(POPUP_PATH);
     }
-    
+
     @Override
     protected void initGeometry() {
         TriangleGeometry triangleGeometry = getElementGeometry();

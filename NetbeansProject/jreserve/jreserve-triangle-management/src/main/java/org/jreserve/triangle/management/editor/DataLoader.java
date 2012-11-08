@@ -44,7 +44,7 @@ public class DataLoader<T extends DataStructure> implements Runnable {
     
     private volatile RuntimeException ex = null;
     
-    DataLoader(T data, Callback<T> callback) {
+    public DataLoader(T data, Callback<T> callback) {
         this.callback = callback;
         this.project = data.getProject();
         this.dataType = data.getDataType();
@@ -54,7 +54,7 @@ public class DataLoader<T extends DataStructure> implements Runnable {
         this.handle = ProgressHandleFactory.createHandle("Loading triangle: " + name, task);
     }
 
-    void start() {
+    public void start() {
         task.schedule(0);
     }
 
@@ -111,7 +111,7 @@ public class DataLoader<T extends DataStructure> implements Runnable {
         return datas;
     }
 
-    void cancel() {
+    public void cancel() {
         task.cancel();
     }
     

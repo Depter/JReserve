@@ -6,14 +6,16 @@ import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
-import org.openide.explorer.ExplorerUtils;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
 
 /**
@@ -52,11 +54,15 @@ public final class NavigatorExplorerTopComponent extends TopComponent implements
     
     private final ExplorerManager em = new ExplorerManager();
     private Result<NavigableComponent> componentsResult;
+    private boolean myChange = false;
+    
+    private InstanceContent ic = new InstanceContent();
+    private Lookup lookup = new AbstractLookup(ic);
     
     public NavigatorExplorerTopComponent() {
         initComponents();
         setName(Bundle.CTL_NavigatorExplorerTopComponent());
-        associateLookup(ExplorerUtils.createLookup(em, getActionMap()));
+        associateLookup(lookup);
     }
     
     /**
@@ -106,7 +112,24 @@ public final class NavigatorExplorerTopComponent extends TopComponent implements
 
     @Override
     public void resultChanged(LookupEvent le) {
+        if(isFocusOwner()) return;
+        if(myChange) 
+            return;
         Collection<? extends NavigableComponent> c = componentsResult.allInstances();
+        setMyContent(c);
+        createTree(c);
+    }
+    
+    private void setMyContent(Collection<? extends NavigableComponent> c) {
+        myChange = true;
+        for(Object o : lookup.lookupAll(Object.class))
+            ic.remove(o);
+        for(NavigableComponent comp : c)
+            ic.add(comp);
+        myChange = false;
+    }
+    
+    private void createTree(Collection<? extends NavigableComponent> c) {
         AbstractNode root = new AbstractNode(new NavigableComponentChildren(c));
         em.setRootContext(root);
         if(c.size() == 1)
@@ -116,5 +139,10 @@ public final class NavigatorExplorerTopComponent extends TopComponent implements
     private void expandFirstChild(AbstractNode root) {
         Node node = root.getChildren().getNodeAt(0);
         tree.expandNode(node);
+    }
+    
+    @Override
+    public Lookup getLookup() {
+        return lookup;
     }
 }

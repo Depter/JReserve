@@ -29,6 +29,10 @@ public class ProjectElementCloseHandler extends CloseConfirmDialog implements Cl
 
     @Override
     public boolean resolveCloseOperation(CloseOperationState[] coss) {
+        return canClose();
+    }
+    
+    public boolean canClose() {
         if(element.getLookup().lookupAll(Savable.class).isEmpty()) {
             clearUndo();
             return true;

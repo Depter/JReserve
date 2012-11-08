@@ -156,7 +156,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
 
         @Override
         protected TopComponent createComponent() {
-            return Editor.createTopComponent(TriangleProjectElement.this);
+            return Editor.createTriangle(TriangleProjectElement.this);
         }
     }
     

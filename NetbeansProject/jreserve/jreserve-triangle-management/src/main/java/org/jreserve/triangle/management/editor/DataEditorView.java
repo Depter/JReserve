@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box.Filler;
 import javax.swing.JPanel;
 import org.jreserve.data.Data;
+import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.smoothing.Smoother;
 import org.jreserve.smoothing.core.Smoothing;
@@ -16,24 +17,22 @@ import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.DataStructure;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.GeometrySettingPanel;
+import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleWidget;
 import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
 import org.jreserve.triangle.widget.WidgetData;
-import org.jreserve.triangle.widget.TriangleCell;
-import org.openide.awt.UndoRedo;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
-import org.openide.util.lookup.ProxyLookup;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
- * @version 1.0
  */
-abstract class DataEditorView<T extends DataStructure> extends JPanel implements Lookup.Provider, UndoRedo.Provider {
+@Messages({
+    "LBL.DataEditorView.Title=Geometry"
+})
+abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     
-    //private final static int VALUE_LAYER = 0;
-    //private final static int CORRECTION_LAYER = 1;
     private final static Color CORRECTION_BG = new Color(235, 204, 204);
     private final static Color VALUE_BG = Color.WHITE;
     private final static Color SMOOTHING_BG = new Color(167, 191, 255);
@@ -46,9 +45,9 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
     
     private boolean userChanging = true;
     private PropertyChangeListener elementListener;
-    private Lookup lookup;
     
-    DataEditorView(ProjectElement<T> element) {
+    DataEditorView(ProjectElement<T> element, Image img) {
+        super(Bundle.LBL_DataEditorView_Title(), img);
         this.element = element;
         userChanging = false;
         initComponents();
@@ -57,25 +56,25 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
         addListeners();
         userChanging = true;
         startLoader();
-        lookup = new ProxyLookup(element.getLookup(), triangle.getLookup());
     }
     
     private void initComponents() {
-        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        setLayout(new GridBagLayout());
+        JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        panel.setLayout(new GridBagLayout());
 
         geometrySetting = new GeometrySettingPanel();
         GridBagConstraints gc = new GridBagConstraints();
         gc.gridx = 0; gc.gridy = 0;
         gc.insets = new Insets(0, 0, 10, 0);
-        add(geometrySetting, gc);
+        panel.add(geometrySetting, gc);
         
         gc.gridx = 1;
         gc.fill = GridBagConstraints.VERTICAL;
         gc.weightx = 1.0;
         Dimension min = new Dimension(0, 0);
         Dimension max = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        add(new Filler(min, min, max), gc);
+        panel.add(new Filler(min, min, max), gc);
 
         triangle = new TriangleWidget();
         triangle.setPreferredSize(new java.awt.Dimension(400, 200));
@@ -84,7 +83,8 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
         gc.gridwidth = 2;
         gc.fill = java.awt.GridBagConstraints.BOTH;
         gc.weightx=1d; gc.weighty=1d;
-        add(triangle, gc);
+        panel.add(triangle, gc);
+        super.setContent(panel);
     }
     
     protected abstract void initGeometry();
@@ -129,17 +129,6 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
         T value = element.getValue();
         loader = new DataLoader<T>(value, new LoaderCallback());
         loader.start();
-    }
-    
-    @Override
-    public Lookup getLookup() {
-        return lookup;
-    }
-    
-    @Override
-    public UndoRedo getUndoRedo() {
-        UndoRedo ur = element.getLookup().lookup(UndoRedo.class);
-        return ur!=null? ur : UndoRedo.NONE;
     }
     
     public void closed() {
@@ -263,5 +252,4 @@ abstract class DataEditorView<T extends DataStructure> extends JPanel implements
         public void commentsChanged() {
         }
     }
-    
 }

@@ -63,7 +63,7 @@ public abstract class PersistentOpenable implements Openable {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if(component != null && !component.isOpened() && isCloseEvent(evt)) {
-                component.removePropertyChangeListener(listener);
+                TopComponent.getRegistry().removePropertyChangeListener(listener);
                 component = null;
                 unRegister();
             }

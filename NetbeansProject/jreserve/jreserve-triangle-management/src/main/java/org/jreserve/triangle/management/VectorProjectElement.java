@@ -157,7 +157,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
 
         @Override
         protected TopComponent createComponent() {
-            return Editor.createTopComponent(VectorProjectElement.this);
+            return Editor.createVector(VectorProjectElement.this);
         }
     }
     
