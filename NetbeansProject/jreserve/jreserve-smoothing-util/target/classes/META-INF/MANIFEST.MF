@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/smoothing/Bundle.proper
  ties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20121106
-OpenIDE-Module-Build-Version: 201211060921
+OpenIDE-Module-Implementation-Version: 1.0-20121108
+OpenIDE-Module-Build-Version: 201211081518
 OpenIDE-Module: org.jreserve.jreserve.smoothing.util
 OpenIDE-Module-Public-Packages: org.jreserve.smoothing.*, org.jreserve
  .smoothing.actions.*
