@@ -7,13 +7,14 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class NavigablePanel extends JPanel implements NavigableComponent, ActionListener {
+public class NavigablePanel extends JPanel implements NavigableComponent, ActionListener, Lookup.Provider {
 
     private final static Color BACKGROUND = new Color(67, 196, 67);
     private final static Color FOREGROUND = Color.WHITE;
@@ -30,6 +31,7 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     private Color background = BACKGROUND;
     private Color foreground = FOREGROUND;
     private boolean opened = true;
+    private Lookup lookup;
     
     public NavigablePanel() {
     }
@@ -86,6 +88,8 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     public void setContent(JComponent component) {
         contentPanel.removeAll();
         contentPanel.add(component, BorderLayout.CENTER);
+        if(component instanceof Lookup.Provider)
+            lookup = ((Lookup.Provider)component).getLookup();
     }
     
     @Override
@@ -124,6 +128,7 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     public void navigateTo() {
         if(parent != null)
             parent.navigateToChild(this);
+        setOpened(true);
     }
 
     @Override
@@ -142,9 +147,24 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(button == e.getSource()) {
-            opened = !opened;
-            contentPanel.setVisible(opened);
-        }
+        if(button == e.getSource())
+            setOpened(!opened);
+    }
+    
+    public void setOpened(boolean opened) {
+        this.opened = opened;
+        button.setOpened(opened);
+        contentPanel.setVisible(opened);
+    }
+
+    @Override
+    public Lookup getLookup() {
+        if(lookup == null)
+            return Lookup.EMPTY;
+        return lookup;
+    }
+    
+    protected void setLookup(Lookup lookup) {
+        this.lookup = lookup;
     }
 }

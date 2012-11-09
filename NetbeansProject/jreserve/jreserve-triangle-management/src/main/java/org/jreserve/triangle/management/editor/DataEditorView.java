@@ -22,6 +22,7 @@ import org.jreserve.triangle.widget.TriangleWidget;
 import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
 import org.jreserve.triangle.widget.WidgetData;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -85,6 +86,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         gc.weightx=1d; gc.weighty=1d;
         panel.add(triangle, gc);
         super.setContent(panel);
+        super.setLookup(triangle.getLookup());
     }
     
     protected abstract void initGeometry();

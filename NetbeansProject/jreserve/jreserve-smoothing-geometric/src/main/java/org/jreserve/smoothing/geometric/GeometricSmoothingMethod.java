@@ -1,5 +1,6 @@
 package org.jreserve.smoothing.geometric;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
@@ -33,23 +34,33 @@ public class GeometricSmoothingMethod implements SmoothingMethod {
     
     @Override
     public Smoothing createSmoothing(PersistentObject owner, TriangleWidget widget, TriangleCell[] cells) {
-        String name = NameSelectPanel.getName(owner);
-        if(name == null)
+        double[] input = getInput(cells);
+        NameSelectPanel panel = NameSelectPanel.createPanel(owner, input);
+        if(panel.isCancelled())
             return null;
-        return createGeometricSmoothing(owner, name, cells);
+        return createGeometricSmoothing(owner, panel.getName(), cells, panel.getApplied());
     }
     
-    private Smoothing createGeometricSmoothing(PersistentObject owner, String name, TriangleCell[] cells) {
+    private double[] getInput(TriangleCell[] cells) {
+        Arrays.sort(cells);
+        int size = cells.length;
+        double[] input = new double[size];
+        for(int i=0; i<size; i++)
+            input[i] = cells[i].getDisplayValue();
+        return input;
+    }
+    
+    private Smoothing createGeometricSmoothing(PersistentObject owner, String name, TriangleCell[] cells, boolean[] applied) {
         GeometricSmoothing smoothing = new GeometricSmoothing(owner, name);
-        for(TriangleCell cell : cells)
-            smoothing.addCell(createCell(smoothing, cell));
+        for(int i=0, size=cells.length; i<size; i++)
+            smoothing.addCell(createCell(smoothing, cells[i], applied[i]));
         return smoothing;
     }
     
-    private SmoothingCell createCell(Smoothing smoothing, TriangleCell cell) {
+    private SmoothingCell createCell(Smoothing smoothing, TriangleCell cell, boolean applied) {
         Date accident = cell.getAccidentBegin();
         Date development = cell.getDevelopmentBegin();
-        return new SmoothingCell(smoothing, accident, development);
+        return new SmoothingCell(smoothing, accident, development, applied);
     }
     
     @Override

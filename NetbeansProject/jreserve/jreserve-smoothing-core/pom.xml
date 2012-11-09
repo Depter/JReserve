@@ -53,6 +53,12 @@
             <artifactId>jreserve-audit</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-locale-settings</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -63,8 +69,9 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>org.jreserve.smoothing.core</publicPackage>
                         <publicPackage>org.jreserve.smoothing.audit</publicPackage>
+                        <publicPackage>org.jreserve.smoothing.core</publicPackage>
+                        <publicPackage>org.jreserve.smoothing.visual</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

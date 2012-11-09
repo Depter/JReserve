@@ -153,6 +153,24 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     }
     
     private class TriangleOpenable extends PersistentOpenable {
+    
+        private boolean added = false;
+        
+        @Override
+        protected void opened() {
+            //if(!added) {
+            //    added = true;
+            //    TriangleProjectElement.this.addToLookup(component);
+            //}
+        }
+    
+        @Override
+        protected void closing() {
+            //if(added) {
+            //    added = false;
+            //    TriangleProjectElement.this.removeFromLookup(component);
+            //}
+        }
 
         @Override
         protected TopComponent createComponent() {

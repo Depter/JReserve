@@ -1,14 +1,14 @@
-package org.jreserve.triangle.widget.util;
+package org.jreserve.localesettings.util;
 
 import java.text.DecimalFormat;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import org.jreserve.localesettings.util.LocaleSettings;
 
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
 public class DecimalSpinner extends JSpinner {
 
@@ -28,4 +28,5 @@ public class DecimalSpinner extends JSpinner {
             return 0;
         return ((Integer)o).intValue();
     }
+
 }

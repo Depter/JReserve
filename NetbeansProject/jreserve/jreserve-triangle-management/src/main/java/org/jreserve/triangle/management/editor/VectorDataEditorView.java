@@ -20,7 +20,7 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     private final static String POPUP_PATH = "JReserve/Popup/VectorDataEditor";
 
     VectorDataEditorView(ProjectElement<Vector> element) {
-        super(element, Editor.TRIANGLE_IMG);
+        super(element, Editor.VECTOR_IMG);
         super.triangle.setPopUpActionPath(POPUP_PATH);
     }
 

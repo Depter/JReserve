@@ -36,6 +36,7 @@ public abstract class PersistentOpenable implements Openable {
             component.open();
         component.requestActive();
         register();
+        opened();
     }
 
     private void initComponent() {
@@ -50,13 +51,20 @@ public abstract class PersistentOpenable implements Openable {
         IC.add(this);
     }
     
+    protected void opened() {
+    }
+    
     public void close() {
         if(component != null)
             component.close();
     }
     
+    
     protected final void unRegister() {
         IC.remove(this);
+    }
+    
+    protected void closing() {
     }
     
     private class TopComponentListener implements PropertyChangeListener {
@@ -64,6 +72,7 @@ public abstract class PersistentOpenable implements Openable {
         public void propertyChange(PropertyChangeEvent evt) {
             if(component != null && !component.isOpened() && isCloseEvent(evt)) {
                 TopComponent.getRegistry().removePropertyChangeListener(listener);
+                closing();
                 component = null;
                 unRegister();
             }

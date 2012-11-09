@@ -44,32 +44,43 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         return new Editor(components, element);
     }
     
-    private Lookup lookup;
     private ProjectElement element;
     private ProjectElementCloseHandler closeHandler;
+    private Lookup lookup;
     
     private Editor(List<NavigableComponent> components, ProjectElement element) {
         super(components);
         this.element = element;
         this.closeHandler = new ProjectElementCloseHandler(element);
+        createLookup();
         initTopComponent();
     }
     
+    private void createLookup() {
+        List<Lookup> lkps = new ArrayList<Lookup>();
+        lkps.add(element.getLookup());
+        for(NavigableComponent comp : super.getChildren())
+            if(comp instanceof Lookup.Provider)
+                lkps.add(((Lookup.Provider) comp).getLookup());
+        this.lookup = new ProxyLookup(lkps.toArray(new Lookup[0]));
+    }
+    
     private void initTopComponent() {
-        initLookup();
         initTab();
         TabNameAdapter.createAdapter(this, element);
     }
     
-    private void initLookup() {
-        lookup = new ProxyLookup(super.getLookup(), element.getLookup());
-    }
-    
     private void initTab() {
-        setIcon(TRIANGLE_IMG);
+        setTabIcon();
         String name = (String) element.getProperty(ProjectElement.NAME_PROPERTY);
         setDisplayName(name);
-        setHtmlDisplayName("<html>"+name+"</html>");
+    }
+    
+    private void setTabIcon() {
+        if(element.getValue() instanceof Triangle)
+            setIcon(TRIANGLE_IMG);
+        else
+            setIcon(VECTOR_IMG);
     }
     
     @Override
@@ -83,8 +94,9 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         return closeHandler.canClose();
     }
     
-    @Override
-    public Lookup getLookup() {
-        return lookup;
-    }
+//    @Override
+//    public Lookup getLookup() {
+//        return lookup;
+//        //return element.getLookup();
+//    }
 }

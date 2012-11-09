@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.AbstractLookup;
-import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 
 /**
@@ -19,8 +19,7 @@ public class NavigableTopComponent extends TopComponent implements NavigableComp
     private final static int COMPONENT_SPACING = 5;
     private final static int SCROLL_INCREMENT = 20;
     
-    private InstanceContent ic = new InstanceContent();
-    private Lookup lookup = new AbstractLookup(ic);
+    private Lookup lookup;
     private NavigableComponent parent;
     private List<NavigableComponent> components = new ArrayList<NavigableComponent>();
     
@@ -29,15 +28,25 @@ public class NavigableTopComponent extends TopComponent implements NavigableComp
     
     public NavigableTopComponent(List<NavigableComponent> components) {
         addComponents(components);
+        createLookup();
         initPanel();
-        ic.add(this);
     }
     
     private void addComponents(List<NavigableComponent> components) {
         for(NavigableComponent comp : components) {
             comp.setParent(this);
             this.components.add(comp);
-        }    
+        }
+    }
+    
+    private void createLookup() {
+        List<Lookup> lkps = new ArrayList<Lookup>();
+        lkps.add(Lookups.fixed(this));
+        for(NavigableComponent comp : components) {
+            if(comp instanceof Lookup.Provider)
+                lkps.add(((Lookup.Provider) comp).getLookup());
+        }
+        lookup = new ProxyLookup(lkps.toArray(new Lookup[0]));
     }
     
     private void initPanel() {

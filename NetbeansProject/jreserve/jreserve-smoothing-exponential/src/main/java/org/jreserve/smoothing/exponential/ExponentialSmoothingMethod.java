@@ -7,9 +7,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.SessionFactory;
+import org.jreserve.smoothing.SmoothingMethod;
 import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.core.SmoothingCell;
-import org.jreserve.smoothing.SmoothingMethod;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleWidget;
 import org.openide.util.NbBundle.Messages;
@@ -36,8 +36,9 @@ public class ExponentialSmoothingMethod implements SmoothingMethod {
     @Override
     public Smoothing createSmoothing(PersistentObject owner, TriangleWidget widget, TriangleCell[] cells) {
         double[] input = getInput(cells);
-        ExponentialSmoothing smoothing = CreatorPanel.create(owner, input);
-        fillSmoothing(smoothing, cells);
+        CreatorPanel panel = CreatorPanel.create(owner, input);
+        ExponentialSmoothing smoothing = panel.isCancelled()? null : new ExponentialSmoothing(owner, panel.getSmoothingName(), panel.getAlpha());
+        fillSmoothing(smoothing, cells, panel.getApplied());
         return smoothing;
     }
     
@@ -50,17 +51,16 @@ public class ExponentialSmoothingMethod implements SmoothingMethod {
         return input;
     }
     
-    private void fillSmoothing(ExponentialSmoothing smoothing, TriangleCell[] cells) {
-        if(smoothing == null)
-            return;
-        for(TriangleCell cell : cells)
-            smoothing.addCell(createCell(smoothing, cell));
+    private void fillSmoothing(ExponentialSmoothing smoothing, TriangleCell[] cells, boolean applied[]) {
+        if(smoothing == null) return;
+        for(int i=0, size=cells.length; i<size; i++)
+            smoothing.addCell(createCell(smoothing, cells[i], applied[i]));
     }
     
-    private SmoothingCell createCell(Smoothing smoothing, TriangleCell cell) {
+    private SmoothingCell createCell(Smoothing smoothing, TriangleCell cell, boolean applied) {
         Date accident = cell.getAccidentBegin();
         Date development = cell.getDevelopmentBegin();
-        return new SmoothingCell(smoothing, accident, development);
+        return new SmoothingCell(smoothing, accident, development, applied);
     }
 
     @Override

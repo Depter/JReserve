@@ -37,6 +37,7 @@ public class TabNameAdapter implements LookupListener, PropertyChangeListener {
         this.element = element;
         savableResult = element.getLookup().lookupResult(Savable.class);
         savableResult.addLookupListener(this);
+        resultChanged(null);
     }
 
     @Override
@@ -46,6 +47,8 @@ public class TabNameAdapter implements LookupListener, PropertyChangeListener {
     }
 
     private void setHtmlDisplayName(boolean isChanged) {
+        if(tc == null)
+            return;
         if (isChanged) {
             tc.setHtmlDisplayName(getChangedHtmlDisplayName());
         } else {

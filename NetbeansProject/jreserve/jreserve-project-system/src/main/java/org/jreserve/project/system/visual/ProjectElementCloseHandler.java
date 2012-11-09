@@ -8,6 +8,7 @@ import org.netbeans.core.spi.multiview.CloseOperationHandler;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.openide.awt.UndoRedo;
 import org.openide.util.NbBundle.Messages;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -33,13 +34,25 @@ public class ProjectElementCloseHandler extends CloseConfirmDialog implements Cl
     }
     
     public boolean canClose() {
-        if(element.getLookup().lookupAll(Savable.class).isEmpty()) {
+        if(isAppClosed())
+            return true;
+        
+        if(!isElementChanged()) {
             clearUndo();
             return true;
         }
 
         super.setVisible(true);
         return super.savables.isEmpty();
+    }
+    
+    private boolean isAppClosed() {
+        java.awt.Frame window = WindowManager.getDefault().getMainWindow();
+        return !window.isVisible();
+    }
+    
+    private boolean isElementChanged() {
+        return !element.getLookup().lookupAll(Savable.class).isEmpty();
     }
 
     private void clearUndo() {

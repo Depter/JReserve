@@ -11,6 +11,10 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author Peter Decsi
  */
+@Messages({
+    "MSG.EditorView.Validator.Name.Empty=Field 'Name' is empty.",
+    "MSG.EditorView.Validator.Name.Exists=Name already exists."
+})
 class EditorView extends NavigablePanel {
 
     private ProjectElementEditPanel editPanel;
@@ -39,7 +43,7 @@ class EditorView extends NavigablePanel {
         private boolean nameNotEmpty(String name) {
             if(name!=null && name.trim().length()>0)
                 return true;
-            panel.showError("Name is empty!");
+            panel.showError(Bundle.MSG_EditorView_Validator_Name_Empty());
             return false;
         }
         
@@ -53,7 +57,7 @@ class EditorView extends NavigablePanel {
         private boolean isNewNameInContainer(String name) {
             ProjectDataContainer container = getContainer();
             if(container.containsName(name)) {
-                panel.showError("Name already used!");
+                panel.showError(Bundle.MSG_EditorView_Validator_Name_Exists());
                 return false;
             }
             return true;

@@ -51,6 +51,11 @@ class NavigablePanelButton extends JLabel implements MouseListener {
         setRequestFocusEnabled(false);
     }   
     
+    public void setOpened(boolean opened) {
+        this.opened = opened;
+        super.repaint();
+    }
+    
     @Override
     public void setForeground(Color color) {
         super.setForeground(color);

@@ -121,8 +121,8 @@ public class ProjectElementEditPanel extends JPanel implements Lookup.Provider, 
         nameText.getDocument().addDocumentListener(editListener);
         descriptionText.getDocument().addDocumentListener(editListener);
         
-        elementListener = WeakListeners.propertyChange(new ElementListener(), element);
-        element.addPropertyChangeListener(elementListener);
+        elementListener = new ElementListener();
+        element.addPropertyChangeListener(WeakListeners.propertyChange(elementListener, element));
     }
     
     public void close() {
@@ -168,7 +168,8 @@ public class ProjectElementEditPanel extends JPanel implements Lookup.Provider, 
     }
         
     private void validatePanel() {
-        if(validator.isNameValid(getElementName()));
+        showError(null);
+        if(validator.isNameValid(getElementName()))
             validator.isDescriptionValid(getElementDescription());
     }
 

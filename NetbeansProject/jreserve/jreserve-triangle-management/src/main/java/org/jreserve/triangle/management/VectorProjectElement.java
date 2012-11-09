@@ -154,6 +154,24 @@ public class VectorProjectElement extends ProjectElement<Vector> {
     }
     
     private class VectorOpenable extends PersistentOpenable {
+    
+        private boolean added = false;
+        
+        @Override
+        protected void opened() {
+            if(!added) {
+                added = true;
+                VectorProjectElement.this.addToLookup(component);
+            }
+        }
+    
+        @Override
+        protected void closing() {
+            if(added) {
+                added = false;
+                VectorProjectElement.this.removeFromLookup(component);
+            }
+        }
 
         @Override
         protected TopComponent createComponent() {

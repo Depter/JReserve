@@ -26,13 +26,17 @@ public class SmoothingCell extends AbstractPersistentObject implements Comparabl
     @Temporal(TemporalType.DATE)
     private Date development;
     
+    @Column(name="APPLIED", nullable=false)
+    private boolean applied;
+    
     protected SmoothingCell() {
     }
     
-    public SmoothingCell(Smoothing smoothing, Date accident, Date development) {
+    public SmoothingCell(Smoothing smoothing, Date accident, Date development, boolean applied) {
         this.smoothing = smoothing;
         this.accident = accident;
         this.development = development;
+        this.applied = applied;
     }
 
     public Date getAccident() {
@@ -43,6 +47,10 @@ public class SmoothingCell extends AbstractPersistentObject implements Comparabl
         return development;
     }
 
+    public boolean isApplied() {
+        return applied;
+    }
+    
     public Smoothing getSmoothing() {
         return smoothing;
     }

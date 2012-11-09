@@ -42,11 +42,11 @@ import org.openide.util.NbBundle.Messages;
 })
 public class CreatorPanel extends javax.swing.JPanel implements ActionListener, DocumentListener, WindowListener {
     
-    public static ExponentialSmoothing create(PersistentObject owner, double[] input) {
+    public static CreatorPanel create(PersistentObject owner, double[] input) {
         CreatorPanel content = new CreatorPanel(owner, input);
         createDialog(content);
         content.dialog.setVisible(true);
-        return createSmoothing(owner, content);
+        return content;
     }
     
     private static void createDialog(CreatorPanel panel) {
@@ -73,7 +73,6 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
     
     private DoubleRenderer renderer = new DoubleRenderer();
     private ExponentialSmoothing smoothing = new ExponentialSmoothing(DEFAULT_ALPHA);
-    private SmoothTableModel model = new SmoothTableModel();
     private boolean cancelled = false;
     
     private Loader loader;
@@ -81,14 +80,17 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
     private CardLayout msgLayout;
     
     private String name;
+    private double[] input;
     private double alpha;
     
     public CreatorPanel(PersistentObject owner, double[] input) {
-        model.input = input;
+        this.input = input;
         smoothing.setAlpha(0d);
-        model.setSmoothed(smoothing.smooth(input));
         
         initComponents();
+        smoothingTable.setInput(input);
+        smoothingTable.setSmoothed(smoothing.smooth(input));
+        
         msgLayout = (CardLayout) msgPanel.getLayout();
         checkInput();
         startLoading(owner);
@@ -157,10 +159,10 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         String strAlpha = alphaText.getText();
         if(checkAlphaNotNull(strAlpha) && checkAlphaValid(strAlpha)) {
             smoothing.setAlpha(renderer.parse(alphaText.getText()));
-            model.setSmoothed(smoothing.smooth(model.input));
+            smoothingTable.setSmoothed(smoothing.smooth(input));
             return true;
         } else {
-            model.setSmoothed(null);
+            smoothingTable.setSmoothed(null);
             return false;
         }
     }
@@ -234,6 +236,22 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
     @Override public void windowDeiconified(WindowEvent e) {}
     @Override public void windowActivated(WindowEvent e) {}
     @Override public void windowDeactivated(WindowEvent e) {}
+    
+    boolean isCancelled() {
+        return name == null;
+    }
+    
+    String getSmoothingName() {
+        return name;
+    }
+    
+    double getAlpha() {
+        return alpha;
+    }
+    
+    boolean[] getApplied() {
+        return smoothingTable.getApplied();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -262,8 +280,7 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
         cancelButton = new javax.swing.JButton();
         centerPanel = new javax.swing.JPanel();
-        tableScroll = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
+        smoothingTable = new org.jreserve.smoothing.visual.SmoothingTablePanel();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setLayout(new java.awt.BorderLayout(15, 15));
@@ -352,15 +369,7 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         add(soutPanel, java.awt.BorderLayout.SOUTH);
 
         centerPanel.setLayout(new java.awt.BorderLayout());
-
-        tableScroll.setPreferredSize(new java.awt.Dimension(200, 200));
-
-        table.setModel(model);
-        table.setFillsViewportHeight(true);
-        table.setDefaultRenderer(Double.class, new DoubleCellRenderer());
-        tableScroll.setViewportView(table);
-
-        centerPanel.add(tableScroll, java.awt.BorderLayout.CENTER);
+        centerPanel.add(smoothingTable, java.awt.BorderLayout.CENTER);
 
         add(centerPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -381,9 +390,8 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
     private javax.swing.JProgressBar pBar;
     private javax.swing.JLabel pBarLabel;
     private javax.swing.JPanel pBarPanel;
+    private org.jreserve.smoothing.visual.SmoothingTablePanel smoothingTable;
     private javax.swing.JPanel soutPanel;
-    private javax.swing.JTable table;
-    private javax.swing.JScrollPane tableScroll;
     // End of variables declaration//GEN-END:variables
 
 

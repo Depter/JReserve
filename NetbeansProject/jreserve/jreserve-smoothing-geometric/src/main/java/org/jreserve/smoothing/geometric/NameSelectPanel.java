@@ -34,11 +34,11 @@ import org.openide.util.NbBundle.Messages;
 })
 public class NameSelectPanel extends javax.swing.JPanel implements DocumentListener, ActionListener, WindowListener {
     
-    public static String getName(PersistentObject owner) {
-        NameSelectPanel content = new NameSelectPanel(owner);
+    public static NameSelectPanel createPanel(PersistentObject owner, double[] input) {
+        NameSelectPanel content = new NameSelectPanel(owner, input);
         createDialog(content);
         content.dialog.setVisible(true);
-        return content.name;
+        return content;
     }
     
     private static void createDialog(NameSelectPanel panel) {
@@ -63,9 +63,10 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
     private volatile boolean cancelled = false;
     private Loader loader;
     
-    
-    public NameSelectPanel(PersistentObject owner) {
+    public NameSelectPanel(PersistentObject owner, double[] input) {
         initComponents();
+        smoothingTable.setInput(input);
+        smoothingTable.setSmoothed(new GeometricSmoothing().smooth(input));
         msgLayout = (CardLayout) msgPanel.getLayout();
         checkInput();
         startLoading(owner);
@@ -175,6 +176,18 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
     @Override public void windowActivated(WindowEvent e) {}
     @Override public void windowDeactivated(WindowEvent e) {}
 
+    boolean isCancelled() {
+        return cancelled;
+    }
+    
+    String getSmoothingName() {
+        return name;
+    }
+    
+    boolean[] getApplied() {
+        return smoothingTable.getApplied();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -187,7 +200,7 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
         namePanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
         nameText = new javax.swing.JTextField();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+        smoothingTable = new org.jreserve.smoothing.visual.SmoothingTablePanel();
         soutPanel = new javax.swing.JPanel();
         msgPanel = new javax.swing.JPanel();
         pBarPanel = new javax.swing.JPanel();
@@ -213,7 +226,7 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
         namePanel.add(nameText, java.awt.BorderLayout.CENTER);
 
         add(namePanel, java.awt.BorderLayout.NORTH);
-        add(filler1, java.awt.BorderLayout.CENTER);
+        add(smoothingTable, java.awt.BorderLayout.CENTER);
 
         soutPanel.setLayout(new java.awt.BorderLayout(0, 5));
 
@@ -256,7 +269,6 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
     private javax.swing.JLabel msgLabel;
     private javax.swing.JPanel msgLabelPanel;
@@ -268,6 +280,7 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
     private javax.swing.JProgressBar pBar;
     private javax.swing.JLabel pBarLabel;
     private javax.swing.JPanel pBarPanel;
+    private org.jreserve.smoothing.visual.SmoothingTablePanel smoothingTable;
     private javax.swing.JPanel soutPanel;
     // End of variables declaration//GEN-END:variables
 

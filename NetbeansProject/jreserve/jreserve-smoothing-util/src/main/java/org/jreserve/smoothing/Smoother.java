@@ -1,8 +1,8 @@
 package org.jreserve.smoothing;
 
-import org.jreserve.smoothing.core.SmoothingCell;
-import org.jreserve.smoothing.core.Smoothing;
 import java.util.*;
+import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.smoothing.core.SmoothingCell;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleWidget;
 import org.jreserve.triangle.widget.WidgetData;
@@ -81,7 +81,8 @@ public class Smoother {
     private Set<WidgetData<Double>> createValues(List<SmoothingCell> cells, double[] smoothed) {
         Set<WidgetData<Double>> values = new HashSet<WidgetData<Double>>();
         for(int i=0, size=smoothed.length; i<size; i++)
-            values.add(createData(smoothed[i], cells.get(i)));
+            if(cells.get(i).isApplied())
+                values.add(createData(smoothed[i], cells.get(i)));
         return values;
     }
     

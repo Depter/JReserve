@@ -132,13 +132,13 @@ public final class NavigatorExplorerTopComponent extends TopComponent implements
     private void createTree(Collection<? extends NavigableComponent> c) {
         AbstractNode root = new AbstractNode(new NavigableComponentChildren(c));
         em.setRootContext(root);
-        if(c.size() == 1)
-            expandFirstChild(root);
+        expandFirstChild(root);
     }
     
     private void expandFirstChild(AbstractNode root) {
-        Node node = root.getChildren().getNodeAt(0);
-        tree.expandNode(node);
+        Node[] nodes = root.getChildren().getNodes();
+        if(nodes != null && nodes.length>0)
+            tree.expandNode(nodes[0]);
     }
     
     @Override
