@@ -1,6 +1,8 @@
 package org.jreserve.navigator;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -18,9 +20,6 @@ import javax.swing.border.Border;
  */
 class NavigablePanelButton extends JLabel implements MouseListener {
     
-    private final static String OPENED = "-";
-    private final static String CLOSED = "+";
-    private final static Font FONT = new Font("SansSarif", Font.BOLD, 15);
     private final static Color FOREGROUND = Color.WHITE;
     private final static int BORDER_WIDTH = 1;
     private final static Dimension SIZE = new Dimension(16, 16);
@@ -28,7 +27,7 @@ class NavigablePanelButton extends JLabel implements MouseListener {
     private Border border = BorderFactory.createLineBorder(FOREGROUND, BORDER_WIDTH);
     private Border emptyBorder = BorderFactory.createEmptyBorder(BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH);
     private boolean opened = true;
-    private boolean pressed = false;
+    protected boolean pressed = false;
     
     private List<ActionListener> listeners = new ArrayList<ActionListener>();
     private String actionCommand = "NavigablePanelButton";
@@ -44,17 +43,11 @@ class NavigablePanelButton extends JLabel implements MouseListener {
 
     private void initButton() {
         setOpaque(false);
-        setFont(FONT);
         super.setForeground(FOREGROUND);
         super.setBorder(emptyBorder);
         addMouseListener(this);
         setRequestFocusEnabled(false);
     }   
-    
-    public void setOpened(boolean opened) {
-        this.opened = opened;
-        super.repaint();
-    }
     
     @Override
     public void setForeground(Color color) {
@@ -70,18 +63,19 @@ class NavigablePanelButton extends JLabel implements MouseListener {
     @Override 
     public void mouseClicked(MouseEvent e) {
         opened = !opened;
-        setText(opened? OPENED : CLOSED);
         fireActionEvent();
     }
     
     @Override 
     public void mousePressed(MouseEvent e) {
         pressed = true;
+        super.repaint();
     }
     
     @Override 
     public void mouseReleased(MouseEvent e) {
         pressed = false;
+        super.repaint();
     }
     
     @Override
@@ -131,7 +125,7 @@ class NavigablePanelButton extends JLabel implements MouseListener {
         listeners.remove(listener);
     }
     
-    private void fireActionEvent() {
+    protected void fireActionEvent() {
         ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_FIRST, actionCommand);
         for(ActionListener listener : new ArrayList<ActionListener>(listeners))
             listener.actionPerformed(evt);
@@ -144,20 +138,5 @@ class NavigablePanelButton extends JLabel implements MouseListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintBorder(g);
-        
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setPaint(FOREGROUND);
-        g2.setStroke(new BasicStroke(1));
-        
-        if(pressed)
-            g2.translate(1, 1);
-        
-        g2.drawLine(3, 7, 12, 7);
-        g2.drawLine(3, 8, 12, 8);
-        if(!opened) {
-            g2.drawLine(7, 3, 7, 12);
-            g2.drawLine(8, 3, 8, 12);
-        }
-        g2.dispose();
     }
 }

@@ -78,7 +78,7 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     public TriangleWidget() {
         initComponent();
-        lookup = new ProxyLookup(Lookups.singleton(this), table.getLookup());
+        lookup = new ProxyLookup(Lookups.fixed(this, getActionMap()), table.getLookup());
         super.addComponentListener(new ResizeListener());
         registerCopyAction();
     }

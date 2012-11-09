@@ -1,9 +1,12 @@
 package org.jreserve.smoothing.visual;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.localesettings.util.DecimalSpinner;
@@ -25,22 +28,27 @@ public class SmoothingTablePanel extends JPanel implements ChangeListener {
     
     public SmoothingTablePanel() {
         initPanel();
+        setPreferredSize(new java.awt.Dimension(250, 150));
     }
     
     private void initPanel() {
-        setLayout(new BorderLayout(5, 5));
+        setLayout(new BorderLayout(0, 0));
         
         JPanel northPanel = new JPanel(new BorderLayout(5, 5));
         JLabel label = new JLabel(Bundle.LBL_SmoothingTablePanel_Decimals());
         northPanel.add(label, BorderLayout.LINE_START);
         spinner = new DecimalSpinner();
         northPanel.add(spinner, BorderLayout.CENTER);
+        northPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(northPanel, BorderLayout.NORTH);
         
         table = new SmoothingTable();
         table.setDigits(spinner.getIntValue());
         table.setFillsViewportHeight(true);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        JScrollPane scroll = new JScrollPane(table);
+        scroll.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
+        add(scroll, BorderLayout.CENTER);
+        setBorder(new LineBorder(Color.BLACK, 1, true));
     }
 
     @Override

@@ -3,10 +3,16 @@ package org.jreserve.navigator;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import org.jreserve.navigator.undockabletopcomponent.DockTarget;
+import org.jreserve.navigator.undockabletopcomponent.UndockDialog;
+import org.jreserve.navigator.undockabletopcomponent.UndockedTopComponent;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
@@ -14,7 +20,7 @@ import org.openide.util.Lookup;
  * @author Peter Decsi
  * @version 1.0
  */
-public class NavigablePanel extends JPanel implements NavigableComponent, ActionListener, Lookup.Provider {
+public class NavigablePanel extends JPanel implements NavigableComponent, ActionListener, Lookup.Provider, DockTarget {
 
     private final static Color BACKGROUND = new Color(67, 196, 67);
     private final static Color FOREGROUND = Color.WHITE;
@@ -26,12 +32,19 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     private JPanel contentPanel;
     private JPanel titlePanel;
     private JLabel titleLabel;
-    private NavigablePanelButton button;
+    private NavigablePanelOpenButton openButton;
+    private NavigablePanelDockButton dockButton;
     
     private Color background = BACKGROUND;
     private Color foreground = FOREGROUND;
     private boolean opened = true;
     private Lookup lookup;
+    
+    private JComponent content;
+    private boolean docked = true;
+    
+    //private UndockedTopComponent tc = null;
+    private Dialog undockedDialog = null;
     
     public NavigablePanel() {
     }
@@ -77,26 +90,81 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
         titlePanel.add(Box.createHorizontalGlue(), gc);
         
         gc.gridx=2; gc.weightx=0d;
-        button = new NavigablePanelButton();
-        button.setForeground(foreground);
-        button.addActionListener(this);
-        titlePanel.add(button, gc);
+        dockButton = new NavigablePanelDockButton();
+        dockButton.setForeground(foreground);
+        dockButton.addActionListener(this);
+        titlePanel.add(dockButton, gc);
+        
+        gc.gridx=3;
+        titlePanel.add(Box.createHorizontalStrut(5), gc);
+        
+        gc.gridx=4;
+        openButton = new NavigablePanelOpenButton();
+        openButton.setForeground(foreground);
+        openButton.addActionListener(this);
+        titlePanel.add(openButton, gc);
         
         titlePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
+        titlePanel.addMouseListener(new DblClickHandler());
     }
     
     public void setContent(JComponent component) {
-        contentPanel.removeAll();
+        if(content != null)
+            throw new IllegalStateException("Content already defined!");
+        this.content = component;
+        setLookup();
+        dock(component);
+    }
+    
+    private void setLookup() {
+        if(content instanceof Lookup.Provider)
+            lookup = ((Lookup.Provider)content).getLookup();
+    }
+
+    public void setDocked(boolean docked) {
+        if(this.docked == docked)
+            return;
+        dockButton.setDocked(docked);
+        if(docked) {
+            undockedDialog.dispose();
+            //tc.close();
+        } else {
+            undock();
+        }
+    }
+    
+    @Override
+    public void dock(JComponent component) {
+        if(content != component)
+            throw new IllegalArgumentException("Wrong component!");
+        this.docked = true;
+        dockButton.setDocked(true);
         contentPanel.add(component, BorderLayout.CENTER);
-        if(component instanceof Lookup.Provider)
-            lookup = ((Lookup.Provider)component).getLookup();
+        contentPanel.revalidate();
+        
+        undockedDialog = null;
+        //tc = null;
+    }
+    
+    public void undock() {
+        if(content == null)
+            throw new IllegalStateException("No component to undock!");
+        dockButton.setDocked(false);
+        contentPanel.remove(content);
+        contentPanel.revalidate();
+        docked = false;
+        
+        undockedDialog = UndockDialog.createDialog(getDisplayName(), content, this);
+        undockedDialog.setVisible(true);
+        //tc = UndockedTopComponent.create(getDisplayName(), content, this);
+        
     }
     
     @Override
     public void setForeground(Color color) {
         if(titlePanel != null) {
             titleLabel.setForeground(color);
-            button.setForeground(color);
+            openButton.setForeground(color);
         }
         super.setForeground(color);
     }
@@ -147,13 +215,16 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(button == e.getSource())
+        Object source = e.getSource();
+        if(openButton == source)
             setOpened(!opened);
+        else if(dockButton == source)
+            setDocked(!docked);
     }
     
     public void setOpened(boolean opened) {
         this.opened = opened;
-        button.setOpened(opened);
+        openButton.setOpened(opened);
         contentPanel.setVisible(opened);
     }
 
@@ -166,5 +237,14 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     
     protected void setLookup(Lookup lookup) {
         this.lookup = lookup;
+    }
+    
+    private class DblClickHandler extends MouseAdapter {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if(e.getClickCount() == 2)
+                setOpened(!opened);
+        }
     }
 }

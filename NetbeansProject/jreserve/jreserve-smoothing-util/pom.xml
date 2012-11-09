@@ -83,6 +83,12 @@
             <artifactId>jreserve-triangle-widget</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-locale-settings</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -95,6 +101,7 @@
                     <publicPackages>
                         <publicPackage>org.jreserve.smoothing</publicPackage>
                         <publicPackage>org.jreserve.smoothing.actions</publicPackage>
+                        <publicPackage>org.jreserve.smoothing.visual</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

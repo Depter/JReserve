@@ -3,6 +3,7 @@
 <filesystem>
     <folder name="Windows2">
         <folder name="Modes">
+            <file name="navigableUndocked.wsmode" url="navigableUndockedWsmode.xml"/>
             <file name="navigator.wsmode" url="navigatorWsmode.xml"/>
         </folder>
     </folder>

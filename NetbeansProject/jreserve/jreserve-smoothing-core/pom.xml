@@ -71,7 +71,6 @@
                     <publicPackages>
                         <publicPackage>org.jreserve.smoothing.audit</publicPackage>
                         <publicPackage>org.jreserve.smoothing.core</publicPackage>
-                        <publicPackage>org.jreserve.smoothing.visual</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>
