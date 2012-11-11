@@ -1,9 +1,10 @@
 package org.jreserve.navigator.undockabletopcomponent;
 
 import java.awt.BorderLayout;
-import javax.swing.ActionMap;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import javax.swing.*;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
@@ -19,9 +20,9 @@ public class UndockedTopComponent extends TopComponent{
     
     public static UndockedTopComponent create(String title, JComponent component, DockTarget target) {
         UndockedTopComponent tc = new UndockedTopComponent(title, target);
-        open(tc);
-        //undock(tc);
         tc.dock(component);
+        open(tc);
+        undock(tc);
         tc.opening = false;
         return tc;
     }
@@ -33,8 +34,10 @@ public class UndockedTopComponent extends TopComponent{
     }
     
     private static void undock(UndockedTopComponent tc) {
-        if(MODE != null)
-            MODE.dockInto(tc);
+        Action action = FileUtil.getConfigObject("Actions/Window/org-netbeans-core-windows-actions-UndockWindowAction.instance", Action.class);
+        if(action != null && WindowManager.getDefault().getRegistry().getActivated() == tc) {
+            action.actionPerformed(new ActionEvent(tc, ActionEvent.ACTION_FIRST, "open-tc"));
+        }
     }
     
     private JPanel contentPane = new JPanel(new BorderLayout());
@@ -47,18 +50,19 @@ public class UndockedTopComponent extends TopComponent{
         setDisplayName(title);
         this.source = source;
         initComponents();
-        //setActionMap(new ActionMap());
-        initLookup();
+        setActionMap(new ActionMap());
     }
     
     private void initComponents() {
-        add(contentPane, BorderLayout.CENTER);
+        super.setLayout(new BorderLayout());
+        super.add(new JScrollPane(contentPane), BorderLayout.CENTER);
     }
     
     private void dock(JComponent component) {
         this.component = component;
         contentPane.add(component, BorderLayout.CENTER);
         contentPane.revalidate();
+        initLookup();
     }
     
     private void initLookup() {

@@ -219,6 +219,13 @@ public class TriangleCellRenderer extends JLabel implements TableCellRenderer {
         return " "+valueRenderer.toString(value);
     }
     
+    protected String getSimpleValue(TriangleCell cell) {
+        Double value = cell.getDisplayValue();
+        if(value == null)
+            return null;
+        return valueRenderer.toSimpleString(value);
+    }
+    
     private static Border createCellBorder() {
         Color color = UIManager.getColor("InternalFrame.borderDarkShadow");
         if(color == null)

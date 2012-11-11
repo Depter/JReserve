@@ -159,18 +159,18 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         
         @Override
         protected void opened() {
-            if(!added) {
-                added = true;
-                VectorProjectElement.this.addToLookup(component);
-            }
+//            if(!added) {
+//                added = true;
+//                VectorProjectElement.this.addToLookup(component);
+//            }
         }
     
         @Override
         protected void closing() {
-            if(added) {
-                added = false;
-                VectorProjectElement.this.removeFromLookup(component);
-            }
+//            if(added) {
+//                added = false;
+//                VectorProjectElement.this.removeFromLookup(component);
+//            }
         }
 
         @Override

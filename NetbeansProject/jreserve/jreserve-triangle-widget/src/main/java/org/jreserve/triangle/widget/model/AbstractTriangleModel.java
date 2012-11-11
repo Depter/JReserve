@@ -1,14 +1,13 @@
 package org.jreserve.triangle.widget.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.widget.TriangleWidget;
-import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
-import org.jreserve.triangle.widget.WidgetData;
-import org.jreserve.triangle.widget.TriangleCell;
-import org.jreserve.triangle.widget.TriangleCellUtil;
+import org.jreserve.triangle.widget.*;
 
 /**
  *
@@ -53,6 +52,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
                 TriangleCellUtil.deCummulate(cells);
         }
         fireTableDataChanged();
+        fireTriangleValuesChanged();
     }
     
     @Override
@@ -71,6 +71,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
         createAxises();
         resetCells();
         fireTableStructureChanged();
+        fireTriangleStructureChanged();
     }
     
     private void createAxises() {
@@ -124,6 +125,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
         checkDatas(datas);
         values.add(datas);
         refillCellValues();
+        fireTriangleValuesChanged();
     }
     
     private void refillCellValues() {
@@ -151,6 +153,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
         ensureLayerExists(layer-1);
         values.add(layer, datas);
         refillCellValues();
+        fireTriangleValuesChanged();
     }
     
     private void ensureLayerExists(int layer) {
@@ -164,6 +167,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
         ensureLayerExists(layer);
         values.set(layer, datas);
         refillCellValues();
+        fireTriangleValuesChanged();
     }
     
     @Override
@@ -189,6 +193,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     public void removeValues(int layer) {
         values.remove(layer);
         refillCellValues();
+        fireTriangleValuesChanged();
     }
     
     @Override
@@ -327,6 +332,16 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
             l.commentsChanged();
     }
     
+    private void fireTriangleValuesChanged() {
+        for(TriangleWidgetListener l : new ArrayList<TriangleWidgetListener>(listeners))
+            l.valuesChanged();
+    }
+    
+    private void fireTriangleStructureChanged() {
+        for(TriangleWidgetListener l : new ArrayList<TriangleWidgetListener>(listeners))
+            l.structureChanged();
+    }
+
     @Override
     public void addTriangleWidgetListener(TriangleWidgetListener listener) {
         if(!listeners.contains(listener))
@@ -334,7 +349,7 @@ public abstract class AbstractTriangleModel extends AbstractTableModel implement
     }
     
     @Override
-    public void removeTriangleWidgetListener(TriangleWidget.TriangleWidgetListener listener) {
+    public void removeTriangleWidgetListener(TriangleWidgetListener listener) {
         listeners.remove(listener);
     }
     

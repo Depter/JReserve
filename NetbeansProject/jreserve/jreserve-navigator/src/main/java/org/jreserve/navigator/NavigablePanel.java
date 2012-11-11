@@ -43,8 +43,8 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     private JComponent content;
     private boolean docked = true;
     
-    //private UndockedTopComponent tc = null;
-    private Dialog undockedDialog = null;
+    private UndockedTopComponent tc = null;
+    //private Dialog undockedDialog = null;
     
     public NavigablePanel() {
     }
@@ -126,8 +126,8 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
             return;
         dockButton.setDocked(docked);
         if(docked) {
-            undockedDialog.dispose();
-            //tc.close();
+            //undockedDialog.dispose();
+            tc.close();
         } else {
             undock();
         }
@@ -142,8 +142,8 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
         contentPanel.add(component, BorderLayout.CENTER);
         contentPanel.revalidate();
         
-        undockedDialog = null;
-        //tc = null;
+        //undockedDialog = null;
+        tc = null;
     }
     
     public void undock() {
@@ -154,9 +154,9 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
         contentPanel.revalidate();
         docked = false;
         
-        undockedDialog = UndockDialog.createDialog(getDisplayName(), content, this);
-        undockedDialog.setVisible(true);
-        //tc = UndockedTopComponent.create(getDisplayName(), content, this);
+        //undockedDialog = UndockDialog.createDialog(getDisplayName(), content, this);
+        //undockedDialog.setVisible(true);
+        tc = UndockedTopComponent.create(getDisplayName(), content, this);
         
     }
     

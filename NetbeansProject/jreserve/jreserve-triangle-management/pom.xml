@@ -141,6 +141,18 @@
             <artifactId>jreserve-navigator</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-locale-settings</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -171,6 +171,12 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-chart</artifactId>
             <version>${project.version}</version>
         </dependency>

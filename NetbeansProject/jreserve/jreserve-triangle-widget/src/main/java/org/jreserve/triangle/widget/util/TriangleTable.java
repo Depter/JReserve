@@ -15,7 +15,7 @@ import org.jreserve.resources.ActionUtil;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.TriangleCell;
-import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
+import org.jreserve.triangle.widget.TriangleWidgetListener;
 import org.jreserve.triangle.widget.WidgetData;
 import org.jreserve.triangle.widget.model.TriangleModel;
 import org.jreserve.triangle.widget.model.TriangleModel.ModelType;
@@ -152,6 +152,15 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         return model.getValues(layer);
     }
     
+    public List<TriangleCell> getCells() {
+        List<TriangleCell> cells = new ArrayList<TriangleCell>();
+        for(TriangleCell[] row : model.getCells())
+            for(TriangleCell cell : row)
+                if(cell != null)
+                    cells.add(cell);
+        return cells;
+    }
+    
     public TriangleCell getCellAt(Date accident, Date development) {
         return model.getCellAt(accident, development);
     }
@@ -239,7 +248,7 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         if(column == 0) {
             sb.append(value);
         } else {
-            String str = renderer.getValue((TriangleCell) value);
+            String str = renderer.getSimpleValue((TriangleCell) value);
             if(str != null)
                 sb.append(str.trim());
         }

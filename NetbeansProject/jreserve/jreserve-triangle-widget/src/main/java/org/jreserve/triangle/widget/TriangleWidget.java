@@ -270,6 +270,10 @@ public class TriangleWidget extends JPanel implements Serializable {
         return table.getValueLayer(layer);
     }
     
+    public List<TriangleCell> getCells() {
+        return table.getCells();
+    }
+    
     public TriangleCell getCellAt(Date accident, Date development) {
         return table.getCellAt(accident, development);
     }
@@ -370,13 +374,6 @@ public class TriangleWidget extends JPanel implements Serializable {
             TableModelEvent evt = new TableModelEvent(table.getModel());
             table.tableChanged(evt);
         }
-    }
-    
-    public static interface TriangleWidgetListener {
-        
-        public void cellEdited(TriangleCell cell, int layer, Double oldValue, Double newValue);
-        
-        public void commentsChanged();
     }
     
     private class CopyDataAction extends AbstractAction {

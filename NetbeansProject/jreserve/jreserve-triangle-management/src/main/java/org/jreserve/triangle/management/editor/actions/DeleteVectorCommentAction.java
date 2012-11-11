@@ -1,4 +1,4 @@
-package org.jreserve.triangle.management.editor;
+package org.jreserve.triangle.management.editor.actions;
 
 import java.util.List;
 import javax.swing.Action;

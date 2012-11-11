@@ -77,8 +77,9 @@
         <module>jreserve-smoothing-geometric</module>
         <module>jreserve-smoothing-exponential</module>
         <module>jreserve-smoothing-util</module>
-        <module>jreserve-chart</module>
         <module>jreserve-navigator</module>
+        <module>jfreechart</module>
+    <module>jreserve-chart</module>
   </modules>
 
     <properties>

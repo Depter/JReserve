@@ -23,8 +23,8 @@ public class NavigableTopComponent extends TopComponent implements NavigableComp
     private NavigableComponent parent;
     private List<NavigableComponent> components = new ArrayList<NavigableComponent>();
     
-    private JPanel panel;
-    private JScrollPane scroller;
+    protected JPanel contentPanel;
+    protected JScrollPane scroller;
     
     public NavigableTopComponent(List<NavigableComponent> components) {
         addComponents(components);
@@ -50,7 +50,7 @@ public class NavigableTopComponent extends TopComponent implements NavigableComp
     }
     
     private void initPanel() {
-        panel = new JPanel(new GridBagLayout());
+        contentPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         gc.gridx=0; gc.gridy=0; 
         gc.weightx=1d;gc.weighty=0d;
@@ -60,16 +60,16 @@ public class NavigableTopComponent extends TopComponent implements NavigableComp
         for(int i=0, size=components.size(); i<size; i++) {
             if(i == 1)
                 gc.insets = new Insets(COMPONENT_SPACING, 0, 0, 0);
-            panel.add(components.get(i).getComponent(), gc);
+            contentPanel.add(components.get(i).getComponent(), gc);
             gc.gridy++;
         }
         
         gc.weighty=1d;
         gc.fill=GridBagConstraints.BOTH;
-        panel.add(Box.createGlue(), gc);
+        contentPanel.add(Box.createGlue(), gc);
         
-        panel.setBorder(BorderFactory.createEmptyBorder(BORDER_WIDHT, BORDER_WIDHT, BORDER_WIDHT, BORDER_WIDHT));
-        scroller = new JScrollPane(panel);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(BORDER_WIDHT, BORDER_WIDHT, BORDER_WIDHT, BORDER_WIDHT));
+        scroller = new JScrollPane(contentPanel);
         scroller.getVerticalScrollBar().setUnitIncrement(SCROLL_INCREMENT);
         scroller.getVerticalScrollBar().setBlockIncrement(SCROLL_INCREMENT);
 
@@ -94,7 +94,7 @@ public class NavigableTopComponent extends TopComponent implements NavigableComp
         if(components.contains(component)) {
             this.navigateTo();
             Rectangle rect = component.getComponent().getBounds();
-            panel.scrollRectToVisible(rect);
+            contentPanel.scrollRectToVisible(rect);
         }
     }
 

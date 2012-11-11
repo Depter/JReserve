@@ -1,4 +1,4 @@
-package org.jreserve.triangle.management.editor;
+package org.jreserve.triangle.management.editor.actions;
 
 import java.util.Date;
 import java.util.List;

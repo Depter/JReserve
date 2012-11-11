@@ -1,4 +1,4 @@
-package org.jreserve.triangle.management.editor;
+package org.jreserve.triangle.management.editor.actions;
 
 import java.awt.event.ActionEvent;
 import java.util.Collections;
@@ -10,7 +10,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import org.jreserve.smoothing.Smoother;
 import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.management.VectorProjectElement;
+import org.jreserve.triangle.management.TriangleProjectElement;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.actions.AbstractPopUpAction;
 import org.openide.util.Lookup;
@@ -22,17 +22,17 @@ import org.openide.util.actions.Presenter;
  * @author Peter Decsi
  */
 @Messages({
-    "LBL.DeleteVectorSmoothingAction.Name=Delete smoothing"
+    "LBL.DeleteTriangleSmoothingAction.Name=Delete smoothing"
 })
-public class DeleteVectorSmoothingAction extends AbstractPopUpAction implements Presenter.Popup {
+public class DeleteTriangleSmoothingAction extends AbstractPopUpAction implements Presenter.Popup {
     
-    private Lookup.Result<VectorProjectElement> tResult;
-    private VectorProjectElement element;
+    private Lookup.Result<TriangleProjectElement> tResult;
+    private TriangleProjectElement element;
     
-    public DeleteVectorSmoothingAction() {
+    public DeleteTriangleSmoothingAction() {
     }
     
-    public DeleteVectorSmoothingAction(Lookup lkp) {
+    public DeleteTriangleSmoothingAction(Lookup lkp) {
         super(lkp);
     }
     
@@ -40,7 +40,7 @@ public class DeleteVectorSmoothingAction extends AbstractPopUpAction implements 
     protected void init(Lookup lookup) {
         if(tResult != null)
             return;
-        tResult = lookup.lookupResult(VectorProjectElement.class);
+        tResult = lookup.lookupResult(TriangleProjectElement.class);
         tResult.addLookupListener(this);
         super.init(lookup);
     }
@@ -63,12 +63,12 @@ public class DeleteVectorSmoothingAction extends AbstractPopUpAction implements 
 
     @Override
     public Action createContextAwareInstance(Lookup lkp) {
-        return new DeleteVectorSmoothingAction(lkp);
+        return new DeleteTriangleSmoothingAction(lkp);
     }
 
     @Override
     public JMenuItem getPopupPresenter() {
-        JMenu menu = new JMenu(Bundle.LBL_DeleteVectorSmoothingAction_Name());
+        JMenu menu = new JMenu(Bundle.LBL_DeleteTriangleSmoothingAction_Name());
         menu.setEnabled(isEnabled());
         if(menu.isEnabled())
             addSmoothings(menu);
@@ -97,7 +97,7 @@ public class DeleteVectorSmoothingAction extends AbstractPopUpAction implements 
         List<Smoothing> smoothings = element.getValue().getSmoothings();
         smoothings.remove(smoothing);
         setWidgetSmoothings(smoothings);
-        element.setProperty(VectorProjectElement.SMOOTHING_PROPERTY, smoothings);
+        element.setProperty(TriangleProjectElement.SMOOTHING_PROPERTY, smoothings);
     }
     
     private void setWidgetSmoothings(List<Smoothing> smoothings) {

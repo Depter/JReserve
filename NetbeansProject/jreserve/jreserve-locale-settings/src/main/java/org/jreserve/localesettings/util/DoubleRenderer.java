@@ -60,6 +60,17 @@ public class DoubleRenderer implements TextRenderer<Double> {
             return nan;
         return format.format(value);
     }
+    
+    public String toSimpleString(Double value) {
+        if(value == null)
+            return null;
+        return toSimpleString(value.doubleValue());
+    }
+    
+    private String toSimpleString(double value) {
+        String str = ""+value;
+        return str.replace('.', decimal);
+    }
 
     @Override
     public Double parse(String str) {

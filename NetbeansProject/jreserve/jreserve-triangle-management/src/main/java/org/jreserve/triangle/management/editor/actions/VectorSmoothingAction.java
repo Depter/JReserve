@@ -1,12 +1,11 @@
-package org.jreserve.triangle.management.editor;
+package org.jreserve.triangle.management.editor.actions;
 
-import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.Action;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.actions.AddSmoothingAction;
-import org.jreserve.triangle.management.TriangleProjectElement;
+import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.management.VectorProjectElement;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
 import org.openide.util.NbBundle;
@@ -17,27 +16,27 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  */
 @Messages({
-    "CTL.TriangleSmoothingAction=Smooth"
+    "CTL.VectorSmoothingAction=Smooth"
 })
-public class TriangleSmoothingAction extends AddSmoothingAction {
+public class VectorSmoothingAction  extends AddSmoothingAction {
     
-    private Result<TriangleProjectElement> tResult;
-    private TriangleProjectElement element;
+    private Result<VectorProjectElement> tResult;
+    private VectorProjectElement element;
     
-    public TriangleSmoothingAction() {
-        putValue(NAME, NbBundle.getMessage(AddTriangleCommentAction.class, "CTL.TriangleSmoothingAction"));
+    public VectorSmoothingAction() {
+        putValue(NAME, NbBundle.getMessage(AddTriangleCommentAction.class, "CTL.VectorSmoothingAction"));
     }
     
-    public TriangleSmoothingAction(Lookup lookup) {
+    public VectorSmoothingAction(Lookup lookup) {
         super(lookup);
-        putValue(NAME, NbBundle.getMessage(AddTriangleCommentAction.class, "CTL.TriangleSmoothingAction"));
+        putValue(NAME, NbBundle.getMessage(AddTriangleCommentAction.class, "CTL.VectorSmoothingAction"));
     }
     
     @Override
     protected void init(Lookup lookup) {
         if(tResult != null)
             return;
-        tResult = lookup.lookupResult(TriangleProjectElement.class);
+        tResult = lookup.lookupResult(VectorProjectElement.class);
         tResult.addLookupListener(this);
         super.init(lookup);
     }
@@ -56,7 +55,7 @@ public class TriangleSmoothingAction extends AddSmoothingAction {
 
     @Override
     public Action createContextAwareInstance(Lookup lkp) {
-        TriangleSmoothingAction action = new TriangleSmoothingAction(lkp);
+        VectorSmoothingAction action = new VectorSmoothingAction(lkp);
         action.init();
         return action;
     }
@@ -70,6 +69,6 @@ public class TriangleSmoothingAction extends AddSmoothingAction {
     protected void smoothingCreated(Smoothing smoothing) {
         List<Smoothing> smoothings = element.getValue().getSmoothings();
         smoothings.add(smoothing);
-        element.setProperty(TriangleProjectElement.SMOOTHING_PROPERTY, smoothings);
+        element.setProperty(VectorProjectElement.SMOOTHING_PROPERTY, smoothings);
     }
 }

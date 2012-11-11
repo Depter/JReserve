@@ -16,11 +16,7 @@ import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.DataStructure;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.widget.GeometrySettingPanel;
-import org.jreserve.triangle.widget.TriangleCell;
-import org.jreserve.triangle.widget.TriangleWidget;
-import org.jreserve.triangle.widget.TriangleWidget.TriangleWidgetListener;
-import org.jreserve.triangle.widget.WidgetData;
+import org.jreserve.triangle.widget.*;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -60,7 +56,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     }
     
     private void initComponents() {
-        JPanel panel = new JPanel();
+        JPanel panel = new LookupPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         panel.setLayout(new GridBagLayout());
 
@@ -225,7 +221,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         }
     }
     
-    private class TriangleListener implements TriangleWidgetListener {
+    private class TriangleListener extends TriangleWidgetAdapter {
 
         @Override
         public void cellEdited(TriangleCell cell, int layer, Double oldValue, Double newValue) {
@@ -249,9 +245,14 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
             if(d2 == null) return false;
             return d1.equals(d2);
         }
+    }
+    
+    private class LookupPanel extends JPanel implements Lookup.Provider {
 
         @Override
-        public void commentsChanged() {
+        public Lookup getLookup() {
+            return triangle.getLookup();
         }
+    
     }
 }

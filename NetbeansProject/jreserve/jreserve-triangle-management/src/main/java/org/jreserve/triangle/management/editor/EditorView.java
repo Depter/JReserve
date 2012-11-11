@@ -24,7 +24,6 @@ class EditorView extends NavigablePanel {
         editPanel = new ProjectElementEditPanel(element, new Validator(), true);
         super.setContent(editPanel);
     }
-    
 
     private static class Validator implements ProjectElementEditPanel.Validator {
 
