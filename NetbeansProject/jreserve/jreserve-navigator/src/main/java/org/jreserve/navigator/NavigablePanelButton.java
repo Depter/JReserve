@@ -18,7 +18,7 @@ import javax.swing.border.Border;
  *
  * @author Peter Decsi
  */
-class NavigablePanelButton extends JLabel implements MouseListener {
+public class NavigablePanelButton extends JLabel implements MouseListener {
     
     private final static Color FOREGROUND = Color.WHITE;
     private final static int BORDER_WIDTH = 1;
@@ -32,7 +32,7 @@ class NavigablePanelButton extends JLabel implements MouseListener {
     private List<ActionListener> listeners = new ArrayList<ActionListener>();
     private String actionCommand = "NavigablePanelButton";
     
-    NavigablePanelButton() {
+    public NavigablePanelButton() {
         super("");
         setVerticalTextPosition(JLabel.CENTER);
         setHorizontalTextPosition(JLabel.CENTER);

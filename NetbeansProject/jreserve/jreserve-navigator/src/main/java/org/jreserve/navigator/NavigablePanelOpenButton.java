@@ -4,11 +4,16 @@ import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  */
+@Messages({
+    "LBL.NavigablePanelOpenButton.Open=Show",
+    "LBL.NavigablePanelOpenButton.Close=Hide"
+})
 class NavigablePanelOpenButton extends NavigablePanelButton {
     
     private boolean opened = true;
@@ -16,11 +21,20 @@ class NavigablePanelOpenButton extends NavigablePanelButton {
     public void setOpened(boolean opened) {
         this.opened = opened;
         super.repaint();
+        setToolTip();
+    }
+    
+    private void setToolTip() {
+        if(opened)
+            setToolTipText(Bundle.LBL_NavigablePanelOpenButton_Close());
+        else
+            setToolTipText(Bundle.LBL_NavigablePanelOpenButton_Open());
     }
     
     @Override 
     public void mouseClicked(MouseEvent e) {
         opened = !opened;
+        setToolTip();
         super.mouseClicked(e);
     }
     

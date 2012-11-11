@@ -10,9 +10,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import org.jreserve.navigator.undockabletopcomponent.DockTarget;
-import org.jreserve.navigator.undockabletopcomponent.UndockDialog;
 import org.jreserve.navigator.undockabletopcomponent.UndockedTopComponent;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
@@ -32,6 +30,9 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     private JPanel contentPanel;
     private JPanel titlePanel;
     private JLabel titleLabel;
+    
+    private JPanel buttonPanel;
+    private JPanel userButtonPanel;
     private NavigablePanelOpenButton openButton;
     private NavigablePanelDockButton dockButton;
     
@@ -44,7 +45,6 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     private boolean docked = true;
     
     private UndockedTopComponent tc = null;
-    //private Dialog undockedDialog = null;
     
     public NavigablePanel() {
     }
@@ -90,19 +90,25 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
         titlePanel.add(Box.createHorizontalGlue(), gc);
         
         gc.gridx=2; gc.weightx=0d;
+        userButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        userButtonPanel.setOpaque(false);
+        titlePanel.add(userButtonPanel, gc);
+        
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        buttonPanel.setOpaque(false);
         dockButton = new NavigablePanelDockButton();
         dockButton.setForeground(foreground);
         dockButton.addActionListener(this);
-        titlePanel.add(dockButton, gc);
+        buttonPanel.add(dockButton);
         
-        gc.gridx=3;
-        titlePanel.add(Box.createHorizontalStrut(5), gc);
-        
-        gc.gridx=4;
+        buttonPanel.add(Box.createHorizontalStrut(5));
         openButton = new NavigablePanelOpenButton();
         openButton.setForeground(foreground);
         openButton.addActionListener(this);
-        titlePanel.add(openButton, gc);
+        buttonPanel.add(openButton);
+        
+        gc.gridx=3; gc.weightx=0d;
+        titlePanel.add(buttonPanel, gc);
         
         titlePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
         titlePanel.addMouseListener(new DblClickHandler());
@@ -121,12 +127,21 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
             lookup = ((Lookup.Provider)content).getLookup();
     }
 
+    public void addUserTitleComponent(JComponent component) {
+        component.setBackground(background);
+        component.setForeground(foreground);
+        userButtonPanel.add(component);
+        userButtonPanel.add(Box.createHorizontalStrut(5));
+        
+        userButtonPanel.revalidate();
+        titlePanel.revalidate();
+    }
+    
     public void setDocked(boolean docked) {
         if(this.docked == docked)
             return;
         dockButton.setDocked(docked);
         if(docked) {
-            //undockedDialog.dispose();
             tc.close();
         } else {
             undock();
@@ -142,7 +157,6 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
         contentPanel.add(component, BorderLayout.CENTER);
         contentPanel.revalidate();
         
-        //undockedDialog = null;
         tc = null;
     }
     
@@ -154,8 +168,6 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
         contentPanel.revalidate();
         docked = false;
         
-        //undockedDialog = UndockDialog.createDialog(getDisplayName(), content, this);
-        //undockedDialog.setVisible(true);
         tc = UndockedTopComponent.create(getDisplayName(), content, this);
         
     }
@@ -165,16 +177,31 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
         if(titlePanel != null) {
             titleLabel.setForeground(color);
             openButton.setForeground(color);
+            setUserComponentsForeground(color);
         }
         super.setForeground(color);
     }
     
+    private void setUserComponentsForeground(Color color) {
+        for(Component c : userButtonPanel.getComponents())
+            c.setForeground(color);
+    }
+    
     @Override
     public void setBackground(Color color) {
-        if(titlePanel != null)
+        if(titlePanel != null) {
             titlePanel.setBackground(color);
+            titleLabel.setBackground(color);
+            openButton.setBackground(color);
+            setUserComponentsBackground(color);
+        }
         setBorder(new LineBorder(color, BORDER_WIDTH, true));
         super.setBackground(color);
+    }
+    
+    private void setUserComponentsBackground(Color color) {
+        for(Component c : userButtonPanel.getComponents())
+            c.setBackground(color);
     }
     
     @Override

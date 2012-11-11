@@ -10,6 +10,10 @@ import org.jreserve.project.system.visual.ProjectElementCloseHandler;
 import org.jreserve.project.system.visual.TabNameAdapter;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.Vector;
+import org.jreserve.triangle.management.editor.charts.AccidentPeriodsChartData;
+import org.jreserve.triangle.management.editor.charts.AccidentTotalChartData;
+import org.jreserve.triangle.management.editor.charts.CalendarYearTotalChartData;
+import org.jreserve.triangle.management.editor.charts.DevelopmentPeriodsChartData;
 import org.jreserve.triangle.management.editor.graphs.*;
 import org.openide.awt.UndoRedo;
 import org.openide.util.ImageUtilities;
@@ -35,12 +39,12 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         components.add(new EditorView(Bundle.LBL_Editor_Triangle(), TRIANGLE_IMG, element));
         TriangleDataEditorView ew = new TriangleDataEditorView(element);
         components.add(ew);
-        components.add(new AccidentTotalGraph(ew.triangle));
-        components.add(new AccidentPeriodsGraph(ew.triangle));
-        components.add(new ScaledAccidentPeriodsGraph(ew.triangle));
-        components.add(new CalendarTotalGraph(ew.triangle));
-        components.add(new DevelopmentPeriodsGraph(ew.triangle));
-        components.add(new ScaledDevelopmentPeriodsGraph(ew.triangle));
+        components.add(AccidentTotalChartData.createPanel(ew.triangle));
+        components.add(AccidentPeriodsChartData.createPanel(ew.triangle));
+        components.add(AccidentPeriodsChartData.createScaledPanel(ew.triangle));
+        components.add(CalendarYearTotalChartData.createPanel(ew.triangle));
+        components.add(DevelopmentPeriodsChartData.createPanel(ew.triangle));
+        components.add(DevelopmentPeriodsChartData.createScaledPanel(ew.triangle));
         return new Editor(components, element);
     }
     
@@ -49,7 +53,7 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         components.add(new EditorView(Bundle.LBL_Editor_Vector(), VECTOR_IMG, element));
         VectorDataEditorView ew = new VectorDataEditorView(element);
         components.add(ew);
-        components.add(new DevelopmentPeriodsGraph(ew.triangle));
+        components.add(DevelopmentPeriodsChartData.createPanel(ew.triangle));
         return new Editor(components, element);
     }
     

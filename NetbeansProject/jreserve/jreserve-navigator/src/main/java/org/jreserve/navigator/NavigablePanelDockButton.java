@@ -4,11 +4,16 @@ import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  */
+@Messages({
+    "LBL.NavigablePanelDockButton.Dock=Dock",
+    "LBL.NavigablePanelDockButton.UnDock=Float"
+})
 class NavigablePanelDockButton extends NavigablePanelButton {
     
     private boolean docked = true;
@@ -16,11 +21,20 @@ class NavigablePanelDockButton extends NavigablePanelButton {
     public void setDocked(boolean docked) {
         this.docked = docked;
         super.repaint();
+        setToolTip();
+    }
+    
+    private void setToolTip() {
+        if(docked)
+            setToolTipText(Bundle.LBL_NavigablePanelDockButton_UnDock());
+        else
+            setToolTipText(Bundle.LBL_NavigablePanelDockButton_Dock());
     }
     
     @Override 
     public void mouseClicked(MouseEvent e) {
         docked = !docked;
+        setToolTip();
         super.mouseClicked(e);
     }
     
