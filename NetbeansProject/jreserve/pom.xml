@@ -79,8 +79,9 @@
         <module>jreserve-smoothing-util</module>
         <module>jreserve-navigator</module>
         <module>jfreechart</module>
-    <module>jreserve-chart</module>
-  </modules>
+        <module>jreserve-chart</module>
+        <module>jreserve-rutil</module>
+    </modules>
 
     <properties>
         <netbeans.version>RELEASE72</netbeans.version>

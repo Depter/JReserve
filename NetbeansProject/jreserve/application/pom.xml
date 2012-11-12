@@ -156,7 +156,7 @@
             <artifactId>jreserve-smoothing-geometric</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-smoothing-exponential</artifactId>
@@ -178,6 +178,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-chart</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-rutil</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

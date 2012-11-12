@@ -3,7 +3,6 @@ package org.jreserve.smoothing.exponential;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.jreserve.persistence.EntityRegistration;

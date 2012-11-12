@@ -40,9 +40,9 @@ public class MultiSeriesScaledLineChart<R extends Comparable<R>, C extends Compa
     private C getScaleColumn(List<SelectableSeries> visibles) {
         if(series.isEmpty()) return null;
         
-        Set<C> columns = new TreeSet<C>(visibles.get(0).getValues().keySet());
+        Set<C> columns = getNonZeroColumns(visibles.get(0));
         for(int i=1, size=visibles.size(); i<size; i++) {
-            Set<C> keys = visibles.get(i).getValues().keySet();
+            Set<C> keys = getNonZeroColumns(visibles.get(i));
             for(Iterator<C> it=columns.iterator(); it.hasNext();)
                 if(!keys.contains(it.next()))
                     it.remove();
@@ -51,7 +51,15 @@ public class MultiSeriesScaledLineChart<R extends Comparable<R>, C extends Compa
         if(columns.isEmpty())
             return null;
         return (C) columns.toArray()[0];
-    }   
+    }  
+    
+    private Set<C> getNonZeroColumns(SelectableSeries serie) {
+        Set<C> result = new TreeSet<C>();
+        for(C key : serie.getValues().keySet())
+            if(serie.getValues().get(key) != 0d)
+                result.add(key);
+        return result;
+    }
     
     private void setScaledValues(List<SelectableSeries> visibles, C scaleColumn) {
         DefaultCategoryDataset ds = getDataSet();
