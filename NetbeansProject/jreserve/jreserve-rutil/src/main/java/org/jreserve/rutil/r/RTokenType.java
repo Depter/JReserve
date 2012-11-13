@@ -8,8 +8,11 @@ package org.jreserve.rutil.r;
 public enum RTokenType {
     
     WHITESPACE,
-    NUMBER,
+    COMMENT,
+    STRING,
+    DOUBLE_OPERATOR,
     OPERATOR,
-    IDENTIFIER,
+    NUMBER,
+    SYMBOL,
     KEYWORD
 }

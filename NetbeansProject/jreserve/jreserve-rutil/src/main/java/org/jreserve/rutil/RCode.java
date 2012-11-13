@@ -64,7 +64,8 @@ public class RCode {
         if(!libraries.isEmpty()) {
             r.append("##################")
              .append("###  LIBRARIES ###")
-             .append("##################");
+             .append("##################")
+             .append("\n\n");
             for(String library : libraries)
                 r.append("library(").append(library).append(")\n");
         }
@@ -74,7 +75,8 @@ public class RCode {
         if(!functions.isEmpty()) {
             r.append("##################")
              .append("###  FUNCTIONS ###")
-             .append("##################");
+             .append("##################")
+             .append("\n\n");
             for(RFunction function : functions)
                 r.append(function.getSource()).append("\n");
         }
@@ -85,8 +87,9 @@ public class RCode {
             if(r.length() > 0)
                 r.append("##################")
                  .append("#####  CODE  #####")
-                 .append("##################");
-            r.append("\n\n").append(source);
+                 .append("##################")
+             .append("\n\n");
+            r.append(source);
         }   
     }
     

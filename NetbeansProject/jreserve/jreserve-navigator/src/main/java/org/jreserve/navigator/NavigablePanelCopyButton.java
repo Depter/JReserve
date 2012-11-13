@@ -1,29 +1,24 @@
-package org.jreserve.chart.util;
+package org.jreserve.navigator;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.jfree.chart.ChartPanel;
-import org.jreserve.navigator.NavigablePanelButton;
 import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
 @Messages({
-    "LBL.CopyChartButton.Tooltip=Copy to clipboard"
+    "LBL.NavigablePanelCopyButton.Copy=Copy to clipboard"
 })
-public class CopyChartButton extends NavigablePanelButton implements ActionListener {
+public class NavigablePanelCopyButton extends NavigablePanelButton {
     
-    private ChartPanel panel;
-    
-    public CopyChartButton(ChartPanel panel) {
-        this.panel = panel;
-        super.addActionListener(this);
-        super.setToolTipText(Bundle.LBL_CopyChartButton_Tooltip());
+    public NavigablePanelCopyButton(ActionListener listener) {
+        super.addActionListener(listener);
+        super.setToolTipText(Bundle.LBL_NavigablePanelCopyButton_Copy());
     }
     
     @Override
@@ -44,8 +39,4 @@ public class CopyChartButton extends NavigablePanelButton implements ActionListe
         g2.dispose();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        panel.doCopy();
-    }
 }

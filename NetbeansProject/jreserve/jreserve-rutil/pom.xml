@@ -77,6 +77,12 @@
             <artifactId>org-openide-explorer</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-navigator</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>

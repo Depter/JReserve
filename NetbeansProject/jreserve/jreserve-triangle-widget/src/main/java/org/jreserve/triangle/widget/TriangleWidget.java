@@ -322,6 +322,10 @@ public class TriangleWidget extends JPanel implements Serializable {
     public double[][] flatten() {
         return table.flatten();
     }
+    
+    public double[][] flattenLayer(int layer) {
+        return table.flattenLayer(layer);
+    }
 
     public Lookup getLookup() {
         return lookup;

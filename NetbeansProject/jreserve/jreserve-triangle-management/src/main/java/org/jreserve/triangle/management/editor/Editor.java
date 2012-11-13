@@ -45,6 +45,7 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         components.add(CalendarYearTotalChartData.createPanel(ew.triangle));
         components.add(DevelopmentPeriodsChartData.createPanel(ew.triangle));
         components.add(DevelopmentPeriodsChartData.createScaledPanel(ew.triangle));
+        components.add(new RCodeView(element, ew.triangle));
         return new Editor(components, element);
     }
     

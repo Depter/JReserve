@@ -206,6 +206,12 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         Flattener flattener = new Flattener(cells);
         return flattener.flatten();
     }
+    
+    public double[][] flattenLayer(int layer) {
+        TriangleCell[][] cells = model.getCells();
+        Flattener flattener = new Flattener(cells, layer);
+        return flattener.flatten();
+    }
 
     @Override
     public Lookup getLookup() {
@@ -256,10 +262,16 @@ public class TriangleTable extends JTable implements Lookup.Provider {
     
     private static class Flattener {
         
+        private int layer;
         private TriangleCell[][] cells;
         
         private Flattener(TriangleCell[][] cells) {
+            this(cells, -1);
+        }
+        
+        private Flattener(TriangleCell[][] cells, int layer) {
             this.cells = cells;
+            this.layer = layer;
         }
         
         double[][] flatten() {
@@ -290,7 +302,7 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         private double getCellValue(TriangleCell cell) {
             if(cell == null)
                 return Double.NaN;
-            Double value = cell.getDisplayValue();
+            Double value = layer<0? cell.getDisplayValue() : cell.getValueAt(layer);
             return value==null? Double.NaN : value;
         }
     }

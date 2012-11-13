@@ -5,15 +5,19 @@ package org.jreserve.rutil.r;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class Token {
+public class Token {
 
     private RTokenType type;
     private int begin;
-    private StringBuilder text = new StringBuilder();
+    private String str;
     
-    protected Token(int begin, RTokenType type) {
+    private Token previous;
+    private Token next;
+    
+    protected Token(int begin, RTokenType type, String str) {
         this.type = type;
         this.begin = begin;
+        this.str = str;
     }
     
     public RTokenType getType() {
@@ -25,12 +29,16 @@ public abstract class Token {
     }
     
     public int getLength() {
-        return text.length();
+        return str.length();
     }
     
-    protected void appendChar(char c) {
-        text.append(c);
+    public String getStr() {
+        return str;
     }
     
-    protected abstract boolean acceptsNextChar(char c);
+    void setPrevious(Token token) {
+        this.previous = token;
+        if(token != null)
+            token.next = this;
+    }
 }

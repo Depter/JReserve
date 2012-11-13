@@ -1,12 +1,14 @@
 package org.jreserve.chart;
 
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import org.jfree.chart.ChartPanel;
-import org.jreserve.chart.util.CopyChartButton;
 import org.jreserve.navigator.NavigablePanel;
+import org.jreserve.navigator.NavigablePanelCopyButton;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -34,7 +36,7 @@ public class ChartUtil {
         NavigablePanel panel = new NavigablePanel(displayName, img);
         panel.setContent(content);
         panel.setBackground(BACKGROUND);
-        panel.addUserTitleComponent(new CopyChartButton(chart));
+        panel.addUserTitleComponent(new NavigablePanelCopyButton(new ChartCopy(chart)));
         return panel;
     }
     
@@ -47,5 +49,19 @@ public class ChartUtil {
         splitPanel.getComponent(2).setBackground(BACKGROUND);
         
         return createNavigablePanel(displayName, img, chartPanel, splitPanel);
+    }
+    
+    private static class ChartCopy implements ActionListener {
+        
+        private ChartPanel panel;
+
+        private ChartCopy(ChartPanel panel) {
+            this.panel = panel;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            panel.doCopy();
+        }
     }
 }

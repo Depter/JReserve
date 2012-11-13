@@ -159,6 +159,12 @@
             <artifactId>jreserve-chart</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-rutil</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
