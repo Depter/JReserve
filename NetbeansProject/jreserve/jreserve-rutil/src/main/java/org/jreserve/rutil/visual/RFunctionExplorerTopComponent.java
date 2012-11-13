@@ -4,7 +4,6 @@ import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RFunction;
-import org.jreserve.rutil.util.RCodeTextPane;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;

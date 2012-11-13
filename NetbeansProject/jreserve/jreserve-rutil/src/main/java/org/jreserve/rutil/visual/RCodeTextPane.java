@@ -1,4 +1,4 @@
-package org.jreserve.rutil.util;
+package org.jreserve.rutil.visual;
 
 import java.awt.Color;
 import java.util.EnumMap;

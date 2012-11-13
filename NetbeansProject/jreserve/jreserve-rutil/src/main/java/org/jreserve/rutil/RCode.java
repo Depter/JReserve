@@ -21,35 +21,40 @@ public class RCode {
 
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
-    public void addLibrary(String library) {
+    public RCode addLibrary(String library) {
         this.libraries.add(library);
         fireChangeEvent();
+        return this;
     }
     
-    public void addFunction(RFunction function) {
+    public RCode addFunction(RFunction function) {
         if(!functions.contains(function)) {
             this.libraries.addAll(function.getLibraryDependendencies());
             for(String name : function.getFunctionDependendencies())
                 addFunction(name);
             fireChangeEvent();
         }
+        return this;
     }
     
-    public void addFunction(String name) {
+    public RCode addFunction(String name) {
         RFunction function = FunctionRegistry.getFunction(name);
         addFunction(function);
+        return this;
     }
     
-    public void addSource(String str) {
+    public RCode addSource(String str) {
         source.append(str);
         fireChangeEvent();
+        return this;
     }
     
-    public void clear() {
+    public RCode clear() {
         this.functions.clear();
         this.libraries.clear();
         this.source.setLength(0);
         fireChangeEvent();
+        return this;
     }
     
     public String toRCode() {

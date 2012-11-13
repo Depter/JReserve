@@ -1,18 +1,15 @@
 package org.jreserve.triangle.management.editor;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.rutil.NavigableRCodePanel;
 import org.jreserve.rutil.RCode;
+import org.jreserve.rutil.RUtil;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleWidget;
 import org.jreserve.triangle.widget.TriangleWidgetListener;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.WeakListeners;
 
 /**
  *
@@ -47,26 +44,7 @@ public class RCodeView extends NavigableRCodePanel implements TriangleWidgetList
     
     private void addDataToCode() {
         double[][] data = widget.flattenLayer(TriangleCell.VALUE_LAYER);
-        int columns = getColumnCount(data);
-        
-        StringBuilder sb = new StringBuilder(dataName).append(" = rbind(\n");
-        for(int r=0, size=data.length; r<size; r++) {
-            sb.append("  ");
-            appendRow(sb, data[r], columns);
-            if(r<(size-1)) sb.append(",");
-            sb.append("\n");
-        }
-        sb.append(")\n");
-        code.addSource(sb.toString());
-    }
-    
-    private int getColumnCount(double[][] data) {
-        int count = 0;
-        for(double[] row : data) {
-            if(row == null) continue;
-            if(count < row.length) count = row.length;
-        }
-        return count;
+        code.addSource(new StringBuilder(dataName).append(" = ").append(RUtil.createArray(data)).append("\n").toString());
     }
     
     private String getElementName() {
@@ -75,19 +53,6 @@ public class RCodeView extends NavigableRCodePanel implements TriangleWidgetList
             return "";
         return name.replace(' ', '.');
     }
-    
-    private void appendRow(StringBuilder sb, double[] row, int columnCount) {
-        sb.append("c(");
-        for(int c=0; c<columnCount; c++) {
-            if(c > 0) sb.append(", ");
-            if(c >= row.length || Double.isNaN(row[c])) {
-                sb.append("NA");
-            } else {
-                sb.append(row[c]);
-            }
-        }
-        sb.append(")");
-    } 
     
     private void addCorrectionsToCode() {
         List<String> corrections = getCorrections();

@@ -109,9 +109,11 @@ public class RTokenizer {
     }
     
     private boolean isOperator(char c) {
-        return c=='(' || c==')' || c=='{' || c=='}' || c=='[' || c==']' || 
+        boolean operator = (c=='(' || c==')' || c=='{' || c=='}' || c=='[' || c==']' || 
                c=='+' || c=='-' || c=='*' || c=='/' || c=='%' || c=='^' || 
-               c=='=' || c=='!' || c==':' || c=='<' || c=='>' || c=='!';
+               c=='=' || c=='!' || c==':' || c=='<' || c=='>' || c=='!' ||
+               c==',');
+        return operator;
     }
     
     private Token readOperator() {

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
@@ -32,9 +33,11 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     private JLabel titleLabel;
     
     private JPanel buttonPanel;
-    private JPanel userButtonPanel;
     private NavigablePanelOpenButton openButton;
     private NavigablePanelDockButton dockButton;
+    
+    private JPanel userButtonPanel;
+    private List<JComponent> userButtons = new ArrayList<JComponent>();
     
     private Color background = BACKGROUND;
     private Color foreground = FOREGROUND;
@@ -132,6 +135,7 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
         component.setForeground(foreground);
         userButtonPanel.add(component);
         userButtonPanel.add(Box.createHorizontalStrut(5));
+        userButtons.add(component);
         
         userButtonPanel.revalidate();
         titlePanel.revalidate();
@@ -174,25 +178,30 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     
     @Override
     public void setForeground(Color color) {
+        this.foreground = color;
         if(titlePanel != null) {
+            titlePanel.setForeground(color);
             titleLabel.setForeground(color);
             openButton.setForeground(color);
+            dockButton.setForeground(color);
             setUserComponentsForeground(color);
         }
         super.setForeground(color);
     }
     
     private void setUserComponentsForeground(Color color) {
-        for(Component c : userButtonPanel.getComponents())
-            c.setForeground(color);
+        for(JComponent comp : userButtons)
+            comp.setForeground(color);
     }
     
     @Override
     public void setBackground(Color color) {
+        this.background = color;
         if(titlePanel != null) {
             titlePanel.setBackground(color);
             titleLabel.setBackground(color);
             openButton.setBackground(color);
+            dockButton.setBackground(color);
             setUserComponentsBackground(color);
         }
         setBorder(new LineBorder(color, BORDER_WIDTH, true));
@@ -200,8 +209,8 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     }
     
     private void setUserComponentsBackground(Color color) {
-        for(Component c : userButtonPanel.getComponents())
-            c.setBackground(color);
+        for(JComponent comp : userButtons)
+            comp.setBackground(color);
     }
     
     @Override
@@ -221,8 +230,12 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
 
     @Override
     public void navigateTo() {
-        if(parent != null)
-            parent.navigateToChild(this);
+        if(tc != null) {
+            tc.requestActive();
+        } else {
+            if(parent != null)
+                parent.navigateToChild(this);
+        }
         setOpened(true);
     }
 

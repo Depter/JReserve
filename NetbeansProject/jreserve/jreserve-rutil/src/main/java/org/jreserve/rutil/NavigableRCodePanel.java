@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.navigator.NavigablePanelCopyButton;
-import org.jreserve.rutil.util.RCodeTextPane;
+import org.jreserve.rutil.visual.RCodeTextPane;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -22,6 +22,8 @@ import org.openide.util.ImageUtilities;
 public class NavigableRCodePanel extends NavigablePanel {
 
     private final static Image IMG = ImageUtilities.loadImage("resources/r.png", false);
+    private final static Color BACKGROUND = new Color(186, 184, 135);
+    private final static Color FOREGROUND = Color.BLACK;
     
     private RCode rCode = new RCode();
     private RCodeTextPane textPane;
@@ -29,14 +31,16 @@ public class NavigableRCodePanel extends NavigablePanel {
     public NavigableRCodePanel(String displayName) {
         super(displayName, IMG);
         textPane = new RCodeTextPane(rCode);
+        textPane.setEditable(false);
         
         JScrollPane scroll = new JScrollPane(textPane);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         super.setContent(scroll);
-        super.setBackground(Color.WHITE);
-        super.setForeground(Color.BLACK);
+        super.setBackground(BACKGROUND);
+        super.setForeground(FOREGROUND);
         super.addUserTitleComponent(new NavigablePanelCopyButton(new CodeCopy()));
+        
     }
     
     public RCode getRCode() {
