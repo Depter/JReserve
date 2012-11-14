@@ -1,10 +1,9 @@
 package org.jreserve.triangle.entities;
 
-import org.jreserve.triangle.entities.TriangleGeometry;
-import org.junit.Test;
+import static org.jreserve.triangle.entities.VectorGeometryTest.*;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import static org.jreserve.triangle.entities.VectorGeometryTest.*;
+import org.junit.Test;
 
 /**
  *
@@ -22,17 +21,17 @@ public class TriangleGeometryTest {
     @Before
     public void setUp() {
         geometry = new TriangleGeometry(START, PERIODS_IN_ACCIDENT, MONTH_IN_ACCIDENT, 
-                START, PERIODS_IN_DEVELOPMENT, MONTH_IN_DEVELOPMENT);
+                PERIODS_IN_DEVELOPMENT, MONTH_IN_DEVELOPMENT);
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_TooFewMonths() {
-        new TriangleGeometry(START, PERIODS_IN_ACCIDENT, MONTH_IN_ACCIDENT, START, PERIODS_IN_DEVELOPMENT, 0);
+        new TriangleGeometry(START, PERIODS_IN_ACCIDENT, MONTH_IN_ACCIDENT, PERIODS_IN_DEVELOPMENT, 0);
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_TooFewPeriods() {
-        new TriangleGeometry(START, PERIODS_IN_ACCIDENT, MONTH_IN_ACCIDENT, START, 0, MONTH_IN_ACCIDENT);
+        new TriangleGeometry(START, PERIODS_IN_ACCIDENT, MONTH_IN_ACCIDENT, 0, MONTH_IN_ACCIDENT);
     }
 
     @Test
@@ -65,17 +64,6 @@ public class TriangleGeometryTest {
     @Test(expected=IllegalArgumentException.class)
     public void testSetDevelopmentPeriods_TooFew() {
         geometry.setDevelopmentPeriods(0);
-    }
-
-    @Test
-    public void testGetDevelopmentStart() {
-        assertEquals(START, geometry.getDevelopmentStart());
-    }
-
-    @Test
-    public void testSetDevelopmentStart() {
-        geometry.setDevelopmentStart(START);
-        assertEquals(START, geometry.getDevelopmentStart());
     }
 
     @Test

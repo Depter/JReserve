@@ -38,13 +38,6 @@ public class TriangleCellUtil {
             for(TriangleCell cell : row)
                 if(cell != null)
                     cell.setCummulated(true);
-//        for(TriangleCell[] row : cells) {
-//            TriangleCell prev = null;
-//            for(TriangleCell cell : row) {
-//                cummulate(prev, cell);
-//                prev = cell;
-//            }
-//        }
     }
     
     public static void cummulate(TriangleCell previous, TriangleCell current) {
@@ -101,9 +94,6 @@ public class TriangleCellUtil {
             for(TriangleCell cell : row)
                 if(cell != null)
                     cell.setCummulated(false);
-//        for(TriangleCell[] row : cells)
-//            for(int i=row.length-1; i>0; i--)
-//                TriangleCellUtil.deCummulatValues(row[i-1], row[i]);
     }
     
     public static void deCummulate(TriangleCell previous, TriangleCell current) {
@@ -151,13 +141,19 @@ public class TriangleCellUtil {
     }
     
     private static void extractValue(TriangleCell cell, int layer, List<WidgetData<Double>> result) {
-        if(cell == null) return;
-        Double value = cell.getValueAt(layer);
-        if(value == null) return;
-        result.add(new WidgetData<Double>(cell.getAccidentBegin(), cell.getAccidentEnd(), value));
+        if(cell != null) {
+            WidgetData<Double> data = cell.getData(layer);
+            if(data != null)
+                result.add(data);
+        }
     }
     
     public static void setValue(TriangleCell cell, int layer, Double value) {
+        TriangleCell prev = cell.getPreviousCell();
+        if(cell.isCummulated() && prev != null && value !=null && layer == TriangleCell.CORRECTION_LAYER) {
+            Double prevV = prev.getDisplayValue();
+            value = subtract(value, prevV);
+        }
         cell.setValueAt(layer, value);
     }
     

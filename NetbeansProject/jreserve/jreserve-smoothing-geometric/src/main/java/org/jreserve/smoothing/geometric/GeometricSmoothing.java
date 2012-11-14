@@ -3,11 +3,10 @@ package org.jreserve.smoothing.geometric;
 import java.util.Arrays;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import org.hibernate.envers.AuditJoinTable;
-import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistentObject;
+import org.jreserve.rutil.RFunction;
 import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.core.SmoothingCell;
 
@@ -49,4 +48,13 @@ public class GeometricSmoothing extends Smoothing {
         return result;
     }
 
+    @Override
+    public String getRSmoothing(String triangle, String x, String y, String used) {
+        return RGeometricFunction.getSmoothing(triangle, x, y, used);
+    }
+
+    @Override
+    public RFunction getRFunction() {
+        return new RGeometricFunction();
+    }
 }

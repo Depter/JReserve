@@ -34,14 +34,13 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     }
     
     private void initSymmetry() {
-        geometrySetting.setSymmetricFromDate(true);
         geometrySetting.setSymmetricPeriods(false);
         geometrySetting.setSymmetricMonths(false);
         geometrySetting.setSymmetricEnabled(false);
     }
     
     private void initBegin(VectorGeometry geometry) {
-        geometrySetting.setAccidentStartDate(geometry.getAccidentStart());
+        geometrySetting.setStartDate(geometry.getStartDate());
     }
     
     private void initPeriods(VectorGeometry geometry) {
@@ -50,7 +49,7 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     }
     
     private void initMonths(VectorGeometry geometry) {
-        geometrySetting.setAccidentMonthsPerStep(geometry.getMonthInAccident());
+        geometrySetting.setAccidentMonthsPerStep(geometry.getAccidentMonths());
         geometrySetting.setDevelopmentMonthsPerStep(Integer.MAX_VALUE);
     }
 
@@ -71,9 +70,9 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     private VectorGeometry getVectorGeometry(TriangleGeometry geometry) {
         if(geometry == null)
             return null;
-        Date start = geometry.getAccidentStart();
+        Date start = geometry.getStartDate();
         int periods = geometry.getAccidentPeriods();
-        int months = geometry.getMonthInAccident();
+        int months = geometry.getAccidentMonths();
         return new VectorGeometry(start, periods, months);
     }
 
@@ -142,11 +141,6 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
         }
 
         @Override
-        public Date getDevelopmentStart() {
-            return geometry.getAccidentStart();
-        }
-
-        @Override
         public int getMonthInDevelopment() {
             return Integer.MAX_VALUE;
         }
@@ -165,13 +159,13 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
         }
 
         @Override
-        public Date getAccidentStart() {
-            return geometry.getAccidentStart();
+        public Date getStartDate() {
+            return geometry.getStartDate();
         }
 
         @Override
-        public int getMonthInAccident() {
-            return geometry.getMonthInAccident();
+        public int getAccidentMonths() {
+            return geometry.getAccidentMonths();
         }
 
         @Override

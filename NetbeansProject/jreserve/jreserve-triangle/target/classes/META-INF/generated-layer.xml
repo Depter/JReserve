@@ -9,24 +9,24 @@
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.VectorCorrection"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
-            <file name="org-jreserve-triangle-entities-Triangle.entity">
-                <!--org.jreserve.triangle.entities.Triangle-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
-                <attr boolvalue="false" name="generatedId"/>
-            </file>
             <file name="org-jreserve-triangle-entities-VectorComment.entity">
                 <!--org.jreserve.triangle.entities.VectorComment-->
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.VectorComment"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
-            <file name="org-jreserve-triangle-entities-Vector.entity">
-                <!--org.jreserve.triangle.entities.Vector-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.Vector"/>
-                <attr boolvalue="false" name="generatedId"/>
-            </file>
             <file name="org-jreserve-triangle-entities-TriangleCorrection.entity">
                 <!--org.jreserve.triangle.entities.TriangleCorrection-->
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleCorrection"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
+            <file name="org-jreserve-triangle-entities-Triangle.entity">
+                <!--org.jreserve.triangle.entities.Triangle-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
+            <file name="org-jreserve-triangle-entities-Vector.entity">
+                <!--org.jreserve.triangle.entities.Vector-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.Vector"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
             <file name="org-jreserve-triangle-entities-TriangleComment.entity">
@@ -47,21 +47,9 @@
                 </file>
             </folder>
             <folder name="AuditFactories">
-                <file name="org-jreserve-triangle-audit-ProjectVectorAuditor.instance">
-                    <!--org.jreserve.triangle.audit.ProjectVectorAuditor-->
-                    <attr intvalue="200" name="priority"/>
-                </file>
-                <file name="org-jreserve-triangle-audit-VectorAuditor.instance">
-                    <!--org.jreserve.triangle.audit.VectorAuditor-->
-                    <attr intvalue="200" name="priority"/>
-                </file>
                 <file name="org-jreserve-triangle-audit-TriangleCorrectionAuditor.instance">
                     <!--org.jreserve.triangle.audit.TriangleCorrectionAuditor-->
                     <attr intvalue="100" name="priority"/>
-                </file>
-                <file name="org-jreserve-triangle-audit-VectorCommentAuditor.instance">
-                    <!--org.jreserve.triangle.audit.VectorCommentAuditor-->
-                    <attr intvalue="200" name="priority"/>
                 </file>
                 <file name="org-jreserve-triangle-audit-VectorCorrectionAuditor.instance">
                     <!--org.jreserve.triangle.audit.VectorCorrectionAuditor-->
@@ -74,6 +62,18 @@
                 <file name="org-jreserve-triangle-audit-TriangleAuditor.instance">
                     <!--org.jreserve.triangle.audit.TriangleAuditor-->
                     <attr intvalue="50" name="priority"/>
+                </file>
+                <file name="org-jreserve-triangle-audit-ProjectVectorAuditor.instance">
+                    <!--org.jreserve.triangle.audit.ProjectVectorAuditor-->
+                    <attr intvalue="200" name="priority"/>
+                </file>
+                <file name="org-jreserve-triangle-audit-VectorAuditor.instance">
+                    <!--org.jreserve.triangle.audit.VectorAuditor-->
+                    <attr intvalue="200" name="priority"/>
+                </file>
+                <file name="org-jreserve-triangle-audit-VectorCommentAuditor.instance">
+                    <!--org.jreserve.triangle.audit.VectorCommentAuditor-->
+                    <attr intvalue="200" name="priority"/>
                 </file>
                 <file name="org-jreserve-triangle-audit-TriangleCommentAuditor.instance">
                     <!--org.jreserve.triangle.audit.TriangleCommentAuditor-->

@@ -64,30 +64,30 @@ public class VectorGeometryTest {
 
     @Test
     public void testGetAccidentStart() {
-        assertEquals(START, geometry.getAccidentStart());
+        assertEquals(START, geometry.getStartDate());
     }
 
     @Test
     public void testSetAccidentStart() {
-        geometry.setAccidentStart(START);
-        assertEquals(START, geometry.getAccidentStart());
+        geometry.setStartDate(START);
+        assertEquals(START, geometry.getStartDate());
     }
 
     @Test
     public void testGetMonthInAccident() {
-        assertEquals(MONTH_IN_ACCIDENT, geometry.getMonthInAccident());
+        assertEquals(MONTH_IN_ACCIDENT, geometry.getAccidentMonths());
     }
 
     @Test
     public void testSetMonthInAccident() {
         int months = MONTH_IN_ACCIDENT+2;
-        geometry.setMonthInAccident(months);
-        assertEquals(months, geometry.getMonthInAccident());
+        geometry.setAccidentMonths(months);
+        assertEquals(months, geometry.getAccidentMonths());
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testSetMonthInAccident_TooFewMonths() {
-        geometry.setMonthInAccident(0);
+        geometry.setAccidentMonths(0);
     }
 
     @Test

@@ -47,6 +47,16 @@ public class RExponentialSmoothing implements RFunction {
         "  triangle;\n" + 
         "}";
 
+    static String getSmoothing(String triangle, String x, String y, String used, double alpha) {
+        return new StringBuilder("smoothing.exponential(")
+                .append(triangle).append(", ")
+                .append(x).append(", ")
+                .append(y).append(", ")
+                .append(used).append(", ")
+                .append(""+alpha).append(")")
+                .toString();
+    }
+    
     @Override
     public String getName() {
         return "smoothing.exponential";

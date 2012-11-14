@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RFunction;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
@@ -45,6 +46,11 @@ public class RGeometricFunction implements RFunction {
         "  \n"+
         "  triangle;\n"+
         "}";
+    
+    public static String getSmoothing(String triangle, String x, String y, String used) {
+        String source = "smoothing.geometric(%s, %s, %s, %s)";
+        return String.format(source, triangle, x, y, used);
+    }
     
     @Override
     public String getName() {

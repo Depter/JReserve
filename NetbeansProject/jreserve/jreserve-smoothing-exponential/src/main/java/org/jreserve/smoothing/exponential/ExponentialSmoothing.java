@@ -7,6 +7,7 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistentObject;
+import org.jreserve.rutil.RFunction;
 import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.core.SmoothingCell;
 
@@ -60,6 +61,16 @@ public class ExponentialSmoothing extends Smoothing {
             output[i] = alpha * output[i-1] + (1-alpha) * output[i];
         
         return output;
+    }
+
+    @Override
+    public String getRSmoothing(String triangle, String x, String y, String used) {
+        return RExponentialSmoothing.getSmoothing(triangle, x, y, used, alpha);
+    }
+
+    @Override
+    public RFunction getRFunction() {
+        return new RExponentialSmoothing();
     }
     
 }

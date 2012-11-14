@@ -15,10 +15,11 @@ import org.jreserve.resources.ActionUtil;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.TriangleCell;
+import org.jreserve.triangle.widget.TriangleModel;
 import org.jreserve.triangle.widget.TriangleWidgetListener;
 import org.jreserve.triangle.widget.WidgetData;
-import org.jreserve.triangle.widget.model.TriangleModel;
-import org.jreserve.triangle.widget.model.TriangleModel.ModelType;
+import org.jreserve.triangle.widget.model2.AbstractTriangleTableModel;
+import org.jreserve.triangle.widget.model2.TriangleTableModel;
 import org.openide.util.Lookup;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.AbstractLookup;
@@ -33,8 +34,7 @@ public class TriangleTable extends JTable implements Lookup.Provider {
 
     private final static int DISMISS_DELAY = 10 * 60 * 1000;
     
-    private TriangleModel.ModelType type;
-    private TriangleModel model;
+    private TriangleTableModel model = new AbstractTriangleTableModel();
     private TriangleCellRenderer renderer;
     private TableCellRenderer headerRenderer;
     private DoubleEditor editor;
@@ -44,20 +44,10 @@ public class TriangleTable extends JTable implements Lookup.Provider {
     private Lookup lookup = new AbstractLookup(content);
     
     public TriangleTable() {
-        this(ModelType.DEVELOPMENT);
-    }
-
-    public TriangleTable(ModelType type) {
-        this.type = type!=null? type : ModelType.DEVELOPMENT;
-        createModel();
+        super.setModel(model);
         createRenderers();
         formatTable();
         setListeners();
-    }
-    
-    private void createModel() {
-        model = type.createModel();
-        setModel(model);
     }
     
     private void createRenderers() {
@@ -96,24 +86,12 @@ public class TriangleTable extends JTable implements Lookup.Provider {
             this.popUpActionPath = path;
     }
     
-    public void setModelType(ModelType type) {
-        this.type = type!=null? type : ModelType.DEVELOPMENT;
-        initModel();
-    }
-    
-    private void initModel() {
-        TriangleModel newModel = type.createModel();
-        newModel.copyStateFrom(model);
-        this.model = newModel;
-        setModel(newModel);
-    }
-    
     public void setFractionDigits(int digits) {
         renderer.setFractionDigits(digits);
     }
     
-    public ModelType getModelType() {
-        return type;
+    public void setTriangleModel(TriangleModel triangleModel) {
+        this.model.setTriangleModel(triangleModel);
     }
     
     public void setTriangleGeometry(TriangleGeometry geometry) {

@@ -23,7 +23,6 @@ public class TriangleCell implements Comparable<TriangleCell> {
     
     private Map<Integer, Double> mValues = new TreeMap<Integer, Double>();
     
-    //private List<Double> values = new ArrayList<Double>();
     private int displayLayer = -1;
     
     private TriangleCell previous;
@@ -64,10 +63,17 @@ public class TriangleCell implements Comparable<TriangleCell> {
     public Date getDevelopmentEnd() {
         return developmentEnd;
     }
+
+    TriangleCell getPreviousCell() {
+        return previous;
+    }
+    
+    boolean isCummulated() {
+        return cummulated;
+    }
     
     public WidgetData<Double> getData(int layer) {
         Double value = mValues.get(layer);
-//        Double value = values.get(layer);
         if(value == null)
             return null;
         return new WidgetData<Double>(accidentBegin, developmentBegin, value);
@@ -83,7 +89,6 @@ public class TriangleCell implements Comparable<TriangleCell> {
     
     public Double getValueAt(int layer) {
         return mValues.get(layer);
-        //return values.get(layer);
     }
     
     void setValueAt(int layer, Double value) {
@@ -92,7 +97,6 @@ public class TriangleCell implements Comparable<TriangleCell> {
         } else {
             mValues.put(layer, value);
         }
-        //this.values.set(layer, value);
         setDisplayLayer();
     }
     
@@ -100,9 +104,6 @@ public class TriangleCell implements Comparable<TriangleCell> {
         displayLayer = -1;
         for(Integer layer : mValues.keySet())
             displayLayer = layer.intValue();
-//        for(int i=0, size=values.size(); i<size; i++) 
-//            if(values.get(i) != null)
-//                displayLayer = i;
     }
     
     public int getDisplayedLayer() {
@@ -111,7 +112,6 @@ public class TriangleCell implements Comparable<TriangleCell> {
     
     public Double getDisplayValue() {
         Double value = mValues.get(displayLayer);
-        //Double value = displayLayer<0? null : values.get(displayLayer);
         if(cummulated && previous != null)
             value = TriangleCellUtil.add(value, previous.getDisplayValue());
         return value;
@@ -124,7 +124,6 @@ public class TriangleCell implements Comparable<TriangleCell> {
     void clear() {
         displayLayer = -1;
         mValues.clear();
-        //values.clear();
     }
     
     void setValues(List<Double> values) {
@@ -135,10 +134,6 @@ public class TriangleCell implements Comparable<TriangleCell> {
                 mValues.put(i, value);
         }
         setDisplayLayer();
-        //if(values != null && !values.isEmpty()) {
-        //    this.values.addAll(values);
-        //    setDisplayLayer();
-        //}
     }
     
     List<Double> getValues() {

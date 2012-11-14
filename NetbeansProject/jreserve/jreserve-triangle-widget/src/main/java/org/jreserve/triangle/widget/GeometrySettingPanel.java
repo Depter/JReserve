@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Date;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
@@ -21,7 +23,7 @@ import org.openide.util.NbBundle.Messages;
     "MSG.GeometrySettingPanel.Development.Invalid.Periods=Field 'Periods' in group 'Development' is invalid!",
     "MSG.GeometrySettingPanel.Development.Invalid.Months=Field 'Month per step' in group 'Development' is invalid!"
 })
-public class GeometrySettingPanel extends javax.swing.JPanel implements PropertyChangeListener, ActionListener {
+public class GeometrySettingPanel extends javax.swing.JPanel implements PropertyChangeListener, ActionListener, ChangeListener {
 
     public final static String PROPERTY_TRIANGLE_GEOMETRY = "TRIANGLE GEOMETRY";
     public final static String PROPERTY_ERROR = "TRIANGLE GEOMETRY ERROR";
@@ -41,13 +43,8 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
     }
 
     public void setSymmetricEnabled(boolean enabled) {
-        setSymmetricFromDateEnabled(enabled);
         setSymmetricPeriodsEnabled(enabled);
         setSymmetricMonthsEnabled(enabled);
-    }
-    
-    public void setSymmetricFromDateEnabled(boolean enabled) {
-        beginSymmetry.setEnabled(enabled);
     }
     
     public void setSymmetricPeriodsEnabled(boolean enabled) {
@@ -56,14 +53,6 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
     
     public void setSymmetricMonthsEnabled(boolean enabled) {
         monthsSymmetry.setEnabled(enabled);
-    }
-    
-    public void setSymmetricFromDate(boolean symmetric) {
-        beginSymmetry.setSelected(symmetric);
-    }
-    
-    public boolean isSymmetricFromDate() {
-        return beginSymmetry.isSelected();
     }
     
     public void setSymmetricPeriods(boolean symmetric) {
@@ -92,53 +81,72 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        datePanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
+        startDateSpinner = new org.jreserve.resources.textfieldfilters.DateSpinner();
         accidentGeometry = new org.jreserve.triangle.widget.AxisGeometryPanel();
         developmentGeometry = new org.jreserve.triangle.widget.AxisGeometryPanel();
         symmetryPanel = new javax.swing.JPanel();
-        beginLabel = new javax.swing.JLabel();
         periodsLabel = new javax.swing.JLabel();
         monthsLabel = new javax.swing.JLabel();
-        beginSymmetry = new javax.swing.JCheckBox();
         periodsSymmetry = new javax.swing.JCheckBox();
         monthsSymmetry = new javax.swing.JCheckBox();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+        rightFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        bottomFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
 
         setLayout(new java.awt.GridBagLayout());
 
-        accidentGeometry.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeometrySettingPanel.class, "LBL.GeometrySettingPanel.Geometry.Accident")), javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5))); // NOI18N
-        accidentGeometry.addPropertyChangeListener(this);
+        datePanel.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeometrySettingPanel.class, "LBL.GeometrySettingPanel.StartDate.Title")), javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5))); // NOI18N
+        datePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEADING, 0, 0));
+
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(GeometrySettingPanel.class, "LBL.GeometrySettingPanel.StartDate")); // NOI18N
+        datePanel.add(jLabel1);
+        datePanel.add(filler3);
+
+        startDateSpinner.setPreferredSize(new java.awt.Dimension(70, 18));
+        startDateSpinner.addChangeListener(this);
+        datePanel.add(startDateSpinner);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        add(datePanel, gridBagConstraints);
+
+        accidentGeometry.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeometrySettingPanel.class, "LBL.GeometrySettingPanel.Geometry.Accident")), javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5))); // NOI18N
+        accidentGeometry.setMinimumSize(new java.awt.Dimension(160, 77));
+        accidentGeometry.setPreferredSize(new java.awt.Dimension(160, 41));
+        accidentGeometry.addPropertyChangeListener(this);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         add(accidentGeometry, gridBagConstraints);
 
         developmentGeometry.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeometrySettingPanel.class, "LBL.GeometrySettingPanel.Geometry.Development")), javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5))); // NOI18N
+        developmentGeometry.setMinimumSize(new java.awt.Dimension(160, 77));
+        developmentGeometry.setPreferredSize(new java.awt.Dimension(160, 41));
         developmentGeometry.setEnabled(false);
         developmentGeometry.addPropertyChangeListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         add(developmentGeometry, gridBagConstraints);
 
         symmetryPanel.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeometrySettingPanel.class, "LBL.GeometrySettingPanel.Symmetry")), javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5))); // NOI18N
+        symmetryPanel.setMinimumSize(new java.awt.Dimension(130, 77));
         symmetryPanel.setLayout(new java.awt.GridBagLayout());
-
-        beginLabel.setText(org.openide.util.NbBundle.getMessage(GeometrySettingPanel.class, "LBL.GeometrySettingPanel.Symmetry.Begin")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        symmetryPanel.add(beginLabel, gridBagConstraints);
 
         periodsLabel.setText(org.openide.util.NbBundle.getMessage(GeometrySettingPanel.class, "LBL.GeometrySettingPanel.Symmetry.Periods")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
@@ -147,24 +155,11 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
         monthsLabel.setText(org.openide.util.NbBundle.getMessage(GeometrySettingPanel.class, "LBL.GeometrySettingPanel.Symmetry.Months")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         symmetryPanel.add(monthsLabel, gridBagConstraints);
-
-        beginSymmetry.setSelected(true);
-        beginSymmetry.setText(null);
-        beginSymmetry.setMaximumSize(new java.awt.Dimension(91, 18));
-        beginSymmetry.setMinimumSize(new java.awt.Dimension(18, 18));
-        beginSymmetry.setPreferredSize(new java.awt.Dimension(91, 18));
-        beginSymmetry.addActionListener(this);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        symmetryPanel.add(beginSymmetry, gridBagConstraints);
 
         periodsSymmetry.setSelected(true);
         periodsSymmetry.setText(null);
@@ -174,6 +169,7 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
         periodsSymmetry.addActionListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
@@ -187,60 +183,54 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
         monthsSymmetry.addActionListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         symmetryPanel.add(monthsSymmetry, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         add(symmetryPanel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        add(filler1, gridBagConstraints);
+        add(rightFiller, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        add(filler2, gridBagConstraints);
+        add(bottomFiller, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jreserve.triangle.widget.AxisGeometryPanel accidentGeometry;
-    private javax.swing.JLabel beginLabel;
-    private javax.swing.JCheckBox beginSymmetry;
+    private javax.swing.Box.Filler bottomFiller;
+    private javax.swing.JPanel datePanel;
     private org.jreserve.triangle.widget.AxisGeometryPanel developmentGeometry;
-    private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler2;
+    private javax.swing.Box.Filler filler3;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel monthsLabel;
     private javax.swing.JCheckBox monthsSymmetry;
     private javax.swing.JLabel periodsLabel;
     private javax.swing.JCheckBox periodsSymmetry;
+    private javax.swing.Box.Filler rightFiller;
+    private org.jreserve.resources.textfieldfilters.DateSpinner startDateSpinner;
     private javax.swing.JPanel symmetryPanel;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if(beginSymmetry == source) {
-            setBeginSymmetric(beginSymmetry.isSelected());
-        } else if(periodsSymmetry == source) {
+        if(periodsSymmetry == source) {
             setPeriodsSymmetric(periodsSymmetry.isSelected());
         } else if(monthsSymmetry == source) {
             setMonthsSymmetric(monthsSymmetry.isSelected());
-        }
-    }
-    
-    private void setBeginSymmetric(boolean simmetric) {
-        developmentGeometry.setFromDateEnabled(!simmetric);
-        if(simmetric) {
-            Date begin = accidentGeometry.getFromDate();
-            developmentGeometry.setFromDate(begin);
         }
     }
     
@@ -261,18 +251,25 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
     }
 
     @Override
+    public void stateChanged(ChangeEvent e) {
+        //start date changed
+        createGeometry();
+    }
+
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if(accidentGeometry == evt.getSource())
             setSymmetricValues();
-        
+        createGeometry();
+    }
+    
+    private void createGeometry() {
         checkInput();
         TriangleGeometry geometry = getGeometry();
         putClientProperty(PROPERTY_TRIANGLE_GEOMETRY, geometry);
     }
     
     private void setSymmetricValues() {
-        if(beginSymmetry.isSelected())
-            developmentGeometry.setFromDate(accidentGeometry.getFromDate());
         if(periodsSymmetry.isSelected())
             developmentGeometry.setPeriods(accidentGeometry.getPeriods());
         if(monthsSymmetry.isSelected())
@@ -280,25 +277,16 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
     }
     
     private void checkInput() {
-        isValid = checkAccidentFromDate() && checkDevelopmentFromDate() &&
+        isValid = checkStartDate() &&
                 checkAccidentPeriods() && checkDevelopmentPeriods() &&
                 checkAccidentMonths() && checkDevelopmentMonths();
         if(isValid)
             putClientProperty(PROPERTY_ERROR, null);
     }
     
-    private boolean checkAccidentFromDate() {
-        if(accidentGeometry.getFromDate() == null) {
+    private boolean checkStartDate() {
+        if(startDateSpinner.getDate() == null) {
             String msg = NbBundle.getMessage(GeometrySettingPanel.class, "MSG.GeometrySettingPanel.Accident.Invalid.From");
-            putClientProperty(PROPERTY_ERROR, msg);
-            return false;
-        }
-        return true;
-    }
-    
-    private boolean checkDevelopmentFromDate() {
-        if(developmentGeometry.getFromDate() == null) {
-            String msg = NbBundle.getMessage(GeometrySettingPanel.class, "MSG.GeometrySettingPanel.Development.Invalid.From");
             putClientProperty(PROPERTY_ERROR, msg);
             return false;
         }
@@ -342,37 +330,27 @@ public class GeometrySettingPanel extends javax.swing.JPanel implements Property
     }
     
     public TriangleGeometry getGeometry() {
-        Date aStart = accidentGeometry.getFromDate();
+        Date aStart = getStartDate();
         int aPeriods = accidentGeometry.getPeriods();
         int aMonths = accidentGeometry.getMonthPerStep();
-        
-        Date dStart = developmentGeometry.getFromDate();
         int dPeriods = developmentGeometry.getPeriods();
         int dMonths = developmentGeometry.getMonthPerStep();
         
-        if(aStart==null || dStart==null || 
+        if(aStart==null || 
            aPeriods < 1 || dPeriods < 1 ||
            aMonths < 1 || dMonths < 1)
             return null;
         
         return new TriangleGeometry(aStart, aPeriods, aMonths, 
-                dStart, dPeriods, dMonths);
+                dPeriods, dMonths);
     }
     
-    public Date getAccidentStartDate() {
-        return accidentGeometry.getFromDate();
+    public Date getStartDate() {
+        return startDateSpinner.getDate();
     }
     
-    public void setAccidentStartDate(Date date) {
-        accidentGeometry.setFromDate(date);
-    }
-    
-    public Date getDevelopmentStartDate() {
-        return developmentGeometry.getFromDate();
-    }
-    
-    public void setDevelopmentStartDate(Date date) {
-        developmentGeometry.setFromDate(date);
+    public void setStartDate(Date date) {
+        startDateSpinner.setValue(date);
     }
     
     public int getAccidentPeriodCount() {

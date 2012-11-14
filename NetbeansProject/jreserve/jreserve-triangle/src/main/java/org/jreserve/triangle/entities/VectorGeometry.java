@@ -23,15 +23,15 @@ public class VectorGeometry implements Serializable, Cloneable  {
     private final static String ERR_ACC_MONTH = 
          "There must be at least 1 month in an accident period, but %d was found!";
 
-    @Column(name="ACCIDENT_START_DATE", nullable=false)
+    @Column(name="START_DATE", nullable=false)
     @Temporal(TemporalType.DATE)
-    private Date accidentStart;
+    private Date start;
     
     @Column(name="ACCIDENT_PERIODS", nullable=false)
     private int accidentPeriods;
     
     @Column(name="MONTH_IN_ACCIDENT", nullable=false)
-    private int monthInAccident;
+    private int accidentMonths;
     
     protected VectorGeometry() {
     }
@@ -39,13 +39,13 @@ public class VectorGeometry implements Serializable, Cloneable  {
     public VectorGeometry(Date start, int accidentPeriods, int monthInAccident) {
         initStartDate(start);
         initAccidnetPeriods(accidentPeriods);
-        initMonthInAccident(monthInAccident);
+        initAccidentMonths(monthInAccident);
     }
     
     private void initStartDate(Date start) {
         if(start == null)
             throw new NullPointerException("Accident start date is null!");
-        this.accidentStart = start;
+        this.start = start;
     }
     
     private void initAccidnetPeriods(int periods) {
@@ -54,17 +54,17 @@ public class VectorGeometry implements Serializable, Cloneable  {
         this.accidentPeriods = periods;
     }
     
-    private void initMonthInAccident(int month) {
+    private void initAccidentMonths(int month) {
         if(month  < 1)
             throw new IllegalArgumentException(String.format(ERR_ACC_MONTH, month));
-        this.monthInAccident = month;
+        this.accidentMonths = month;
     }
 
-    public Date getAccidentStart() {
-        return accidentStart;
+    public Date getStartDate() {
+        return start;
     }
 
-    public void setAccidentStart(Date startDate) {
+    public void setStartDate(Date startDate) {
         initStartDate(startDate);
     }
 
@@ -76,29 +76,29 @@ public class VectorGeometry implements Serializable, Cloneable  {
         initAccidnetPeriods(periods);
     }
 
-    public int getMonthInAccident() {
-        return monthInAccident;
+    public int getAccidentMonths() {
+        return accidentMonths;
     }
 
-    public void setMonthInAccident(int monthInAccident) {
-        initMonthInAccident(monthInAccident);
+    public void setAccidentMonths(int accidentMonths) {
+        initAccidentMonths(accidentMonths);
     }
     
     public boolean isEqualGeometry(VectorGeometry g) {
         if(g==null)
             return false;
-        return accidentStart.equals(g.accidentStart) &&
+        return start.equals(g.start) &&
                accidentPeriods == g.accidentPeriods &&
-               monthInAccident == g.monthInAccident;
+               accidentMonths == g.accidentMonths;
     }
     
     public VectorGeometry copy() {
-        return new VectorGeometry(accidentStart, accidentPeriods, monthInAccident);
+        return new VectorGeometry(start, accidentPeriods, accidentMonths);
     }
     
     @Override
     public String toString() {
         return String.format("Geometry [%tF; %d; %d]",
-            accidentStart, accidentPeriods, monthInAccident);
+            start, accidentPeriods, accidentMonths);
     }
 }

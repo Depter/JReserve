@@ -33,20 +33,7 @@ class TriangleDataEditorView extends DataEditorView<Triangle> {
     }
     
     private void initBegin(TriangleGeometry geometry) {
-        if(isBeginSymmetric(geometry)) {
-            geometrySetting.setSymmetricFromDate(true);
-            geometrySetting.setAccidentStartDate(geometry.getAccidentStart());
-        } else {
-            geometrySetting.setSymmetricFromDate(false);
-            geometrySetting.setAccidentStartDate(geometry.getAccidentStart());
-            geometrySetting.setDevelopmentStartDate(geometry.getDevelopmentStart());
-        }
-    }
-    
-    private boolean isBeginSymmetric(TriangleGeometry geometry) {
-        Date aBegin = geometry.getAccidentStart();
-        Date dBegin = geometry.getDevelopmentStart();
-        return aBegin.equals(dBegin);
+        geometrySetting.setStartDate(geometry.getStartDate());
     }
     
     private void initPeriods(TriangleGeometry geometry) {
@@ -69,16 +56,16 @@ class TriangleDataEditorView extends DataEditorView<Triangle> {
     private void initMonths(TriangleGeometry geometry) {
         if(isMonthsSymmetric(geometry)) {
             geometrySetting.setSymmetricMonths(true);
-            geometrySetting.setAccidentMonthsPerStep(geometry.getMonthInAccident());
+            geometrySetting.setAccidentMonthsPerStep(geometry.getAccidentMonths());
         } else {
             geometrySetting.setSymmetricMonths(true);
-            geometrySetting.setAccidentMonthsPerStep(geometry.getMonthInAccident());
+            geometrySetting.setAccidentMonthsPerStep(geometry.getAccidentMonths());
             geometrySetting.setDevelopmentMonthsPerStep(geometry.getMonthInDevelopment());
         }
     }
     
     private boolean isMonthsSymmetric(TriangleGeometry geometry) {
-        int aMonth = geometry.getMonthInAccident();
+        int aMonth = geometry.getAccidentMonths();
         int dMonth = geometry.getMonthInDevelopment();
         return aMonth == dMonth;
     }

@@ -57,7 +57,7 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
     private void setFirstDate(List<Data<ProjectDataType, Double>> datas) {
         Date start = getFirstDate(datas);
         if(start != null)
-            panel.geometrySetting.setAccidentStartDate(start);
+            panel.geometrySetting.setStartDate(start);
     }
     
     private Date getFirstDate(List<Data<ProjectDataType, Double>> datas) {

@@ -29,7 +29,7 @@ import org.openide.util.NbBundle.Messages;
 @Auditor.Registration(50)
 public class TriangleAuditor extends AbstractAuditor<Triangle>{
 
-    private final static String GEOMETRY_FORMAT = "[%tF, %d, %d] / [%tF, %d, %d]";
+    private final static String GEOMETRY_FORMAT = "[%tF] [%d, %d] / [%d, %d]";
     
     public TriangleAuditor() {
         factory.setType(Bundle.MSG_TriangleAuditor_TypeName());
@@ -99,8 +99,8 @@ public class TriangleAuditor extends AbstractAuditor<Triangle>{
     
     private String toString(TriangleGeometry g) {
         return String.format(GEOMETRY_FORMAT, 
-              g.getAccidentStart(), g.getAccidentPeriods(), g.getMonthInAccident(),
-              g.getDevelopmentStart(), g.getDevelopmentPeriods(), g.getMonthInDevelopment());
+              g.getStartDate(), g.getAccidentPeriods(), g.getAccidentMonths(),
+              g.getDevelopmentPeriods(), g.getMonthInDevelopment());
     }
     
     private void appendChange(StringBuilder sb, String change) {

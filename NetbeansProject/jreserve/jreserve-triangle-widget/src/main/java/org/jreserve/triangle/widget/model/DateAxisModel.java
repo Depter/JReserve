@@ -13,14 +13,14 @@ import org.jreserve.triangle.entities.TriangleGeometry;
 public class DateAxisModel implements AxisModel {
 
     static AxisModel createAccident(TriangleGeometry geometry) {
-        Date start = geometry.getAccidentStart();
+        Date start = geometry.getStartDate();
         int periods = geometry.getAccidentPeriods();
-        int months = geometry.getMonthInAccident();
+        int months = geometry.getAccidentMonths();
         return new DateAxisModel(start, periods, months);
     } 
     
     static AxisModel createDevelopment(TriangleGeometry geometry) {
-        Date start = geometry.getDevelopmentStart();
+        Date start = geometry.getStartDate();
         int periods = geometry.getDevelopmentPeriods();
         int months = geometry.getMonthInDevelopment();
         return new DateAxisModel(start, periods, months);

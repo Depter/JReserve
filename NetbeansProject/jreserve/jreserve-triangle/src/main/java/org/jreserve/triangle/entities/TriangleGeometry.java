@@ -19,38 +19,26 @@ public class TriangleGeometry extends VectorGeometry {
          "There must be at least 1 development period, but %d was found!";
     private final static String ERR_DEV_MONTH = 
          "There must be at least 1 month in a development period, but %d was found!";
-
-    @Column(name="DEVELOPMENT_START_DATE", nullable=false)
-    @Temporal(TemporalType.DATE)
-    private Date developmentStart;
     
     @Column(name="DEVELOPMENT_PERIODS", nullable=false)
     private int developmentPeriods;
 
     @Column(name="MONTH_IN_DEVELOPMENT", nullable=false)
-    private int monthInDevelopment;
+    private int developmentMonths;
     
     protected TriangleGeometry() {
     }
     
     public TriangleGeometry(Date start, int periods, int months) {
         super(start, periods, months);
-        initStartDate(start);
         initDevelopmentPeriods(periods);
         initMonthInDevelopment(months);
     }
     
-    public TriangleGeometry(Date accidentStart, int accidentPeriods, int monthInAccident, Date developmentStart, int developmentPeriods, int monthInDevelopment) {
-        super(accidentStart, accidentPeriods, monthInAccident);
-        initStartDate(developmentStart);
+    public TriangleGeometry(Date start, int accidentPeriods, int accidentMonths, int developmentPeriods, int developmentMonths) {
+        super(start, accidentPeriods, accidentMonths);
         initDevelopmentPeriods(developmentPeriods);
-        initMonthInDevelopment(monthInDevelopment);
-    }
-    
-    private void initStartDate(Date start) {
-        if(start == null)
-            throw new NullPointerException("Development start date is null!");
-        this.developmentStart = start;
+        initMonthInDevelopment(developmentMonths);
     }
     
     private void initDevelopmentPeriods(int periods) {
@@ -62,15 +50,7 @@ public class TriangleGeometry extends VectorGeometry {
     private void initMonthInDevelopment(int month) {
         if(month  < 1)
             throw new IllegalArgumentException(String.format(ERR_DEV_MONTH, month));
-        this.monthInDevelopment = month;
-    }
-
-    public Date getDevelopmentStart() {
-        return developmentStart;
-    }
-
-    public void setDevelopmentStart(Date startDate) {
-        initStartDate(startDate);
+        this.developmentMonths = month;
     }
 
     public int getDevelopmentPeriods() {
@@ -82,32 +62,33 @@ public class TriangleGeometry extends VectorGeometry {
     }
 
     public int getMonthInDevelopment() {
-        return monthInDevelopment;
+        return developmentMonths;
     }
 
     public void setMonthInDevelopment(int month) {
         initMonthInDevelopment(month);
     }
     
+    @Override
     public TriangleGeometry copy() {
-        Date aStart = super.getAccidentStart();
+        Date aStart = super.getStartDate();
         int aPeriods = super.getAccidentPeriods();
-        int aMonth = super.getMonthInAccident();
-        return new TriangleGeometry(aStart, aPeriods, aMonth, developmentStart, developmentPeriods, monthInDevelopment);
+        int aMonth = super.getAccidentMonths();
+        return new TriangleGeometry(aStart, aPeriods, aMonth, developmentPeriods, developmentMonths);
     }
     
     public boolean isEqualGeometry(TriangleGeometry g) {
         if(!super.isEqualGeometry(g))
             return false;
-        return developmentStart.equals(g.developmentStart) &&
-               developmentPeriods == g.developmentPeriods &&
-               monthInDevelopment == g.monthInDevelopment;
+        return developmentPeriods == g.developmentPeriods &&
+               developmentMonths == g.developmentMonths;
     }
     
     @Override
     public String toString() {
-        return String.format("Geometry [%tF; %d; %d] / [%tF; %d; %d]",
-            getAccidentStart(), getAccidentPeriods(), getMonthInAccident(), 
-            developmentStart, developmentPeriods, monthInDevelopment);
+        return String.format("Geometry [%tF] [%d; %d] / [%d; %d]",
+            getStartDate(), 
+            getAccidentPeriods(), getAccidentMonths(), 
+            developmentPeriods, developmentMonths);
     }
 }

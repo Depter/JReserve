@@ -1,11 +1,11 @@
 package org.jreserve.smoothing;
 
-import org.jreserve.smoothing.core.Smoothing;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Session;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.SessionTask;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.util.SmoothingMethodRegistry;
 
 /**

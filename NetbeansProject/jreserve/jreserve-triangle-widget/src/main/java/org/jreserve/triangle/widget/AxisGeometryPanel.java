@@ -1,7 +1,6 @@
 package org.jreserve.triangle.widget;
 
 import java.awt.BorderLayout;
-import java.util.Date;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -19,7 +18,6 @@ import org.openide.util.Exceptions;
  */
 public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListener {
     
-    public final static String PROPERTY_FROM = "FROM DATE";
     public final static String PROPERTY_PERIODS = "PERIODS";
     public final static String PROPERTY_MONTHS = "MONTHS";
 
@@ -35,25 +33,8 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
     
     @Override
     public void setEnabled(boolean enabled) {
-        fromSpinner.setEnabled(enabled);
         periodSpinner.setEnabled(enabled);
         monthsSpinner.setEnabled(enabled);
-    }
-    
-    public void setFromDateEnabled(boolean enabled) {
-        fromSpinner.setEnabled(enabled);
-    }
-    
-    public Date getFromDate() {
-        return fromSpinner.getDate();
-    }
-    
-    public String getFromDateAsString() {
-        return fromSpinner.getText();
-    }
-    
-    public void setFromDate(Date date) {
-        fromSpinner.setValue(date);
     }
     
     public void setPeriodsEnabled(boolean enabled) {
@@ -83,9 +64,7 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
     @Override
     public void stateChanged(ChangeEvent e) {
         Object source = e.getSource();
-        if(fromSpinner == source) {
-            setProperty(PROPERTY_FROM, fromSpinner.getValue());
-        } else if(periodSpinner == source) {
+        if(periodSpinner == source) {
             setProperty(PROPERTY_PERIODS, periodSpinner.getValue());
         } else if(monthsSpinner == source) {
             setProperty(PROPERTY_MONTHS, monthsSpinner.getValue());
@@ -106,24 +85,14 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        fromLabel = new javax.swing.JLabel();
         toLabel = new javax.swing.JLabel();
         stepLabel = new javax.swing.JLabel();
-        fromSpinner = new org.jreserve.resources.textfieldfilters.DateSpinner();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
         periodSpinner = new javax.swing.JSpinner();
         monthsSpinner = new javax.swing.JSpinner();
 
+        setPreferredSize(new java.awt.Dimension(140, 41));
         setLayout(new java.awt.GridBagLayout());
-
-        fromLabel.setText(org.openide.util.NbBundle.getMessage(AxisGeometryPanel.class, "LBL.AxisGeometryPanel.Begin")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        add(fromLabel, gridBagConstraints);
 
         toLabel.setText(org.openide.util.NbBundle.getMessage(AxisGeometryPanel.class, "LBL.AxisGeometryPanel.Periods")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -142,16 +111,6 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         add(stepLabel, gridBagConstraints);
-
-        fromSpinner.addChangeListener(this);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        add(fromSpinner, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -165,6 +124,7 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
         periodSpinner.setModel(periodModel);
         periodSpinner.setEditor(new IntegerEditor(periodSpinner));
         periodSpinner.addChangeListener(this);
+        periodSpinner.setPreferredSize(new java.awt.Dimension(40, 18));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -177,6 +137,7 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
         monthsSpinner.setModel(monthModel);
         monthsSpinner.setEditor(new IntegerEditor(monthsSpinner));
         monthsSpinner.addChangeListener(this);
+        monthsSpinner.setPreferredSize(new java.awt.Dimension(40, 18));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -187,8 +148,6 @@ public class AxisGeometryPanel extends javax.swing.JPanel implements ChangeListe
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
-    private javax.swing.JLabel fromLabel;
-    private org.jreserve.resources.textfieldfilters.DateSpinner fromSpinner;
     private javax.swing.JSpinner monthsSpinner;
     private javax.swing.JSpinner periodSpinner;
     private javax.swing.JLabel stepLabel;

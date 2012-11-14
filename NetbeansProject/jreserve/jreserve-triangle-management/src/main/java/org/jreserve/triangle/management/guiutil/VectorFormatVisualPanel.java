@@ -38,11 +38,11 @@ public class VectorFormatVisualPanel extends TriangleFormatVisualPanel {
     }
 
     private int getDevelopmentEnd() {
-        Date start = geometry.getAccidentStart();
+        Date start = geometry.getStartDate();
         if(start == null)
             return -1;
         int periods = geometry.getAccidentPeriods();
-        int months = geometry.getMonthInAccident();
+        int months = geometry.getAccidentMonths();
         return getYearMonth(start) + periods * months;
     }
 
@@ -54,7 +54,7 @@ public class VectorFormatVisualPanel extends TriangleFormatVisualPanel {
     }
     
     private int getDevelopmentStart() {
-        Date start = geometry.getDevelopmentStart();
+        Date start = geometry.getStartDate();
         if(start == null)
             return -1;
         return getYearMonth(start);

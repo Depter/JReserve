@@ -14,9 +14,9 @@ import org.jreserve.triangle.entities.TriangleGeometry;
 public class ModelUtil {
     
     public static List<Date> accidentBounds(TriangleGeometry geometry) {
-        Date start = geometry.getAccidentStart();
+        Date start = geometry.getStartDate();
         int periods = geometry.getAccidentPeriods();
-        int months = geometry.getMonthInAccident();
+        int months = geometry.getAccidentMonths();
         return createBounds(start, periods, months);
     }
     
@@ -34,7 +34,7 @@ public class ModelUtil {
     }
 
     public static List<Date> developmentBounds(TriangleGeometry geometry) {
-        Date start = geometry.getDevelopmentStart();
+        Date start = geometry.getStartDate();
         int periods = geometry.getDevelopmentPeriods();
         int months = geometry.getMonthInDevelopment();
         return createBounds(start, periods, months);

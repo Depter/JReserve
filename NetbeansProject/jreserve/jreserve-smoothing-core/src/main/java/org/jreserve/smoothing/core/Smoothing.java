@@ -11,6 +11,8 @@ import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.IdGenerator;
 import org.jreserve.persistence.PersistentObject;
+import org.jreserve.rutil.RCode;
+import org.jreserve.rutil.RFunction;
 
 /**
  *
@@ -89,6 +91,10 @@ public abstract class Smoothing implements PersistentObject {
     
     public abstract double[] smooth(double[] input);
 
+    public abstract String getRSmoothing(String triangle, String x, String y, String used);
+    
+    public abstract RFunction getRFunction();
+    
     @Override
     public boolean equals(Object o) {
         if(this == o)

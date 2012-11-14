@@ -31,6 +31,7 @@ import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.util.TriangleTable;
 import org.openide.actions.CopyAction;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -53,11 +54,7 @@ import org.openide.util.lookup.ProxyLookup;
 public class TriangleWidget extends JPanel implements Serializable {
     
     private final static Dimension INTERNAL_SPACIN = new Dimension(0, 0);
-    private final static String DEVELOPMENT_PERIOD_STRUCTURE_ACTION = "DEVELOPMENT_PERIOD_STRUCTURE_ACTION";
-    private final static String DEVELOPMENT_PERIOD_STRUCTURE_ICON = "resources/triangle.png";
-    private final static String CALENDAR_PERIOD_STRUCTURE_ACTION = "CALENDAR_PERIOD_STRUCTURE_ACTION";
-    private final static String CALENDAR_PERIOD_STRUCTURE_ICON = "resources/calendar_triangle.png";
-
+    
     private final static String CUMMULATED_ACTION = "CUMMULATED_ACTION";
     private final static String CUMMULATED_ICON = "resources/arrow_up.png";
     private final static String NOT_CUMMULATED_ACTION = "NOT_CUMMLATED_ACTION";
@@ -85,8 +82,8 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     private void initComponent() {
         super.setLayout(new BorderLayout());
-        super.add(getToolBar(), BorderLayout.NORTH);
         super.add(getTable(), BorderLayout.CENTER);
+        super.add(getToolBar(), BorderLayout.NORTH);
         super.setBorder(BorderFactory.createLoweredBevelBorder());
     }
     
@@ -108,13 +105,7 @@ public class TriangleWidget extends JPanel implements Serializable {
         toolBar.addSeparator();
         
         ButtonGroup group = new ButtonGroup();
-        toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
-        toolBar.add(createDevelopmentPeriodButton(group));
-        
-        toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
-        toolBar.add(createCalendarPeriodButton(group));
-        
-        toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
+        createViewButtons(group);
         toolBar.addSeparator();
         
         group = new ButtonGroup();
@@ -136,25 +127,29 @@ public class TriangleWidget extends JPanel implements Serializable {
         return toolBar;
     }
     
-    private JToggleButton createDevelopmentPeriodButton(ButtonGroup group) {
-        Icon i = ImageUtilities.loadImageIcon(DEVELOPMENT_PERIOD_STRUCTURE_ICON, false);
-        JToggleButton button = new ToolBarToggleButton(i);
-        button.setActionCommand(DEVELOPMENT_PERIOD_STRUCTURE_ACTION);
-        button.addActionListener(actionHandler);
-        button.setSelected(true);
-        button.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_Development());
-        group.add(button);
-        return button;
+    private void createViewButtons(ButtonGroup group) {
+        TriangleModel[] models = getRegisteredModels();
+        for(int m=0, size=models.length; m<size; m++) {
+            createTriangleModelButton(group, models[m], m==0);
+            toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
+        }
+        if(models.length > 0)
+        table.setTriangleModel(models[0]);
     }
     
-    private JToggleButton createCalendarPeriodButton(ButtonGroup group) {
-        Icon i = ImageUtilities.loadImageIcon(CALENDAR_PERIOD_STRUCTURE_ICON, false);
-        JToggleButton button = new ToolBarToggleButton(i);
-        button.setActionCommand(CALENDAR_PERIOD_STRUCTURE_ACTION);
-        button.addActionListener(actionHandler);
-        button.setSelected(false);
-        button.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_Calendar());
+    private TriangleModel[] getRegisteredModels() {
+        return Lookup.getDefault()
+              .lookupAll(TriangleModel.class)
+              .toArray(new TriangleModel[0]);
+    }
+    
+    private JToggleButton createTriangleModelButton(ButtonGroup group, TriangleModel model, boolean selected) {
+        JToggleButton button = new JToggleButton(new ImageIcon(model.getIcon()));
+        button.setToolTipText(model.getToolTipName());
+        toolBar.add(button);
         group.add(button);
+        button.setSelected(selected);
+        button.addActionListener(new ModelSelectAction(model));
         return button;
     }
     
@@ -358,10 +353,6 @@ public class TriangleWidget extends JPanel implements Serializable {
                 table.setCummulated(true);
             } else if(command.equals(NOT_CUMMULATED_ACTION)) {
                 table.setCummulated(false);
-            } else if(command.equals(CALENDAR_PERIOD_STRUCTURE_ACTION)) {
-                table.setModelType(org.jreserve.triangle.widget.model.TriangleModel.ModelType.CALENDAR);
-            } else if(command.equals(DEVELOPMENT_PERIOD_STRUCTURE_ACTION)) {
-                table.setModelType(org.jreserve.triangle.widget.model.TriangleModel.ModelType.DEVELOPMENT);
             }
         }
     }
@@ -388,6 +379,20 @@ public class TriangleWidget extends JPanel implements Serializable {
             StringSelection text = new StringSelection(str);
             Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
             cb.setContents(text, null);
+        }
+    }
+    
+    private class ModelSelectAction implements ActionListener {
+        
+        private TriangleModel model;
+
+        ModelSelectAction(TriangleModel model) {
+            this.model = model;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            table.setTriangleModel(model);
         }
     }
     

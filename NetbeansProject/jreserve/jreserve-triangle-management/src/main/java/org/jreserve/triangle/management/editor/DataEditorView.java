@@ -95,13 +95,12 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     }
     
     private void setAccidentGeometry(TriangleGeometry geometry) {
-        geometrySetting.setAccidentStartDate(geometry.getAccidentStart());
+        geometrySetting.setStartDate(geometry.getStartDate());
         geometrySetting.setAccidentPeriodCount(geometry.getAccidentPeriods());
-        geometrySetting.setAccidentMonthsPerStep(geometry.getMonthInAccident());
+        geometrySetting.setAccidentMonthsPerStep(geometry.getAccidentMonths());
     }
     
     private void setDevelopmentGeometry(TriangleGeometry geometry) {
-        geometrySetting.setDevelopmentStartDate(geometry.getDevelopmentStart());
         geometrySetting.setDevelopmentPeriodCount(geometry.getDevelopmentPeriods());
         geometrySetting.setDevelopmentMonthsPerStep(geometry.getMonthInDevelopment());
     }

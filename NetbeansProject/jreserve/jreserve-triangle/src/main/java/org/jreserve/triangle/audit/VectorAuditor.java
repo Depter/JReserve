@@ -99,7 +99,7 @@ public class VectorAuditor extends AbstractAuditor<Vector>{
     
     private String toString(VectorGeometry g) {
         return String.format(GEOMETRY_FORMAT, 
-              g.getAccidentStart(), g.getAccidentPeriods(), g.getMonthInAccident());
+              g.getStartDate(), g.getAccidentPeriods(), g.getAccidentMonths());
     }
     
     private void appendChange(StringBuilder sb, String change) {

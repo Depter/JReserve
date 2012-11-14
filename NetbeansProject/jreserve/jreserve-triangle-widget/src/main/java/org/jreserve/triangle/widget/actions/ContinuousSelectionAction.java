@@ -2,6 +2,7 @@ package org.jreserve.triangle.widget.actions;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.openide.util.Lookup;
 
@@ -38,10 +39,10 @@ public abstract class ContinuousSelectionAction extends AbstractCellPopUpAction 
         if(cells.size() < 2)
             return false;
         Collections.sort(cells, COMPARATOR);
-        return checkSameRow() || checkSameColumn();
+        return checkSameAccident() || checkSameDevelopment() || checkSameCalendarPeriod();
     }
     
-    private boolean checkSameRow() {
+    private boolean checkSameAccident() {
         int row = -1;
         int column = -1;
         for(TriangleCell cell : cells) {
@@ -58,7 +59,7 @@ public abstract class ContinuousSelectionAction extends AbstractCellPopUpAction 
         return true;
     }
     
-    private boolean checkSameColumn() {
+    private boolean checkSameDevelopment() {
         int row = -1;
         int column = -1;
         for(TriangleCell cell : cells) {
@@ -75,5 +76,21 @@ public abstract class ContinuousSelectionAction extends AbstractCellPopUpAction 
         return true;
     }
     
+    private boolean checkSameCalendarPeriod() {
+        int row = -1;
+        int column = -1;
+        for(TriangleCell cell : cells) {
+            int r = cell.getRow();
+            int c = cell.getColumn();
+            if(column == -1) {
+                row = r;
+                column = c;
+            } else {
+                if(c!=--column || r!=++row);
+                    return false;
+            }
+        }
+        return true;
+    }
     
 }
