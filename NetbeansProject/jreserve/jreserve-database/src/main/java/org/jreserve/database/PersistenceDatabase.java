@@ -13,7 +13,7 @@ public interface PersistenceDatabase {
     
     /**
      * Returns the name of the jdbc-driver for this database.
-     * Can not be null;
+     * Can not be null.
      */
     public String getDriverClass();
     
@@ -22,7 +22,7 @@ public interface PersistenceDatabase {
      * username and password here. The user will get a login dialog
      * when needed.
      */
-    public abstract String getConnectionUrl();
+    public String getConnectionUrl();
     
     /**
      * Returns the sql dialect for hibernate to use. A <i>null</i>
@@ -30,7 +30,7 @@ public interface PersistenceDatabase {
      * 
      * @see <a href="http://docs.jboss.org/hibernate/orm/3.3/reference/en/html/session-configuration.html#configuration-optional-dialects">Hibernate documentation</a>
      */
-    public abstract String getDialect();
+    public String getDialect();
     
     /**
      * Returns the user name, which is the default value in the login
