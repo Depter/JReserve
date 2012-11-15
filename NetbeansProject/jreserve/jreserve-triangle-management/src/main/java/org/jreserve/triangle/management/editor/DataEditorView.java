@@ -48,8 +48,8 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         this.element = element;
         userChanging = false;
         initComponents();
-        initGeometry();
         initLayers();
+        initGeometry();
         addListeners();
         userChanging = true;
         startLoader();
@@ -74,6 +74,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         panel.add(new Filler(min, min, max), gc);
 
         triangle = new TriangleWidget();
+        triangle.setManualEvents(true);
         triangle.setPreferredSize(new java.awt.Dimension(400, 200));
         triangle.setTriangleGeometry(getElementGeometry());
         gc.gridx = 0; gc.gridy = 1;
@@ -151,7 +152,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     protected abstract List<Smoothing> getSmoothings();
     
     private class LoaderCallback implements DataLoader.Callback<T> {
-
+        
         @Override
         public void finnished(DataLoader<T> loader) {
             try {
@@ -161,6 +162,9 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
                 triangle.setComments(getComments());
             } catch (RuntimeException ex) {
                 Exceptions.printStackTrace(ex);
+            } finally {
+                triangle.setManualEvents(false);
+                triangle.fireTriangleStructureChanged();
             }
         }
     

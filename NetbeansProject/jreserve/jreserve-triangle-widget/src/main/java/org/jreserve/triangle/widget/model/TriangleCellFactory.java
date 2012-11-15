@@ -1,4 +1,4 @@
-package org.jreserve.triangle.widget.model2;
+package org.jreserve.triangle.widget.model;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,8 +59,8 @@ class TriangleCellFactory {
         TriangleCell cell = null;
         
         while(dBegin.before(developmentEnd)) {
-            Date dEnd = util.getDevelopmentEnd(geometry, row, dev++);
-            cell = new TriangleCell(cell, row, dev, aBegin, aEnd, dBegin, dEnd);
+            Date dEnd = util.getDevelopmentEnd(geometry, row, dev);
+            cell = new TriangleCell(cell, row, dev++, aBegin, aEnd, dBegin, dEnd);
             cells.add(cell);
             dBegin = dEnd;
         }

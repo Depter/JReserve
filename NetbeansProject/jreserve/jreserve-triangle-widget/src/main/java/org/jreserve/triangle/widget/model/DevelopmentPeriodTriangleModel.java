@@ -1,4 +1,4 @@
-package org.jreserve.triangle.widget.model2;
+package org.jreserve.triangle.widget.model;
 
 import java.awt.Image;
 import java.util.Date;
@@ -9,6 +9,7 @@ import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.util.GeometryUtil;
 import org.jreserve.triangle.widget.TriangleModel;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -16,11 +17,14 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "LBL.DevelopmentPeriodTriangleModel.ToolTip=Development periods"
+})
 @ServiceProvider(service=TriangleModel.class, position=100)
 public class DevelopmentPeriodTriangleModel extends AbstractTriangleModel {
 
     private final static Image IMG = ImageUtilities.loadImage("resources/triangle.png", false);
-    private final static String TOOL_TIP = "Development periods";
+    private final static String TOOL_TIP = Bundle.LBL_DevelopmentPeriodTriangleModel_ToolTip();
     
     private DateRenderer renderer = new DateRenderer();
     private Map<Integer, String> dateCache = new HashMap<Integer, String>();

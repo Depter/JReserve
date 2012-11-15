@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RFunction;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;

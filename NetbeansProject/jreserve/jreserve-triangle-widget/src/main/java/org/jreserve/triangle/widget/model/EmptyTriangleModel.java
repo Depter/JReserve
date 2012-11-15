@@ -1,4 +1,4 @@
-package org.jreserve.triangle.widget.model2;
+package org.jreserve.triangle.widget.model;
 
 import org.jreserve.triangle.widget.TriangleModel;
 import java.awt.Image;

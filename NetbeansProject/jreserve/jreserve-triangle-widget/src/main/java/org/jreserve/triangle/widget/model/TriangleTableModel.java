@@ -1,12 +1,12 @@
-package org.jreserve.triangle.widget.model2;
+package org.jreserve.triangle.widget.model;
 
-import org.jreserve.triangle.widget.TriangleModel;
 import java.util.Date;
 import java.util.List;
 import javax.swing.table.TableModel;
 import org.jreserve.triangle.entities.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.TriangleCell;
+import org.jreserve.triangle.widget.TriangleModel;
 import org.jreserve.triangle.widget.TriangleWidgetListener;
 import org.jreserve.triangle.widget.WidgetData;
 
@@ -59,28 +59,23 @@ public interface TriangleTableModel extends TableModel {
     
     public int getEditableLayer();
     
+    public void copyStateFrom(TriangleTableModel model);
+    
     public void addTriangleWidgetListener(TriangleWidgetListener listener);
     
     public void removeTriangleWidgetListener(TriangleWidgetListener listener);
     
     public List<TriangleWidgetListener> getTriangleWidgetListeners();
     
-    public void copyStateFrom(TriangleTableModel model);
+    public void setManualEvents(boolean manualEvents);
     
-//    public static enum ModelType {
-//        CALENDAR {
-//            @Override
-//            public TriangleModel createModel() {
-//                return new CalendarTriangleModel();
-//            }
-//        },
-//        DEVELOPMENT {
-//            @Override
-//            public TriangleModel createModel() {
-//                return new DevelopmentTriangleModel();
-//            }
-//        };
-//        
-//        public abstract TriangleModel createModel();
-//    }
+    public boolean isManualEvents();
+    
+    public void fireTriangleStructureChanged();
+
+    public void fireEdited(TriangleCell cell, Double old, Double current);
+    
+    public void fireTriangleValuesChanged();
+    
+    public void fireCommentsChanged();
 }

@@ -1,9 +1,6 @@
 package org.jreserve.rutil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.rutil.util.FunctionRegistry;
@@ -15,15 +12,41 @@ import org.jreserve.rutil.util.FunctionRegistry;
  */
 public class RCode {
 
+    private final static Comparator<RFunction> FUNCTION_COMPARATOR = new Comparator<RFunction>(){
+        @Override
+        public int compare(RFunction o1, RFunction o2) {
+            if(o1 == null) return o2==null? 0 : 1;
+            if(o2 == null) return -1;
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
+    
+    private boolean manualEvents = false;
+    private boolean clearsWorkspace = true;
     private Set<String> libraries = new TreeSet<String>();
-    private Set<RFunction> functions = new TreeSet<RFunction>();
+    private Set<RFunction> functions = new TreeSet<RFunction>(FUNCTION_COMPARATOR);
     private StringBuilder source = new StringBuilder();
 
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
+    public RCode() {
+    }
+    
+    public RCode(boolean manualEvents) {
+        this.manualEvents = manualEvents;
+    }
+    
+    public boolean isManualEvents() {
+        return manualEvents;
+    }
+    
+    public void setManualEvents(boolean manualEvents) {
+        this.manualEvents = manualEvents;
+    }
+    
     public RCode addLibrary(String library) {
         this.libraries.add(library);
-        fireChangeEvent();
+        fireAutomaticChangeEvent();
         return this;
     }
     
@@ -32,7 +55,8 @@ public class RCode {
             this.libraries.addAll(function.getLibraryDependendencies());
             for(String name : function.getFunctionDependendencies())
                 addFunction(name);
-            fireChangeEvent();
+            functions.add(function);
+            fireAutomaticChangeEvent();
         }
         return this;
     }
@@ -45,7 +69,7 @@ public class RCode {
     
     public RCode addSource(String str) {
         source.append(str);
-        fireChangeEvent();
+        fireAutomaticChangeEvent();
         return this;
     }
     
@@ -53,8 +77,17 @@ public class RCode {
         this.functions.clear();
         this.libraries.clear();
         this.source.setLength(0);
-        fireChangeEvent();
+        fireAutomaticChangeEvent();
         return this;
+    }
+    
+    public boolean getClearsWorkspace() {
+        return clearsWorkspace;
+    }
+    
+    public void setClearsWorkspace(boolean clearsWorkspace) {
+        this.clearsWorkspace = clearsWorkspace;
+        fireAutomaticChangeEvent();
     }
     
     public String toRCode() {
@@ -62,6 +95,8 @@ public class RCode {
         appendLibraries(r);
         appendFunctions(r);
         appendCode(r);
+        if(clearsWorkspace)
+            r.insert(0, "rm(list=ls())\n\n");
         return r.toString();
     }
     
@@ -107,9 +142,15 @@ public class RCode {
         listeners.remove(listener);
     }
     
-    private void fireChangeEvent() {
+    private void fireAutomaticChangeEvent() {
+        if(!manualEvents)
+            fireChangeEvent();
+    }
+    
+    public void fireChangeEvent() {
         ChangeEvent evt = new ChangeEvent(this);
         for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
             listener.stateChanged(evt);
     }
+    
 }

@@ -78,15 +78,15 @@ public abstract class ContinuousSelectionAction extends AbstractCellPopUpAction 
     
     private boolean checkSameCalendarPeriod() {
         int row = -1;
-        int column = -1;
+        Date date = null;
         for(TriangleCell cell : cells) {
             int r = cell.getRow();
-            int c = cell.getColumn();
-            if(column == -1) {
+            Date d = cell.getDevelopmentBegin();
+            if(row == -1) {
                 row = r;
-                column = c;
+                date = d;
             } else {
-                if(c!=--column || r!=++row);
+                if(!date.equals(d) || r!=++row)
                     return false;
             }
         }

@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/smoothing/Bundle.proper
  ties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20121114
-OpenIDE-Module-Build-Version: 201211141728
+OpenIDE-Module-Implementation-Version: 1.0-20121115
+OpenIDE-Module-Build-Version: 201211151355
 OpenIDE-Module: org.jreserve.jreserve.smoothing.util
 OpenIDE-Module-Public-Packages: org.jreserve.smoothing.*, org.jreserve
  .smoothing.actions.*, org.jreserve.smoothing.visual.*
@@ -18,5 +18,5 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
  .jreserve.jreserve.persistence > 1.0, org.jreserve.jreserve.resources
   > 1.0, org.jreserve.jreserve.smoothing.core > 1.0, org.jreserve.jres
  erve.triangle.widget > 1.0, org.jreserve.jreserve.locale.settings > 1
- .0
+ .0, org.jreserve.jreserve.rutil > 1.0
 

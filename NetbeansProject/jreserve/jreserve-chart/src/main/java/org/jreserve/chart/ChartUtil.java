@@ -34,6 +34,7 @@ public class ChartUtil {
     
     private static NavigablePanel createNavigablePanel(String displayName, Image img, ChartPanel chart, JComponent content) {
         NavigablePanel panel = new NavigablePanel(displayName, img);
+        panel.setOpened(false);
         panel.setContent(content);
         panel.setBackground(BACKGROUND);
         panel.addUserTitleComponent(new NavigablePanelCopyButton(new ChartCopy(chart)));

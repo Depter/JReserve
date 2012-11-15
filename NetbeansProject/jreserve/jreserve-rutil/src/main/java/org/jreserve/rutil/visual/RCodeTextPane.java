@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.swing.JTextPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
@@ -55,7 +53,8 @@ public class RCodeTextPane extends JTextPane implements ChangeListener {
         
         //STRING,
         Style string = document.addStyle("string", base);
-        StyleConstants.setForeground(string, Color.ORANGE);
+        StyleConstants.setForeground(string, new Color(206, 123, 0));
+        StyleConstants.setBold(string, true);
         styles.put(RTokenType.STRING, string);
         
         //DOUBLE_OPERATOR, OPERATOR
@@ -67,13 +66,13 @@ public class RCodeTextPane extends JTextPane implements ChangeListener {
         //SYMBOL,
         Style symbol = document.addStyle("symbol", base);
         StyleConstants.setForeground(symbol, Color.BLACK);
-        StyleConstants.setBold(symbol, true);
+        //StyleConstants.setBold(symbol, true);
         styles.put(RTokenType.SYMBOL, symbol);
         
         //NUMBER
         Style number = document.addStyle("number", base);
         StyleConstants.setForeground(number, new Color(00, 96, 00));
-        StyleConstants.setBold(number, true);
+        //StyleConstants.setBold(number, true);
         styles.put(RTokenType.NUMBER, number);
     }
 

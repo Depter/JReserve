@@ -18,8 +18,8 @@ import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleModel;
 import org.jreserve.triangle.widget.TriangleWidgetListener;
 import org.jreserve.triangle.widget.WidgetData;
-import org.jreserve.triangle.widget.model2.AbstractTriangleTableModel;
-import org.jreserve.triangle.widget.model2.TriangleTableModel;
+import org.jreserve.triangle.widget.model.AbstractTriangleTableModel;
+import org.jreserve.triangle.widget.model.TriangleTableModel;
 import org.openide.util.Lookup;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.AbstractLookup;
@@ -116,6 +116,30 @@ public class TriangleTable extends JTable implements Lookup.Provider {
     
     public void removeTriangleWidgetListener(TriangleWidgetListener listener) {
         model.removeTriangleWidgetListener(listener);
+    }
+    
+    public void setManualEvents(boolean manualEvents) {
+        model.setManualEvents(manualEvents);
+    }
+    
+    public boolean isManualEvents() {
+        return model.isManualEvents();
+    }
+    
+    public void fireTriangleStructureChanged() {
+        model.fireTriangleStructureChanged();
+    }
+
+    public void fireEdited(TriangleCell cell, Double old, Double current) {
+        model.fireEdited(cell, old, current);
+    }
+    
+    public void fireTriangleValuesChanged() {
+        model.fireTriangleValuesChanged();
+    }
+    
+    public void fireCommentsChanged() {
+        model.fireCommentsChanged();
     }
     
     public void addValueLayer(List<WidgetData<Double>> datas) {

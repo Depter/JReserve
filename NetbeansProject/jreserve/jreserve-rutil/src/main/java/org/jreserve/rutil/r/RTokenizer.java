@@ -80,7 +80,7 @@ public class RTokenizer {
     private Token readString() {
         int count = 0;
         while(position < size && count < 2) {
-            char c = txt[position];
+            char c = txt[position++];
             str.append(c);
             if(c == '"') 
                 count++;

@@ -203,12 +203,40 @@ public class TriangleWidget extends JPanel implements Serializable {
         return toolBar.isVisible();
     }
     
+    public int getVisibleDigits() {
+        return spinner.getIntValue();
+    }
+    
     public void addTriangleWidgetListener(TriangleWidgetListener listener) {
         table.addTriangleWidgetListener(listener);
     }
     
     public void removeTriangleWidgetListener(TriangleWidgetListener listener) {
         table.removeTriangleWidgetListener(listener);
+    }
+    
+    public void setManualEvents(boolean manualEvents) {
+        table.setManualEvents(manualEvents);
+    }
+    
+    public boolean isManualEvents() {
+        return table.isManualEvents();
+    }
+    
+    public void fireTriangleStructureChanged() {
+        table.fireTriangleStructureChanged();
+    }
+
+    public void fireEdited(TriangleCell cell, Double old, Double current) {
+        table.fireEdited(cell, old, current);
+    }
+    
+    public void fireTriangleValuesChanged() {
+        table.fireTriangleValuesChanged();
+    }
+    
+    public void fireCommentsChanged() {
+        table.fireCommentsChanged();
     }
     
     public void setPopUpActionPath(String path) {

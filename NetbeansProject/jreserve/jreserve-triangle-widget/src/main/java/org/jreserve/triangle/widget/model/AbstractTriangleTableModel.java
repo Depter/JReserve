@@ -1,4 +1,4 @@
-package org.jreserve.triangle.widget.model2;
+package org.jreserve.triangle.widget.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +16,7 @@ import org.jreserve.triangle.widget.*;
  */
 public class AbstractTriangleTableModel extends AbstractTableModel implements TriangleTableModel {
 
+    private boolean manualEvents = false;
     private TriangleGeometry geometry;
     private TriangleModel triangleModel = EmptyTriangleModel.EMPTY;
     
@@ -27,6 +28,16 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
     private boolean cummulated = false;
     
     private List<TriangleWidgetListener> listeners = new ArrayList<TriangleWidgetListener>();
+    
+    @Override
+    public void setManualEvents(boolean manualEvents) {
+        this.manualEvents = manualEvents;
+    }
+    
+    @Override
+    public boolean isManualEvents() {
+        return manualEvents;
+    }
     
     @Override
     public void setTriangleModel(TriangleModel model) {
@@ -47,7 +58,7 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
         this.triangleModel.setTriangleGeometry(geometry);
         resetCells();
         fireTableStructureChanged();
-        fireTriangleStructureChanged();
+        fireAutomaticTriangleStructureChanged();
     }
     
     private void resetCells() {
@@ -91,7 +102,7 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
                 TriangleCellUtil.deCummulate(cells);
         }
         fireTableDataChanged();
-        fireTriangleValuesChanged();
+        fireAutomaticTriangleValuesChanged();
     }
 
     @Override
@@ -109,7 +120,7 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
         checkDatas(datas);
         values.add(datas);
         refillCellValues();
-        fireTriangleValuesChanged();
+        fireAutomaticTriangleValuesChanged();
     }
     
     private void checkDatas(List datas) {
@@ -137,7 +148,7 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
         ensureLayerExists(layer-1);
         values.add(layer, datas);
         refillCellValues();
-        fireTriangleValuesChanged();
+        fireAutomaticTriangleValuesChanged();
     }
     
     private void ensureLayerExists(int layer) {
@@ -151,7 +162,7 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
         ensureLayerExists(layer);
         values.set(layer, datas);
         refillCellValues();
-        fireTriangleValuesChanged();
+        fireAutomaticTriangleValuesChanged();
     }
 
     @Override
@@ -168,7 +179,7 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
     public void removeValues(int layer) {
         values.remove(layer);
         refillCellValues();
-        fireTriangleValuesChanged();
+        fireAutomaticTriangleValuesChanged();
     }
     
     @Override
@@ -213,7 +224,7 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
         checkData(comment);
         comments.add(comment);
         refillCellComments();
-        fireCommentsChanged();
+        fireAutomaticCommentsChanged();
     }
 
     @Override
@@ -225,7 +236,7 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
     public void removeComment(WidgetData<Comment> comment) {
         comments.remove(comment);
         refillCellComments();
-        fireCommentsChanged();
+        fireAutomaticCommentsChanged();
     }
 
     @Override
@@ -328,7 +339,7 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
         TriangleCellUtil.setValue(cell, editableLayer, value);
         values.set(editableLayer, TriangleCellUtil.extractValues(cells, editableLayer));
         fireTableCellUpdated(editableLayer, editableLayer);
-        fireEdited(cell, old, value);
+        fireAutomaticEdited(cell, old, value);
     }
     
     
@@ -336,23 +347,47 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
     //Events
     //****************
     
-    private void fireTriangleStructureChanged() {
+    private void fireAutomaticTriangleStructureChanged() {
+        if(!manualEvents)
+            fireTriangleStructureChanged();
+    }
+    
+    @Override
+    public final void fireTriangleStructureChanged() {
         for(TriangleWidgetListener l : new ArrayList<TriangleWidgetListener>(listeners))
             l.structureChanged();
     }
 
-    private void fireEdited(TriangleCell cell, Double old, Double current) {
+    private void fireAutomaticEdited(TriangleCell cell, Double old, Double current) {
+        if(!manualEvents)
+            fireEdited(cell, old, current);
+    }
+
+    @Override
+    public final void fireEdited(TriangleCell cell, Double old, Double current) {
         for(TriangleWidgetListener l : new ArrayList<TriangleWidgetListener>(listeners))
             l.cellEdited(cell, editableLayer, old, current);
     }
     
-    private void fireTriangleValuesChanged() {
+    private void fireAutomaticTriangleValuesChanged() {
+        if(!manualEvents)
+            fireTriangleValuesChanged();
+    }
+    
+    @Override
+    public final void fireTriangleValuesChanged() {
         for(TriangleWidgetListener l : new ArrayList<TriangleWidgetListener>(listeners))
             l.valuesChanged();
     }
     
-    private void fireCommentsChanged() {
+    private void fireAutomaticCommentsChanged() {
+        if(!manualEvents)
+            fireCommentsChanged();
+    }    
+    
+    @Override
+    public final void fireCommentsChanged() {
         for(TriangleWidgetListener l : new ArrayList<TriangleWidgetListener>(listeners))
             l.commentsChanged();
-    }    
+    }
 }

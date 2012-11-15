@@ -14,7 +14,6 @@ import org.jreserve.triangle.management.editor.charts.AccidentPeriodsChartData;
 import org.jreserve.triangle.management.editor.charts.AccidentTotalChartData;
 import org.jreserve.triangle.management.editor.charts.CalendarYearTotalChartData;
 import org.jreserve.triangle.management.editor.charts.DevelopmentPeriodsChartData;
-import org.jreserve.triangle.management.editor.graphs.*;
 import org.openide.awt.UndoRedo;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
@@ -45,7 +44,7 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         components.add(CalendarYearTotalChartData.createPanel(ew.triangle));
         components.add(DevelopmentPeriodsChartData.createPanel(ew.triangle));
         components.add(DevelopmentPeriodsChartData.createScaledPanel(ew.triangle));
-        components.add(new RCodeView(element, ew.triangle));
+        components.add(RCodeView.getTriangleView(element, ew.triangle));
         return new Editor(components, element);
     }
     
@@ -55,6 +54,7 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         VectorDataEditorView ew = new VectorDataEditorView(element);
         components.add(ew);
         components.add(DevelopmentPeriodsChartData.createPanel(ew.triangle));
+        components.add(RCodeView.getVectorView(element, ew.triangle));
         return new Editor(components, element);
     }
     

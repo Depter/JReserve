@@ -1,6 +1,7 @@
 package org.jreserve.rutil;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -25,15 +26,22 @@ public class NavigableRCodePanel extends NavigablePanel {
     private final static Color BACKGROUND = new Color(186, 184, 135);
     private final static Color FOREGROUND = Color.BLACK;
     
-    private RCode rCode = new RCode();
+    private RCode rCode = new RCode(true);
     private RCodeTextPane textPane;
     
     public NavigableRCodePanel(String displayName) {
         super(displayName, IMG);
+        super.setOpened(false);
+
         textPane = new RCodeTextPane(rCode);
         textPane.setEditable(false);
         
         JScrollPane scroll = new JScrollPane(textPane);
+        
+        Dimension size = textPane.getPreferredSize();
+        size.height = 300;
+        scroll.setMaximumSize(size);
+        scroll.setPreferredSize(size);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         super.setContent(scroll);

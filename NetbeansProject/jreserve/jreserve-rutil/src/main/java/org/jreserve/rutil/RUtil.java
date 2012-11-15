@@ -48,5 +48,65 @@ public class RUtil {
         return sb.append(")").toString();
     }
     
+    public static String createVector(int[] values) {
+        return createVector(values, values.length);
+    }
+    
+    public static String createVector(int[] values, int length) {
+        StringBuilder sb = new StringBuilder("c(");
+        int size = values.length;
+        
+        for(int c=0; c<length; c++) {
+            if(c > 0) sb.append(", ");
+            if(c >= size) {
+                sb.append("NA");
+            } else {
+                sb.append(values[c]);
+            }
+        }
+        
+        return sb.append(")").toString();
+    }
+    
+    public static String createVector(boolean[] values) {
+        return createVector(values, values.length);
+    }
+    
+    public static String createVector(boolean[] values, int length) {
+        StringBuilder sb = new StringBuilder("c(");
+        int size = values.length;
+        
+        for(int c=0; c<length; c++) {
+            if(c > 0) sb.append(", ");
+            if(c >= size) {
+                sb.append("NA");
+            } else {
+                sb.append(values[c]? "TRUE" : "FALSE");
+            }
+        }
+        
+        return sb.append(")").toString();
+    }
+    
+    public static String createVector(String[] values) {
+        return createVector(values, values.length);
+    }
+    
+    public static String createVector(String[] values, int length) {
+        StringBuilder sb = new StringBuilder("c(");
+        int size = values.length;
+        
+        for(int c=0; c<length; c++) {
+            if(c > 0) sb.append(", ");
+            if(c >= size || values[c] == null) {
+                sb.append("NULL");
+            } else {
+                sb.append('"').append(values[c]).append('"');
+            }
+        }
+        
+        return sb.append(")").toString();
+    }
+    
     private RUtil() {}
 }
