@@ -5,10 +5,10 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.data.container.ProjectDataContainer;
 import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.management.TriangleProjectElement;
@@ -79,10 +79,10 @@ class TriangleFormatWizardPanel extends DataFormatWizardPanel implements WizardD
         });
     }
     
-    private ProjectDataContainer getContainer() {
+    private ProjectElementContainer getContainer() {
         ProjectElement element = triangleData.element;
-        Object v = element.getFirstChildValue(ProjectDataContainer.class);
-        return (ProjectDataContainer) v;
+        Object v = element.getFirstChildValue(ProjectElementContainer.class);
+        return (ProjectElementContainer) v;
     }
     
     private class TriangleCreator extends SessionTask.AbstractTask<Triangle> {

@@ -1,8 +1,8 @@
 package org.jreserve.triangle.entities;
 
-import org.jreserve.data.ProjectData;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.PersistentObject;
+import org.jreserve.project.util.ProjectData;
 
 /**
  *

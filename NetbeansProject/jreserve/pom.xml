@@ -81,7 +81,10 @@
         <module>jfreechart</module>
         <module>jreserve-chart</module>
         <module>jreserve-rutil</module>
-    </modules>
+        <module>jreserve-chainladder</module>
+        <module>jreserve-estimates</module>
+    <module>jreserve-projectelement-container</module>
+  </modules>
 
     <properties>
         <netbeans.version>RELEASE72</netbeans.version>

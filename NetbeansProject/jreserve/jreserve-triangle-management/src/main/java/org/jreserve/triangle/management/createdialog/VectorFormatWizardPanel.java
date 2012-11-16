@@ -6,10 +6,10 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.data.container.ProjectDataContainer;
 import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
@@ -82,10 +82,10 @@ class VectorFormatWizardPanel extends DataFormatWizardPanel implements WizardDes
         });
     }
     
-    private ProjectDataContainer getContainer() {
+    private ProjectElementContainer getContainer() {
         ProjectElement element = vectorData.element;
-        Object v = element.getFirstChildValue(ProjectDataContainer.class);
-        return (ProjectDataContainer) v;
+        Object v = element.getFirstChildValue(ProjectElementContainer.class);
+        return (ProjectElementContainer) v;
     }
     
     private class VectorCreator extends SessionTask.AbstractTask<Vector> {

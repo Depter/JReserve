@@ -3,9 +3,10 @@ package org.jreserve.triangle.management;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.data.container.ProjectDataContainer;
+import org.jreserve.data.container.ProjectDataContainerFactoy;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.project.system.management.Deletable;
 import org.jreserve.project.system.management.Deleter;
 import org.jreserve.project.system.management.ProjectSystemDeletionListener;
@@ -38,18 +39,19 @@ abstract class AbstractDataTypeDeletionListener implements ProjectSystemDeletion
     }
 
     private void addDeletables(List<Deletable> deletables, ProjectElement project, ProjectDataType dt) {
-        ProjectDataContainer container = (ProjectDataContainer) project.getFirstChildValue(ProjectDataContainer.class);
+        int position = ProjectDataContainerFactoy.POSITION;
+        ProjectElementContainer container = (ProjectElementContainer) project.getFirstChildValue(position, ProjectElementContainer.class);
         deletables.addAll(getDeletables(container, dt));
     }
     
-    private List<Deletable> getDeletables(ProjectDataContainer container, ProjectDataType dt) {
+    private List<Deletable> getDeletables(ProjectElementContainer container, ProjectDataType dt) {
         List<Deletable> deletables = new ArrayList<Deletable>();
         for(ProjectElement element : getProjectElements(container, dt))
             addDeletableIfExists(deletables, element);
         return deletables;
     }
     
-    protected abstract List<ProjectElement> getProjectElements(ProjectDataContainer container, ProjectDataType dt);
+    protected abstract List<ProjectElement> getProjectElements(ProjectElementContainer container, ProjectDataType dt);
     
     private void addDeletableIfExists(List<Deletable> deletables, ProjectElement element) {
         Deletable d = element.getLookup().lookup(Deletable.class);

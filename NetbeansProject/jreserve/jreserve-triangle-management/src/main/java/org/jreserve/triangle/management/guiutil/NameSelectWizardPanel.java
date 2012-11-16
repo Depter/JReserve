@@ -12,11 +12,12 @@ import org.jreserve.data.Data;
 import org.jreserve.data.DataCriteria;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.data.container.ProjectDataContainer;
+import org.jreserve.data.container.ProjectDataContainerFactoy;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -206,7 +207,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
     }
     
     private boolean checkNewName(String name) {
-        ProjectDataContainer container = getDataContainer();
+        ProjectElementContainer container = getDataContainer();
         if(container.containsName(name)) {
             showError(Bundle.MSG_NameSelectWizardPanel_NameExists());
             return false;
@@ -214,10 +215,10 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
         return true;
     }
     
-    private ProjectDataContainer getDataContainer() {
+    private ProjectElementContainer getDataContainer() {
         ProjectElement element = component.getProjectElement();
-        element = element.getFirstChild(ProjectDataContainer.class);
-        return (ProjectDataContainer) element.getValue();
+        element = element.getFirstChild(ProjectDataContainerFactoy.POSITION, ProjectElementContainer.class);
+        return (ProjectElementContainer) element.getValue();
     }
 
     private void fireChange() {

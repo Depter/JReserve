@@ -168,6 +168,19 @@ public class ProjectElement<T> implements Lookup.Provider {
     }
     
     /**
+     * Returns the list of child elements with the given position attribute. Modifying the
+     * returned list does not affect this element.
+     */
+    public List<ProjectElement> getChildren(int position) {
+        List<ProjectElement> result = new ArrayList<ProjectElement>();
+        for(ProjectElement child : children)
+            if(child.getPosition() == position)
+                result.add(child);
+        return result;
+    }
+    
+    
+    /**
      * Returns a list of children, that contain values from the
      * given class.
      */
@@ -176,6 +189,21 @@ public class ProjectElement<T> implements Lookup.Provider {
         for(ProjectElement child : children) {
             Class clazz = child.getValue().getClass();
             if(valueClass.isAssignableFrom(clazz))
+                result.add(child);
+        }
+        return result;
+    }
+    
+    
+    /**
+     * Returns a list of children, that contain values from the
+     * given class and has the given position attribute.
+     */
+    public <T> List<ProjectElement<T>> getChildren(int position, Class<T> valueClass) {
+        List<ProjectElement<T>> result = new ArrayList<ProjectElement<T>>();
+        for(ProjectElement child : children) {
+            Class clazz = child.getValue().getClass();
+            if(position==child.getPosition() && valueClass.isAssignableFrom(clazz))
                 result.add(child);
         }
         return result;
@@ -196,6 +224,20 @@ public class ProjectElement<T> implements Lookup.Provider {
     }
     
     /**
+     * Returns the values from the children of this element, that
+     * contain a value with the given class and has the given position attribute.
+     */
+    public <T> List<T> getChildValues(int position, Class<T> clazz) {
+        List result = new ArrayList();
+        for(ProjectElement child : children) {
+            Object childValue = child.getValue();
+            if(position==child.getPosition() && clazz.isAssignableFrom(childValue.getClass()))
+                result.add(childValue);
+        }
+        return result;
+    }
+    
+    /**
      * Returns the first ProjectElement, with the value of the given class. If
      * there is no such child, null is returned.
      */
@@ -209,6 +251,20 @@ public class ProjectElement<T> implements Lookup.Provider {
     }
     
     /**
+     * Returns the first ProjectElement, with the given position attribute and
+     * the value of the given class. If there is no such child, null is 
+     * returned.
+     */
+    public <T> ProjectElement<T> getFirstChild(int position, Class<T> clazz) {
+        for(ProjectElement child : children) {
+            Object childValue = child.getValue();
+            if(position==child.getPosition() && clazz.isAssignableFrom(childValue.getClass()))
+                return child;
+        }
+        return null;
+    }
+    
+    /**
      * Returns the value of the first ProjectElement, with the value of the 
      * given class. If there is no such child, null is returned.
      */
@@ -216,6 +272,20 @@ public class ProjectElement<T> implements Lookup.Provider {
         for(ProjectElement child : children) {
             Object childValue = child.getValue();
             if(clazz.isAssignableFrom(childValue.getClass()))
+                return (T) child.getValue();
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the value of the first ProjectElement, with the given position
+     * attribute and with the value of the given class. If there is no such 
+     * child, null is returned.
+     */
+    public <T> T getFirstChildValue(int position, Class<T> clazz) {
+        for(ProjectElement child : children) {
+            Object childValue = child.getValue();
+            if(position==child.getPosition() && clazz.isAssignableFrom(childValue.getClass()))
                 return (T) child.getValue();
         }
         return null;

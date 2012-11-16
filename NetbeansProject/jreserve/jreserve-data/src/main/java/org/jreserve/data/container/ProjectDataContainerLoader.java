@@ -1,11 +1,8 @@
 package org.jreserve.data.container;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.jreserve.project.entities.Project;
-import org.jreserve.project.system.AbstractProjectElementFactory;
-import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.ProjectElementFactory;
+import org.jreserve.project.system.container.AbstractProjectElementContainerLoader;
+import org.jreserve.project.system.container.ProjectDataElementContainerFactory;
 
 /**
  *
@@ -13,26 +10,10 @@ import org.jreserve.project.system.ProjectElementFactory;
  * @version 1.0
  */
 @ProjectElementFactory.Registration(500)
-public class ProjectDataContainerLoader extends AbstractProjectElementFactory<ProjectDataContainer> {
+public class ProjectDataContainerLoader extends AbstractProjectElementContainerLoader {
 
     @Override
-    public boolean isInterested(Object value) {
-        return (value instanceof Project);
+    protected ProjectDataElementContainerFactory getFactory() {
+        return ProjectDataContainerFactoy.getInstance();
     }
-
-    @Override
-    protected List<ProjectDataContainer> getChildValues(Object value) {
-        List<ProjectDataContainer> result = new ArrayList<ProjectDataContainer>(1);
-        Project project = (Project) value;
-        result.add(new ProjectDataContainer(project));
-        return result;
-    }
-    
-    @Override
-    protected ProjectElement createProjectElement(ProjectDataContainer container) {
-        ProjectElement element = new ProjectDataContainerElement(container);
-        container.setMyElement(element);
-        return element;
-    }
-
 }

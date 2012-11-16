@@ -4,7 +4,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.data.container.ProjectDataContainer;
+import org.jreserve.data.container.ProjectDataContainerFactoy;
 import org.jreserve.data.util.ProjectDataTypeFactory;
 import org.jreserve.data.util.ProjectDataTypeFactory.DataTypeDummy;
 import org.jreserve.persistence.SessionFactory;
@@ -16,6 +16,7 @@ import org.jreserve.project.factories.ClaimTypeFactory;
 import org.jreserve.project.factories.LoBFactory;
 import org.jreserve.project.factories.ProjectFactory;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.triangle.management.factories.TriangleFactory;
 import org.jreserve.triangle.management.factories.VectorFactory;
 import org.openide.util.NbBundle.Messages;
@@ -109,30 +110,29 @@ public class SampleBuilder {
     }
     
     private void createDatas(ProjectElement<Project> project) throws Exception {
-        ProjectElement<ProjectDataContainer> child = ProjectDataContainer.createContainer(project.getValue());
+        ProjectElement<ProjectElementContainer> child = ProjectDataContainerFactoy.getInstance().createProjectElement(project.getValue());
         project.addChild(child);
-        ProjectDataContainer container = child.getValue();
+        ProjectElementContainer container = child.getValue();
         for(ProjectDataType dt : (List<ProjectDataType>) project.getParent().getChildValues(ProjectDataType.class))
             createDataFor(container, dt);
     }
     
-    private void createDataFor(ProjectDataContainer container, ProjectDataType dt) throws Exception {
+    private void createDataFor(ProjectElementContainer container, ProjectDataType dt) throws Exception {
         if(dt.isTriangle())
             createTriangle(container, dt);
         else
             createVector(container, dt);
     }
     
-    private void createTriangle(ProjectDataContainer container, ProjectDataType dt) throws Exception {
+    private void createTriangle(ProjectElementContainer container, ProjectDataType dt) throws Exception {
         TriangleFactory factory = new TriangleFactory(container.getProject(), dt, dt.getName(), InputData.TRIANGLE_GEOMETRY);
         container.addElement(doWork(factory, null));
     }
     
-    private void createVector(ProjectDataContainer container, ProjectDataType dt) throws Exception {
+    private void createVector(ProjectElementContainer container, ProjectDataType dt) throws Exception {
         VectorFactory factory = new VectorFactory(container.getProject(), dt, dt.getName(), InputData.VECTOR_GEOMETRY);
         container.addElement(doWork(factory, null));
-    }
-    
+    }    
     
     private void createMaterialDamage(ProjectElement<LoB> parent) throws Exception {
         String msg = Bundle.MSG_SampleBuilder_Create_ClaimType(MATERIAL_DAMAGE);

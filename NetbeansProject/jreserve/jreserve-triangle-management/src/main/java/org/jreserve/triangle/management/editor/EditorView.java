@@ -1,9 +1,9 @@
 package org.jreserve.triangle.management.editor;
 
 import java.awt.Image;
-import org.jreserve.data.container.ProjectDataContainer;
 import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.project.system.visual.ProjectElementEditPanel;
 import org.openide.util.NbBundle.Messages;
 
@@ -54,7 +54,7 @@ class EditorView extends NavigablePanel {
         }
         
         private boolean isNewNameInContainer(String name) {
-            ProjectDataContainer container = getContainer();
+            ProjectElementContainer container = getContainer();
             if(container.containsName(name)) {
                 panel.showError(Bundle.MSG_EditorView_Validator_Name_Exists());
                 return false;
@@ -62,9 +62,9 @@ class EditorView extends NavigablePanel {
             return true;
         }
         
-        private ProjectDataContainer getContainer() {
+        private ProjectElementContainer getContainer() {
             ProjectElement parent = panel.getElement().getParent();
-            return (ProjectDataContainer) parent.getValue();
+            return (ProjectElementContainer) parent.getValue();
         }
 
         @Override

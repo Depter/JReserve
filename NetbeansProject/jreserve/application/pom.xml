@@ -99,6 +99,12 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-projectelement-container</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-project</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -184,6 +190,18 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-rutil</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-estimates</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-chainladder</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -143,6 +143,12 @@
             <artifactId>jreserve-locale-settings</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-projectelement-container</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

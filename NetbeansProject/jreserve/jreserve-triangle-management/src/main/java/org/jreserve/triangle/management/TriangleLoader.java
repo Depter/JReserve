@@ -4,12 +4,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.hibernate.Query;
-import org.jreserve.data.container.ProjectDataContainer;
+import org.jreserve.data.container.ProjectDataContainerFactoy;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.AbstractProjectElementFactory;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.ProjectElementFactory;
+import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.triangle.entities.Triangle;
 
 /**
@@ -34,12 +35,14 @@ public class TriangleLoader extends AbstractProjectElementFactory<Triangle> {
     
     @Override
     public boolean isInterested(Object value) {
-        return (value instanceof ProjectDataContainer);
+        if(value instanceof ProjectElementContainer)
+            return ((ProjectElementContainer)value).getPosition() == ProjectDataContainerFactoy.POSITION;
+        return false;
     }
 
     @Override
     protected List<Triangle> getChildValues(Object value) {
-        Project project = ((ProjectDataContainer) value).getProject();
+        Project project = ((ProjectElementContainer) value).getProject();
         List<Triangle> triangles = getTriangles(project);
         Collections.sort(triangles, COMPARATOR);
         return triangles;

@@ -190,6 +190,7 @@
                     <publicPackages>
                         <publicPackage>org.jreserve.project.entities</publicPackage>
                         <publicPackage>org.jreserve.project.factories</publicPackage>
+                        <publicPackage>org.jreserve.project.util</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

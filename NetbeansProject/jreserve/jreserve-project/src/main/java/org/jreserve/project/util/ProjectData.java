@@ -1,4 +1,4 @@
-package org.jreserve.data;
+package org.jreserve.project.util;
 
 import org.jreserve.project.entities.Project;
 
@@ -14,5 +14,4 @@ public interface ProjectData {
     public Project getProject();
     
     public int getPosition();
-    
 }
