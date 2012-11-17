@@ -1,5 +1,6 @@
 package org.jreserve.project.entities.project;
 
+import java.awt.Image;
 import javax.swing.SwingUtilities;
 import org.hibernate.Session;
 import org.jreserve.audit.AuditableProjectElement;
@@ -7,11 +8,13 @@ import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.editor.ProjectEditor;
+import org.jreserve.project.system.DefaultProjectNode;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
@@ -27,6 +30,9 @@ import org.openide.windows.TopComponent;
     "LOG.ProjectElement.description.change=Project description changed."
 })
 public class ProjectElement extends org.jreserve.project.system.ProjectElement<Project> {
+    
+    private final static Image PROJECT_ICON = ImageUtilities.loadImage("resources/project.png", false);
+    private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-ProjectNode";
 
     public ProjectElement(Project project) {
         super(project);
@@ -45,7 +51,7 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
     
     @Override
     public Node createNodeDelegate() {
-        return new ProjectNode(this);
+        return new DefaultProjectNode(this, PROJECT_ICON, ACTION_PATH);
     }
     
     @Override

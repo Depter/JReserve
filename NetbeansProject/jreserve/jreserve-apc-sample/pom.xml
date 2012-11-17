@@ -89,6 +89,12 @@
             <artifactId>jreserve-triangle-management</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-estimates</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

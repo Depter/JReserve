@@ -32,17 +32,49 @@ import org.openide.util.lookup.Lookups;
 })
 public class DefaultProjectNode extends AbstractNode implements PropertyChangeListener {
     
-    //private final static String ACTION_PATH = "Menu/Project";
+    private final static int MAX_TOOLTIP_LENGTH = 30;
     private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-DefaultNode";
     
     private Set<String> actionPathes = new TreeSet<String>();
+    private Image img;
     
     public DefaultProjectNode(ProjectElement element) {
         super(new ProjectElementChildren(element), Lookups.proxy(element));
+        initToolTip((String) element.getProperty(ProjectElement.DESCRIPTION_PROPERTY));
         element.addPropertyChangeListener(WeakListeners.propertyChange(this, element));
         Object name = element.getProperty(ProjectElement.NAME_PROPERTY);
         setDisplayName(name==null? "null" : name.toString());
         actionPathes.add(ACTION_PATH);
+    }
+    
+    public DefaultProjectNode(ProjectElement element, Image img) {
+        this(element);
+        this.img = img;
+    }
+    
+    public DefaultProjectNode(ProjectElement element, Image img, String... actionPathes) {
+        this(element, img);
+        for(String path : actionPathes)
+            addActionPath(path);
+    }
+    
+    protected void initToolTip(String description) {
+        String tooltip = getToolTippText(description);
+        super.setShortDescription(tooltip);
+    }
+    
+    private String getToolTippText(String description) {
+        String str = getFirstSentence(description);
+        if(str != null && str.length() > MAX_TOOLTIP_LENGTH)
+            str = str.substring(0, MAX_TOOLTIP_LENGTH-3) + "...";
+        return str;
+    }
+    
+    private String getFirstSentence(String description) {
+        if(description == null || description.trim().length()==0)
+            return null;
+        int index = description.indexOf('.');
+        return index < 0? description : description.substring(0, index+1);
     }
 
     protected void addActionPath(String path) {
@@ -52,6 +84,12 @@ public class DefaultProjectNode extends AbstractNode implements PropertyChangeLi
     protected void removeActionPath(String path) {
         actionPathes.remove(path);
     }
+    
+    @Override
+    public Image getIcon(int type) {
+        return img==null? super.getIcon(type) : img;
+    }
+    
     @Override
     public Image getOpenedIcon(int type) {
         return getIcon(type);
@@ -96,6 +134,8 @@ public class DefaultProjectNode extends AbstractNode implements PropertyChangeLi
     public void propertyChange(PropertyChangeEvent evt) {
         if(ProjectElement.NAME_PROPERTY.equalsIgnoreCase(evt.getPropertyName()))
             setDisplayName((String) evt.getNewValue());
+        else if(ProjectElement.DESCRIPTION_PROPERTY.equals(evt.getPropertyName()))
+            initToolTip((String) evt.getNewValue());
     }
     
     @Override

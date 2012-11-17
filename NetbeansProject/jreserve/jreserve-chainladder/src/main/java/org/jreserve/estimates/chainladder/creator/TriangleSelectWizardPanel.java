@@ -5,8 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.hibernate.Session;
+import org.jreserve.estimates.chainladder.ChainLadderEstimate;
+import org.jreserve.estimates.chainladder.ChainLadderEstimateProjectElement;
 import org.jreserve.estimates.visual.NameSelectWizardPanel;
+import org.jreserve.persistence.SessionTask;
+import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.triangle.entities.Triangle;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -105,6 +111,66 @@ public class TriangleSelectWizardPanel implements WizardDescriptor.ValidatingPan
 
     @Override
     public void validate() throws WizardValidationException {
+        try {
+            ChainLadderEstimate estimate = SessionTask.withOpenSession(createFactory());
+            addProjectElement(estimate);
+            clearProperties();    
+        } catch (Exception ex) {
+        }
         System.out.println("validate");
     }    
+    
+    private Factory createFactory() {
+        Project project = (Project) wizard.getProperty(NameSelectWizardPanel.PROP_PROJECT);
+        String name = (String) wizard.getProperty(NameSelectWizardPanel.PROP_NAME);
+        String description = (String) wizard.getProperty(NameSelectWizardPanel.PROP_DESCRIPTION);
+        return new Factory(project.getId(), name, description);
+    }
+    
+    private void addProjectElement(ChainLadderEstimate estimate) {
+        ChainLadderEstimateProjectElement element = new ChainLadderEstimateProjectElement(estimate);
+        getContainer().addElement(element);
+    }
+    
+    private ProjectElementContainer getContainer() {
+        ProjectElement element = (ProjectElement) wizard.getProperty(NameSelectWizardPanel.PROP_PROJECT_ELEMENT);
+        Object v = element.getFirstChildValue(ProjectElementContainer.class);
+        return (ProjectElementContainer) v;
+    }
+    
+    private void clearProperties() {
+        wizard.putProperty(NameSelectWizardPanel.PROP_NAME, null);
+        wizard.putProperty(NameSelectWizardPanel.PROP_DESCRIPTION, null);
+        wizard.putProperty(NameSelectWizardPanel.PROP_PROJECT, null);
+        wizard.putProperty(NameSelectWizardPanel.PROP_PROJECT_ELEMENT, null);
+        wizard.putProperty(PROP_TRIANGLE, null);
+    }
+    
+    private class Factory extends SessionTask.AbstractTask<ChainLadderEstimate> {
+
+        private final String projectId;
+        private final String name;
+        private final String description;
+        
+        Factory(String projectId, String name, String description) {
+            this.projectId = projectId;
+            this.name = name;
+            this.description = description;
+        }
+        
+        @Override
+        public void doWork(Session session) throws Exception {
+            Project project = (Project) session.get(Project.class, projectId);
+            ChainLadderEstimate estimate = createEstimate(project);
+            session.persist(estimate);
+            result = estimate;
+        }
+    
+        private ChainLadderEstimate createEstimate(Project project) {
+            ChainLadderEstimate estimate = new ChainLadderEstimate(project, name);
+            estimate.setDescription(description);
+            return estimate;
+        }
+    }
+    
 }

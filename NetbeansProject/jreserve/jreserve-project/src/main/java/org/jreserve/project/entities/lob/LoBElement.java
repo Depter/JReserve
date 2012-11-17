@@ -1,12 +1,15 @@
 package org.jreserve.project.entities.lob;
 
+import java.awt.Image;
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.entities.LoB;
+import org.jreserve.project.system.DefaultProjectNode;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -19,6 +22,8 @@ import org.openide.util.NbBundle.Messages;
     "MSG.LoBElement.nameexists=Name \"{0}\" is already exists!"
 })
 public class LoBElement extends ProjectElement<LoB> {
+
+    private final static Image LOB_ICON = ImageUtilities.loadImage("resources/lob.png", false);
     
     public LoBElement(LoB lob) {
         super(lob);
@@ -31,7 +36,7 @@ public class LoBElement extends ProjectElement<LoB> {
 
     @Override
     public Node createNodeDelegate() {
-        return new LoBNode(this);
+        return new DefaultProjectNode(this, LOB_ICON);
     }
     
     @Override

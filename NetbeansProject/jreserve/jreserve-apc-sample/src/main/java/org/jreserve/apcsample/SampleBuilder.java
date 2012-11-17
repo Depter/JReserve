@@ -7,6 +7,7 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.container.ProjectDataContainerFactoy;
 import org.jreserve.data.util.ProjectDataTypeFactory;
 import org.jreserve.data.util.ProjectDataTypeFactory.DataTypeDummy;
+import org.jreserve.estimates.EstimateContainerFactory;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.ClaimType;
@@ -107,6 +108,7 @@ public class SampleBuilder {
         ProjectElement<Project> project = doWork(new ProjectFactory(claimType.getValue(), PROJECT_NAME), null);
         claimType.addChild(project);
         createDatas(project);
+        createEstimates(project);
     }
     
     private void createDatas(ProjectElement<Project> project) throws Exception {
@@ -133,6 +135,12 @@ public class SampleBuilder {
         VectorFactory factory = new VectorFactory(container.getProject(), dt, dt.getName(), InputData.VECTOR_GEOMETRY);
         container.addElement(doWork(factory, null));
     }    
+    
+    private void createEstimates(ProjectElement<Project> project) throws Exception {
+        ProjectElement<ProjectElementContainer> child = EstimateContainerFactory.getInstance().createProjectElement(project.getValue());
+        project.addChild(child);
+        //ProjectElementContainer container = child.getValue();
+    }
     
     private void createMaterialDamage(ProjectElement<LoB> parent) throws Exception {
         String msg = Bundle.MSG_SampleBuilder_Create_ClaimType(MATERIAL_DAMAGE);

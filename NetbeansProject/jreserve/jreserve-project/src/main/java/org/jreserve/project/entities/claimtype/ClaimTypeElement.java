@@ -1,14 +1,17 @@
 package org.jreserve.project.entities.claimtype;
 
+import java.awt.Image;
 import org.hibernate.Session;
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
+import org.jreserve.project.system.DefaultProjectNode;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -16,6 +19,9 @@ import org.openide.nodes.Node;
  * @version 1.0
  */
 public class ClaimTypeElement extends ProjectElement<ClaimType> {
+
+    private final static Image CLAIM_TYPE_ICON = ImageUtilities.loadImage("resources/claim_type.png", false);
+    private final static String ACTION_PATH = "JReserve/Popup/ProjectRoot-ClaimTypeNode";
     
     public ClaimTypeElement(ClaimType claimType) {
         super(claimType);
@@ -32,7 +38,7 @@ public class ClaimTypeElement extends ProjectElement<ClaimType> {
     
     @Override
     public Node createNodeDelegate() {
-        return new ClaimTypeNode(this);
+        return new DefaultProjectNode(this, CLAIM_TYPE_ICON, ACTION_PATH);
     }
     
     @Override

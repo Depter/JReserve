@@ -1,7 +1,5 @@
 package org.jreserve.project.system.container;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;

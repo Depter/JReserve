@@ -24,7 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=TriangleModel.class, position=200)
 public class CalendarPeriodTriangleModel extends AbstractTriangleModel {
 
-    private final static Image IMG = ImageUtilities.loadImage("resources/calendar_triangle.png", false);
+    private final static Image IMG = ImageUtilities.loadImage("resources/calendar_periods.png", false);
     private final static String TOOL_TIP = Bundle.LBL_CalendarPeriodTriangleModel_ToolTip();
     
     private DateRenderer renderer = new DateRenderer();

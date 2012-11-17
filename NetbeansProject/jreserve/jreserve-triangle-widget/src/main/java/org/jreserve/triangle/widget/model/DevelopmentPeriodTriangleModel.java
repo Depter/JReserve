@@ -23,7 +23,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=TriangleModel.class, position=100)
 public class DevelopmentPeriodTriangleModel extends AbstractTriangleModel {
 
-    private final static Image IMG = ImageUtilities.loadImage("resources/triangle.png", false);
+    private final static Image IMG = ImageUtilities.loadImage("resources/development_periods.png", false);
     private final static String TOOL_TIP = Bundle.LBL_DevelopmentPeriodTriangleModel_ToolTip();
     
     private DateRenderer renderer = new DateRenderer();
