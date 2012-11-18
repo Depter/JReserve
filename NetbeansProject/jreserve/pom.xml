@@ -84,6 +84,8 @@
         <module>jreserve-chainladder</module>
         <module>jreserve-estimates</module>
     <module>jreserve-projectelement-container</module>
+    <module>jreserve-factors</module>
+    <module>jreserve-triangle-data</module>
   </modules>
 
     <properties>

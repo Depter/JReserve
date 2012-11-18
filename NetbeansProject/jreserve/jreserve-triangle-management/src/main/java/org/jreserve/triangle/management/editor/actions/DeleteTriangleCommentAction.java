@@ -2,8 +2,8 @@ package org.jreserve.triangle.management.editor.actions;
 
 import java.util.List;
 import javax.swing.Action;
-import org.jreserve.triangle.entities.Comment;
-import org.jreserve.triangle.entities.TriangleComment;
+import org.jreserve.triangle.data.Comment;
+import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.management.TriangleProjectElement;
 import org.jreserve.triangle.widget.actions.DeleteCommentsAction;
 import org.openide.util.Lookup;

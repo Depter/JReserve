@@ -8,11 +8,11 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.data.Data;
 import org.jreserve.data.DataCriteria;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.container.ProjectDataContainerFactoy;
+import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.entities.Project;
@@ -56,7 +56,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     private boolean isValid = false;
     
-    private volatile DataCriteria<ProjectDataType> criteria;
+    private volatile DataCriteria criteria;
     
     public NameSelectWizardPanel(boolean isTriangle) {
         this.isTrinagle = isTriangle;
@@ -240,11 +240,11 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
 
     @Override
     public void validate() throws WizardValidationException {
-        List<Data<ProjectDataType, Double>> datas = loadDatas();
+        List<ClaimValue> datas = loadDatas();
         setDatas(datas);
     }
     
-    private List<Data<ProjectDataType, Double>> loadDatas() throws WizardValidationException {
+    private List<ClaimValue> loadDatas() throws WizardValidationException {
         DataSource ds = new DataSource();
         try {
             ds.open();
@@ -268,7 +268,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.AsynchronousValid
         });
     }
     
-    private void setDatas(List<Data<ProjectDataType, Double>> datas) throws WizardValidationException {
+    private void setDatas(List<ClaimValue> datas) throws WizardValidationException {
         if(datas.isEmpty()) {
             stopProgressBar();
             String msg = Bundle.MSG_NameSelectWizardPanel_NoData();

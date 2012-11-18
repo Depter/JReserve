@@ -1,14 +1,13 @@
 package org.jreserve.data;
 
 import java.util.Date;
-import org.jreserve.persistence.PersistentObject;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class DataCriteria<T extends PersistentObject> {
+public class DataCriteria {
     
     public static enum EQT {
         GE,
@@ -18,7 +17,7 @@ public class DataCriteria<T extends PersistentObject> {
         LE
     };
     
-    private T owner = null;
+    private ProjectDataType owner = null;
     
     private Date fromAccidentDate;
     private EQT fromAccidentEqt = EQT.GE;
@@ -32,17 +31,17 @@ public class DataCriteria<T extends PersistentObject> {
     private Date toDevelopmentDate;
     private EQT toDevelopmentEqt = EQT.LE;
 
-    public DataCriteria(T owner) {
+    public DataCriteria(ProjectDataType owner) {
         if(owner == null)
             throw new NullPointerException("Owner can not be null!");
         this.owner = owner;
     }
 
-    public T getOwner() {
+    public ProjectDataType getOwner() {
         return owner;
     }
 
-    public DataCriteria setOwner(T owner) {
+    public DataCriteria setOwner(ProjectDataType owner) {
         if(owner == null)
             throw new NullPointerException("Owner can not be null!");
         this.owner = owner;

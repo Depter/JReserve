@@ -13,6 +13,8 @@ import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.Project;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.data.TriangleComment;
+import org.jreserve.triangle.data.TriangleCorrection;
 
 /**
  *
@@ -38,7 +40,13 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
     private TriangleGeometry geometry;
 
     @NotAudited
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="triangle", orphanRemoval=true, cascade=CascadeType.ALL)
+    @OneToMany(cascade= CascadeType.ALL)
+    @JoinTable(
+        name="TRIANGLE_CORRECTIONS",
+        schema="JRESERVE",
+        joinColumns=@JoinColumn(name="TRIANGLE_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF),
+        inverseJoinColumns=@JoinColumn(name="CORRECTION_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
+    )
     private Set<TriangleCorrection> corrections = new HashSet<TriangleCorrection>();
     
     @NotAudited
@@ -50,9 +58,15 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
         inverseJoinColumns=@JoinColumn(name="SMOOTHING_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
     )
     private Set<Smoothing> smoothings = new HashSet<Smoothing>();
-    
+
     @NotAudited
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="triangle", orphanRemoval=true, cascade=CascadeType.ALL)
+    @OneToMany(cascade= CascadeType.ALL)
+    @JoinTable(
+        name="TRIANGLE_COMMENTS",
+        schema="JRESERVE",
+        joinColumns=@JoinColumn(name="TRIANGLE_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF),
+        inverseJoinColumns=@JoinColumn(name="COMMENT_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
+    )
     private Set<TriangleComment> comments = new HashSet<TriangleComment>();
     
     protected Triangle() {
@@ -84,23 +98,9 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
     }
     
     public void setCorrections(List<TriangleCorrection> corrections) {
-        if(corrections != null)
-            checkMyCorrections(corrections);
         this.corrections.clear();
         if(corrections != null)
             this.corrections.addAll(corrections);
-    }
-    
-    private void checkMyCorrections(List<TriangleCorrection> corrections) {
-        for(TriangleCorrection correction : corrections)
-            if(!equals(correction.getTriangle()))
-                throwOtherTriangleException(correction);
-    }
-    
-    private void throwOtherTriangleException(TriangleCorrection correction) {
-        String msg = "Correction belongs to another triangle '%s' instead of '%s'!";
-        msg = String.format(msg, this, correction.getTriangle());
-        throw new IllegalArgumentException(msg);
     }
     
     public List<TriangleComment> getComments() {
@@ -108,28 +108,12 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
     }
     
     public void setComments(List<TriangleComment> comments) {
-        if(comments != null)
-            checkMyComments(comments);
         this.comments.clear();
         if(comments != null)
             this.comments.addAll(comments);
     }
     
-    private void checkMyComments(List<TriangleComment> comments) {
-        for(TriangleComment comment : comments)
-            if(!equals(comment.getTriangle()))
-                throwOtherTriangleException(comment);
-    }
-    
-    private void throwOtherTriangleException(TriangleComment comment) {
-        String msg = "Comment belongs to another triangle '%s' instead of '%s'!";
-        msg = String.format(msg, this, comment.getTriangle());
-        throw new IllegalArgumentException(msg);
-    }
-    
     public void addComment(TriangleComment comment) {
-        if(!equals(comment.getTriangle()))
-            throwOtherTriangleException(comment);
         this.comments.add(comment);
     }
     
@@ -138,28 +122,12 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
     }
     
     public void setSmoothings(List<Smoothing> smoothings) {
-        if(smoothings != null)
-            checkMySmoothings(smoothings);
         this.smoothings.clear();
         if(smoothings != null)
             this.smoothings.addAll(smoothings);
     }
     
-    private void checkMySmoothings(List<Smoothing> smoothings) {
-        for(Smoothing smoothing : smoothings)
-            if(!getId().equals(smoothing.getOwner()))
-                throwOtherTriangleException(smoothing);
-    }
-    
-    private void throwOtherTriangleException(Smoothing smoothing) {
-        String msg = "Smoothing belongs to another triangle '%s' instead of '%s'!";
-        msg = String.format(msg, this, smoothing.getOwner());
-        throw new IllegalArgumentException(msg);
-    }
-    
     public void addSmoothing(Smoothing smoothing) {
-        if(!getId().equals(smoothing.getOwner()))
-            throwOtherTriangleException(smoothing);
         this.smoothings.add(smoothing);
     }
     

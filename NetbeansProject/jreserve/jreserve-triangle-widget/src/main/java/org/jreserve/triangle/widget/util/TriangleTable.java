@@ -12,7 +12,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import org.jreserve.resources.ActionUtil;
-import org.jreserve.triangle.entities.Comment;
+import org.jreserve.triangle.data.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleModel;
@@ -161,6 +161,10 @@ public class TriangleTable extends JTable implements Lookup.Provider {
                 if(cell != null)
                     cells.add(cell);
         return cells;
+    }
+    
+    public TriangleCell[][] getCellArray() {
+        return model.getCells();
     }
     
     public TriangleCell getCellAt(Date accident, Date development) {

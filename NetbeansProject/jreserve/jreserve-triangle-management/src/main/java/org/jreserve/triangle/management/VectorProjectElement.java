@@ -10,9 +10,9 @@ import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.data.TriangleComment;
+import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.Vector;
-import org.jreserve.triangle.entities.VectorComment;
-import org.jreserve.triangle.entities.VectorCorrection;
 import org.jreserve.triangle.entities.VectorGeometry;
 import org.jreserve.triangle.management.editor.Editor;
 import org.openide.nodes.Node;
@@ -86,9 +86,9 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         else if(GEOMETRY_PROPERTY.equals(property))
             getValue().setGeometry((VectorGeometry) value);
         else if(CORRECTION_PROPERTY.equals(property))
-            getValue().setCorrections((List<VectorCorrection>) value);
+            getValue().setCorrections((List<TriangleCorrection>) value);
         else if(COMMENT_PROPERTY.equals(property))
-            getValue().setComments((List<VectorComment>) value);
+            getValue().setComments((List<TriangleComment>) value);
         else if(SMOOTHING_PROPERTY.equals(property))
             getValue().setSmoothings((List<Smoothing>) value);
         super.setProperty(property, value);
@@ -116,9 +116,9 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             if(GEOMETRY_PROPERTY.equals(property)) {
                 return isChanged((VectorGeometry) o1, (VectorGeometry) o2);
             } else if(CORRECTION_PROPERTY.equals(property)) {
-                return isChanged((List<VectorCorrection>) o1, (List<VectorCorrection>) o2);
+                return isChanged((List<TriangleCorrection>) o1, (List<TriangleCorrection>) o2);
             } else if(COMMENT_PROPERTY.equals(property)) {
-                return isChanged((List<VectorComment>) o1, (List<VectorComment>) o2);
+                return isChanged((List<TriangleComment>) o1, (List<TriangleComment>) o2);
             } else if(SMOOTHING_PROPERTY.equals(property)) {
                 return isChanged((List<Smoothing>) o1, (List<Smoothing>) o2);
             } else {

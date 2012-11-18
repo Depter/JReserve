@@ -10,7 +10,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import org.jreserve.localesettings.util.DateRenderer;
-import org.jreserve.triangle.entities.Comment;
+import org.jreserve.triangle.data.Comment;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;

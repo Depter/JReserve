@@ -1,7 +1,7 @@
 package org.jreserve.triangle.widget;
 
 import java.util.*;
-import org.jreserve.triangle.entities.Comment;
+import org.jreserve.triangle.data.Comment;
 
 /**
  *

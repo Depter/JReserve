@@ -3,11 +3,13 @@ package org.jreserve.estimates.chainladder;
 import javax.persistence.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
+import org.jreserve.estimates.factors.FactorSelection;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.util.ProjectData;
+import org.jreserve.triangle.entities.Triangle;
 
 /**
  *
@@ -31,21 +33,26 @@ public class ChainLadderEstimate extends AbstractPersistentObject implements Pro
     private String description;
     
     @ManyToOne(fetch=FetchType.EAGER, optional=false)
-    @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
-    private Project project;
+    @JoinColumn(name="TRIANGLE_ID", referencedColumnName="ID", nullable=false)
+    private Triangle triangle;
+    
+    @ManyToOne(fetch=FetchType.EAGER, optional=false)
+    @JoinColumn(name="FACTOR_SELECTION_ID", referencedColumnName="ID", nullable=false)
+    private FactorSelection factorSelection;
     
     protected ChainLadderEstimate() {
     }
     
-    public ChainLadderEstimate(Project project, String name) {
-        initProject(project);
+    public ChainLadderEstimate(Triangle triangle, String name) {
+        initTriangle(triangle);
         initName(name);
+        this.factorSelection = new FactorSelection();
     }
     
-    private void initProject(Project project) {
-        if(project == null)
-            throw new NullPointerException("Project is null!");
-        this.project = project;
+    private void initTriangle(Triangle triangle) {
+        if(triangle == null)
+            throw new NullPointerException("Triangle is null!");
+        this.triangle = triangle;
     }
     
     private void initName(String name) {
@@ -72,11 +79,15 @@ public class ChainLadderEstimate extends AbstractPersistentObject implements Pro
     
     @Override
     public Project getProject() {
-        return project;
+        return triangle.getProject();
     }
     
-    public void setProject(Project project) {
-        initProject(project);
+    public Triangle getTriangle() {
+        return triangle;
+    }
+    
+    public FactorSelection getFactorSelection() {
+        return factorSelection;
     }
 
     @Override
@@ -90,8 +101,8 @@ public class ChainLadderEstimate extends AbstractPersistentObject implements Pro
     }
     
     public String getPath() {
-        if(project == null)
+        if(triangle == null)
             return toString();
-        return String.format("%s/%s", project.getPath(), this);
+        return String.format("%s/%s", triangle.getProject().getPath(), this);
     }
 }

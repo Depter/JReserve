@@ -15,12 +15,12 @@ import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
-import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.data.util.DateTableCellRenderer;
-import org.jreserve.data.util.DoubleTableCellRenderer;
+import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.data.util.ProjectDataTypeElementComparator;
+import org.jreserve.data.util.visual.DateTableCellRenderer;
+import org.jreserve.data.util.visual.DoubleTableCellRenderer;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
@@ -321,7 +321,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
     }
     
     
-    private List<Data<ProjectDataType, Double>> getSelectedTableData() {
+    private List<ClaimValue> getSelectedTableData() {
         int rows[] = table.getSelectedRows();
         if(rows.length > 0)
             return tableModel.getSelectedData(rows);
@@ -356,12 +356,12 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
         }
         
         private String getText() {
-            for(Data data : getSelectedTableData())
+            for(ClaimValue data : getSelectedTableData())
                 appendData(data);
             return sb.toString();
         }
         
-        private void appendData(Data data) {
+        private void appendData(ClaimValue data) {
             if(sb.length() != 0)
                 sb.append("\n");
             sb.append(dateFormat.format(data.getAccidentDate())).append("\t");
@@ -370,8 +370,8 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
             sb.append(getValue(data, decimalSep));
         }
         
-        private String getValue(Data data, char decimalSep) {
-            String str = ""+data.getValue();
+        private String getValue(ClaimValue data, char decimalSep) {
+            String str = ""+data.getClaimValue();
             return str.replace('.', decimalSep);
         }
     }
@@ -380,7 +380,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            List<Data<ProjectDataType, Double>> datas = getSelectedTableData();
+            List<ClaimValue> datas = getSelectedTableData();
             if(!datas.isEmpty() && confirmUser(datas.size()))
                 deleteData(datas);
         }
@@ -391,7 +391,7 @@ public final class DataExplorerTopComponent extends TopComponent implements Acti
             return DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION;
         }
         
-        private void deleteData(List<Data<ProjectDataType, Double>> datas) {
+        private void deleteData(List<ClaimValue> datas) {
             DataSource ds = new DataSource();
             ProjectDataType dt = getSelectedDataType();
             try {

@@ -132,6 +132,22 @@ public class TriangleCellUtil {
         return a - b;
     }
     
+    public static List<WidgetData<Double>> extractValues(TriangleCell[][] cells) {
+        List<WidgetData<Double>> result = new ArrayList<WidgetData<Double>>();
+        for(TriangleCell[] row : cells)
+            for(TriangleCell cell : row)
+                extractValue(cell, result);
+        return result;
+    }
+    
+    private static void extractValue(TriangleCell cell, List<WidgetData<Double>> result) {
+        if(cell != null) {
+            Double value = cell.getDisplayValue();
+            if(value != null)
+                result.add(new WidgetData<Double>(cell.getAccidentBegin(), cell.getDevelopmentBegin(), value));
+        }
+    }
+    
     public static List<WidgetData<Double>> extractValues(TriangleCell[][] cells, int layer) {
         List<WidgetData<Double>> result = new ArrayList<WidgetData<Double>>();
         for(TriangleCell[] row : cells)
@@ -148,6 +164,12 @@ public class TriangleCellUtil {
         }
     }
     
+    public static void setCellValues(TriangleCell[][] cells, List<WidgetData<Double>> values, int layer) {
+        for(TriangleCell[] row : cells)
+            for(TriangleCell cell : row)
+                setValue(cell, layer, sum(cell, values));
+    }
+    
     public static void setValue(TriangleCell cell, int layer, Double value) {
         TriangleCell prev = cell.getPreviousCell();
         if(cell.isCummulated() && prev != null && value !=null && layer == TriangleCell.CORRECTION_LAYER) {
@@ -155,6 +177,12 @@ public class TriangleCellUtil {
             value = subtract(value, prevV);
         }
         cell.setValueAt(layer, value);
+    }
+    
+    public static void clearValues(TriangleCell[][] cells) {
+        for(TriangleCell[] row : cells)
+            for(TriangleCell cell : row)
+                cell.clear();
     }
     
     private TriangleCellUtil() {}

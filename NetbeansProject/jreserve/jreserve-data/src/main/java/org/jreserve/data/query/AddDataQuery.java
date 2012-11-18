@@ -5,11 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
-import org.jreserve.data.Data;
 import org.jreserve.data.DataCriteria;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
-import org.jreserve.persistence.PersistentObject;
 
 /**
  *
@@ -20,12 +18,8 @@ public class AddDataQuery extends AbstractQuery {
     
     private Map<String, ProjectDataType> dataTypes = new HashMap<String, ProjectDataType>();
     
-    public AddDataQuery() {
-        super(ClaimValue.class);
-    }
-    
-    public void add(Session session, List<Data<ProjectDataType, Double>> datas) {
-        for(Data<ProjectDataType, Double> data : datas) {
+    public void add(Session session, List<ClaimValue> datas) {
+        for(ClaimValue data : datas) {
             loadPersistence(session, data);
             add(session, data);
         }
@@ -33,8 +27,8 @@ public class AddDataQuery extends AbstractQuery {
         clearPersistence();
     }
     
-    private void loadPersistence(Session session, Data<ProjectDataType, Double> data) {
-        String id = data.getOwner().getId();
+    private void loadPersistence(Session session, ClaimValue data) {
+        String id = data.getDataType().getId();
         if(!dataTypes.containsKey(id))
             dataTypes.put(id, getDataType(session, id));
     }
@@ -43,34 +37,34 @@ public class AddDataQuery extends AbstractQuery {
         return (ProjectDataType) session.get(ProjectDataType.class, id);
     }
     
-    private void add(Session session, Data<ProjectDataType, Double> data) {
+    private void add(Session session, ClaimValue data) {
         boolean update = true;
         ClaimValue cv = getPersistedClaimValue(session, data);
         if(cv == null) {
             cv = createClaimValue(data);
             update = false;
         }
-        cv.setClaimValue(data.getValue());
+        cv.setClaimValue(data.getClaimValue());
         saveClaimValue(update, session, cv);
     }
     
-    private ClaimValue getPersistedClaimValue(Session session, Data data) {
+    private ClaimValue getPersistedClaimValue(Session session, ClaimValue data) {
         DataCriteria criteria = createCriteria(data);
         return (ClaimValue) super.queryUniqueResult(session, criteria);
     }
     
-    private DataCriteria createCriteria(Data data) {
-        return new DataCriteria(data.getOwner())
+    private DataCriteria createCriteria(ClaimValue data) {
+        return new DataCriteria(data.getDataType())
                .setFromAccidentDate(data.getAccidentDate())
                .setFromAccidentEqt(DataCriteria.EQT.EQ)
                .setFromDevelopmentDate(data.getDevelopmentDate())
                .setFromDevelopmentEqt(DataCriteria.EQT.EQ);
     }
     
-    private ClaimValue createClaimValue(Data data) {
+    private ClaimValue createClaimValue(ClaimValue data) {
         Date accident = data.getAccidentDate();
         Date development = data.getDevelopmentDate();
-        PersistentObject owner = data.getOwner();
+        ProjectDataType owner = data.getDataType();
         return new ClaimValue(owner, accident, development);
     }
     

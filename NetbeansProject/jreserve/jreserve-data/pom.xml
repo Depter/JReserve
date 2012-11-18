@@ -161,6 +161,7 @@
                     <publicPackages>
                         <publicPackage>org.jreserve.data</publicPackage>
                         <publicPackage>org.jreserve.data.container</publicPackage>
+                        <publicPackage>org.jreserve.data.entities</publicPackage>
                         <publicPackage>org.jreserve.data.util</publicPackage>
                     </publicPackages>
                 </configuration>

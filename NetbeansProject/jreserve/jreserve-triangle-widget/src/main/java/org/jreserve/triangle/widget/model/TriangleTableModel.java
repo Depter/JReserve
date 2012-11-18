@@ -3,7 +3,7 @@ package org.jreserve.triangle.widget.model;
 import java.util.Date;
 import java.util.List;
 import javax.swing.table.TableModel;
-import org.jreserve.triangle.entities.Comment;
+import org.jreserve.triangle.data.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleModel;

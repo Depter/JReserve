@@ -1,7 +1,7 @@
 package org.jreserve.triangle.widget.actions;
 
 import java.awt.event.ActionEvent;
-import org.jreserve.triangle.entities.Comment;
+import org.jreserve.triangle.data.Comment;
 import org.jreserve.triangle.widget.WidgetData;
 import org.jreserve.triangle.widget.util.AddCommentDialog;
 import org.openide.util.Lookup;

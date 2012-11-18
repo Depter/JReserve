@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.data.Data;
 import org.jreserve.data.DataTable;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.dataimport.DataImportWizard;
 import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.system.ProjectElement;
@@ -203,12 +203,12 @@ class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
         return table;
     }
     
-    private Data<ProjectDataType, Double> getData(DataDummy dummy, ProjectDataType dt, DateFormat df, DoubleParser dp) {
+    private ClaimValue getData(DataDummy dummy, ProjectDataType dt, DateFormat df, DoubleParser dp) {
         try {
             Date accident = df.parse(dummy.getAccident());
             Date development = df.parse(dummy.getDevelopment());
             double value = dp.parse(dummy.getValue());
-            return new Data<ProjectDataType, Double>(dt, accident, development, value);
+            return new ClaimValue(dt, accident, development, value);
         } catch (ParseException ex) {
             Exceptions.printStackTrace(ex);
             return null;

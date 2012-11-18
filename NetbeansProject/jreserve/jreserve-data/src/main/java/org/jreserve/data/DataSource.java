@@ -2,9 +2,8 @@ package org.jreserve.data;
 
 import java.util.List;
 import org.hibernate.Session;
-import org.jreserve.data.entities.*;
+import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.data.query.*;
-import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.ClaimType;
 
@@ -67,16 +66,15 @@ public class DataSource {
      * Deletes all data for the given criteria.
      */
     public int clearData(DataCriteria criteria) {
-        ClearDataQuery query = new ClearDataQuery(ClaimValue.class);
+        ClearDataQuery query = new ClearDataQuery();
         return query.query(session, criteria);
     }
     
     /**
      * Returns all data for the given criteria.
      */
-    public List<Data<ProjectDataType, Double>> getClaimData(DataCriteria<ProjectDataType> criteria) {
-        ClaimValueDataFactory<ProjectDataType> dataFactory = new ClaimValueDataFactory<ProjectDataType>(criteria.getOwner());
-        SelectDataQuery<ClaimValue, ProjectDataType, Double> query = new SelectDataQuery<ClaimValue, ProjectDataType, Double>(ClaimValue.class, dataFactory);
+    public List<ClaimValue> getClaimData(DataCriteria criteria) {
+        SelectDataQuery query = new SelectDataQuery();
         return query.query(session, criteria);
     }
     
@@ -84,7 +82,7 @@ public class DataSource {
      * Saves the given data. If a datapoint for the given dates and
      * data type is already exists, the old value is overwritten.
      */
-    public void saveClaimData(List<Data<ProjectDataType, Double>> data) {
+    public void saveClaimData(List<ClaimValue> data) {
         AddDataQuery query = new AddDataQuery();
         query.add(session, data);
     }
@@ -92,18 +90,8 @@ public class DataSource {
     /**
      * Deletes the given data.
      */
-    public void deleteData(List<Data<ProjectDataType, Double>> data) {
+    public void deleteData(List<ClaimValue> data) {
         DeleteDataQuery query = new DeleteDataQuery();
         query.delete(session, data);
     }
-    
-    /**
-     * Returns the data for the given criteria.
-     */
-    public <T extends PersistentObject> List<Data<T, Double>> getCorrections(DataCriteria<T> criteria) {
-        DataCorrectionFactory<T> factory = new DataCorrectionFactory<T>(criteria.getOwner());
-        SelectDataQuery<DataCorrection, T, Double> query = new SelectDataQuery<DataCorrection, T, Double>(DataCorrection.class, factory);
-        return query.query(session, criteria);
-    }
-    
 }

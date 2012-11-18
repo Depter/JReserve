@@ -10,9 +10,9 @@ import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.data.TriangleComment;
+import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.Triangle;
-import org.jreserve.triangle.entities.TriangleComment;
-import org.jreserve.triangle.entities.TriangleCorrection;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.management.editor.Editor;
 import org.openide.nodes.Node;
@@ -99,7 +99,6 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     
     private class TriangleSavable extends PersistentSavable<Triangle> {
         
-        
         public TriangleSavable() {
             super(TriangleProjectElement.this);
         }
@@ -119,12 +118,6 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         protected boolean isChanged(String property, Object o1, Object o2) {
             if(GEOMETRY_PROPERTY.equals(property)) {
                 return isChanged((TriangleGeometry) o1, (TriangleGeometry) o2);
-            } else if(CORRECTION_PROPERTY.equals(property)) {
-                return isChanged((List<TriangleCorrection>) o1, (List<TriangleCorrection>) o2);
-            } else if(COMMENT_PROPERTY.equals(property)) {
-                return isChanged((List<TriangleComment>) o1, (List<TriangleComment>) o2);
-            } else if(SMOOTHING_PROPERTY.equals(property)) {
-                return isChanged((List<Smoothing>) o1, (List<Smoothing>) o2);
             } else {
                 return super.isChanged(property, o1, o2);
             }
@@ -135,43 +128,9 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             if(g2==null) return true;
             return !g1.isEqualGeometry(g2);
         }
-        
-        private boolean isChanged(List c1, List c2) {
-            if(getSize(c1) != getSize(c2)) return true;
-            //if both size is 0, but one is empty aother is null => not changed
-            if(c1 == null || c2 == null) return false;
-            
-            for(Object c : c1)
-                if(!c2.contains(c))
-                    return true;
-            return false;
-        }
-        
-        private int getSize(List list) {
-            return list==null? 0 : list.size();
-        }
     }
     
     private class TriangleOpenable extends PersistentOpenable {
-    
-        private boolean added = false;
-        
-        @Override
-        protected void opened() {
-            //if(!added) {
-            //    added = true;
-            //    TriangleProjectElement.this.addToLookup(component);
-            //}
-        }
-    
-        @Override
-        protected void closing() {
-            //if(added) {
-            //    added = false;
-            //    TriangleProjectElement.this.removeFromLookup(component);
-            //}
-        }
-
         @Override
         protected TopComponent createComponent() {
             return Editor.createTriangle(TriangleProjectElement.this);

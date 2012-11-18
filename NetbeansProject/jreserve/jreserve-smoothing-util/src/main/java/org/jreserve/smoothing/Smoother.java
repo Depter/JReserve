@@ -4,6 +4,7 @@ import java.util.*;
 import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.core.SmoothingCell;
 import org.jreserve.triangle.widget.TriangleCell;
+import org.jreserve.triangle.widget.TriangleCellUtil;
 import org.jreserve.triangle.widget.TriangleWidget;
 import org.jreserve.triangle.widget.WidgetData;
 
@@ -14,18 +15,22 @@ import org.jreserve.triangle.widget.WidgetData;
  */
 public class Smoother {
     
-    private TriangleWidget widget;
+    private TriangleCell[][] cells;
     private int layer;
     
     public Smoother(TriangleWidget widget, int layer) {
-        initWidget(widget);
+        this(widget.getCellArray(), layer);
+    }
+    
+    public Smoother(TriangleCell[][] cells, int layer) {
+        initCells(cells);
         initLayer(layer);
     }
     
-    private void initWidget(TriangleWidget widget) {
-        if(widget == null)
-            throw new NullPointerException("TriangleWidget was null!");
-        this.widget = widget;
+    private void initCells(TriangleCell[][] cells) {
+        if(cells == null)
+            throw new NullPointerException("TriangleCells was null!");
+        this.cells = cells;
     }
     
     private void initLayer(int layer) {
@@ -62,7 +67,11 @@ public class Smoother {
     private TriangleCell getCellAt(SmoothingCell cell) {
         Date accident = cell.getAccident();
         Date development = cell.getDevelopment();
-        return widget.getCellAt(accident, development);
+        for(TriangleCell[] row : cells)
+            for(TriangleCell tc : row)
+                if(tc.acceptsDates(accident, development))
+                    return tc;
+        return null;
     }
     
     private double getCellValue(TriangleCell cell) {
@@ -74,8 +83,8 @@ public class Smoother {
     
     private void setValues(List<SmoothingCell> cells, double[] values) {
         Set<WidgetData<Double>> datas = createValues(cells, values);
-        datas.addAll(widget.getValueLayer(layer));
-        widget.setValueLayer(layer, new ArrayList<WidgetData<Double>>(datas));
+        datas.addAll(TriangleCellUtil.extractValues(this.cells, layer));
+        TriangleCellUtil.setCellValues(this.cells, new ArrayList<WidgetData<Double>>(datas), layer);
     }
     
     private Set<WidgetData<Double>> createValues(List<SmoothingCell> cells, double[] smoothed) {

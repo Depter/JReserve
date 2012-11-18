@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.VectorGeometry;
 
@@ -271,7 +271,7 @@ public class InputData {
     final static TriangleGeometry TRIANGLE_GEOMETRY = new TriangleGeometry(START, PERIODS, MONTHS);
     final static VectorGeometry VECTOR_GEOMETRY = new VectorGeometry(START, PERIODS, MONTHS);
     
-    static List<Data<ProjectDataType, Double>> getData(ProjectDataType dt) {
+    static List<ClaimValue> getData(ProjectDataType dt) {
         DataDummy[] dummies = getDummies(dt);
         return getData(dt, dummies);
     }
@@ -309,17 +309,17 @@ public class InputData {
         }
     }
     
-    private static List<Data<ProjectDataType, Double>> getData(ProjectDataType dt, DataDummy[] dummies) {
-        List<Data<ProjectDataType, Double>> datas = new ArrayList<Data<ProjectDataType, Double>>(dummies.length);
+    private static List<ClaimValue> getData(ProjectDataType dt, DataDummy[] dummies) {
+        List<ClaimValue> datas = new ArrayList<ClaimValue>(dummies.length);
         for(DataDummy dummy : dummies)
             datas.add(createData(dt, dummy));
         return datas;
     }
     
-    private static Data<ProjectDataType, Double> createData(ProjectDataType dt, DataDummy dummy) {
+    private static ClaimValue createData(ProjectDataType dt, DataDummy dummy) {
         Date accident = getDate(dummy.accidnet);
         Date development = getDate(dummy.development);
-        return new Data<ProjectDataType, Double>(dt, accident, development, dummy.value);
+        return new ClaimValue(dt, accident, development, dummy.value);
     }
     
     private static Date getDate(String date) {

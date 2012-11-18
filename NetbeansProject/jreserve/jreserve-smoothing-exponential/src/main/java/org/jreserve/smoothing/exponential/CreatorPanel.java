@@ -56,12 +56,6 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
         panel.dialog.pack();
     }
     
-    private static ExponentialSmoothing createSmoothing(PersistentObject owner, CreatorPanel content) {
-        if(content.name == null)
-            return null;
-        return new ExponentialSmoothing(owner, content.name, content.alpha);
-    }
-    
     private final static Logger logger = Logger.getLogger(CreatorPanel.class.getName());
     
     private final static String ERR_IMG = "org/netbeans/modules/dialogs/error.gif";

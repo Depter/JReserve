@@ -171,6 +171,12 @@
             <artifactId>jreserve-rutil</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-data</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -7,7 +7,9 @@ import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -61,7 +63,27 @@ public abstract class AbstractProjectElementSavable<T> extends AbstractSavable i
     protected boolean isChanged(String property) {
         Object original = originalProperties.get(property);
         Object current = element.getProperty(property);
+        if(isCollection(original, current))
+            return isChanged(property, (Collection) original, (Collection) current);
         return isChanged(property, original, current);
+    }
+    
+    private boolean isCollection(Object o1, Object o2) {
+        return (o1 instanceof List) && (o2 instanceof List);
+    }
+    
+    protected boolean isChanged(String property, Collection c1, Collection c2) {
+        if(getSize(c1) != getSize(c2)) return true;
+        if(c1 == null || c2 == null) return false;
+            
+        for(Object c : c1)
+            if(!c2.contains(c))
+                return true;
+        return false;    
+    }
+        
+    private int getSize(Collection collection) {
+        return collection==null? 0 : collection.size();
     }
 
     protected boolean isChanged(String property, Object o1, Object o2) {

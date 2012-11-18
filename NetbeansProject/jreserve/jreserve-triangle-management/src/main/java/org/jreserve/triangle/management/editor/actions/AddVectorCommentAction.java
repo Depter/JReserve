@@ -3,8 +3,8 @@ package org.jreserve.triangle.management.editor.actions;
 import java.util.Date;
 import java.util.List;
 import javax.swing.Action;
-import org.jreserve.triangle.entities.Comment;
-import org.jreserve.triangle.entities.VectorComment;
+import org.jreserve.triangle.data.Comment;
+import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.management.VectorProjectElement;
 import org.jreserve.triangle.widget.actions.AddCommentAction;
 import org.openide.util.Lookup;
@@ -55,18 +55,18 @@ public class AddVectorCommentAction extends AddCommentAction {
     
     @Override
     protected Comment createComment(Comment comment) {
-        VectorComment tc = createVectorComment(comment);
-        List<VectorComment> comments = (List<VectorComment>) element.getProperty(VectorProjectElement.COMMENT_PROPERTY);
+        TriangleComment tc = createVectorComment(comment);
+        List<TriangleComment> comments = (List<TriangleComment>) element.getProperty(VectorProjectElement.COMMENT_PROPERTY);
         comments.add(tc);
         element.setProperty(VectorProjectElement.COMMENT_PROPERTY, comments);
         return tc;
     }
     
-    private VectorComment createVectorComment(Comment comment) {
+    private TriangleComment createVectorComment(Comment comment) {
         Date accident = cell.getAccidentBegin();
         String user = comment.getUserName();
         String text = comment.getCommentText();
-        return new VectorComment(element.getValue(), accident, user, text);
+        return new TriangleComment(element.getValue(), accident, accident, user, text);
     }
 
     @Override

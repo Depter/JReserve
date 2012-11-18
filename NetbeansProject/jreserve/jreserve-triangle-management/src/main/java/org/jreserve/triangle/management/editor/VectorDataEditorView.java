@@ -1,15 +1,16 @@
 package org.jreserve.triangle.management.editor;
 
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.jreserve.data.Data;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.entities.*;
+import org.jreserve.triangle.data.TriangleComment;
+import org.jreserve.triangle.data.TriangleCorrection;
+import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.entities.Vector;
+import org.jreserve.triangle.entities.VectorGeometry;
 import org.jreserve.triangle.management.VectorProjectElement;
-import org.jreserve.triangle.widget.WidgetData;
 
 /**
  *
@@ -54,11 +55,8 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     }
 
     @Override
-    protected List<Data<Vector, Double>> getCorrectionData() {
-        List<Data<Vector, Double>> datas = new ArrayList<Data<Vector, Double>>();
-        for(VectorCorrection tc : element.getValue().getCorrections())
-            datas.add(tc.toData());
-        return datas;
+    protected List<TriangleCorrection> getCorrectionData() {
+        return element.getValue().getCorrections();
     }
 
     @Override
@@ -91,30 +89,13 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     }
 
     @Override
-    protected void updateCorrections(List<Data<Vector, Double>> datas) {
-        List<VectorCorrection> corrections = getCorrections(datas);
+    protected void updateCorrections(List<TriangleCorrection> corrections) {
         element.setProperty(VectorProjectElement.CORRECTION_PROPERTY, corrections);
-    }
-    
-    private List<VectorCorrection> getCorrections(List<Data<Vector, Double>> datas) {
-        List<VectorCorrection> corrections = new ArrayList<VectorCorrection>(datas.size());
-        for(Data<Vector, Double> data : datas)
-            corrections.add(getCorrection(data));
-        return corrections;
-    }
-    
-    private VectorCorrection getCorrection(Data<Vector, Double> data) {
-        VectorCorrection tc = new VectorCorrection(data.getOwner(), data.getAccidentDate());
-        tc.setCorrection(data.getValue());
-        return tc;
     }
 
     @Override
-    protected List<WidgetData<Comment>> getComments() {
-        List<WidgetData<Comment>> comments = new ArrayList<WidgetData<Comment>>();
-        for(VectorComment comment : element.getValue().getComments())
-            comments.add(new WidgetData<Comment>(comment.getAccidentDate(), comment.getAccidentDate(), comment));
-        return comments;
+    protected List<TriangleComment> getComments() {
+        return element.getValue().getComments();
     }
 
     @Override

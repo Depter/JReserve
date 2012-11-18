@@ -8,9 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import org.jreserve.data.DataCriteria;
-import org.jreserve.data.Data;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.project.entities.ClaimType;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
@@ -31,7 +31,7 @@ class DataExplorerTabelModel extends DefaultTableModel {
     
     private ClaimType claimType;
     private ProjectDataType dataType;
-    private List<Data<ProjectDataType, Double>> allData = new ArrayList<Data<ProjectDataType, Double>>();
+    private List<ClaimValue> allData = new ArrayList<ClaimValue>();
     private int pageIndex;
     private int rowPerPage;
 
@@ -63,7 +63,7 @@ class DataExplorerTabelModel extends DefaultTableModel {
         }
     }
     
-    private DataCriteria<ProjectDataType> getCriteria() {
+    private DataCriteria getCriteria() {
         return new DataCriteria(dataType);
     }
     
@@ -139,7 +139,7 @@ class DataExplorerTabelModel extends DefaultTableModel {
 
     @Override
     public Object getValueAt(int row, int column) {
-        Data data = getData(row);
+        ClaimValue data = getData(row);
         switch(column) {
             case 0:
                 return pageIndex * rowPerPage + row + 1;
@@ -148,9 +148,9 @@ class DataExplorerTabelModel extends DefaultTableModel {
             case 2:
                 return dataType.isTriangle()?
                         data.getDevelopmentDate() :
-                        data.getValue();
+                        data.getClaimValue();
             case 3:
-                return data.getValue();
+                return data.getClaimValue();
             default:
                 throw new IllegalArgumentException("Unknown column id: "+column);
         }
@@ -181,19 +181,19 @@ class DataExplorerTabelModel extends DefaultTableModel {
         }
     }
     
-    List<Data<ProjectDataType, Double>> getAllDataOnPage() {
-        List<Data<ProjectDataType, Double>> result = new ArrayList<Data<ProjectDataType, Double>>();
+    List<ClaimValue> getAllDataOnPage() {
+        List<ClaimValue> result = new ArrayList<ClaimValue>();
         for(int i=0, rowCount=getRowCount(); i<rowCount; i++)
             result.add(getData(i));
         return result;
     }
     
-    private Data<ProjectDataType, Double> getData(int row) {
+    private ClaimValue getData(int row) {
         return allData.get(pageIndex * rowPerPage + row);
     }
     
-    List<Data<ProjectDataType, Double>> getSelectedData(int[] rows) {
-        List<Data<ProjectDataType, Double>> result = new ArrayList<Data<ProjectDataType, Double>>();
+    List<ClaimValue> getSelectedData(int[] rows) {
+        List<ClaimValue> result = new ArrayList<ClaimValue>();
         for(int i=0, length=rows.length; i<length; i++)
             result.add(getData(rows[i]));
         return result;

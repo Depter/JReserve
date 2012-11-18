@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.*;
-import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.IdGenerator;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RFunction;
 
 /**
@@ -74,7 +72,7 @@ public abstract class Smoothing implements PersistentObject {
     
     public String getOwner() {
         return ownerId;
-    }
+    }    
     
     public String getName() {
         return name;

@@ -3,7 +3,7 @@ package org.jreserve.triangle.widget.actions;
 import java.awt.event.ActionEvent;
 import java.util.Date;
 import java.util.List;
-import org.jreserve.triangle.entities.Comment;
+import org.jreserve.triangle.data.Comment;
 import org.jreserve.triangle.widget.WidgetData;
 import org.jreserve.triangle.widget.util.DeleteCommentDialog;
 import org.openide.util.Lookup;

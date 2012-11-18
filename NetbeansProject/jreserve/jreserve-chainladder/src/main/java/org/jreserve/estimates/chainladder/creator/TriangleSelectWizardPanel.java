@@ -10,7 +10,6 @@ import org.jreserve.estimates.chainladder.ChainLadderEstimate;
 import org.jreserve.estimates.chainladder.ChainLadderEstimateProjectElement;
 import org.jreserve.estimates.visual.NameSelectWizardPanel;
 import org.jreserve.persistence.SessionTask;
-import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.triangle.entities.Triangle;
@@ -121,10 +120,10 @@ public class TriangleSelectWizardPanel implements WizardDescriptor.ValidatingPan
     }    
     
     private Factory createFactory() {
-        Project project = (Project) wizard.getProperty(NameSelectWizardPanel.PROP_PROJECT);
+        Triangle triangle = component.getTriangle();
         String name = (String) wizard.getProperty(NameSelectWizardPanel.PROP_NAME);
         String description = (String) wizard.getProperty(NameSelectWizardPanel.PROP_DESCRIPTION);
-        return new Factory(project.getId(), name, description);
+        return new Factory(triangle.getId(), name, description);
     }
     
     private void addProjectElement(ChainLadderEstimate estimate) {
@@ -148,26 +147,26 @@ public class TriangleSelectWizardPanel implements WizardDescriptor.ValidatingPan
     
     private class Factory extends SessionTask.AbstractTask<ChainLadderEstimate> {
 
-        private final String projectId;
+        private final String triangleId;
         private final String name;
         private final String description;
         
-        Factory(String projectId, String name, String description) {
-            this.projectId = projectId;
+        Factory(String triangleId, String name, String description) {
+            this.triangleId = triangleId;
             this.name = name;
             this.description = description;
         }
         
         @Override
         public void doWork(Session session) throws Exception {
-            Project project = (Project) session.get(Project.class, projectId);
-            ChainLadderEstimate estimate = createEstimate(project);
+            Triangle triangle = (Triangle) session.get(Triangle.class, triangleId);
+            ChainLadderEstimate estimate = createEstimate(triangle);
             session.persist(estimate);
             result = estimate;
         }
     
-        private ChainLadderEstimate createEstimate(Project project) {
-            ChainLadderEstimate estimate = new ChainLadderEstimate(project, name);
+        private ChainLadderEstimate createEstimate(Triangle triangle) {
+            ChainLadderEstimate estimate = new ChainLadderEstimate(triangle, name);
             estimate.setDescription(description);
             return estimate;
         }

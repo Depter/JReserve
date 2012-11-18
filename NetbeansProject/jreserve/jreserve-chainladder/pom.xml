@@ -107,6 +107,12 @@
             <artifactId>jreserve-triangle</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-factors</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>

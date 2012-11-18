@@ -13,6 +13,8 @@ import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.project.entities.Project;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.data.TriangleComment;
+import org.jreserve.triangle.data.TriangleCorrection;
 
 /**
  *
@@ -37,9 +39,16 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
     @Embedded
     private VectorGeometry geometry;
     
+
     @NotAudited
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="vector", orphanRemoval=true, cascade=CascadeType.ALL)
-    private Set<VectorCorrection> corrections = new HashSet<VectorCorrection>();
+    @OneToMany(cascade= CascadeType.ALL)
+    @JoinTable(
+        name="VECTOR_CORRECTIONS",
+        schema="JRESERVE",
+        joinColumns=@JoinColumn(name="VECTOR_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF),
+        inverseJoinColumns=@JoinColumn(name="CORRECTION_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
+    )
+    private Set<TriangleCorrection> corrections = new HashSet<TriangleCorrection>();
     
     @NotAudited
     @OneToMany(cascade= CascadeType.ALL)
@@ -50,10 +59,16 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
         inverseJoinColumns=@JoinColumn(name="SMOOTHING_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
     )
     private Set<Smoothing> smoothings = new HashSet<Smoothing>();
-    
+
     @NotAudited
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="vector", orphanRemoval=true, cascade=CascadeType.ALL)
-    private Set<VectorComment> comments = new HashSet<VectorComment>();
+    @OneToMany(cascade= CascadeType.ALL)
+    @JoinTable(
+        name="VECTOR_COMMENTS",
+        schema="JRESERVE",
+        joinColumns=@JoinColumn(name="TRIANGLE_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF),
+        inverseJoinColumns=@JoinColumn(name="COMMENT_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
+    )
+    private Set<TriangleComment> comments = new HashSet<TriangleComment>();
     
     protected Vector() {
     }
@@ -79,52 +94,24 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
         this.geometry = geometry;
     }
     
-    public List<VectorCorrection> getCorrections() {
-        return new ArrayList<VectorCorrection>(corrections);
+    public List<TriangleCorrection> getCorrections() {
+        return new ArrayList<TriangleCorrection>(corrections);
     }
     
-    public void setCorrections(List<VectorCorrection> corrections) {
-        if(corrections != null)
-            checkMyCorrections(corrections);
+    public void setCorrections(List<TriangleCorrection> corrections) {
         this.corrections.clear();
         if(corrections != null)
             this.corrections.addAll(corrections);
     }
     
-    private void checkMyCorrections(List<VectorCorrection> corrections) {
-        for(VectorCorrection correction : corrections)
-            if(!equals(correction.getVector()))
-                throwOtherTriangleException(correction);
+    public List<TriangleComment> getComments() {
+        return new ArrayList<TriangleComment>(comments);
     }
     
-    private void throwOtherTriangleException(VectorCorrection correction) {
-        String msg = "Correction belongs to another vector '%s' instead of '%s'!";
-        msg = String.format(msg, this, correction.getVector());
-        throw new IllegalArgumentException(msg);
-    }
-    
-    public List<VectorComment> getComments() {
-        return new ArrayList<VectorComment>(comments);
-    }
-    
-    public void setComments(List<VectorComment> comments) {
-        if(comments != null)
-            checkMyComments(comments);
+    public void setComments(List<TriangleComment> comments) {
         this.comments.clear();
         if(comments != null)
             this.comments.addAll(comments);
-    }
-    
-    private void checkMyComments(List<VectorComment> comments) {
-        for(VectorComment comment : comments)
-            if(!equals(comment.getVector()))
-                throwOtherTriangleException(comment);
-    }
-    
-    private void throwOtherTriangleException(VectorComment comments) {
-        String msg = "Comment belongs to another vector '%s' instead of '%s'!";
-        msg = String.format(msg, this, comments.getVector());
-        throw new IllegalArgumentException(msg);
     }
     
     public List<Smoothing> getSmoothings() {
@@ -132,28 +119,12 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
     }
     
     public void setSmoothings(List<Smoothing> smoothings) {
-        if(smoothings != null)
-            checkMySmoothings(smoothings);
         this.smoothings.clear();
         if(smoothings != null)
             this.smoothings.addAll(smoothings);
     }
     
-    private void checkMySmoothings(List<Smoothing> smoothings) {
-        for(Smoothing smoothing : smoothings)
-            if(!getId().equals(smoothing.getOwner()))
-                throwOtherVectorException(smoothing);
-    }
-    
-    private void throwOtherVectorException(Smoothing smoothing) {
-        String msg = "Smoothing belongs to another vector '%s' instead of '%s'!";
-        msg = String.format(msg, this, smoothing.getOwner());
-        throw new IllegalArgumentException(msg);
-    }
-    
     public void addSmoothing(Smoothing smoothing) {
-        if(!getId().equals(smoothing.getOwner()))
-            throwOtherVectorException(smoothing);
         this.smoothings.add(smoothing);
     }
     

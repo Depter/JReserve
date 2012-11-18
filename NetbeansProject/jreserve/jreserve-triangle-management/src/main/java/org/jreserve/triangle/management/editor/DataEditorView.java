@@ -8,12 +8,13 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box.Filler;
 import javax.swing.JPanel;
-import org.jreserve.data.Data;
 import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.smoothing.Smoother;
 import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.entities.Comment;
+import org.jreserve.triangle.data.Comment;
+import org.jreserve.triangle.data.TriangleComment;
+import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.DataStructure;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.*;
@@ -137,7 +138,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         }
     }
     
-    protected abstract List<Data<T, Double>> getCorrectionData();
+    protected abstract List<TriangleCorrection> getCorrectionData();
     
     protected abstract void setElementGeometry(TriangleGeometry geometry);
     
@@ -145,9 +146,9 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     
     protected abstract boolean isGeometryChanged(PropertyChangeEvent evt);
     
-    protected abstract void updateCorrections(List<Data<T, Double>> datas);
+    protected abstract void updateCorrections(List<TriangleCorrection> datas);
     
-    protected abstract List<WidgetData<Comment>> getComments();
+    protected abstract List<TriangleComment> getComments();
     
     protected abstract List<Smoothing> getSmoothings();
     
@@ -156,10 +157,10 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         @Override
         public void finnished(DataLoader<T> loader) {
             try {
-                triangle.setDataValueLayer(TriangleCell.VALUE_LAYER, loader.getData());
+                triangle.setValueLayer(TriangleCell.VALUE_LAYER, loader.getData());
                 setCorrections();
                 setSmoothings();
-                triangle.setComments(getComments());
+                setComments();
             } catch (RuntimeException ex) {
                 Exceptions.printStackTrace(ex);
             } finally {
@@ -169,14 +170,21 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         }
     
         private void setCorrections() {
-            List<Data<T, Double>> corrections = getCorrectionData();
-            triangle.setDataValueLayer(TriangleCell.CORRECTION_LAYER, corrections);
+            List<TriangleCorrection> corrections = getCorrectionData();
+            List<WidgetData<Double>> escaped = DataUtil.convertCorrections(corrections);
+            triangle.setValueLayer(TriangleCell.CORRECTION_LAYER, escaped);
         }
         
         private void setSmoothings() {
             Smoother smoother = new Smoother(triangle, TriangleCell.SMOOTHING_LAYER);
             for(Smoothing smoothing : getSmoothings())
                 smoother.smooth(smoothing);
+        }
+        
+        private void setComments() {
+            List<TriangleComment> comments = getComments();
+            List<WidgetData<Comment>> escaped = DataUtil.convertComments(comments);
+            triangle.addComments(escaped);
         }
     }
     
@@ -231,16 +239,14 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
             if(layer==TriangleCell.CORRECTION_LAYER && !equals(oldValue, newValue)) {
                 List<WidgetData<Double>> values = triangle.getValueLayer(TriangleCell.CORRECTION_LAYER);
                 triangle.setValueLayer(TriangleCell.CORRECTION_LAYER, values);
-                List<Data<T, Double>> datas = getCorrections(element.getValue(), values);
+                List<TriangleCorrection> datas = getCorrections(values);
                 updateCorrections(datas);
             }
         }
         
-        private List<Data<T, Double>> getCorrections(T owner, List<WidgetData<Double>> values) {
-            List<Data<T, Double>> datas = new ArrayList<Data<T, Double>>(values.size());
-            for(WidgetData<Double> value : values)
-                datas.add(new Data<T, Double>(owner, value.getAccident(), value.getDevelopment(), value.getValue()));
-            return datas;
+        private List<TriangleCorrection> getCorrections(List<WidgetData<Double>> values) {
+            T owner = element.getValue();
+            return DataUtil.escapeCorrections(owner, values);
         }
     
         private boolean equals(Double d1, Double d2) {

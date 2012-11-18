@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.data.Data;
 import org.jreserve.data.ProjectDataType;
+import org.jreserve.data.entities.ClaimValue;
+import org.jreserve.triangle.widget.DataUtil;
+import org.jreserve.triangle.widget.WidgetData;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
@@ -47,22 +49,27 @@ public abstract class DataFormatWizardPanel implements WizardDescriptor.Panel<Wi
     @Override
     public void readSettings(WizardDescriptor wizard) {
         this.wizard = wizard;
-        List<Data<ProjectDataType, Double>> datas = (List<Data<ProjectDataType, Double>>) wizard.getProperty(NameSelectWizardPanel.PROP_DATA);
+        List<ClaimValue> datas = (List<ClaimValue>) wizard.getProperty(NameSelectWizardPanel.PROP_DATA);
         ProjectDataType dt = (ProjectDataType) wizard.getProperty(NameSelectWizardPanel.PROP_DATA_TYPE);
         setFirstDate(datas);
-        panel.triangle.addDataValueLayer(datas);
+        panel.triangle.addValueLayer(getWidgetData(datas));
         validate();
     }
     
-    private void setFirstDate(List<Data<ProjectDataType, Double>> datas) {
+    private List<WidgetData<Double>> getWidgetData(List<ClaimValue> datas) {
+        List<ClaimValue> escaped = new ArrayList<ClaimValue>(datas);
+        return DataUtil.convertDatas(escaped);
+    }
+    
+    private void setFirstDate(List<ClaimValue> datas) {
         Date start = getFirstDate(datas);
         if(start != null)
             panel.geometrySetting.setStartDate(start);
     }
     
-    private Date getFirstDate(List<Data<ProjectDataType, Double>> datas) {
+    private Date getFirstDate(List<ClaimValue> datas) {
         Date first = null;
-        for(Data data : datas) {
+        for(ClaimValue data : datas) {
             Date date = data.getAccidentDate();
             if(first==null || date.before(first))
                 first = date;

@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.*;
@@ -22,16 +21,13 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultEditorKit;
-import org.jreserve.data.Data;
 import org.jreserve.localesettings.util.DecimalSpinner;
-import org.jreserve.persistence.PersistentObject;
 import org.jreserve.resources.ToolBarButton;
 import org.jreserve.resources.ToolBarToggleButton;
-import org.jreserve.triangle.entities.Comment;
+import org.jreserve.triangle.data.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.util.TriangleTable;
 import org.openide.actions.CopyAction;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -269,24 +265,8 @@ public class TriangleWidget extends JPanel implements Serializable {
         table.addValueLayer(datas);
     }
     
-    public <T extends PersistentObject> void addDataValueLayer(List<Data<T, Double>> datas) {
-        table.addValueLayer(escapeData(datas));
-    }
-    
-    private <T extends PersistentObject> List<WidgetData<Double>> escapeData(List<Data<T, Double>> datas) {
-        List<WidgetData<Double>> escaped = new ArrayList<WidgetData<Double>>(datas.size());
-        for(Data<T, Double> data : datas)
-            escaped.add(new WidgetData<Double>(data.getAccidentDate(), data.getDevelopmentDate(), data.getValue()));
-        return escaped;
-    }
-    
     public void setValueLayer(int layer, List<WidgetData<Double>> datas) {
         table.setValueLayer(layer, datas);
-    }
-    
-    public <T extends PersistentObject> void setDataValueLayer(int layer, List<Data<T, Double>> datas) {
-        List<WidgetData<Double>> escaped = escapeData(datas);
-        table.setValueLayer(layer, escaped);
     }
     
     public List<WidgetData<Double>> getValueLayer(int layer) {
@@ -295,6 +275,10 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     public List<TriangleCell> getCells() {
         return table.getCells();
+    }
+    
+    public TriangleCell[][] getCellArray() {
+        return table.getCellArray();
     }
     
     public TriangleCell getCellAt(Date accident, Date development) {

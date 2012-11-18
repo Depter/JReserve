@@ -1,6 +1,7 @@
 package org.jreserve.data;
 
 import java.util.*;
+import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.project.entities.ClaimType;
 
 /**
@@ -11,7 +12,7 @@ import org.jreserve.project.entities.ClaimType;
 public class DataTable {
 
     private ProjectDataType dataType;
-    private Map<Date, TreeSet<Data<ProjectDataType, Double>>> datas = new TreeMap<Date, TreeSet<Data<ProjectDataType, Double>>>();
+    private Map<Date, TreeSet<ClaimValue>> datas = new TreeMap<Date, TreeSet<ClaimValue>>();
     private Date firstAccidentDate;
     private Date lastAccidentDate;
     
@@ -31,22 +32,22 @@ public class DataTable {
         return new ArrayList<Date>(datas.keySet());
     }
     
-    public List<Data<ProjectDataType, Double>> getDatas(Date accidentDate) {
-        Set<Data<ProjectDataType, Double>> data = datas.get(accidentDate);
+    public List<ClaimValue> getDatas(Date accidentDate) {
+        Set<ClaimValue> data = datas.get(accidentDate);
         if(data == null)
             data = Collections.EMPTY_SET;
-        return new ArrayList<Data<ProjectDataType, Double>>(data);
+        return new ArrayList<ClaimValue>(data);
     }
     
-    public Data<ProjectDataType, Double> getData(Date accidentDate, Date developmentDate) {
-        Set<Data<ProjectDataType, Double>> data = datas.get(accidentDate);
+    public ClaimValue getData(Date accidentDate, Date developmentDate) {
+        Set<ClaimValue> data = datas.get(accidentDate);
         if(data == null)
             return null;
         return getData(developmentDate, data);
     }
     
-    private Data<ProjectDataType, Double> getData(Date developmentDate, Set<Data<ProjectDataType, Double>> data) {
-        for(Data<ProjectDataType, Double> d : data)
+    private ClaimValue getData(Date developmentDate, Set<ClaimValue> data) {
+        for(ClaimValue d : data)
             if(d.getDevelopmentDate().equals(developmentDate))
                 return d;
         return null;
@@ -60,33 +61,33 @@ public class DataTable {
         return lastAccidentDate;
     }
     
-    public void addData(Data<ProjectDataType, Double> data) {
+    public void addData(ClaimValue data) {
         setDates(data);
-        Set<Data<ProjectDataType, Double>> aData = getCachedDatas(data.getAccidentDate());
+        Set<ClaimValue> aData = getCachedDatas(data.getAccidentDate());
         aData.add(data);
     }
     
-    private void setDates(Data data) {
+    private void setDates(ClaimValue data) {
         setFirstAccidentDate(data);
         setLastAccidentDate(data);
     }
     
-    private void setFirstAccidentDate(Data data) {
+    private void setFirstAccidentDate(ClaimValue data) {
         Date date = data.getAccidentDate();
         if(firstAccidentDate==null || firstAccidentDate.after(date))
             firstAccidentDate = date;
     }
     
-    private void setLastAccidentDate(Data data) {
+    private void setLastAccidentDate(ClaimValue data) {
         Date date = data.getAccidentDate();
         if(lastAccidentDate==null || lastAccidentDate.before(date))
             lastAccidentDate = date;
     }
     
-    private TreeSet<Data<ProjectDataType, Double>> getCachedDatas(Date accidentDate) {
-        TreeSet<Data<ProjectDataType, Double>> data = datas.get(accidentDate);
+    private TreeSet<ClaimValue> getCachedDatas(Date accidentDate) {
+        TreeSet<ClaimValue> data = datas.get(accidentDate);
         if(data == null) {
-            data = new TreeSet<Data<ProjectDataType, Double>>();
+            data = new TreeSet<ClaimValue>();
             datas.put(accidentDate, data);
         }
         return data;
@@ -94,7 +95,7 @@ public class DataTable {
     
     public int getDataCount() {
         int count = 0;
-        for(Set<Data<ProjectDataType, Double>> set : datas.values())
+        for(Set<ClaimValue> set : datas.values())
             count += set.size();
         return count;
     }
@@ -104,11 +105,11 @@ public class DataTable {
             cummulate(datas.get(accident));
     }
     
-    private void cummulate(Set<Data<ProjectDataType, Double>> dataSet) {
+    private void cummulate(Set<ClaimValue> dataSet) {
         double sum = 0d;
-        for(Data<ProjectDataType, Double> data : dataSet) {
-            sum += data.getValue();
-            data.setValue(sum);
+        for(ClaimValue data : dataSet) {
+            sum += data.getClaimValue();
+            data.setClaimValue(sum);
         }
     }
     
@@ -117,12 +118,12 @@ public class DataTable {
             deCummulate(datas.get(accident));
     }
     
-    private void deCummulate(TreeSet<Data<ProjectDataType, Double>> dataSet) {
-        Data<ProjectDataType, Double> prev = null;
-        for(Iterator<Data<ProjectDataType, Double>> it = dataSet.descendingIterator(); it.hasNext();) {
-            Data<ProjectDataType, Double> current = it.next();
+    private void deCummulate(TreeSet<ClaimValue> dataSet) {
+        ClaimValue prev = null;
+        for(Iterator<ClaimValue> it = dataSet.descendingIterator(); it.hasNext();) {
+            ClaimValue current = it.next();
             if(prev != null)
-                prev.setValue(prev.getValue()-current.getValue());
+                prev.setClaimValue(prev.getClaimValue()-current.getClaimValue());
             prev = current;
         }
     }

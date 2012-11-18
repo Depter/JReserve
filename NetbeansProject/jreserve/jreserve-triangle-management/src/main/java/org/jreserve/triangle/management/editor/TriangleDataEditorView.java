@@ -1,15 +1,14 @@
 package org.jreserve.triangle.management.editor;
 
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import org.jreserve.data.Data;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.entities.*;
+import org.jreserve.triangle.data.TriangleComment;
+import org.jreserve.triangle.data.TriangleCorrection;
+import org.jreserve.triangle.entities.Triangle;
+import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.management.TriangleProjectElement;
-import org.jreserve.triangle.widget.WidgetData;
 
 /**
  *
@@ -71,11 +70,8 @@ class TriangleDataEditorView extends DataEditorView<Triangle> {
     }
 
     @Override
-    protected List<Data<Triangle, Double>> getCorrectionData() {
-        List<Data<Triangle, Double>> datas = new ArrayList<Data<Triangle, Double>>();
-        for(TriangleCorrection tc : element.getValue().getCorrections())
-            datas.add(tc.toData());
-        return datas;
+    protected List<TriangleCorrection> getCorrectionData() {
+        return element.getValue().getCorrections();
     }
 
     @Override
@@ -95,30 +91,13 @@ class TriangleDataEditorView extends DataEditorView<Triangle> {
     }
 
     @Override
-    protected void updateCorrections(List<Data<Triangle, Double>> datas) {
-        List<TriangleCorrection> corrections = getCorrections(datas);
+    protected void updateCorrections(List<TriangleCorrection> corrections) {
         element.setProperty(TriangleProjectElement.CORRECTION_PROPERTY, corrections);
-    }
-    
-    private List<TriangleCorrection> getCorrections(List<Data<Triangle, Double>> datas) {
-        List<TriangleCorrection> corrections = new ArrayList<TriangleCorrection>(datas.size());
-        for(Data<Triangle, Double> data : datas)
-            corrections.add(getCorrection(data));
-        return corrections;
-    }
-    
-    private TriangleCorrection getCorrection(Data<Triangle, Double> data) {
-        TriangleCorrection tc = new TriangleCorrection(data.getOwner(), data.getAccidentDate(), data.getDevelopmentDate());
-        tc.setCorrection(data.getValue());
-        return tc;
     }
 
     @Override
-    protected List<WidgetData<Comment>> getComments() {
-        List<WidgetData<Comment>> comments = new ArrayList<WidgetData<Comment>>();
-        for(TriangleComment comment : element.getValue().getComments())
-            comments.add(new WidgetData<Comment>(comment.getAccidentDate(), comment.getDevelopmentDate(), comment));
-        return comments;
+    protected List<TriangleComment> getComments() {
+        return element.getValue().getComments();
     }
 
     @Override
