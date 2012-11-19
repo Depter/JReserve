@@ -3,11 +3,14 @@ package org.jreserve.estimates.factors.util;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import org.hibernate.Session;
 import org.jreserve.data.DataCriteria;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.entities.ClaimValue;
+import org.jreserve.persistence.SessionTask;
 import org.jreserve.persistence.SessionTask.AbstractTask;
 import org.jreserve.smoothing.Smoother;
 import org.jreserve.smoothing.core.Smoothing;
@@ -18,34 +21,113 @@ import org.jreserve.triangle.widget.DataUtil;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleCellUtil;
 import org.jreserve.triangle.widget.WidgetData;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.RequestProcessor;
 
 /**
  *
  * @author Peter Decsi
  */
-public class FactorInputLoader extends AbstractTask<List<WidgetData<Double>>> {
+@Messages({
+    "# {0} - triangle name",
+    "MSG.FactorInputLoader.HandlerName=Loading triangle {0}"
+})
+public class FactorInputLoader extends AbstractTask<TriangleCell[][]> implements Runnable{
+    
+    public static interface Callback {
+        public void finnished(TriangleCell[][] cells);
+        public void finnished(Exception ex);
+    }
     
     private final static Logger logger = Logger.getLogger(FactorInputLoader.class.getName());
     private final static TriangleCell[] ROW_SABLON = new TriangleCell[0];
     
-    private String triangleId;
-    private GeometryUtil util;
-    private TriangleCell[][] cells;
-    private TriangleCell[][] factors;
+    private final Callback callBack;
+    private final ProgressHandle handle;
+    private final RequestProcessor.Task task;
     
-//    private final ProgressHandle handle;
-//    private final RequestProcessor.Task task;
+    private final String triangleName;
+    private final String triangleId;
+    private GeometryUtil util;
+    
+    public FactorInputLoader(Triangle triangle, Callback callBack) {
+        this.triangleName = triangle.getName();
+        this.triangleId = triangle.getId();
+        this.callBack = callBack;
+        
+        this.task = RequestProcessor.getDefault().create(this);
+        handle = ProgressHandleFactory.createHandle(Bundle.MSG_FactorInputLoader_HandlerName(triangleName), task);
+    }
+    
+    public void start() {
+        task.schedule(0);
+    }
+    
+    public void cancel() {
+        task.cancel();
+    }
+    
+    @Override
+    public void run() {
+        try {
+            handle.start(5);
+            TriangleCell[][] cells = SessionTask.withOpenCurrentSession(this);
+            callBack(cells);
+        } catch (Exception ex) {
+            callBack(ex);
+        } finally {
+            handle.finish();
+        }
+    }
+    
+    private void callBack(final TriangleCell[][] cells) {
+        if(callBack == null) return;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                callBack.finnished(cells);
+            }
+        });
+    }
+    
+    private void callBack(final Exception ex) {
+        if(callBack == null) return;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                callBack.finnished(ex);
+            }
+        });
+    }
 
     @Override
     public void doWork(Session session) throws Exception {
+        logger.log(Level.FINE, "Loading triangle data: {0}", triangleName);
+        try {
+            loadCells(session);
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Unable to load triangle data: "+triangleName, ex);
+            throw ex;
+        }
+    }
+    
+    private void loadCells(Session session) {
         Triangle triangle = (Triangle) session.load(Triangle.class, triangleId);
+        handle.progress(1);
+
         initCells(triangle);
+        handle.progress(1);
+
         loadValues(session, triangle);
+        handle.progress(1);
+
         applyCorrections(triangle);
+        handle.progress(1);
+
         applySmoothings(triangle);
-        TriangleCellUtil.cummulate(cells);
-        createFactors();
-        result = TriangleCellUtil.extractValues(factors);
+        handle.progress(1);
     }
     
     private void initCells(Triangle triangle) {
@@ -56,11 +138,11 @@ public class FactorInputLoader extends AbstractTask<List<WidgetData<Double>>> {
     private void createCells(Triangle triangle) {
         TriangleGeometry geometry = triangle.getGeometry();
         int aps = geometry.getAccidentPeriods();
-        cells = new TriangleCell[aps][];
+        result = new TriangleCell[aps][];
         Date developmentEnd = util.getDevelopmentEnd(geometry, 0, geometry.getDevelopmentPeriods() - 1);
         
         for(int r=0; r<aps; r++)
-            cells[r] = createRow(r, geometry, developmentEnd);
+            result[r] = createRow(r, geometry, developmentEnd);
     }
     
     private TriangleCell[] createRow(int row, TriangleGeometry geometry, Date developmentEnd) {
@@ -85,62 +167,17 @@ public class FactorInputLoader extends AbstractTask<List<WidgetData<Double>>> {
     private void loadValues(Session session, Triangle triangle) {
         List<ClaimValue> datas = new DataSource(session).getClaimData(new DataCriteria(triangle.getDataType()));
         List<WidgetData<Double>> values = DataUtil.convertDatas(datas);
-        TriangleCellUtil.setCellValues(cells, values, TriangleCell.VALUE_LAYER);
+        TriangleCellUtil.setCellValues(result, values, TriangleCell.VALUE_LAYER);
     }
     
     private void applyCorrections(Triangle triangle) {
         List<WidgetData<Double>> corrections = DataUtil.convertCorrections(triangle.getCorrections());
-        TriangleCellUtil.setCellValues(cells, corrections, TriangleCell.CORRECTION_LAYER);
+        TriangleCellUtil.setCellValues(result, corrections, TriangleCell.CORRECTION_LAYER);
     }
     
     private void applySmoothings(Triangle triangle) {
-        Smoother smoother = new Smoother(cells, TriangleCell.SMOOTHING_LAYER);
+        Smoother smoother = new Smoother(result, TriangleCell.SMOOTHING_LAYER);
         for(Smoothing smoothing : triangle.getSmoothings())
             smoother.smooth(smoothing);
-    }
-    
-    private void createFactors() {
-        factors = new TriangleCell[cells.length][];
-        for(int r=0, size=cells.length; r<size; r++) {
-            TriangleCell[] row = cells[r];
-            if(row.length < 2) {
-                factors[r] = ROW_SABLON;
-            } else {
-                factors[r] = createFactorRow(r, row);
-            }            
-        }
-    }
-    
-    private TriangleCell[] createFactorRow(int r, TriangleCell[] row) {
-        TriangleCell[] result = new TriangleCell[row.length - 1];
-        TriangleCell cell = null;
-        
-        for(int c=0, size=row.length-1; c<size; c++) {
-            TriangleCell c1 = row[c];
-            TriangleCell c2 = row[c+1];
-            cell = new TriangleCell(cell, r, c, c1.getAccidentBegin(), c1.getAccidentEnd(), c1.getDevelopmentBegin(), c1.getDevelopmentEnd());
-            double factor = getFactor(c1, c2);
-            TriangleCellUtil.setValue(cell, TriangleCell.VALUE_LAYER, factor);
-            result[c] = cell;
-        }
-        return result;
-    }
-    
-    private double getFactor(TriangleCell c1, TriangleCell c2) {
-        if(c1 == null || c2 == null) return Double.NaN;
-        
-        Double d1 = c1.getDisplayValue();
-        if(d1 == null) return Double.NaN;
-        
-        double pd1 = d1.doubleValue();
-        if(Double.isNaN(pd1) || pd1 == 0d) return Double.NaN;
-        
-        Double d2 = c2.getDisplayValue();
-        if(d2 == null) return Double.NaN;
-        
-        double pd2 = d2.doubleValue();
-        if(Double.isNaN(pd2)) return Double.NaN;
-        
-        return pd2 / pd1;
     }
 }

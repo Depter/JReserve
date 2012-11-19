@@ -1,7 +1,7 @@
 package org.jreserve.estimates.factors.visual;
 
 import javax.swing.JPanel;
-import org.jreserve.project.entities.project.ProjectElement;
+import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.widget.TriangleWidget;
 
