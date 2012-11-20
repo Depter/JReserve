@@ -36,7 +36,7 @@ public class ChainLadderEstimate extends AbstractPersistentObject implements Pro
     @JoinColumn(name="TRIANGLE_ID", referencedColumnName="ID", nullable=false)
     private Triangle triangle;
     
-    @ManyToOne(fetch=FetchType.EAGER, optional=false)
+    @ManyToOne(fetch=FetchType.EAGER, optional=false, cascade=CascadeType.ALL)
     @JoinColumn(name="FACTOR_SELECTION_ID", referencedColumnName="ID", nullable=false)
     private FactorSelection factorSelection;
     

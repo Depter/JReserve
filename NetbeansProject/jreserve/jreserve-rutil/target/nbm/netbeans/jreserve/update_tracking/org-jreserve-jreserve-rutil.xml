@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.rutil">
-    <module_version install_time="1353334889942" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1353407999773" last="true" origin="installer" specification_version="1.0">
         <file crc="2838910058" name="config/Modules/org-jreserve-jreserve-rutil.xml"/>
-        <file crc="261640802" name="modules/org-jreserve-jreserve-rutil.jar"/>
+        <file crc="3247213337" name="modules/org-jreserve-jreserve-rutil.jar"/>
     </module_version>
 </module>

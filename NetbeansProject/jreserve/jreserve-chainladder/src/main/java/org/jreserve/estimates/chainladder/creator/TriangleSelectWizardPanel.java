@@ -3,6 +3,8 @@ package org.jreserve.estimates.chainladder.creator;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.hibernate.Session;
@@ -15,6 +17,7 @@ import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.triangle.entities.Triangle;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
@@ -27,6 +30,8 @@ import org.openide.util.NbBundle.Messages;
     "MSG.TriangleSelectWizardPanel.Triangle.Empty=Triangle not selected!"
 })
 public class TriangleSelectWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDescriptor>, ChangeListener  {
+    
+    private final static Logger logger = Logger.getLogger(TriangleSelectWizardPanel.class.getName());
     
     final static String PROP_TRIANGLE = "SELECTED TRIANGLE";
     
@@ -115,8 +120,9 @@ public class TriangleSelectWizardPanel implements WizardDescriptor.ValidatingPan
             addProjectElement(estimate);
             clearProperties();    
         } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Unable to create ChainLadderEstimate!", ex);
+            Exceptions.printStackTrace(ex);
         }
-        System.out.println("validate");
     }    
     
     private Factory createFactory() {

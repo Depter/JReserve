@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.estimates.chainladder.ChainLadderEstimateProjectElement;
+import org.jreserve.estimates.factors.FactorNavigatorUtil;
 import org.jreserve.navigator.NavigableComponent;
 import org.jreserve.navigator.NavigableTopComponent;
 import org.jreserve.project.system.ProjectElement;
@@ -21,7 +22,7 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
 
     public static TopComponent createEditor(ChainLadderEstimateProjectElement element) {
         List<NavigableComponent> components = new ArrayList<NavigableComponent>();
-        
+        components.addAll(FactorNavigatorUtil.createComponents(element.getValue().getTriangle()));
         return new Editor(components, element);
     }
     
