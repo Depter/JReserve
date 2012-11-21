@@ -64,7 +64,7 @@ public class TriangleCell implements Comparable<TriangleCell> {
         return developmentEnd;
     }
 
-    TriangleCell getPreviousCell() {
+    public TriangleCell getPreviousCell() {
         return previous;
     }
     

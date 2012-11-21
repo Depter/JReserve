@@ -61,11 +61,11 @@ public class TriangleGeometry extends VectorGeometry {
         initDevelopmentPeriods(periods);
     }
 
-    public int getMonthInDevelopment() {
+    public int getDevelopmentMonths() {
         return developmentMonths;
     }
 
-    public void setMonthInDevelopment(int month) {
+    public void setDevelopmentMonths(int month) {
         initMonthInDevelopment(month);
     }
     

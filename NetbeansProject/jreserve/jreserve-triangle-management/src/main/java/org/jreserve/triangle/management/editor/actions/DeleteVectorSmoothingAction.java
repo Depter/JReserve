@@ -10,6 +10,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import org.jreserve.smoothing.Smoother;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.management.VectorProjectElement;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.actions.AbstractPopUpAction;
@@ -97,7 +98,7 @@ public class DeleteVectorSmoothingAction extends AbstractPopUpAction implements 
         List<Smoothing> smoothings = element.getValue().getSmoothings();
         smoothings.remove(smoothing);
         setWidgetSmoothings(smoothings);
-        element.setProperty(VectorProjectElement.SMOOTHING_PROPERTY, smoothings);
+        element.setProperty(Vector.SMOOTHING_PROPERTY, smoothings);
     }
     
     private void setWidgetSmoothings(List<Smoothing> smoothings) {

@@ -1,9 +1,6 @@
 package org.jreserve.triangle.widget;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
@@ -11,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.*;
@@ -23,7 +21,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultEditorKit;
 import org.jreserve.localesettings.util.DecimalSpinner;
 import org.jreserve.resources.ToolBarButton;
-import org.jreserve.resources.ToolBarToggleButton;
 import org.jreserve.triangle.data.Comment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.util.TriangleTable;
@@ -49,7 +46,7 @@ import org.openide.util.lookup.ProxyLookup;
 })
 public class TriangleWidget extends JPanel implements Serializable {
     
-    private final static Dimension INTERNAL_SPACIN = new Dimension(0, 0);
+    private final static Dimension INTERNAL_SPACING = new Dimension(0, 0);
     
     private final static String CUMMULATED_ACTION = "CUMMULATED_ACTION";
     private final static String CUMMULATED_ICON = "resources/arrow_up.png";
@@ -58,11 +55,23 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     private final static int TOOLBAR_STRUT = 5;
     private final static int DEFAULT_COLUMN_WIDTH = 75;
+    private final static Dimension PREFFERED_SIZE = new Dimension(500, 200);
+    
+    public final static Color CORRECTION_BG = new Color(235, 204, 204);
+    public final static Color VALUE_BG = Color.WHITE;
+    public final static Color SMOOTHING_BG = new Color(167, 191, 255);
     
     private DecimalSpinner spinner;
     private JToolBar toolBar;
-    private ToolBarToggleButton cummulatedButton;
-    private ToolBarToggleButton notCummulatedButton;
+    
+    private boolean viewButtonsVisible = true;
+    private List<Component> viewButtonComponents = new ArrayList<Component>();
+    
+    private boolean cummulateButtonsVisible = true;
+    private List<Component> cummulateButtonComponents = new ArrayList<Component>();
+    
+    private JToggleButton cummulatedButton;
+    private JToggleButton notCummulatedButton;
     private ActionHandler actionHandler = new ActionHandler();
     
     private TriangleTable table;
@@ -74,6 +83,7 @@ public class TriangleWidget extends JPanel implements Serializable {
         lookup = new ProxyLookup(Lookups.fixed(this, getActionMap()), table.getLookup());
         super.addComponentListener(new ResizeListener());
         registerCopyAction();
+        setPreferredSize(PREFFERED_SIZE);
     }
     
     private void initComponent() {
@@ -109,17 +119,21 @@ public class TriangleWidget extends JPanel implements Serializable {
         toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
         toolBar.add(createNotCummulatedButton(group));
         
-        toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
+        Component c = Box.createHorizontalStrut(TOOLBAR_STRUT);
+        cummulateButtonComponents.add(c);
+        toolBar.add(c);
         toolBar.add(createCummulatedButton(group));
         
-        ToolBarButton copyButton = new ToolBarButton(SystemAction.get(CopyAction.class));
-        copyButton.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_ClipboardCopy());
         toolBar.addSeparator();
         toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
+        ToolBarButton copyButton = new ToolBarButton(SystemAction.get(CopyAction.class));
+        copyButton.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_ClipboardCopy());
         toolBar.add(copyButton);
         
         toolBar.setVisible(true);
         toolBar.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        toolBar.setFloatable(false);
+        toolBar.setRollover(true);
         return toolBar;
     }
     
@@ -127,10 +141,12 @@ public class TriangleWidget extends JPanel implements Serializable {
         TriangleModel[] models = getRegisteredModels();
         for(int m=0, size=models.length; m<size; m++) {
             createTriangleModelButton(group, models[m], m==0);
-            toolBar.add(Box.createHorizontalStrut(TOOLBAR_STRUT));
+            Component strut = Box.createHorizontalStrut(TOOLBAR_STRUT);
+            viewButtonComponents.add(strut);
+            toolBar.add(strut);
         }
         if(models.length > 0)
-        table.setTriangleModel(models[0]);
+        table.setTriangleModel(models[0].createInstance());
     }
     
     private TriangleModel[] getRegisteredModels() {
@@ -142,6 +158,7 @@ public class TriangleWidget extends JPanel implements Serializable {
     private JToggleButton createTriangleModelButton(ButtonGroup group, TriangleModel model, boolean selected) {
         JToggleButton button = new JToggleButton(new ImageIcon(model.getIcon()));
         button.setToolTipText(model.getToolTipName());
+        viewButtonComponents.add(button);
         toolBar.add(button);
         group.add(button);
         button.setSelected(selected);
@@ -151,33 +168,39 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     private JToggleButton createNotCummulatedButton(ButtonGroup group) {
         Icon i = ImageUtilities.loadImageIcon(NOT_CUMMULATED_ICON, false);
-        notCummulatedButton = new ToolBarToggleButton(i);
+        notCummulatedButton = new JToggleButton(i);
         notCummulatedButton.setActionCommand(NOT_CUMMULATED_ACTION);
         notCummulatedButton.addActionListener(actionHandler);
         notCummulatedButton.setSelected(true);
         notCummulatedButton.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_Deummulate());
         group.add(notCummulatedButton);
+        cummulateButtonComponents.add(notCummulatedButton);
         return notCummulatedButton;
     }
     
     private JToggleButton createCummulatedButton(ButtonGroup group) {
         Icon i = ImageUtilities.loadImageIcon(CUMMULATED_ICON, false);
-        cummulatedButton = new ToolBarToggleButton(i);
+        cummulatedButton = new JToggleButton(i);
         cummulatedButton.setActionCommand(CUMMULATED_ACTION);
         cummulatedButton.addActionListener(actionHandler    );
         cummulatedButton.setSelected(false);
         cummulatedButton.setToolTipText(Bundle.LBL_TriangleWidget_ToolTip_Cummulate());
         group.add(cummulatedButton);
+        cummulateButtonComponents.add(cummulatedButton);
         return cummulatedButton;
     }
     
     private JScrollPane getTable() {
-        table = new org.jreserve.triangle.widget.util.TriangleTable();
+        table = new TriangleTable();
         
         table.setFillsViewportHeight(false);
-        table.setIntercellSpacing(INTERNAL_SPACIN);
+        table.setIntercellSpacing(INTERNAL_SPACING);
         table.getModel().addTableModelListener(new TableListener());
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        
+        table.setLayerBackground(TriangleCell.VALUE_LAYER, VALUE_BG);
+        table.setLayerBackground(TriangleCell.SMOOTHING_LAYER, SMOOTHING_BG);
+        table.setLayerBackground(TriangleCell.CORRECTION_LAYER, CORRECTION_BG);
         
         scroll = new JScrollPane(table);
         scroll.setBorder(BorderFactory.createEmptyBorder());
@@ -201,6 +224,32 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     public int getVisibleDigits() {
         return spinner.getIntValue();
+    }
+    
+    public void setVisibleDigits(int digits) {
+        if(digits < 0) 
+            digits = 0;
+        spinner.setValue(digits);
+    }
+    
+    public void setViewButtonsVisible(boolean visible) {
+        this.viewButtonsVisible = visible;
+        for(Component c : viewButtonComponents)
+            c.setVisible(visible);
+    }
+    
+    public boolean getViewButtonsVisible() {
+        return viewButtonsVisible;
+    }
+    
+    public void setCummulateButtonsVisible(boolean visible) {
+        this.cummulateButtonsVisible = visible;
+        for(Component c : cummulateButtonComponents)
+            c.setVisible(visible);
+    }
+    
+    public boolean getCummulateButtonsVisible() {
+        return cummulateButtonsVisible;
     }
     
     public void addTriangleWidgetListener(TriangleWidgetListener listener) {
@@ -399,7 +448,7 @@ public class TriangleWidget extends JPanel implements Serializable {
         private TriangleModel model;
 
         ModelSelectAction(TriangleModel model) {
-            this.model = model;
+            this.model = model.createInstance();
         }
         
         @Override

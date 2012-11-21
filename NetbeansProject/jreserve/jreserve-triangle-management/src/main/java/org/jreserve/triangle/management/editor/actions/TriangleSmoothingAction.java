@@ -1,11 +1,11 @@
 package org.jreserve.triangle.management.editor.actions;
 
-import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.Action;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.actions.AddSmoothingAction;
+import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.management.TriangleProjectElement;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
@@ -70,6 +70,6 @@ public class TriangleSmoothingAction extends AddSmoothingAction {
     protected void smoothingCreated(Smoothing smoothing) {
         List<Smoothing> smoothings = element.getValue().getSmoothings();
         smoothings.add(smoothing);
-        element.setProperty(TriangleProjectElement.SMOOTHING_PROPERTY, smoothings);
+        element.setProperty(Triangle.SMOOTHING_PROPERTY, smoothings);
     }
 }

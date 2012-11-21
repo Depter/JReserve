@@ -10,7 +10,6 @@ import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
-import org.jreserve.triangle.management.VectorProjectElement;
 
 /**
  *
@@ -62,7 +61,7 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     @Override
     protected void setElementGeometry(TriangleGeometry geometry) {
         VectorGeometry vg = getVectorGeometry(geometry);
-        element.setProperty(VectorProjectElement.GEOMETRY_PROPERTY, vg);
+        element.setProperty(Vector.GEOMETRY_PROPERTY, vg);
     }
     
     private VectorGeometry getVectorGeometry(TriangleGeometry geometry) {
@@ -85,12 +84,12 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     @Override
     protected boolean isGeometryChanged(PropertyChangeEvent evt) {
         String property = evt.getPropertyName();
-        return VectorProjectElement.GEOMETRY_PROPERTY.equals(property);
+        return Vector.GEOMETRY_PROPERTY.equals(property);
     }
 
     @Override
     protected void updateCorrections(List<TriangleCorrection> corrections) {
-        element.setProperty(VectorProjectElement.CORRECTION_PROPERTY, corrections);
+        element.setProperty(Vector.CORRECTION_PROPERTY, corrections);
     }
 
     @Override
@@ -122,7 +121,7 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
         }
 
         @Override
-        public int getMonthInDevelopment() {
+        public int getDevelopmentMonths() {
             return Integer.MAX_VALUE;
         }
 

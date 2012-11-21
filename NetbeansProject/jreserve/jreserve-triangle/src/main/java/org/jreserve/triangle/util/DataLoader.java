@@ -1,4 +1,4 @@
-package org.jreserve.triangle.management.editor;
+package org.jreserve.triangle.util;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -12,8 +12,6 @@ import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.Project;
 import org.jreserve.triangle.entities.DataStructure;
-import org.jreserve.triangle.widget.DataUtil;
-import org.jreserve.triangle.widget.WidgetData;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle.Messages;
@@ -42,7 +40,7 @@ public class DataLoader<T extends DataStructure> implements Runnable {
     private Session session;
     private DataSource dataSource;
     
-    private volatile List<WidgetData<Double>> datas = null;
+    private volatile List<ClaimValue> datas = null;
     
     private volatile RuntimeException ex = null;
     
@@ -66,7 +64,7 @@ public class DataLoader<T extends DataStructure> implements Runnable {
         handle.switchToIndeterminate();
         try {
             initSession();
-            loadData();
+            datas = dataSource.getClaimData(new DataCriteria(dataType));
         } catch (RuntimeException rex) {
             this.ex = rex;
             logger.log(Level.SEVERE, "Unable to load data for: " + name, ex);
@@ -82,11 +80,6 @@ public class DataLoader<T extends DataStructure> implements Runnable {
         project = (Project) session.merge(project);
         dataType = (ProjectDataType) session.merge(dataType);
         dataSource = new DataSource(session);
-    }
-
-    private void loadData() {
-        List<ClaimValue> result = dataSource.getClaimData(new DataCriteria(dataType));
-        this.datas = DataUtil.convertDatas(result);
     }
 
     private void closeSession() {
@@ -108,7 +101,7 @@ public class DataLoader<T extends DataStructure> implements Runnable {
         });
     }
 
-    public List<WidgetData<Double>> getData() {
+    public List<ClaimValue> getData() {
         if (ex != null)
             throw ex;
         return datas;

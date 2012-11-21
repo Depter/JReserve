@@ -16,16 +16,16 @@ import org.jreserve.triangle.widget.*;
  */
 public class AbstractTriangleTableModel extends AbstractTableModel implements TriangleTableModel {
 
-    private boolean manualEvents = false;
-    private TriangleGeometry geometry;
-    private TriangleModel triangleModel = EmptyTriangleModel.EMPTY;
+    protected boolean manualEvents = false;
+    protected TriangleGeometry geometry;
+    protected TriangleModel triangleModel = new EmptyTriangleModel();
     
-    private TriangleCell[][] cells = new TriangleCell[0][];
-    private List<List<WidgetData<Double>>> values = new ArrayList<List<WidgetData<Double>>>();
-    private List<WidgetData<Comment>> comments = new ArrayList<WidgetData<Comment>>();
+    protected TriangleCell[][] cells = new TriangleCell[0][];
+    protected List<List<WidgetData<Double>>> values = new ArrayList<List<WidgetData<Double>>>();
+    protected List<WidgetData<Comment>> comments = new ArrayList<WidgetData<Comment>>();
     
-    private int editableLayer = -1;
-    private boolean cummulated = false;
+    protected int editableLayer = -1;
+    protected boolean cummulated = false;
     
     private List<TriangleWidgetListener> listeners = new ArrayList<TriangleWidgetListener>();
     
@@ -68,13 +68,13 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
         fillCellComments();
     }
 
-    private void fillCellValues() {
+    protected void fillCellValues() {
         TriangleCellUtil.setCellValues(cells, values);
         if(cummulated)
             TriangleCellUtil.cummulate(cells);
     }
     
-    private void fillCellComments() {
+    protected void fillCellComments() {
         for(TriangleCell[] row : cells)
             for(TriangleCell cell : row)
                 fillCellComments(cell);

@@ -98,4 +98,9 @@ public class CalendarPeriodTriangleModel extends AbstractTriangleModel {
                 return cell;
         return null;
     }
+
+    @Override
+    public TriangleModel createInstance() {
+        return new CalendarPeriodTriangleModel();
+    }
 }

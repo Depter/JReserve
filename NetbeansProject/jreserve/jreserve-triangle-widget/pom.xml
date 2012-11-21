@@ -95,6 +95,18 @@
             <artifactId>jreserve-triangle</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-chart</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-navigator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -105,8 +117,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>org.jreserve.triangle.widget</publicPackage>
-                        <publicPackage>org.jreserve.triangle.widget.actions</publicPackage>
+                        <publicPackage>org.jreserve.triangle.widget.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

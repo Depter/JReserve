@@ -13,6 +13,7 @@ import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.Vector;
+import static org.jreserve.triangle.entities.Vector.*;
 import org.jreserve.triangle.entities.VectorGeometry;
 import org.jreserve.triangle.management.editor.Editor;
 import org.openide.nodes.Node;
@@ -37,11 +38,6 @@ import org.openide.windows.TopComponent;
     "LOG.VectorProjectElement.GeometryChange=Geometry of vector \"{0}\" changed {1} => {2}."
 })
 public class VectorProjectElement extends ProjectElement<Vector> {
-    
-    public final static String GEOMETRY_PROPERTY = "VECTOR_GEOMETRY_PROPERTY";
-    public final static String CORRECTION_PROPERTY = "VECTOR_CORRECTION_PROPERTY";
-    public final static String COMMENT_PROPERTY = "VECTOR_COMMENT_PROPERTY";
-    public final static String SMOOTHING_PROPERTY = "VECTOR_SMOOTHING_PROPERTY";
     
     public VectorProjectElement(Vector vector) {
         super(vector);

@@ -1,4 +1,4 @@
-package org.jreserve.triangle.management.editor.charts;
+package org.jreserve.triangle.widget.charts;
 
 import java.util.*;
 import org.jreserve.chart.ChartUtil;

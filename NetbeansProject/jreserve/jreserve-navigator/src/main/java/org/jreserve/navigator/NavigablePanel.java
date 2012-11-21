@@ -49,9 +49,6 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     
     private UndockedTopComponent tc = null;
     
-    public NavigablePanel() {
-    }
-    
     public NavigablePanel(String displayName, Image icon) {
         super.setName(displayName);
         this.icon = icon;
@@ -277,6 +274,10 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
     
     protected void setLookup(Lookup lookup) {
         this.lookup = lookup;
+    }
+
+    @Override
+    public void parentClosed() {
     }
     
     private class DblClickHandler extends MouseAdapter {

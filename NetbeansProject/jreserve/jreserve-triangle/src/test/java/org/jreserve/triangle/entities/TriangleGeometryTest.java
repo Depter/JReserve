@@ -36,18 +36,18 @@ public class TriangleGeometryTest {
 
     @Test
     public void testGetMonthInDevelopment() {
-        assertEquals(MONTH_IN_DEVELOPMENT, geometry.getMonthInDevelopment());
+        assertEquals(MONTH_IN_DEVELOPMENT, geometry.getDevelopmentMonths());
     }
 
     @Test
     public void testSetMonthInDevelopment() {
-        geometry.setMonthInDevelopment(10);
-        assertEquals(10, geometry.getMonthInDevelopment());
+        geometry.setDevelopmentMonths(10);
+        assertEquals(10, geometry.getDevelopmentMonths());
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testSetMonthInDevelopment_TooFewMonths() {
-        geometry.setMonthInDevelopment(0);
+        geometry.setDevelopmentMonths(0);
     }
 
     @Test

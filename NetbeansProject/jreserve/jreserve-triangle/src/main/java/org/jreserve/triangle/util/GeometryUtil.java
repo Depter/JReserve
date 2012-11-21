@@ -49,13 +49,13 @@ public class GeometryUtil {
         Date start = getAccidentBegin(geometry, accident);
         if(development == 0)
             return start;
-        return stepMonths(start, development, geometry.getMonthInDevelopment());
+        return stepMonths(start, development, geometry.getDevelopmentMonths());
     }
 
     public Date getDevelopmentEnd(TriangleGeometry geometry, int accident, int development) {
         Date start = getAccidentBegin(geometry, accident);
         if(++development == 0)
             return start;
-        return stepMonths(start, development, geometry.getMonthInDevelopment());
+        return stepMonths(start, development, geometry.getDevelopmentMonths());
     }
 }

@@ -5,6 +5,7 @@ import javax.swing.Action;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.smoothing.actions.AddSmoothingAction;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.management.VectorProjectElement;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
@@ -69,6 +70,6 @@ public class VectorSmoothingAction  extends AddSmoothingAction {
     protected void smoothingCreated(Smoothing smoothing) {
         List<Smoothing> smoothings = element.getValue().getSmoothings();
         smoothings.add(smoothing);
-        element.setProperty(VectorProjectElement.SMOOTHING_PROPERTY, smoothings);
+        element.setProperty(Vector.SMOOTHING_PROPERTY, smoothings);
     }
 }

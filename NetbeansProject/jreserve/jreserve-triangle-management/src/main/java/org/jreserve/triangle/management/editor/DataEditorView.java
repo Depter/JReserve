@@ -17,6 +17,7 @@ import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.DataStructure;
 import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.util.DataLoader;
 import org.jreserve.triangle.widget.*;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -30,10 +31,6 @@ import org.openide.util.NbBundle.Messages;
     "LBL.DataEditorView.Title=Geometry"
 })
 abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
-    
-    private final static Color CORRECTION_BG = new Color(235, 204, 204);
-    private final static Color VALUE_BG = Color.WHITE;
-    private final static Color SMOOTHING_BG = new Color(167, 191, 255);
     
     protected GeometrySettingPanel geometrySetting;
     protected TriangleWidget triangle;
@@ -104,15 +101,12 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     
     private void setDevelopmentGeometry(TriangleGeometry geometry) {
         geometrySetting.setDevelopmentPeriodCount(geometry.getDevelopmentPeriods());
-        geometrySetting.setDevelopmentMonthsPerStep(geometry.getMonthInDevelopment());
+        geometrySetting.setDevelopmentMonthsPerStep(geometry.getDevelopmentMonths());
     }
     
     private void initLayers() {
         triangle.addValueLayer(new ArrayList<WidgetData<Double>>());
         triangle.addValueLayer(new ArrayList<WidgetData<Double>>());
-        triangle.setLayerBackground(TriangleCell.VALUE_LAYER, VALUE_BG);
-        triangle.setLayerBackground(TriangleCell.SMOOTHING_LAYER, SMOOTHING_BG);
-        triangle.setLayerBackground(TriangleCell.CORRECTION_LAYER, CORRECTION_BG);
         triangle.setEditableLayer(TriangleCell.CORRECTION_LAYER);
     }
     
@@ -157,7 +151,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         @Override
         public void finnished(DataLoader<T> loader) {
             try {
-                triangle.setValueLayer(TriangleCell.VALUE_LAYER, loader.getData());
+                triangle.setValueLayer(TriangleCell.VALUE_LAYER, DataUtil.convertDatas(loader.getData()));
                 setCorrections();
                 setSmoothings();
                 setComments();

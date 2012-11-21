@@ -4,6 +4,7 @@ import java.util.List;
 import javax.swing.Action;
 import org.jreserve.triangle.data.Comment;
 import org.jreserve.triangle.data.TriangleComment;
+import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.management.TriangleProjectElement;
 import org.jreserve.triangle.widget.actions.DeleteCommentsAction;
 import org.openide.util.Lookup;
@@ -14,17 +15,6 @@ import org.openide.util.NbBundle;
  * @author Peter Decsi
  * @version 1.0
  */
-//@ActionID(
-//    category = "JReserve/TriangleWidget/TriangleEditor",
-//    id = "org.jreserve.triangle.editor.DeleteTriangleCommentAction"
-//)
-//@ActionRegistration(
-//    displayName="#CTL.DeleteTriangleCommentAction",
-//    lazy=true
-//)
-//@ActionReferences({
-//    @ActionReference(path = "JReserve/Popup/TriangleDataEditor", position = 200)
-//})
 @NbBundle.Messages({
     "CTL.DeleteTriangleCommentAction=Delete comments"
 })
@@ -66,9 +56,9 @@ public class DeleteTriangleCommentAction extends DeleteCommentsAction {
 
     @Override
     protected void deleteComments(List<Comment> comments) {
-        List<TriangleComment> tcs = (List<TriangleComment>) element.getProperty(TriangleProjectElement.COMMENT_PROPERTY);
+        List<TriangleComment> tcs = (List<TriangleComment>) element.getProperty(Triangle.COMMENT_PROPERTY);
         tcs.removeAll(comments);
-        element.setProperty(TriangleProjectElement.COMMENT_PROPERTY, tcs);
+        element.setProperty(Triangle.COMMENT_PROPERTY, tcs);
     }
 
     @Override

@@ -47,6 +47,10 @@ public class TriangleSelectVisualPanel extends JPanel {
         return triangleCombo.getSelectedItem(Triangle.class);
     }
     
+    void setTriangle(Triangle triangle) {
+        triangleCombo.setSelectedItem(triangle);
+    }
+    
     void addChangeListener(ChangeListener listener) {
         if(!listeners.contains(listener))
             listeners.add(listener);

@@ -1,9 +1,9 @@
 package org.jreserve.triangle.widget.model;
 
-import org.jreserve.triangle.widget.TriangleModel;
 import java.awt.Image;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.TriangleCell;
+import org.jreserve.triangle.widget.TriangleModel;
 
 /**
  *
@@ -12,9 +12,10 @@ import org.jreserve.triangle.widget.TriangleCell;
  */
 class EmptyTriangleModel implements TriangleModel {
 
-    final static TriangleModel EMPTY = new EmptyTriangleModel();
+    //final static TriangleModel EMPTY = new EmptyTriangleModel();
     
-    private EmptyTriangleModel() {}
+    EmptyTriangleModel() {
+    }
     
     @Override
     public Image getIcon() {
@@ -57,5 +58,10 @@ class EmptyTriangleModel implements TriangleModel {
     @Override
     public TriangleCell getCellAt(int row, int column) {
         return null;
+    }
+
+    @Override
+    public TriangleModel createInstance() {
+        return new EmptyTriangleModel();
     }
 }

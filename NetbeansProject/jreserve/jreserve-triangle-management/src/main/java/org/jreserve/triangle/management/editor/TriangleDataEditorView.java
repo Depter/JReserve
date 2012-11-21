@@ -8,7 +8,6 @@ import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.management.TriangleProjectElement;
 
 /**
  *
@@ -59,13 +58,13 @@ class TriangleDataEditorView extends DataEditorView<Triangle> {
         } else {
             geometrySetting.setSymmetricMonths(true);
             geometrySetting.setAccidentMonthsPerStep(geometry.getAccidentMonths());
-            geometrySetting.setDevelopmentMonthsPerStep(geometry.getMonthInDevelopment());
+            geometrySetting.setDevelopmentMonthsPerStep(geometry.getDevelopmentMonths());
         }
     }
     
     private boolean isMonthsSymmetric(TriangleGeometry geometry) {
         int aMonth = geometry.getAccidentMonths();
-        int dMonth = geometry.getMonthInDevelopment();
+        int dMonth = geometry.getDevelopmentMonths();
         return aMonth == dMonth;
     }
 
@@ -76,7 +75,7 @@ class TriangleDataEditorView extends DataEditorView<Triangle> {
 
     @Override
     protected void setElementGeometry(TriangleGeometry geometry) {
-        element.setProperty(TriangleProjectElement.GEOMETRY_PROPERTY, geometry);
+        element.setProperty(Triangle.GEOMETRY_PROPERTY, geometry);
     }
 
     @Override
@@ -87,12 +86,12 @@ class TriangleDataEditorView extends DataEditorView<Triangle> {
     @Override
     protected boolean isGeometryChanged(PropertyChangeEvent evt) {
         String property = evt.getPropertyName();
-        return TriangleProjectElement.GEOMETRY_PROPERTY.equals(property);
+        return Triangle.GEOMETRY_PROPERTY.equals(property);
     }
 
     @Override
     protected void updateCorrections(List<TriangleCorrection> corrections) {
-        element.setProperty(TriangleProjectElement.CORRECTION_PROPERTY, corrections);
+        element.setProperty(Triangle.CORRECTION_PROPERTY, corrections);
     }
 
     @Override

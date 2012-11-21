@@ -52,4 +52,9 @@ public class DevelopmentPeriodTriangleModel extends AbstractTriangleModel {
         dateCache.put(index, str);
         return str;
     }
+
+    @Override
+    public TriangleModel createInstance() {
+        return new DevelopmentPeriodTriangleModel();
+    }
 }

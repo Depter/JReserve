@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.Action;
 import org.jreserve.triangle.data.Comment;
 import org.jreserve.triangle.data.TriangleComment;
+import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.management.TriangleProjectElement;
 import org.jreserve.triangle.widget.actions.AddCommentAction;
 import org.openide.util.Lookup;
@@ -58,9 +59,9 @@ public class AddTriangleCommentAction extends AddCommentAction {
     @Override
     protected Comment createComment(Comment comment) {
         TriangleComment tc = createTriangleComment(comment);
-        List<TriangleComment> comments = (List<TriangleComment>) element.getProperty(TriangleProjectElement.COMMENT_PROPERTY);
+        List<TriangleComment> comments = (List<TriangleComment>) element.getProperty(Triangle.COMMENT_PROPERTY);
         comments.add(tc);
-        element.setProperty(TriangleProjectElement.COMMENT_PROPERTY, comments);
+        element.setProperty(Triangle.COMMENT_PROPERTY, comments);
         return tc;
     }
     

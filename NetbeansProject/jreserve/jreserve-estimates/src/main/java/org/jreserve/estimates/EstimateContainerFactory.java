@@ -2,6 +2,7 @@ package org.jreserve.estimates;
 
 import java.awt.Image;
 import org.jreserve.project.system.container.ProjectDataElementContainerFactory;
+import org.jreserve.project.system.container.ProjectElementContainer;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
@@ -14,6 +15,14 @@ import org.openide.util.NbBundle.Messages;
     "LBL.EstimateContainerFactory.Name=Estimates"
 })
 public class EstimateContainerFactory extends ProjectDataElementContainerFactory {
+    
+    private static ProjectElementContainer PATH_ELEMENT;
+    
+    public static ProjectElementContainer createPathElement() {
+        if(PATH_ELEMENT == null)
+            PATH_ELEMENT = ProjectElementContainer.getPathElement(POSITION);
+        return PATH_ELEMENT;
+    }
     
     private static EstimateContainerFactory INSTANCE = null;
     

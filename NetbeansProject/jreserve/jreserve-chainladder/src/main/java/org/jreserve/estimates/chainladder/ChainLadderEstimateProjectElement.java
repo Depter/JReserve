@@ -6,6 +6,7 @@ import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.estimates.chainladder.visual.Editor;
 import org.jreserve.estimates.factors.FactorExclusion;
 import org.jreserve.estimates.factors.FactorSelection;
+import static org.jreserve.estimates.factors.FactorSelection.*;
 import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.DefaultProjectNode;
 import org.jreserve.project.system.ProjectElement;
@@ -37,6 +38,14 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
     private void initProperties(ChainLadderEstimate estimate) {
         super.setProperty(NAME_PROPERTY, estimate.getName());
         super.setProperty(DESCRIPTION_PROPERTY, estimate.getDescription());
+        initProperties(estimate.getFactorSelection());
+    }
+    
+    private void initProperties(FactorSelection fs) {
+        super.setProperty(FACTOR_SELECTION_COMMENTS, fs.getComments());
+        super.setProperty(FACTOR_SELECTION_CORRECTIONS, fs.getCorrections());
+        super.setProperty(FACTOR_SELECTION_EXCLUSIONS, fs.getExclusions());
+        super.setProperty(FACTOR_SELECTION_SMOOTHINGS, fs.getSmoothings());
     }
     
     private void initLookup() {

@@ -112,4 +112,15 @@ public class NavigableTopComponent extends TopComponent implements NavigableComp
     public Lookup getLookup() {
         return lookup;
     }
+    
+    @Override
+    public void parentClosed() {
+    }
+
+    @Override
+    protected void componentClosed() {
+        super.componentClosed();
+        for(NavigableComponent comp : components)
+            comp.parentClosed();
+    }
 }

@@ -8,17 +8,21 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.hibernate.Session;
+import org.jreserve.estimates.EstimateContainerFactory;
 import org.jreserve.estimates.chainladder.ChainLadderEstimate;
 import org.jreserve.estimates.chainladder.ChainLadderEstimateProjectElement;
 import org.jreserve.estimates.visual.NameSelectWizardPanel;
 import org.jreserve.persistence.SessionTask;
+import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
+import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.jreserve.triangle.entities.Triangle;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -57,9 +61,22 @@ public class TriangleSelectWizardPanel implements WizardDescriptor.ValidatingPan
     @Override
     public void readSettings(WizardDescriptor data) {
         this.wizard = data;
+        setProject();
+        validatePanel();
+    }
+    
+    private void setProject() {
         ProjectElement project = (ProjectElement) wizard.getProperty(NameSelectWizardPanel.PROP_PROJECT_ELEMENT);
         component.setProject(project);
-        validatePanel();
+        setTriangle();
+    }
+    
+    private void setTriangle() {
+        Lookup lkp = (Lookup) wizard.getProperty(ElementCreatorWizard.PROP_ELEMENT_LOOKUP);
+        Project project = (Project) wizard.getProperty(NameSelectWizardPanel.PROP_PROJECT);
+        Triangle triangle = lkp.lookup(Triangle.class);
+        if(triangle != null && triangle.getProject().equals(project))
+            component.setTriangle(triangle);
     }
 
     @Override
@@ -139,7 +156,7 @@ public class TriangleSelectWizardPanel implements WizardDescriptor.ValidatingPan
     
     private ProjectElementContainer getContainer() {
         ProjectElement element = (ProjectElement) wizard.getProperty(NameSelectWizardPanel.PROP_PROJECT_ELEMENT);
-        Object v = element.getFirstChildValue(ProjectElementContainer.class);
+        Object v = element.getFirstChildValue(EstimateContainerFactory.POSITION, ProjectElementContainer.class);
         return (ProjectElementContainer) v;
     }
     
@@ -166,6 +183,7 @@ public class TriangleSelectWizardPanel implements WizardDescriptor.ValidatingPan
         @Override
         public void doWork(Session session) throws Exception {
             Triangle triangle = (Triangle) session.get(Triangle.class, triangleId);
+            triangle.getProject().getId();
             ChainLadderEstimate estimate = createEstimate(triangle);
             session.persist(estimate);
             result = estimate;

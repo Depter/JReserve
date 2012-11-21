@@ -24,4 +24,6 @@ public interface NavigableComponent {
     public void navigateToChild(NavigableComponent component);
     
     public void setParent(NavigableComponent parent);
+    
+    public void parentClosed();
 }

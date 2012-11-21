@@ -2,7 +2,6 @@ package org.jreserve.triangle.widget;
 
 import java.awt.Image;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.widget.TriangleCell;
 
 /**
  *
@@ -28,4 +27,6 @@ public interface TriangleModel {
     public String getRowName(int row);
     
     public TriangleCell getCellAt(int row, int column);
+    
+    public TriangleModel createInstance();
 }

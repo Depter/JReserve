@@ -8,6 +8,7 @@ import org.jreserve.estimates.factors.FactorNavigatorUtil;
 import org.jreserve.navigator.NavigableComponent;
 import org.jreserve.navigator.NavigableTopComponent;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.ProjectTreeQuery;
 import org.jreserve.project.system.visual.ProjectElementCloseHandler;
 import org.jreserve.project.system.visual.TabNameAdapter;
 import org.openide.awt.UndoRedo;
@@ -22,7 +23,8 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
 
     public static TopComponent createEditor(ChainLadderEstimateProjectElement element) {
         List<NavigableComponent> components = new ArrayList<NavigableComponent>();
-        components.addAll(FactorNavigatorUtil.createComponents(element.getValue().getTriangle()));
+        ProjectElement triangle = ProjectTreeQuery.findElement(element.getValue().getTriangle());
+        components.addAll(FactorNavigatorUtil.createComponents(triangle, element));
         return new Editor(components, element);
     }
     
@@ -30,6 +32,7 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
     private final static int SCROLL_INCREMENT = 40;
     
     private ProjectElement element;
+    
     private ProjectElementCloseHandler closeHandler;
     
     private Editor(List<NavigableComponent> components, ProjectElement element) {
@@ -52,6 +55,10 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         setDisplayName(name);
     }
     
+    private void initTriangleElement(ProjectElement trangleElement) {
+        
+    }
+    
     @Override
     public UndoRedo getUndoRedo() {
         UndoRedo ur = element.getLookup().lookup(UndoRedo.class);
@@ -62,4 +69,5 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
     public boolean canClose() {
         return closeHandler.canClose();
     }
+
 }

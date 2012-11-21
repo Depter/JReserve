@@ -100,7 +100,7 @@ public class TriangleAuditor extends AbstractAuditor<Triangle>{
     private String toString(TriangleGeometry g) {
         return String.format(GEOMETRY_FORMAT, 
               g.getStartDate(), g.getAccidentPeriods(), g.getAccidentMonths(),
-              g.getDevelopmentPeriods(), g.getMonthInDevelopment());
+              g.getDevelopmentPeriods(), g.getDevelopmentMonths());
     }
     
     private void appendChange(StringBuilder sb, String change) {

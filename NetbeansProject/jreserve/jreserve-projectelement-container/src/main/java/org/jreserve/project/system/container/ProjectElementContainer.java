@@ -12,6 +12,10 @@ import org.jreserve.project.util.ProjectData;
  */
 public class ProjectElementContainer {
     
+    public static ProjectElementContainer getPathElement(int position) {
+        return new ProjectElementContainer(null, position);
+    }
+    
     private Project project;
     private ProjectElement<ProjectElementContainer> myElement;
     private int position;
@@ -111,4 +115,15 @@ public class ProjectElementContainer {
         return myElement.getChildren(clazz);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof ProjectElementContainer)
+            return position == ((ProjectElementContainer)o).position;
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return position;
+    }
 }

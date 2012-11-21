@@ -12,16 +12,14 @@ import org.jreserve.triangle.widget.TriangleCell;
  * @author Peter Decsi
  * @version 1.0
  */
-class TriangleCellFactory {
-    
-    private final static TriangleCell[] ROW_SABLON = new TriangleCell[0];
+public class TriangleCellFactory {
     
     private GeometryUtil util = new GeometryUtil();
     private TriangleGeometry geometry;
     private int rowCount;
     private Date developmentEnd;
     
-    TriangleCellFactory(TriangleGeometry geometry) {
+    public TriangleCellFactory(TriangleGeometry geometry) {
         this.geometry = geometry;
     }
     
@@ -49,7 +47,7 @@ class TriangleCellFactory {
         Date aBegin = util.getAccidentBegin(geometry, row);
         Date aEnd = util.getAccidentEnd(geometry, row);
         List<TriangleCell> cells = buildRow(row, aBegin, aEnd);
-        return cells.toArray(ROW_SABLON);
+        return cells.toArray(new TriangleCell[cells.size()]);
     }
     
     private List<TriangleCell> buildRow(int row, Date aBegin, Date aEnd) {

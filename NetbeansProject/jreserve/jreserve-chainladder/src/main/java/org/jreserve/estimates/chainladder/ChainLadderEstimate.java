@@ -33,6 +33,10 @@ public class ChainLadderEstimate extends AbstractPersistentObject implements Pro
     private String description;
     
     @ManyToOne(fetch=FetchType.EAGER, optional=false)
+    @JoinColumn(name="PROJECT_ID", referencedColumnName="ID", nullable=false)
+    private Project project;
+    
+    @ManyToOne(fetch=FetchType.EAGER, optional=false)
     @JoinColumn(name="TRIANGLE_ID", referencedColumnName="ID", nullable=false)
     private Triangle triangle;
     
@@ -53,6 +57,7 @@ public class ChainLadderEstimate extends AbstractPersistentObject implements Pro
         if(triangle == null)
             throw new NullPointerException("Triangle is null!");
         this.triangle = triangle;
+        this.project = triangle.getProject();
     }
     
     private void initName(String name) {
@@ -79,7 +84,7 @@ public class ChainLadderEstimate extends AbstractPersistentObject implements Pro
     
     @Override
     public Project getProject() {
-        return triangle.getProject();
+        return project;
     }
     
     public Triangle getTriangle() {

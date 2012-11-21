@@ -6,6 +6,8 @@ import org.jreserve.estimates.factors.visual.FactorsPanel;
 import org.jreserve.navigator.NavigableComponent;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.entities.Triangle;
+import org.jreserve.triangle.widget.charts.AccidentPeriodsChartData;
+import org.jreserve.triangle.widget.charts.DevelopmentPeriodsChartData;
 
 /**
  *
@@ -14,11 +16,12 @@ import org.jreserve.triangle.entities.Triangle;
  */
 public class FactorNavigatorUtil {
 
-    public static List<NavigableComponent> createComponents(Triangle triangle) {
+    public static List<NavigableComponent> createComponents(ProjectElement<Triangle> triangle, ProjectElement estimate) {
         List<NavigableComponent> components = new ArrayList<NavigableComponent>();
-        components.add(new FactorsPanel(triangle));
-        //TODO add accidents chart
-        //TODO add development chart
+        FactorsPanel factors = new FactorsPanel(triangle, estimate);
+        components.add(factors);
+        components.add(AccidentPeriodsChartData.createPanel(factors.getTriangleWidget()));
+        components.add(DevelopmentPeriodsChartData.createPanel(factors.getTriangleWidget()));
         return components;
     }
 }

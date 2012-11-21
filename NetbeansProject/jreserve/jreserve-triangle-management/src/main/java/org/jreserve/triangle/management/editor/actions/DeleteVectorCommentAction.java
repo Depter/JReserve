@@ -4,6 +4,7 @@ import java.util.List;
 import javax.swing.Action;
 import org.jreserve.triangle.data.Comment;
 import org.jreserve.triangle.data.TriangleComment;
+import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.management.VectorProjectElement;
 import org.jreserve.triangle.widget.actions.DeleteCommentsAction;
 import org.openide.util.Lookup;
@@ -54,9 +55,9 @@ public class DeleteVectorCommentAction extends DeleteCommentsAction {
 
     @Override
     protected void deleteComments(List<Comment> comments) {
-        List<TriangleComment> vcs = (List<TriangleComment>) element.getProperty(VectorProjectElement.COMMENT_PROPERTY);
+        List<TriangleComment> vcs = (List<TriangleComment>) element.getProperty(Vector.COMMENT_PROPERTY);
         vcs.removeAll(comments);
-        element.setProperty(VectorProjectElement.COMMENT_PROPERTY, vcs);
+        element.setProperty(Vector.COMMENT_PROPERTY, vcs);
     }
 
     @Override

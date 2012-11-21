@@ -13,6 +13,7 @@ import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.Triangle;
+import static org.jreserve.triangle.entities.Triangle.*;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.management.editor.Editor;
 import org.openide.nodes.Node;
@@ -40,11 +41,6 @@ import org.openide.windows.TopComponent;
     "MSG.TriangleProjectElement.UndoRedo.Correction=correction change"
 })
 public class TriangleProjectElement extends ProjectElement<Triangle> {
-    
-    public final static String GEOMETRY_PROPERTY = "TRIANGLE_GEOMETRY_PROPERTY";
-    public final static String CORRECTION_PROPERTY = "TRIANGLE_CORRECTION_PROPERTY";
-    public final static String COMMENT_PROPERTY = "TRIANGLE_COMMENT_PROPERTY";
-    public final static String SMOOTHING_PROPERTY = "TRIANGLE_SMOOTHING_PROPERTY";
     
     public TriangleProjectElement(Triangle triangle) {
         super(triangle);

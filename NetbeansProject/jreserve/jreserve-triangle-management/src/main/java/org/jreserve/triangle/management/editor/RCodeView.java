@@ -9,9 +9,9 @@ import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RUtil;
 import org.jreserve.smoothing.RSmoother;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.management.TriangleProjectElement;
-import org.jreserve.triangle.management.VectorProjectElement;
+import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.util.GeometryUtil;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleWidget;
@@ -32,7 +32,7 @@ public abstract class RCodeView extends NavigableRCodePanel implements TriangleW
         return new RCodeView(element, widget) {
             @Override
             protected List<Smoothing> getSmoothings() {
-                return (List<Smoothing>) element.getProperty(TriangleProjectElement.SMOOTHING_PROPERTY);
+                return (List<Smoothing>) element.getProperty(Triangle.SMOOTHING_PROPERTY);
             }
         };
     }
@@ -41,7 +41,7 @@ public abstract class RCodeView extends NavigableRCodePanel implements TriangleW
         return new RCodeView(element, widget) {
             @Override
             protected List<Smoothing> getSmoothings() {
-                return (List<Smoothing>) element.getProperty(VectorProjectElement.SMOOTHING_PROPERTY);
+                return (List<Smoothing>) element.getProperty(Vector.SMOOTHING_PROPERTY);
             }
         };
     }
