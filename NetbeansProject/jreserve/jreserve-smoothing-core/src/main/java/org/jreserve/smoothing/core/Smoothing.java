@@ -30,6 +30,10 @@ public abstract class Smoothing implements PersistentObject {
     private String id = IdGenerator.getId();
     
     @NotAudited
+    @Column(name="SMOOTH_ORDER", nullable=false)
+    private int order;
+    
+    @NotAudited
     @Version
     @Column(name="VERSION", nullable=false)
     private Long version;
@@ -59,6 +63,14 @@ public abstract class Smoothing implements PersistentObject {
     
     protected void setId(String id) {
         this.id = id;
+    }
+    
+    public void setOrder(int order) {
+        this.order = order;
+    }
+    
+    public int getOrder() {
+        return order;
     }
 
     @Override

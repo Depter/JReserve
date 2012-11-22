@@ -69,6 +69,7 @@ public class VectorSmoothingAction  extends AddSmoothingAction {
     @Override
     protected void smoothingCreated(Smoothing smoothing) {
         List<Smoothing> smoothings = element.getValue().getSmoothings();
+        smoothing.setOrder(element.getValue().getMaxSmoothingOrder()+1);
         smoothings.add(smoothing);
         element.setProperty(Vector.SMOOTHING_PROPERTY, smoothings);
     }

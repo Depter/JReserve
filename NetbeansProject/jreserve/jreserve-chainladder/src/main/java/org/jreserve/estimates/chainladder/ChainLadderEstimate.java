@@ -4,6 +4,7 @@ import javax.persistence.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.jreserve.estimates.factors.FactorSelection;
+import org.jreserve.estimates.factors.FactorSelectionOwner;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
@@ -19,7 +20,7 @@ import org.jreserve.triangle.entities.Triangle;
 @EntityRegistration
 @Entity
 @Table(name="CHAIN_LADDER_ESTIMATE", schema="JRESERVE")
-public class ChainLadderEstimate extends AbstractPersistentObject implements ProjectData {
+public class ChainLadderEstimate extends AbstractPersistentObject implements ProjectData, FactorSelectionOwner {
     private final static long serialVersionUID = 1L;
     
     public final static int POSITION = 100;
@@ -91,6 +92,7 @@ public class ChainLadderEstimate extends AbstractPersistentObject implements Pro
         return triangle;
     }
     
+    @Override
     public FactorSelection getFactorSelection() {
         return factorSelection;
     }

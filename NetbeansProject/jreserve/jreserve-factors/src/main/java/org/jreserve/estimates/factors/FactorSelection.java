@@ -88,6 +88,14 @@ public class FactorSelection extends AbstractPersistentObject {
             this.smoothings.addAll(smoothings);
     }
     
+    public int getMaxSmoothingOrder() {
+        int order = 0;
+        for(Smoothing smoothing : smoothings)
+            if(order < smoothing.getOrder())
+                order = smoothing.getOrder();
+        return order;
+    }
+    
     public List<TriangleComment> getComments() {
         return new ArrayList<TriangleComment>(comments);
     }

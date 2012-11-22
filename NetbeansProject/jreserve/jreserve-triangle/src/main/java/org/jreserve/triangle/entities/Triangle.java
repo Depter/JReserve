@@ -136,6 +136,14 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
         this.smoothings.add(smoothing);
     }
     
+    public int getMaxSmoothingOrder() {
+        int order = 0;
+        for(Smoothing smoothing : smoothings)
+            if(smoothing.getOrder() > order)
+                order = smoothing.getOrder();
+        return order;
+    }
+    
     @Override
     public String toString() {
         return String.format("Triangle [%s;]", getName());

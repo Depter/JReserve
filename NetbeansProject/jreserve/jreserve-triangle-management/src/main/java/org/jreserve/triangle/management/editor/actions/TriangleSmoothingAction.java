@@ -69,6 +69,7 @@ public class TriangleSmoothingAction extends AddSmoothingAction {
     @Override
     protected void smoothingCreated(Smoothing smoothing) {
         List<Smoothing> smoothings = element.getValue().getSmoothings();
+        smoothing.setOrder(element.getValue().getMaxSmoothingOrder()+1);
         smoothings.add(smoothing);
         element.setProperty(Triangle.SMOOTHING_PROPERTY, smoothings);
     }

@@ -38,6 +38,7 @@ public class SmoothingTablePanel extends JPanel implements ChangeListener {
         JLabel label = new JLabel(Bundle.LBL_SmoothingTablePanel_Decimals());
         northPanel.add(label, BorderLayout.LINE_START);
         spinner = new DecimalSpinner();
+        spinner.addChangeListener(this);
         northPanel.add(spinner, BorderLayout.CENTER);
         northPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(northPanel, BorderLayout.NORTH);
@@ -51,6 +52,13 @@ public class SmoothingTablePanel extends JPanel implements ChangeListener {
         setBorder(new LineBorder(Color.BLACK, 1, true));
     }
 
+    public void setVisibleDigits(int visibleDigits) {
+        if(visibleDigits < 0) 
+            visibleDigits = 0;
+        spinner.setValue(visibleDigits);
+        table.setDigits(visibleDigits);
+    }
+    
     @Override
     public void stateChanged(ChangeEvent e) {
         table.setDigits(spinner.getIntValue());

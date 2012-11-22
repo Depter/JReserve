@@ -36,7 +36,7 @@ public class ExponentialSmoothingMethod implements SmoothingMethod {
     @Override
     public Smoothing createSmoothing(PersistentObject owner, TriangleWidget widget, TriangleCell[] cells) {
         double[] input = getInput(cells);
-        CreatorPanel panel = CreatorPanel.create(owner, input);
+        CreatorPanel panel = CreatorPanel.create(owner, input, widget.getVisibleDigits());
         ExponentialSmoothing smoothing = panel.isCancelled()? null : new ExponentialSmoothing(owner, panel.getSmoothingName(), panel.getAlpha());
         fillSmoothing(smoothing, cells, panel.getApplied());
         return smoothing;

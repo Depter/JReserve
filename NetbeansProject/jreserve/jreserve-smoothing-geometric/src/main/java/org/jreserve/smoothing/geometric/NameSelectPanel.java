@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.SwingLoader;
+import org.jreserve.smoothing.core.Smoothing;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.ImageUtilities;
@@ -34,8 +34,8 @@ import org.openide.util.NbBundle.Messages;
 })
 public class NameSelectPanel extends javax.swing.JPanel implements DocumentListener, ActionListener, WindowListener {
     
-    public static NameSelectPanel createPanel(PersistentObject owner, double[] input) {
-        NameSelectPanel content = new NameSelectPanel(owner, input);
+    public static NameSelectPanel createPanel(PersistentObject owner, double[] input, int visibleDigits) {
+        NameSelectPanel content = new NameSelectPanel(owner, input, visibleDigits);
         createDialog(content);
         content.dialog.setVisible(true);
         return content;
@@ -63,8 +63,9 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
     private volatile boolean cancelled = false;
     private Loader loader;
     
-    public NameSelectPanel(PersistentObject owner, double[] input) {
+    public NameSelectPanel(PersistentObject owner, double[] input, int visibleDigits) {
         initComponents();
+        smoothingTable.setVisibleDigits(visibleDigits);
         smoothingTable.setInput(input);
         smoothingTable.setSmoothed(new GeometricSmoothing().smooth(input));
         msgLayout = (CardLayout) msgPanel.getLayout();

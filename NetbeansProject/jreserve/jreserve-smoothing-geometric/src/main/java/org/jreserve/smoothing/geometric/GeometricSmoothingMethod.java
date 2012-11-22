@@ -35,7 +35,7 @@ public class GeometricSmoothingMethod implements SmoothingMethod {
     @Override
     public Smoothing createSmoothing(PersistentObject owner, TriangleWidget widget, TriangleCell[] cells) {
         double[] input = getInput(cells);
-        NameSelectPanel panel = NameSelectPanel.createPanel(owner, input);
+        NameSelectPanel panel = NameSelectPanel.createPanel(owner, input, widget.getVisibleDigits());
         if(panel.isCancelled())
             return null;
         return createGeometricSmoothing(owner, panel.getSmoothingName(), cells, panel.getApplied());

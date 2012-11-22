@@ -6,9 +6,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.smoothing.Smoother;
-import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.SmoothingFactory;
 import org.jreserve.smoothing.SmoothingUtil;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.actions.ContinuousSelectionAction;
 import org.openide.util.Lookup;
@@ -59,6 +59,7 @@ public abstract class AddSmoothingAction  extends ContinuousSelectionAction impl
     private void doSmooth(Smoothing smoothing) {
         Smoother smoother = new Smoother(widget, TriangleCell.SMOOTHING_LAYER);
         smoother.smooth(smoothing);
+        widget.fireTriangleValuesChanged();
     }
     
     private class FactoryAction extends AbstractAction {

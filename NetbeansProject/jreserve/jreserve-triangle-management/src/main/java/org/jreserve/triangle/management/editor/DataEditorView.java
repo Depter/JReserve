@@ -4,6 +4,8 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box.Filler;
@@ -171,8 +173,19 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         
         private void setSmoothings() {
             Smoother smoother = new Smoother(triangle, TriangleCell.SMOOTHING_LAYER);
-            for(Smoothing smoothing : getSmoothings())
+            for(Smoothing smoothing : getSortedSmoothings())
                 smoother.smooth(smoothing);
+        }
+        
+        private List<Smoothing> getSortedSmoothings() {
+            List<Smoothing> result = getSmoothings();
+            Collections.sort(result, new Comparator<Smoothing>() {
+                @Override
+                public int compare(Smoothing o1, Smoothing o2) {
+                    return o1.getOrder() - o2.getOrder();
+                }
+            });
+            return result;
         }
         
         private void setComments() {

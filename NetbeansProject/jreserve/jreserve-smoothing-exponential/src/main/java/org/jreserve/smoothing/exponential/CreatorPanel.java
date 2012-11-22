@@ -19,8 +19,8 @@ import org.jreserve.localesettings.util.DoubleRenderer;
 import org.jreserve.localesettings.util.LocaleSettings;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.resources.textfieldfilters.DoubleFilter;
-import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.SwingLoader;
+import org.jreserve.smoothing.core.Smoothing;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.ImageUtilities;
@@ -42,8 +42,8 @@ import org.openide.util.NbBundle.Messages;
 })
 public class CreatorPanel extends javax.swing.JPanel implements ActionListener, DocumentListener, WindowListener {
     
-    public static CreatorPanel create(PersistentObject owner, double[] input) {
-        CreatorPanel content = new CreatorPanel(owner, input);
+    public static CreatorPanel create(PersistentObject owner, double[] input, int visibleDigits) {
+        CreatorPanel content = new CreatorPanel(owner, input, visibleDigits);
         createDialog(content);
         content.dialog.setVisible(true);
         return content;
@@ -77,11 +77,12 @@ public class CreatorPanel extends javax.swing.JPanel implements ActionListener, 
     private double[] input;
     private double alpha;
     
-    public CreatorPanel(PersistentObject owner, double[] input) {
+    public CreatorPanel(PersistentObject owner, double[] input, int visibleDigits) {
         this.input = input;
         smoothing.setAlpha(0d);
         
         initComponents();
+        smoothingTable.setVisibleDigits(visibleDigits);
         smoothingTable.setInput(input);
         smoothingTable.setSmoothed(smoothing.smooth(input));
         

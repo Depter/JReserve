@@ -3,6 +3,8 @@ package org.jreserve.estimates.factors.visual;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.estimates.factors.FactorSelection;
@@ -11,6 +13,7 @@ import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.smoothing.Smoother;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -18,29 +21,37 @@ import org.jreserve.triangle.util.DataLoader;
 import org.jreserve.triangle.widget.*;
 import org.jreserve.triangle.widget.model.TriangleCellFactory;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
  * @author Peter Decsi
  */
 public class FactorsPanel extends NavigablePanel implements PropertyChangeListener {
-
+    
+    private final static String POPUP_PATH = "JReserve/Popup/FactorsPanel";
+    private final static java.awt.Image IMG = ImageUtilities.loadImage("resources/factors.png", false);
+    
     private ProjectElement<Triangle> triangle;
     private ProjectElement<? extends PersistentObject> estimate;
     
     private TriangleWidget widget;
     private FactorInput factorInput;
     private DataLoader<Triangle> loader;
+    private Lookup lookup;
     
     public FactorsPanel(ProjectElement<Triangle> triangle, ProjectElement<? extends PersistentObject> estimate) {
-        super("Factors", null);
+        super("Factors", IMG);
         this.triangle = triangle;
         this.estimate = estimate;
         this.factorInput = new FactorInput();
         initComponents();
         startLoader();
         initListener();
+        lookup = new ProxyLookup(widget.getLookup(), Lookups.fixed(estimate));
     }
     
     private void initComponents() {
@@ -51,6 +62,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
         widget.setVisibleDigits(5);
         widget.setEditableLayer(TriangleCell.CORRECTION_LAYER);
         widget.addTriangleWidgetListener(new WidgetListener());
+        widget.setPopUpActionPath(POPUP_PATH);
         setContent(widget);
     }
     
@@ -69,7 +81,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
     
     @Override
     public Lookup getLookup() {
-        return widget.getLookup();
+        return lookup;
     }
 
     @Override
@@ -87,6 +99,10 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
     
     private List<Smoothing> getTriangleSmoothings() {
         return (List<Smoothing>) triangle.getProperty(Triangle.SMOOTHING_PROPERTY);
+    }
+    
+    private List<TriangleComment> getFactorComments() {
+        return (List<TriangleComment>) estimate.getProperty(FactorSelection.FACTOR_SELECTION_COMMENTS);
     }
     
     private List<TriangleCorrection> getFactorCorrections() {
@@ -143,6 +159,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
             try {
                 factorInput.values = loader.getData();
                 factorInput.calculateFactors();
+                widget.setComments(DataUtil.convertComments(getFactorComments()));
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             } finally {
@@ -201,10 +218,20 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
         
         private void applySmoothings(TriangleCell[][] cells, List<Smoothing> smoothings) {
             Smoother smoother = new Smoother(cells, TriangleCell.SMOOTHING_LAYER);
+            sortSmoothings(smoothings);
             for(Smoothing smoothing : smoothings)
                 smoother.smooth(smoothing);
         }
-
+        
+        private void sortSmoothings(List<Smoothing> smoothings) {
+            Collections.sort(smoothings, new Comparator<Smoothing>() {
+                @Override
+                public int compare(Smoothing o1, Smoothing o2) {
+                    return o1.getOrder() - o2.getOrder();
+                }
+            });
+        }
+        
         private TriangleGeometry createGeoemtry() {
             int dPeriods = geometry.getDevelopmentPeriods() - 1;
             int dMonths = geometry.getDevelopmentMonths();
