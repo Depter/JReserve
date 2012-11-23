@@ -4,7 +4,9 @@ import java.awt.BasicStroke;
 import java.awt.Shape;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.Plot;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.util.ShapeUtilities;
 
@@ -36,6 +38,16 @@ public class MultiSeriesLineChart<R extends Comparable<R>, C extends Comparable<
                 format.showLegend(), 
                 format.showToolTip(), 
                 format.showURLs());
+    }
+    
+    @Override
+    protected void formatPlot(Plot plot) {
+        super.formatPlot(plot);
+        
+        CategoryPlot cPlot = (CategoryPlot) plot;
+        NumberAxis axis = (NumberAxis) cPlot.getRangeAxis();
+        axis.setAutoRange(true);
+        axis.setAutoRangeIncludesZero(false);
     }
     
     @Override

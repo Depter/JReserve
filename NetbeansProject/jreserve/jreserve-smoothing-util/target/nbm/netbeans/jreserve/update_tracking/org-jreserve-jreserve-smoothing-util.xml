@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.smoothing.util">
-    <module_version install_time="1353588153142" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1353666999473" last="true" origin="installer" specification_version="1.0">
         <file crc="784156946" name="config/Modules/org-jreserve-jreserve-smoothing-util.xml"/>
-        <file crc="992197416" name="modules/org-jreserve-jreserve-smoothing-util.jar"/>
+        <file crc="2774319613" name="modules/org-jreserve-jreserve-smoothing-util.jar"/>
     </module_version>
 </module>

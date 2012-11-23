@@ -5,6 +5,10 @@
         <folder name="JReserve">
             <folder name="TriangleWidget">
                 <folder name="FactorsPanel">
+                    <file name="org-jreserve-estimates-factors-actions-IncludeFactorAction.instance">
+                    </file>
+                    <file name="org-jreserve-estimates-factors-actions-ExcludeFactorAction.instance">
+                    </file>
                     <file name="org-jreserve-estimates-factors-actions-AddFactorCommentAction.instance">
                     </file>
                     <file name="org-jreserve-estimates-factors-actions-DeleteFactorCommentAction.instance">
@@ -20,6 +24,21 @@
     <folder name="JReserve">
         <folder name="Popup">
             <folder name="FactorsPanel">
+                <file name="org-jreserve-estimates-factors-actions-ExcludeFactorAction.shadow">
+                    <!--org.jreserve.estimates.factors.actions.ExcludeFactorAction-->
+                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/FactorsPanel/org-jreserve-estimates-factors-actions-ExcludeFactorAction.instance"/>
+                    <attr intvalue="20" name="position"/>
+                </file>
+                <file name="org-jreserve-estimates-factors-actions-IncludeFactorAction.shadow">
+                    <!--org.jreserve.estimates.factors.actions.IncludeFactorAction-->
+                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/FactorsPanel/org-jreserve-estimates-factors-actions-IncludeFactorAction.instance"/>
+                    <attr intvalue="30" name="position"/>
+                </file>
+                <file name="org-jreserve-estimates-factors-actions-AddFactorSmoothingAction-separatorBefore.instance">
+                    <!--org.jreserve.estimates.factors.actions.AddFactorSmoothingAction-->
+                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
+                    <attr intvalue="40" name="position"/>
+                </file>
                 <file name="org-jreserve-estimates-factors-actions-AddFactorSmoothingAction.shadow">
                     <!--org.jreserve.estimates.factors.actions.AddFactorSmoothingAction-->
                     <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/FactorsPanel/org-jreserve-estimates-factors-actions-AddFactorSmoothingAction.instance"/>

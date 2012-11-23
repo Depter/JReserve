@@ -1,16 +1,15 @@
 package org.jreserve.triangle.management;
 
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.audit.AuditableProjectElement;
+import org.jreserve.persistence.DeleteUtil;
 import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
-import org.jreserve.smoothing.core.DeleteUtil;
 import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
@@ -130,15 +129,11 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         @Override
         protected void saveEntity() {
             super.saveEntity();
-            List<Smoothing> original = (List<Smoothing>) originalProperties.get(SMOOTHING_PROPERTY);
-            List<Smoothing> current = (List<Smoothing>) element.getProperty(SMOOTHING_PROPERTY);
-            DeleteUtil.delete(getDeleted(original, current));
-        }
-        
-        private <T> List<T> getDeleted(List<T> original, List<T> current) {
-            List result = new ArrayList(original);
-            result.removeAll(current);
-            return result;
+            DeleteUtil deleter = new DeleteUtil();
+            addEntities(deleter, Smoothing.class, SMOOTHING_PROPERTY);
+            addEntities(deleter, TriangleComment.class, COMMENT_PROPERTY);
+            addEntities(deleter, TriangleCorrection.class, CORRECTION_PROPERTY);
+            deleter.delete(session);
         }
     }
     

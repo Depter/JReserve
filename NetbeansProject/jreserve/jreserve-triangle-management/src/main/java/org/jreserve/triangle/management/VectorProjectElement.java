@@ -3,6 +3,7 @@ package org.jreserve.triangle.management;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 import org.jreserve.audit.AuditableProjectElement;
+import org.jreserve.persistence.DeleteUtil;
 import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentObjectDeletable;
@@ -111,12 +112,6 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         protected boolean isChanged(String property, Object o1, Object o2) {
             if(GEOMETRY_PROPERTY.equals(property)) {
                 return isChanged((VectorGeometry) o1, (VectorGeometry) o2);
-            } else if(CORRECTION_PROPERTY.equals(property)) {
-                return isChanged((List<TriangleCorrection>) o1, (List<TriangleCorrection>) o2);
-            } else if(COMMENT_PROPERTY.equals(property)) {
-                return isChanged((List<TriangleComment>) o1, (List<TriangleComment>) o2);
-            } else if(SMOOTHING_PROPERTY.equals(property)) {
-                return isChanged((List<Smoothing>) o1, (List<Smoothing>) o2);
             } else {
                 return super.isChanged(property, o1, o2);
             }
@@ -127,47 +122,19 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             if(g2==null) return true;
             return !g1.isEqualGeometry(g2);
         }
-        
-        private boolean isChanged(List c1, List c2) {
-            if(getSize(c1) != getSize(c2)) return true;
-            //if both size is 0, but one is empty aother is null => not changed
-            if(c1 == null || c2 == null) return false;
-            
-            for(Object c : c1)
-                if(!c2.contains(c))
-                    return true;
-            return false;
-        }
-        
-        private int getSize(List list) {
-            return list==null? 0 : list.size();
-        }
 
         @Override
         protected void saveEntity() {
             super.saveEntity();
+            DeleteUtil deleter = new DeleteUtil();
+            addEntities(deleter, Smoothing.class, SMOOTHING_PROPERTY);
+            addEntities(deleter, TriangleComment.class, COMMENT_PROPERTY);
+            addEntities(deleter, TriangleCorrection.class, CORRECTION_PROPERTY);
+            deleter.delete(session);
         }
     }
-    
+
     private class VectorOpenable extends PersistentOpenable {
-    
-        private boolean added = false;
-        
-        @Override
-        protected void opened() {
-//            if(!added) {
-//                added = true;
-//                VectorProjectElement.this.addToLookup(component);
-//            }
-        }
-    
-        @Override
-        protected void closing() {
-//            if(added) {
-//                added = false;
-//                VectorProjectElement.this.removeFromLookup(component);
-//            }
-        }
 
         @Override
         protected TopComponent createComponent() {

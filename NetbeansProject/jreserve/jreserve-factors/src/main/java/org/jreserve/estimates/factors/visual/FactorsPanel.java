@@ -2,11 +2,9 @@ package org.jreserve.estimates.factors.visual;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import org.jreserve.data.entities.ClaimValue;
+import org.jreserve.estimates.factors.FactorExclusion;
 import org.jreserve.estimates.factors.FactorSelection;
 import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.persistence.PersistentObject;
@@ -112,6 +110,10 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
     private List<Smoothing> getFactorSmoothings() {
         return (List<Smoothing>) estimate.getProperty(FactorSelection.FACTOR_SELECTION_SMOOTHINGS);
     }
+    
+    private List<FactorExclusion> getFactorExclusions() {
+        return (List<FactorExclusion>) estimate.getProperty(FactorSelection.FACTOR_SELECTION_EXCLUSIONS);
+    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -178,7 +180,8 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
         
         private List<TriangleCorrection> factorCorrections;
         private List<Smoothing> factorSmoothings;
-
+        private List<FactorExclusion> factorExclusions;
+        
         FactorInput() {
             geometry = getTraingleGeometry();
             triangleCorrections = getTriangleCorrections();
@@ -186,6 +189,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
             
             factorCorrections = getFactorCorrections();
             factorSmoothings = getFactorSmoothings();
+            factorExclusions = getFactorExclusions();
         }
         
         void calculateFactors() {
@@ -195,7 +199,10 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
                 widget.setTriangleGeometry(createGeoemtry());
                 widget.setValueLayer(TriangleCell.VALUE_LAYER, calculateFactors(input));
                 widget.setValueLayer(TriangleCell.CORRECTION_LAYER, DataUtil.convertCorrections(factorCorrections));
-                applySmoothings(widget.getCellArray(), factorSmoothings);
+                
+                TriangleCell[][] cells = widget.getCellArray();
+                applySmoothings(cells, factorSmoothings);
+                applyExclusions(cells);
                 widget.setManualEvents(false);
                 widget.fireTriangleStructureChanged();
             }
@@ -230,6 +237,18 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
                     return o1.getOrder() - o2.getOrder();
                 }
             });
+        }
+        
+        private void applyExclusions(TriangleCell[][] cells) {
+            for(FactorExclusion exclusion : factorExclusions)
+                applyExclusion(exclusion.getAccidentDate(), exclusion.getDevelopmentDate(), cells);
+        }
+        
+        private void applyExclusion(Date accident, Date development, TriangleCell[][] cells) {
+            for(TriangleCell[] row : cells)
+                for(TriangleCell cell : row)
+                    if(cell!=null && cell.acceptsDates(accident, development))
+                        cell.setExcluded(true);
         }
         
         private TriangleGeometry createGeoemtry() {

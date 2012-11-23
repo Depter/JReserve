@@ -219,6 +219,12 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         return flattener.flatten();
     }
 
+    public boolean[][] flattenExclusions() {
+        TriangleCell[][] cells = model.getCells();
+        ExclusionFlattener flattener = new ExclusionFlattener(cells);
+        return flattener.flatten();
+    }
+    
     @Override
     public Lookup getLookup() {
         return lookup;
@@ -310,6 +316,46 @@ public class TriangleTable extends JTable implements Lookup.Provider {
                 return Double.NaN;
             Double value = layer<0? cell.getDisplayValue() : cell.getValueAt(layer);
             return value==null? Double.NaN : value;
+        }
+    }
+    
+    private static class ExclusionFlattener {
+        
+        private TriangleCell[][] cells;
+        
+        private ExclusionFlattener(TriangleCell[][] cells) {
+            this.cells = cells;
+        }
+        
+        boolean[][] flatten() {
+            int rCount = cells.length;
+            boolean[][] result = new boolean[rCount][];
+            for(int r=0; r<rCount; r++)
+                result[r] = createRow(cells[r]);
+            return result;
+        }
+        
+        private boolean[] createRow(TriangleCell[] cells) {
+            int lastIndex = getLastIndex(cells);
+            if(lastIndex < 0) return new boolean[0];
+            
+            boolean[] result = new boolean[lastIndex+1];
+            for(int c=0; c<=lastIndex; c++)
+                result[c] = getCellValue(cells[c]);
+            return result;
+        } 
+        
+        private int getLastIndex(TriangleCell[] row) {
+            for(int c=row.length-1; c>=0; c--)
+                if(row[c] != null)
+                    return c;
+            return -1;
+        }
+        
+        private boolean getCellValue(TriangleCell cell) {
+            if(cell == null)
+                return false;
+            return !cell.isExcluded();
         }
     }
     

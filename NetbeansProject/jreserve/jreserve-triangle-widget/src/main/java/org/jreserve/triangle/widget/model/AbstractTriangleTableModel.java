@@ -376,6 +376,7 @@ public class AbstractTriangleTableModel extends AbstractTableModel implements Tr
     
     @Override
     public final void fireTriangleValuesChanged() {
+        super.fireTableDataChanged();
         for(TriangleWidgetListener l : new ArrayList<TriangleWidgetListener>(listeners))
             l.valuesChanged();
     }

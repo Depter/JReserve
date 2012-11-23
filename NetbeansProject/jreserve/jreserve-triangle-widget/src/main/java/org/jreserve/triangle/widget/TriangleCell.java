@@ -29,6 +29,7 @@ public class TriangleCell implements Comparable<TriangleCell> {
     private boolean cummulated;
     
     private List<Comment> comments = new ArrayList<Comment>();
+    private boolean excluded = false;
     
     public TriangleCell(TriangleCell previous, int row, int column, Date aBegin, Date aEnd, Date dBegin, Date dEnd) {
         this.previous = previous;
@@ -202,6 +203,14 @@ public class TriangleCell implements Comparable<TriangleCell> {
     
     public boolean hasComments() {
         return !comments.isEmpty();
+    }
+    
+    public boolean isExcluded() {
+        return excluded;
+    }
+    
+    public void setExcluded(boolean excluded) {
+        this.excluded = excluded;
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.jreserve.estimates.chainladder.visual.Editor;
 import org.jreserve.estimates.factors.FactorExclusion;
 import org.jreserve.estimates.factors.FactorSelection;
 import static org.jreserve.estimates.factors.FactorSelection.*;
+import org.jreserve.persistence.DeleteUtil;
 import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.DefaultProjectNode;
 import org.jreserve.project.system.ProjectElement;
@@ -84,6 +85,13 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
         super.setProperty(property, value);
     }
     
+    private class ChainLadderEstimateOpenable extends PersistentOpenable {
+        @Override
+        protected TopComponent createComponent() {
+            return Editor.createEditor(ChainLadderEstimateProjectElement.this);
+        }
+    }
+    
     private class ChainLadderEstimateSavable extends PersistentSavable<ChainLadderEstimate> {
 
         private ChainLadderEstimateSavable() {
@@ -104,14 +112,16 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
             originalProperties.put(FactorSelection.FACTOR_SELECTION_EXCLUSIONS, factors.getExclusions());
             originalProperties.put(FactorSelection.FACTOR_SELECTION_SMOOTHINGS, factors.getSmoothings());
         }
-    }
-    
-    
-    private class ChainLadderEstimateOpenable extends PersistentOpenable {
+ 
         @Override
-        protected TopComponent createComponent() {
-            return Editor.createEditor(ChainLadderEstimateProjectElement.this);
+        protected void saveEntity() {
+            super.saveEntity();
+            DeleteUtil deleter = new DeleteUtil();
+            addEntities(deleter, Smoothing.class, FactorSelection.FACTOR_SELECTION_SMOOTHINGS);
+            addEntities(deleter, TriangleComment.class, FactorSelection.FACTOR_SELECTION_COMMENTS);
+            addEntities(deleter, TriangleCorrection.class, FactorSelection.FACTOR_SELECTION_CORRECTIONS);
+            addEntities(deleter, TriangleCorrection.class, FactorSelection.FACTOR_SELECTION_EXCLUSIONS);
+            deleter.delete(session);
         }
-    }
-    
+    }   
 }

@@ -61,6 +61,9 @@ public class TriangleWidget extends JPanel implements Serializable {
     public final static Color VALUE_BG = Color.WHITE;
     public final static Color SMOOTHING_BG = new Color(167, 191, 255);
     
+    public final static Color EXCLUDED_BG = new Color(238, 238, 238);
+    public final static Color EXCLUDED_FG = new Color(153, 153, 153);
+    
     private DecimalSpinner spinner;
     private JToolBar toolBar;
     
@@ -381,6 +384,10 @@ public class TriangleWidget extends JPanel implements Serializable {
     
     public double[][] flattenLayer(int layer) {
         return table.flattenLayer(layer);
+    }
+
+    public boolean[][] flattenExclusions() {
+        return table.flattenExclusions();
     }
 
     public Lookup getLookup() {

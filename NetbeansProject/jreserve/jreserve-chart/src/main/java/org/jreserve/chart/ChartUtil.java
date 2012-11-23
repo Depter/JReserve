@@ -3,10 +3,10 @@ package org.jreserve.chart;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
+import javax.swing.*;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.navigator.NavigablePanelCopyButton;
 import org.openide.util.ImageUtilities;
@@ -21,14 +21,20 @@ public class ChartUtil {
     public final static Image CHART_XY = ImageUtilities.loadImage("resources/chart_xy.png", false);
     public final static java.awt.Color BACKGROUND = new java.awt.Color(255, 125, 48);
     
-    public static ChartPanel createChartPanel(Chart chart) {
+    public static ChartPanel createChartPanel(Chart chart, boolean fixedRangeAxis) {
         ChartPanel panel = new ChartPanel(chart.getJFreeChart());
-        panel.setPopupMenu(null);
+        panel.setPopupMenu(fixedRangeAxis? null : createPopUp(chart));
         return panel;
     }
     
-    public static NavigablePanel createNavigablePanel(String displayName, Image img, Chart chart) {
-        ChartPanel chartPanel = createChartPanel(chart);
+    private static JPopupMenu createPopUp(Chart chart) {
+        JPopupMenu popUp = new JPopupMenu();
+        popUp.add(new FixRangeAction(chart));
+        return popUp;
+    }
+    
+    public static NavigablePanel createNavigablePanel(String displayName, Image img, Chart chart, boolean fixedRangeAxis) {
+        ChartPanel chartPanel = createChartPanel(chart, fixedRangeAxis);
         return createNavigablePanel(displayName, img, chartPanel, chartPanel);
     }
     
@@ -43,7 +49,7 @@ public class ChartUtil {
     
     public static <R extends Comparable<R>, C extends Comparable<C>> NavigablePanel createMultiSeriesNavigablePanel(String displayName, Image img, MultiSeriesCategoryChart<R, C> chart) {
         SeriesCheckBoxPanel<R, C> checkPanel = new SeriesCheckBoxPanel<R, C>(chart);
-        ChartPanel chartPanel = createChartPanel(chart);
+        ChartPanel chartPanel = createChartPanel(chart, false);
         JSplitPane splitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(checkPanel), chartPanel);
         splitPanel.setDividerLocation(0.2);
         splitPanel.setOneTouchExpandable(true);
@@ -64,5 +70,27 @@ public class ChartUtil {
         public void actionPerformed(ActionEvent e) {
             panel.doCopy();
         }
+    }
+    
+    private static class FixRangeAction extends AbstractAction {
+        
+        private Chart chart;
+        private boolean fixScale = true;
+        
+        private FixRangeAction(Chart chart) {
+            this.chart = chart;
+            putValue(NAME, "Fix scale");
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            CategoryPlot plot = (CategoryPlot) chart.getJFreeChart().getPlot();
+            NumberAxis axis = (NumberAxis) plot.getRangeAxis();
+            axis.setAutoRangeIncludesZero(fixScale);
+            
+            fixScale = !fixScale;
+            putValue(NAME, fixScale? "Fix scale" : "Dynamic scale");
+        }
+        
     }
 }

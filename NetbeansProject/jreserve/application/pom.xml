@@ -204,6 +204,18 @@
             <artifactId>jreserve-chainladder</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-factors</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-factors-estimate</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -27,7 +27,7 @@ public class CalendarYearTotalChartData extends TriangleChartData<String, Date> 
         AccidentTotalChartData data = new AccidentTotalChartData(widget);
         MultiSeriesBarChart<String, Date> chart = new MultiSeriesBarChart<String, Date>(data, new ListColorGenerator(BAR_COLOR));
         String title = Bundle.LBL_CalendarYearTotalChartData_Title();
-        return ChartUtil.createNavigablePanel(title, ChartUtil.CHART_BAR, chart);
+        return ChartUtil.createNavigablePanel(title, ChartUtil.CHART_BAR, chart, true);
     }
     
     

@@ -13,6 +13,7 @@ import javax.swing.table.TableCellRenderer;
 import org.jreserve.localesettings.util.DoubleRenderer;
 import org.jreserve.triangle.data.Comment;
 import org.jreserve.triangle.widget.TriangleCell;
+import org.jreserve.triangle.widget.TriangleWidget;
 
 /**
  *
@@ -86,7 +87,10 @@ public class TriangleCellRenderer extends JLabel implements TableCellRenderer {
     
     protected Color getBackground(JTable table, TriangleCell cell, boolean isSelected, boolean hasFocus, int row, int column) {
         Color color = null;
-
+        
+        if(cell.isExcluded())
+            return TriangleWidget.EXCLUDED_BG;
+        
         if (hasFocus && !isSelected && table.isCellEditable(row, column))
             color = getBgFocused(table, cell, isSelected, hasFocus, row, column);
         
@@ -133,6 +137,9 @@ public class TriangleCellRenderer extends JLabel implements TableCellRenderer {
     
     protected Color getForeground(JTable table, TriangleCell cell, boolean isSelected, boolean hasFocus, int row, int column) {
         Color color = null;
+        
+        if(cell.isExcluded())
+            return TriangleWidget.EXCLUDED_FG;
         
         if (hasFocus && !isSelected && table.isCellEditable(row, column))
             color = getFgFocused(table, cell, isSelected, hasFocus, row, column);
