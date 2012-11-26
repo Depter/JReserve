@@ -29,8 +29,6 @@ public class Triangle extends AbstractPersistentObject implements Serializable, 
     
     public final static String GEOMETRY_PROPERTY = "TRIANGLE_GEOMETRY_PROPERTY";
     public final static String CORRECTION_PROPERTY = "TRIANGLE_CORRECTION_PROPERTY";
-    public final static String COMMENT_PROPERTY = "TRIANGLE_COMMENT_PROPERTY";
-    public final static String SMOOTHING_PROPERTY = "TRIANGLE_SMOOTHING_PROPERTY";
 
     public final static int POSITION = 100;
     

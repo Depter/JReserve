@@ -56,7 +56,8 @@ public abstract class PersistentSavable<T> extends AbstractProjectElementSavable
     protected <T extends PersistentObject> void addEntities(DeleteUtil deleter, Class<T> clazz, String property) {
         List<T> removed = new ArrayList<T>((List<T>) originalProperties.get(property));
         removed.removeAll((List<T>) element.getProperty(property));
-        deleter.addEntities(clazz, removed);
+        if(!removed.isEmpty())
+            deleter.addEntities(clazz, removed);
     }
     
     private void commit() {

@@ -8,18 +8,18 @@ import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 
 /**
  *
  * @author Peter Decsi
  */
 class TriangleDataEditorView extends DataEditorView<Triangle> {
-    
-    private final static String POPUP_PATH = "JReserve/Popup/TriangleDataEditor";
 
     TriangleDataEditorView(ProjectElement<Triangle> element) {
         super(element, Editor.TRIANGLE_IMG);
-        super.triangle.setPopUpActionPath(POPUP_PATH);
     }
 
     @Override

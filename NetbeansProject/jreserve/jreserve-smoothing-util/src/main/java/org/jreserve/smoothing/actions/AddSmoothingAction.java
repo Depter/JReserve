@@ -2,16 +2,18 @@ package org.jreserve.smoothing.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import org.jreserve.persistence.PersistentObject;
 import org.jreserve.smoothing.Smoother;
 import org.jreserve.smoothing.SmoothingFactory;
-import org.jreserve.smoothing.SmoothingUtil;
+import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.smoothing.util.SmoothingMethodRegistry;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.actions.ContinuousSelectionAction;
 import org.openide.util.Lookup;
+import org.openide.util.Lookup.Result;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
 
@@ -21,15 +23,39 @@ import org.openide.util.actions.Presenter;
  * @version 1.0
  */
 @Messages({
-    "CTL.AddSmoothingAction.Smoothing=Smoothing"
+    "CTL.AddSmoothingAction.Smoothing=Add Smoothing"
 })
-public abstract class AddSmoothingAction  extends ContinuousSelectionAction implements Presenter.Popup {
+public class AddSmoothingAction  extends ContinuousSelectionAction implements Presenter.Popup {
+                          
+    protected Result<Smoothable> tResult;
+    protected Smoothable smoothable;
 
-    protected AddSmoothingAction() {
+    public AddSmoothingAction() {
     }
     
-    protected AddSmoothingAction(Lookup lkp) {
+    public AddSmoothingAction(Lookup lkp) {
         super(lkp);
+    }
+    
+    @Override
+    protected void init(Lookup lookup) {
+        if(tResult != null)
+            return;
+        tResult = lookup.lookupResult(Smoothable.class);
+        tResult.addLookupListener(this);
+        super.init(lookup);
+    }
+    
+    @Override
+    protected boolean checkEnabled() {
+        if(super.checkEnabled())
+            return initElement();
+        return false;
+    }
+    
+    private boolean initElement() {
+        smoothable = super.lookupOne(tResult);
+        return smoothable != null;
     }
 
     @Override
@@ -39,20 +65,16 @@ public abstract class AddSmoothingAction  extends ContinuousSelectionAction impl
     @Override
     public JMenuItem getPopupPresenter() {
         JMenu menu = new JMenu(Bundle.CTL_AddSmoothingAction_Smoothing());
-        for(SmoothingFactory factory : SmoothingUtil.getFactories())
+        for(SmoothingFactory factory : SmoothingMethodRegistry.getFactories())
             menu.add(new FactoryAction(factory));
         menu.setEnabled(isEnabled());
         return menu;
     }
     
-    protected abstract PersistentObject getOwner();
-    
-    protected abstract void smoothingCreated(Smoothing smoothing);
-    
     private void addSmoothing(Smoothing smoothing) {
         if(smoothing == null)
             return;
-        smoothingCreated(smoothing);
+        smoothable.addSmoothing(smoothing);
         doSmooth(smoothing);
     }
     
@@ -60,6 +82,11 @@ public abstract class AddSmoothingAction  extends ContinuousSelectionAction impl
         Smoother smoother = new Smoother(widget, TriangleCell.SMOOTHING_LAYER);
         smoother.smooth(smoothing);
         widget.fireTriangleValuesChanged();
+    }
+
+    @Override
+    public Action createContextAwareInstance(Lookup lkp) {
+        return new AddSmoothingAction(lkp);
     }
     
     private class FactoryAction extends AbstractAction {
@@ -74,9 +101,8 @@ public abstract class AddSmoothingAction  extends ContinuousSelectionAction impl
         
         @Override
         public void actionPerformed(ActionEvent e) {
-            PersistentObject owner = getOwner();
             TriangleCell[] selection = cells.toArray(new TriangleCell[0]);
-            addSmoothing(factory.createSmoothing(owner, widget, selection));
+            addSmoothing(factory.createSmoothing(smoothable, widget, selection));
         }
     }
 

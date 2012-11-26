@@ -24,8 +24,6 @@ import org.jreserve.triangle.data.TriangleCorrection;
 public class FactorSelection extends AbstractPersistentObject {
 
     public final static String FACTOR_SELECTION_CORRECTIONS = "FACTOR_SELECTION_CORRECTIONS";
-    public final static String FACTOR_SELECTION_SMOOTHINGS = "FACTOR_SELECTION_SMOOTHINGS";
-    public final static String FACTOR_SELECTION_COMMENTS = "FACTOR_SELECTION_COMMENTS";
     public final static String FACTOR_SELECTION_EXCLUSIONS = "FACTOR_SELECTION_EXCLUSIONS";
     
     @NotAudited

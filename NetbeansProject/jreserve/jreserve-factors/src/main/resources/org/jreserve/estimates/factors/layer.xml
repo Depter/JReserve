@@ -9,14 +9,6 @@
                     </file>
                     <file name="org-jreserve-estimates-factors-actions-ExcludeFactorAction.instance">
                     </file>
-                    <file name="org-jreserve-estimates-factors-actions-AddFactorCommentAction.instance">
-                    </file>
-                    <file name="org-jreserve-estimates-factors-actions-DeleteFactorCommentAction.instance">
-                    </file>
-                    <file name="org-jreserve-estimates-factors-actions-AddFactorSmoothingAction.instance">
-                    </file>
-                    <file name="org-jreserve-estimates-factors-actions-DeleteFactorSmoothingAction.instance">
-                    </file>
                 </folder>
             </folder>
         </folder>
@@ -33,36 +25,6 @@
                     <!--org.jreserve.estimates.factors.actions.IncludeFactorAction-->
                     <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/FactorsPanel/org-jreserve-estimates-factors-actions-IncludeFactorAction.instance"/>
                     <attr intvalue="30" name="position"/>
-                </file>
-                <file name="org-jreserve-estimates-factors-actions-AddFactorSmoothingAction-separatorBefore.instance">
-                    <!--org.jreserve.estimates.factors.actions.AddFactorSmoothingAction-->
-                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                    <attr intvalue="40" name="position"/>
-                </file>
-                <file name="org-jreserve-estimates-factors-actions-AddFactorSmoothingAction.shadow">
-                    <!--org.jreserve.estimates.factors.actions.AddFactorSmoothingAction-->
-                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/FactorsPanel/org-jreserve-estimates-factors-actions-AddFactorSmoothingAction.instance"/>
-                    <attr intvalue="50" name="position"/>
-                </file>
-                <file name="org-jreserve-estimates-factors-actions-DeleteFactorSmoothingAction.shadow">
-                    <!--org.jreserve.estimates.factors.actions.DeleteFactorSmoothingAction-->
-                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/FactorsPanel/org-jreserve-estimates-factors-actions-DeleteFactorSmoothingAction.instance"/>
-                    <attr intvalue="60" name="position"/>
-                </file>
-                <file name="org-jreserve-estimates-factors-actions-AddFactorCommentAction-separatorBefore.instance">
-                    <!--org.jreserve.estimates.factors.actions.AddFactorCommentAction-->
-                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                    <attr intvalue="90" name="position"/>
-                </file>
-                <file name="org-jreserve-estimates-factors-actions-AddFactorCommentAction.shadow">
-                    <!--org.jreserve.estimates.factors.actions.AddFactorCommentAction-->
-                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/FactorsPanel/org-jreserve-estimates-factors-actions-AddFactorCommentAction.instance"/>
-                    <attr intvalue="100" name="position"/>
-                </file>
-                <file name="org-jreserve-estimates-factors-actions-DeleteFactorCommentAction.shadow">
-                    <!--org.jreserve.estimates.factors.actions.DeleteFactorCommentAction-->
-                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/FactorsPanel/org-jreserve-estimates-factors-actions-DeleteFactorCommentAction.instance"/>
-                    <attr intvalue="200" name="position"/>
                 </file>
             </folder>
         </folder>

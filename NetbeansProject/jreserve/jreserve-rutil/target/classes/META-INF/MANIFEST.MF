@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/rutil/Bundle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20121123
-OpenIDE-Module-Build-Version: 201211231036
+OpenIDE-Module-Implementation-Version: 1.0-20121126
+OpenIDE-Module-Build-Version: 201211261651
 OpenIDE-Module: org.jreserve.jreserve.rutil
 OpenIDE-Module-Public-Packages: org.jreserve.rutil.*
 OpenIDE-Module-Display-Category: org.jreserve

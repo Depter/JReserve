@@ -2,12 +2,8 @@ package org.jreserve.smoothing.geometric;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.jreserve.persistence.PersistentObject;
-import org.jreserve.persistence.SessionFactory;
 import org.jreserve.smoothing.SmoothingMethod;
+import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.core.SmoothingCell;
 import org.jreserve.triangle.widget.TriangleCell;
@@ -27,18 +23,15 @@ import org.openide.util.NbBundle.Messages;
 })
 public class GeometricSmoothingMethod implements SmoothingMethod {
     
-    private final static String SELECT_QUERY = 
-        "SELECT s FROM GeometricSmoothing s WHERE s.ownerId = :ownerId";
-    
     public final static int ID = 100;
     
     @Override
-    public Smoothing createSmoothing(PersistentObject owner, TriangleWidget widget, TriangleCell[] cells) {
+    public Smoothing createSmoothing(Smoothable smoothable, TriangleWidget widget, TriangleCell[] cells) {
         double[] input = getInput(cells);
-        NameSelectPanel panel = NameSelectPanel.createPanel(owner, input, widget.getVisibleDigits());
+        NameSelectPanel panel = NameSelectPanel.createPanel(smoothable, input, widget.getVisibleDigits());
         if(panel.isCancelled())
             return null;
-        return createGeometricSmoothing(owner, panel.getSmoothingName(), cells, panel.getApplied());
+        return createGeometricSmoothing(smoothable, panel.getSmoothingName(), cells, panel.getApplied());
     }
     
     private double[] getInput(TriangleCell[] cells) {
@@ -50,8 +43,8 @@ public class GeometricSmoothingMethod implements SmoothingMethod {
         return input;
     }
     
-    private Smoothing createGeometricSmoothing(PersistentObject owner, String name, TriangleCell[] cells, boolean[] applied) {
-        GeometricSmoothing smoothing = new GeometricSmoothing(owner, name);
+    private Smoothing createGeometricSmoothing(Smoothable smoothable, String name, TriangleCell[] cells, boolean[] applied) {
+        GeometricSmoothing smoothing = new GeometricSmoothing(smoothable.getOwner(), name);
         for(int i=0, size=cells.length; i<size; i++)
             smoothing.addCell(createCell(smoothing, cells[i], applied[i]));
         return smoothing;
@@ -61,13 +54,5 @@ public class GeometricSmoothingMethod implements SmoothingMethod {
         Date accident = cell.getAccidentBegin();
         Date development = cell.getDevelopmentBegin();
         return new SmoothingCell(smoothing, accident, development, applied);
-    }
-    
-    @Override
-    public List<Smoothing> getSmoothings(PersistentObject owner) {
-        Session session = SessionFactory.getCurrentSession();
-        Query query = session.createQuery(SELECT_QUERY);
-        query.setString("ownerId", owner.getId());
-        return query.list();
     }
 }

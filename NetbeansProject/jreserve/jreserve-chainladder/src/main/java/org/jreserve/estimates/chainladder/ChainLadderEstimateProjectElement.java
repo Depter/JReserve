@@ -6,7 +6,8 @@ import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.estimates.chainladder.visual.Editor;
 import org.jreserve.estimates.factors.FactorExclusion;
 import org.jreserve.estimates.factors.FactorSelection;
-import static org.jreserve.estimates.factors.FactorSelection.*;
+import static org.jreserve.estimates.factors.FactorSelection.FACTOR_SELECTION_CORRECTIONS;
+import static org.jreserve.estimates.factors.FactorSelection.FACTOR_SELECTION_EXCLUSIONS;
 import org.jreserve.persistence.DeleteUtil;
 import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.DefaultProjectNode;
@@ -15,7 +16,11 @@ import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
+import org.jreserve.smoothing.core.AbstractSmoothable;
+import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.data.AbstractCommentable;
+import org.jreserve.triangle.data.Commentable;
 import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
 import org.openide.nodes.Node;
@@ -43,10 +48,10 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
     }
     
     private void initProperties(FactorSelection fs) {
-        super.setProperty(FACTOR_SELECTION_COMMENTS, fs.getComments());
+        super.setProperty(Commentable.COMMENT_PROPERTY, fs.getComments());
         super.setProperty(FACTOR_SELECTION_CORRECTIONS, fs.getCorrections());
         super.setProperty(FACTOR_SELECTION_EXCLUSIONS, fs.getExclusions());
-        super.setProperty(FACTOR_SELECTION_SMOOTHINGS, fs.getSmoothings());
+        super.setProperty(Smoothable.SMOOTHING_PROPERTY, fs.getSmoothings());
     }
     
     private void initLookup() {
@@ -55,7 +60,19 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
         super.addToLookup(new RenameableProjectElement(this));
         super.addToLookup(new AuditableProjectElement(this));
         super.addToLookup(new ProjectElementUndoRedo(this));
+        super.addToLookup(createSmoothable());
+        super.addToLookup(createCommentable());
         new ChainLadderEstimateSavable();
+    }
+    
+    private Smoothable createSmoothable() {
+        FactorSelection owner = getValue().getFactorSelection();
+        return new AbstractSmoothable(this, owner);
+    }
+    
+    private Commentable createCommentable() {
+        FactorSelection owner = getValue().getFactorSelection();
+        return new AbstractCommentable(this, owner);
     }
 
     @Override
@@ -78,9 +95,9 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
             getValue().getFactorSelection().setCorrections((List<TriangleCorrection>) value);
         else if(FactorSelection.FACTOR_SELECTION_EXCLUSIONS.equals(property))
             getValue().getFactorSelection().setExclusions((List<FactorExclusion>) value);
-        else if(FactorSelection.FACTOR_SELECTION_COMMENTS.equals(property))
+        else if(Commentable.COMMENT_PROPERTY.equals(property))
             getValue().getFactorSelection().setComments((List<TriangleComment>) value);
-        else if(FactorSelection.FACTOR_SELECTION_SMOOTHINGS.equals(property))
+        else if(Smoothable.SMOOTHING_PROPERTY.equals(property))
             getValue().getFactorSelection().setSmoothings((List<Smoothing>) value);
         super.setProperty(property, value);
     }
@@ -107,18 +124,18 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
         }
     
         private void initOriginalProperties(FactorSelection factors) {
-            originalProperties.put(FactorSelection.FACTOR_SELECTION_COMMENTS, factors.getComments());
+            originalProperties.put(Commentable.COMMENT_PROPERTY, factors.getComments());
             originalProperties.put(FactorSelection.FACTOR_SELECTION_CORRECTIONS, factors.getCorrections());
             originalProperties.put(FactorSelection.FACTOR_SELECTION_EXCLUSIONS, factors.getExclusions());
-            originalProperties.put(FactorSelection.FACTOR_SELECTION_SMOOTHINGS, factors.getSmoothings());
+            originalProperties.put(Smoothable.SMOOTHING_PROPERTY, factors.getSmoothings());
         }
  
         @Override
         protected void saveEntity() {
             super.saveEntity();
             DeleteUtil deleter = new DeleteUtil();
-            addEntities(deleter, Smoothing.class, FactorSelection.FACTOR_SELECTION_SMOOTHINGS);
-            addEntities(deleter, TriangleComment.class, FactorSelection.FACTOR_SELECTION_COMMENTS);
+            addEntities(deleter, Smoothing.class, Smoothable.SMOOTHING_PROPERTY);
+            addEntities(deleter, TriangleComment.class, Commentable.COMMENT_PROPERTY);
             addEntities(deleter, TriangleCorrection.class, FactorSelection.FACTOR_SELECTION_CORRECTIONS);
             addEntities(deleter, TriangleCorrection.class, FactorSelection.FACTOR_SELECTION_EXCLUSIONS);
             deleter.delete(session);

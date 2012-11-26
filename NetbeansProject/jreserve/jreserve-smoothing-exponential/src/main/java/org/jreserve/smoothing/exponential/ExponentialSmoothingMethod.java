@@ -2,12 +2,8 @@ package org.jreserve.smoothing.exponential;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.jreserve.persistence.PersistentObject;
-import org.jreserve.persistence.SessionFactory;
 import org.jreserve.smoothing.SmoothingMethod;
+import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.core.SmoothingCell;
 import org.jreserve.triangle.widget.TriangleCell;
@@ -28,16 +24,13 @@ import org.openide.util.NbBundle.Messages;
 })
 public class ExponentialSmoothingMethod implements SmoothingMethod {
     
-    private final static String SELECT_QUERY = 
-        "SELECT s FROM ExponentialSmoothing s WHERE s.ownerId = :ownerId";
-    
     public final static int ID = 200;
 
     @Override
-    public Smoothing createSmoothing(PersistentObject owner, TriangleWidget widget, TriangleCell[] cells) {
+    public Smoothing createSmoothing(Smoothable smoothable, TriangleWidget widget, TriangleCell[] cells) {
         double[] input = getInput(cells);
-        CreatorPanel panel = CreatorPanel.create(owner, input, widget.getVisibleDigits());
-        ExponentialSmoothing smoothing = panel.isCancelled()? null : new ExponentialSmoothing(owner, panel.getSmoothingName(), panel.getAlpha());
+        CreatorPanel panel = CreatorPanel.create(smoothable, input, widget.getVisibleDigits());
+        ExponentialSmoothing smoothing = panel.isCancelled()? null : new ExponentialSmoothing(smoothable.getOwner(), panel.getSmoothingName(), panel.getAlpha());
         fillSmoothing(smoothing, cells, panel.getApplied());
         return smoothing;
     }
@@ -61,13 +54,5 @@ public class ExponentialSmoothingMethod implements SmoothingMethod {
         Date accident = cell.getAccidentBegin();
         Date development = cell.getDevelopmentBegin();
         return new SmoothingCell(smoothing, accident, development, applied);
-    }
-
-    @Override
-    public List<Smoothing> getSmoothings(PersistentObject owner) {
-        Session session = SessionFactory.getCurrentSession();
-        Query query = session.createQuery(SELECT_QUERY);
-        query.setString("ownerId", owner.getId());
-        return query.list();
     }
 }

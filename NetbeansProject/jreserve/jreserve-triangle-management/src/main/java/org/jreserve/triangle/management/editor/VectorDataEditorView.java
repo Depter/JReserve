@@ -10,18 +10,18 @@ import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 
 /**
  *
  * @author Peter Decsi
  */
 public class VectorDataEditorView extends DataEditorView<Vector> {
-    
-    private final static String POPUP_PATH = "JReserve/Popup/VectorDataEditor";
 
     VectorDataEditorView(ProjectElement<Vector> element) {
         super(element, Editor.VECTOR_IMG);
-        super.triangle.setPopUpActionPath(POPUP_PATH);
     }
 
     @Override

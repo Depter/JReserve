@@ -10,7 +10,11 @@ import org.jreserve.project.system.management.PersistentObjectDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
+import org.jreserve.smoothing.core.AbstractSmoothable;
+import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.data.AbstractCommentable;
+import org.jreserve.triangle.data.Commentable;
 import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.Vector;
@@ -51,8 +55,8 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         super.setProperty(DESCRIPTION_PROPERTY, vector.getDescription());
         super.setProperty(GEOMETRY_PROPERTY, vector.getGeometry());
         super.setProperty(CORRECTION_PROPERTY, vector.getCorrections());
-        super.setProperty(COMMENT_PROPERTY, vector.getComments());
-        super.setProperty(SMOOTHING_PROPERTY, vector.getSmoothings());
+        super.setProperty(Commentable.COMMENT_PROPERTY, vector.getComments());
+        super.setProperty(Smoothable.SMOOTHING_PROPERTY, vector.getSmoothings());
     }
     
     private void initLookup() {
@@ -61,6 +65,8 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         super.addToLookup(new RenameableProjectElement(this));
         super.addToLookup(new AuditableProjectElement(this));
         super.addToLookup(new VectorUndoRedo());
+        super.addToLookup(new AbstractSmoothable<Vector>(this, getValue()));
+        super.addToLookup(new AbstractCommentable<Vector>(this, getValue()));
         new VectorSavable();
     }
 
@@ -84,9 +90,9 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             getValue().setGeometry((VectorGeometry) value);
         else if(CORRECTION_PROPERTY.equals(property))
             getValue().setCorrections((List<TriangleCorrection>) value);
-        else if(COMMENT_PROPERTY.equals(property))
+        else if(Commentable.COMMENT_PROPERTY.equals(property))
             getValue().setComments((List<TriangleComment>) value);
-        else if(SMOOTHING_PROPERTY.equals(property))
+        else if(Smoothable.SMOOTHING_PROPERTY.equals(property))
             getValue().setSmoothings((List<Smoothing>) value);
         super.setProperty(property, value);
     }
@@ -104,8 +110,8 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             originalProperties.put(DESCRIPTION_PROPERTY, vector.getDescription());
             originalProperties.put(GEOMETRY_PROPERTY, vector.getGeometry());
             originalProperties.put(CORRECTION_PROPERTY, vector.getCorrections());
-            originalProperties.put(COMMENT_PROPERTY, vector.getComments());
-            originalProperties.put(SMOOTHING_PROPERTY, vector.getSmoothings());
+            originalProperties.put(Commentable.COMMENT_PROPERTY, vector.getComments());
+            originalProperties.put(Smoothable.SMOOTHING_PROPERTY, vector.getSmoothings());
         }        
         
         @Override
@@ -127,8 +133,8 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         protected void saveEntity() {
             super.saveEntity();
             DeleteUtil deleter = new DeleteUtil();
-            addEntities(deleter, Smoothing.class, SMOOTHING_PROPERTY);
-            addEntities(deleter, TriangleComment.class, COMMENT_PROPERTY);
+            addEntities(deleter, Smoothing.class, Smoothable.SMOOTHING_PROPERTY);
+            addEntities(deleter, TriangleComment.class, Commentable.COMMENT_PROPERTY);
             addEntities(deleter, TriangleCorrection.class, CORRECTION_PROPERTY);
             deleter.delete(session);
         }

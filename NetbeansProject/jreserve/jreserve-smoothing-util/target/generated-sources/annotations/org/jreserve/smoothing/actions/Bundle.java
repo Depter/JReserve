@@ -3,7 +3,7 @@ package org.jreserve.smoothing.actions;
 @javax.annotation.Generated(value="org.netbeans.modules.openide.util.NbBundleProcessor")
 class Bundle {
     /**
-     * @return <i>Smoothing</i>
+     * @return <i>Add Smoothing</i>
      * @see AddSmoothingAction
      */
     static String CTL_AddSmoothingAction_Smoothing() {

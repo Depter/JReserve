@@ -21,6 +21,9 @@ import org.jreserve.triangle.entities.DataStructure;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.util.DataLoader;
 import org.jreserve.triangle.widget.*;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -29,10 +32,35 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author Peter Decsi
  */
+@ActionReferences({
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.smoothing.actions.AddSmoothingAction", category="JReserve/Smoothing"),
+        path="JReserve/Popup/DataEditor",
+        position=50
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.smoothing.actions.DeleteSmoothingAction", category="JReserve/Smoothing"),
+        path="JReserve/Popup/DataEditor",
+        position=60
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.widget.actions.AddCommentAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/DataEditor",
+        position=100,
+        separatorBefore=90
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.widget.actions.DeleteCommentsAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/DataEditor",
+        position=200
+    )
+})
 @Messages({
     "LBL.DataEditorView.Title=Geometry"
 })
 abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
+    
+    private final static String POP_UP_PATH = "JReserve/Popup/DataEditor";
     
     protected GeometrySettingPanel geometrySetting;
     protected TriangleWidget triangle;
@@ -77,6 +105,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         triangle.setManualEvents(true);
         triangle.setPreferredSize(new java.awt.Dimension(400, 200));
         triangle.setTriangleGeometry(getElementGeometry());
+        triangle.setPopUpActionPath(POP_UP_PATH);
         gc.gridx = 0; gc.gridy = 1;
         gc.gridwidth = 2;
         gc.fill = java.awt.GridBagConstraints.BOTH;

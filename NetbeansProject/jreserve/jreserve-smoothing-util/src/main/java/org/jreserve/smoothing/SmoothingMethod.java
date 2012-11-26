@@ -1,8 +1,7 @@
 package org.jreserve.smoothing;
 
+import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
-import java.util.List;
-import org.jreserve.persistence.PersistentObject;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleWidget;
 
@@ -12,9 +11,7 @@ import org.jreserve.triangle.widget.TriangleWidget;
  */
 public interface SmoothingMethod {
 
-    public Smoothing createSmoothing(PersistentObject owner, TriangleWidget widget, TriangleCell[] cells);
-    
-    public List<Smoothing> getSmoothings(PersistentObject owner);
+    public Smoothing createSmoothing(Smoothable owner, TriangleWidget widget, TriangleCell[] cells);
     
     public @interface Registration {
         public int id();

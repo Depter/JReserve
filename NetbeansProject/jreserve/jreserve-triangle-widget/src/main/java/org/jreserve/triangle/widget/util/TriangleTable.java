@@ -384,6 +384,7 @@ public class TriangleTable extends JTable implements Lookup.Provider {
         private JPopupMenu createPopUp() {
             JPopupMenu popUp = new JPopupMenu();
             for(Action action : ActionUtil.actionsForPath(popUpActionPath)) {
+            //for(Action action : Utilities.actionsForPath(popUpActionPath)) {
                 if(action == null)
                     popUp.add(new JSeparator());
                 else if(action instanceof Presenter.Popup)

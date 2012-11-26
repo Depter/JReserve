@@ -7,12 +7,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.jreserve.persistence.PersistentObject;
-import org.jreserve.smoothing.SwingLoader;
+import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -34,8 +31,8 @@ import org.openide.util.NbBundle.Messages;
 })
 public class NameSelectPanel extends javax.swing.JPanel implements DocumentListener, ActionListener, WindowListener {
     
-    public static NameSelectPanel createPanel(PersistentObject owner, double[] input, int visibleDigits) {
-        NameSelectPanel content = new NameSelectPanel(owner, input, visibleDigits);
+    public static NameSelectPanel createPanel(Smoothable smoothable, double[] input, int visibleDigits) {
+        NameSelectPanel content = new NameSelectPanel(smoothable, input, visibleDigits);
         createDialog(content);
         content.dialog.setVisible(true);
         return content;
@@ -48,9 +45,6 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
         panel.dialog.pack();
     }
     
-    
-    private final static Logger logger = Logger.getLogger(NameSelectPanel.class.getName());
-    
     private final static String ERR_IMG = "org/netbeans/modules/dialogs/error.gif";
     private final static String CARD_MSG = "MSG_LABEL";
     private final static String CARD_PBAR = "PBAR_LABEL";
@@ -59,18 +53,18 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
     private String name;
     private CardLayout msgLayout;
     private List<Smoothing> smoothings;
+    private Smoothable smoothable;
     
     private volatile boolean cancelled = false;
-    private Loader loader;
     
-    public NameSelectPanel(PersistentObject owner, double[] input, int visibleDigits) {
+    public NameSelectPanel(Smoothable smoothable, double[] input, int visibleDigits) {
+        this.smoothable = smoothable;
         initComponents();
         smoothingTable.setVisibleDigits(visibleDigits);
         smoothingTable.setInput(input);
         smoothingTable.setSmoothed(new GeometricSmoothing().smooth(input));
         msgLayout = (CardLayout) msgPanel.getLayout();
         checkInput();
-        startLoading(owner);
     }
     
     private void setDialog(Dialog dialog) {
@@ -78,28 +72,9 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
         this.dialog.addWindowListener(this);
     }
     
-    private void startLoading(PersistentObject owner) {
-        nameText.setEnabled(false);
-        okButton.setEnabled(false);
-        msgLayout.show(msgPanel, CARD_PBAR);
-        pBar.setIndeterminate(true);
-        loader = new Loader(owner);
-        loader.execute();
-    }
-        
-    private void stopLoading() {
-        msgLayout.show(msgPanel, CARD_MSG);
-        setDefaultName();
-        nameText.setEnabled(true);
-        pBar.setIndeterminate(false);
-        loader = null;
-    }
-    
-    private void setDefaultName() {
-        if(smoothings == null)
-            return;
-        int count = smoothings.size()+1;
-        nameText.setText(Bundle.LBL_NameSelectPanel_DefaultName(count));
+    private String getDefaultName() {
+        int order = smoothable.getMaxSmoothingOrder()+1;
+        return Bundle.LBL_NameSelectPanel_DefaultName(order);
     }
     
     private void showError(String msg) {
@@ -126,12 +101,18 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
     
     private boolean checkNotExists(String name) {
         String trimmed = name.trim();
-        for(Smoothing s : smoothings)
+        for(Smoothing s : getSmoothings())
             if(s.getName().trim().equalsIgnoreCase(trimmed)) {
                 showError(Bundle.MSG_NameSelectPanel_Name_Exists(name));
                 return false;
             }
         return true;
+    }
+    
+    private List<Smoothing> getSmoothings() {
+        if(smoothings == null)
+            smoothings = smoothable.getSmoothings();
+        return smoothings;
     }
     
     @Override
@@ -161,8 +142,6 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
     
     private void cancel() {
         cancelled = true;
-        if(loader != null)
-            loader.cancel(true);
     }
 
     @Override
@@ -222,7 +201,7 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
         nameLabel.setText(org.openide.util.NbBundle.getMessage(NameSelectPanel.class, "LBL.NameSelectPanel.Name")); // NOI18N
         namePanel.add(nameLabel, java.awt.BorderLayout.LINE_START);
 
-        nameText.setText(null);
+        nameText.setText(getDefaultName());
         nameText.getDocument().addDocumentListener(this);
         namePanel.add(nameText, java.awt.BorderLayout.CENTER);
 
@@ -284,26 +263,4 @@ public class NameSelectPanel extends javax.swing.JPanel implements DocumentListe
     private org.jreserve.smoothing.visual.SmoothingTablePanel smoothingTable;
     private javax.swing.JPanel soutPanel;
     // End of variables declaration//GEN-END:variables
-
-    private class Loader extends SwingLoader {
-        
-        private Loader(PersistentObject owner) {
-            super(owner);
-        }
-
-        @Override
-        protected void done() {
-            try {
-                if(cancelled)
-                    return;
-                smoothings = get();
-                checkInput();
-            } catch (Exception ex) {
-                logger.log(Level.SEVERE, "Unable to load smoothings!", ex);
-                showError(ex.getLocalizedMessage());
-            } finally {
-                stopLoading();
-            }
-        }
-    }
 }

@@ -29,8 +29,6 @@ public class Vector extends AbstractPersistentObject implements Serializable, Da
     
     public final static String GEOMETRY_PROPERTY = "VECTOR_GEOMETRY_PROPERTY";
     public final static String CORRECTION_PROPERTY = "VECTOR_CORRECTION_PROPERTY";
-    public final static String COMMENT_PROPERTY = "VECTOR_COMMENT_PROPERTY";
-    public final static String SMOOTHING_PROPERTY = "VECTOR_SMOOTHING_PROPERTY";
 
     public final static int POSITION = 200;
     

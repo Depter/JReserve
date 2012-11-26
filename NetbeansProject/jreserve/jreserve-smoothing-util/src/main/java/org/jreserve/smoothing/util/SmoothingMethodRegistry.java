@@ -1,12 +1,13 @@
 package org.jreserve.smoothing.util;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import org.jreserve.persistence.PersistentObject;
 import org.jreserve.resources.annotation.RegistrationRegistry;
-import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.smoothing.SmoothingFactory;
 import org.jreserve.smoothing.SmoothingMethod;
+import org.jreserve.smoothing.core.Smoothable;
+import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.widget.TriangleCell;
 import org.jreserve.triangle.widget.TriangleWidget;
 import org.openide.filesystems.FileObject;
@@ -25,6 +26,14 @@ public class SmoothingMethodRegistry extends RegistrationRegistry<SmoothingFacto
             return id1 - id2;
         }
     };
+    
+    private static SmoothingMethodRegistry INSTANCE;
+    
+    public synchronized static List<SmoothingFactory> getFactories() {
+        if(INSTANCE == null)
+            INSTANCE = new SmoothingMethodRegistry();
+        return new ArrayList<SmoothingFactory>(INSTANCE.getValues());
+    }
     
     @Override
     public List<SmoothingFactory> getValues() {
@@ -71,13 +80,8 @@ public class SmoothingMethodRegistry extends RegistrationRegistry<SmoothingFacto
         }
 
         @Override
-        public Smoothing createSmoothing(PersistentObject owner, TriangleWidget widget, TriangleCell[] cells) {
-            return method.createSmoothing(owner, widget, cells);
-        }
-
-        @Override
-        public List<Smoothing> getSmoothings(PersistentObject owner) {
-            return method.getSmoothings(owner);
+        public Smoothing createSmoothing(Smoothable smoothable, TriangleWidget widget, TriangleCell[] cells) {
+            return method.createSmoothing(smoothable, widget, cells);
         }
     }
 }

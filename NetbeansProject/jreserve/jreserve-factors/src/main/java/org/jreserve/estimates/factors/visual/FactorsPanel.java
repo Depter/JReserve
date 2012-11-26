@@ -10,7 +10,9 @@ import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.smoothing.Smoother;
+import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
+import org.jreserve.triangle.data.Commentable;
 import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.Triangle;
@@ -18,16 +20,42 @@ import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.util.DataLoader;
 import org.jreserve.triangle.widget.*;
 import org.jreserve.triangle.widget.model.TriangleCellFactory;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
  * @author Peter Decsi
  */
+@ActionReferences({
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.smoothing.actions.AddSmoothingAction", category="JReserve/Smoothing"),
+        path="JReserve/Popup/FactorsPanel",
+        position=50,
+        separatorBefore=40
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.smoothing.actions.DeleteSmoothingAction", category="JReserve/Smoothing"),
+        path="JReserve/Popup/FactorsPanel",
+        position=60
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.widget.actions.AddCommentAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/FactorsPanel",
+        position=100,
+        separatorBefore=90
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.widget.actions.DeleteCommentsAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/FactorsPanel",
+        position=200
+    )
+})
 public class FactorsPanel extends NavigablePanel implements PropertyChangeListener {
     
     private final static String POPUP_PATH = "JReserve/Popup/FactorsPanel";
@@ -49,7 +77,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
         initComponents();
         startLoader();
         initListener();
-        lookup = new ProxyLookup(widget.getLookup(), Lookups.fixed(estimate));
+        lookup = new ProxyLookup(widget.getLookup(), estimate.getLookup());
     }
     
     private void initComponents() {
@@ -96,11 +124,11 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
     }
     
     private List<Smoothing> getTriangleSmoothings() {
-        return (List<Smoothing>) triangle.getProperty(Triangle.SMOOTHING_PROPERTY);
+        return (List<Smoothing>) triangle.getProperty(Smoothable.SMOOTHING_PROPERTY);
     }
     
     private List<TriangleComment> getFactorComments() {
-        return (List<TriangleComment>) estimate.getProperty(FactorSelection.FACTOR_SELECTION_COMMENTS);
+        return (List<TriangleComment>) estimate.getProperty(Commentable.COMMENT_PROPERTY);
     }
     
     private List<TriangleCorrection> getFactorCorrections() {
@@ -108,7 +136,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
     }
     
     private List<Smoothing> getFactorSmoothings() {
-        return (List<Smoothing>) estimate.getProperty(FactorSelection.FACTOR_SELECTION_SMOOTHINGS);
+        return (List<Smoothing>) estimate.getProperty(Smoothable.SMOOTHING_PROPERTY);
     }
     
     private List<FactorExclusion> getFactorExclusions() {
