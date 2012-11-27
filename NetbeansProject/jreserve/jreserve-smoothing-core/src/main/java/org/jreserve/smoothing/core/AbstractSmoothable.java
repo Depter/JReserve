@@ -1,5 +1,6 @@
 package org.jreserve.smoothing.core;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.system.ProjectElement;
@@ -53,7 +54,7 @@ public class AbstractSmoothable<T> implements Smoothable {
     @Override
     public void addSmoothing(Smoothing smoothing) {
         checkOwnerId(smoothing);
-        List<Smoothing> smoothings = getSmoothings();
+        List<Smoothing> smoothings = new ArrayList<Smoothing>(getSmoothings());
         if(!smoothings.contains(smoothing))
             smoothings.add(smoothing);
         element.setProperty(SMOOTHING_PROPERTY, smoothings);
@@ -61,7 +62,7 @@ public class AbstractSmoothable<T> implements Smoothable {
     
     @Override
     public void removeSmoothing(Smoothing smoothing) {
-        List<Smoothing> smoothings = getSmoothings();
+        List<Smoothing> smoothings = new ArrayList<Smoothing>(getSmoothings());
         smoothings.remove(smoothing);
         element.setProperty(SMOOTHING_PROPERTY, smoothings);
     }

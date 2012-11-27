@@ -3,6 +3,7 @@ package org.jreserve.project.system.management;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -47,7 +48,27 @@ public class ProjectElementUndoRedo implements PropertyChangeListener, UndoRedo 
     protected boolean isChange(PropertyChangeEvent evt) {
         Object o1 = evt.getOldValue();
         Object o2 = evt.getNewValue();
-        if(o1==null) return o2 != null;
+        if(isCollection(o1, o2))
+            return isChanged(evt.getPropertyName(), (Collection) o1, (Collection) o2);
+        return isChanged(evt.getPropertyName(), o1, o2);
+    }
+    
+    private boolean isCollection(Object o1, Object o2) {
+        return (o1 instanceof Collection) && (o2 instanceof Collection);
+    }
+    
+    protected boolean isChanged(String property, Collection c1, Collection c2) {
+        if(c1.size() != c2.size()) return true;
+            
+        for(Object c : c1)
+            if(!c2.contains(c))
+                return true;
+        return false;    
+    }
+
+    protected boolean isChanged(String property, Object o1, Object o2) {
+        if(o1 == null)
+            return !(o2 == null);
         return !o1.equals(o2);
     }
     

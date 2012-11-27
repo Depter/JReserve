@@ -31,7 +31,7 @@ public class ExponentialSmoothingMethod implements SmoothingMethod {
         double[] input = getInput(cells);
         CreatorPanel panel = CreatorPanel.create(smoothable, input, widget.getVisibleDigits());
         ExponentialSmoothing smoothing = panel.isCancelled()? null : new ExponentialSmoothing(smoothable.getOwner(), panel.getSmoothingName(), panel.getAlpha());
-        fillSmoothing(smoothing, cells, panel.getApplied());
+        fillSmoothing(smoothable, smoothing, cells, panel.getApplied());
         return smoothing;
     }
     
@@ -44,10 +44,11 @@ public class ExponentialSmoothingMethod implements SmoothingMethod {
         return input;
     }
     
-    private void fillSmoothing(ExponentialSmoothing smoothing, TriangleCell[] cells, boolean applied[]) {
+    private void fillSmoothing(Smoothable smoothable, ExponentialSmoothing smoothing, TriangleCell[] cells, boolean applied[]) {
         if(smoothing == null) return;
         for(int i=0, size=cells.length; i<size; i++)
             smoothing.addCell(createCell(smoothing, cells[i], applied[i]));
+        smoothing.setOrder(smoothable.getMaxSmoothingOrder() + 1);
     }
     
     private SmoothingCell createCell(Smoothing smoothing, TriangleCell cell, boolean applied) {

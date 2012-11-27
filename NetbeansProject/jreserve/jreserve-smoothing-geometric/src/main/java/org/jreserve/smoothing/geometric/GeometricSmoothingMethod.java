@@ -47,6 +47,7 @@ public class GeometricSmoothingMethod implements SmoothingMethod {
         GeometricSmoothing smoothing = new GeometricSmoothing(smoothable.getOwner(), name);
         for(int i=0, size=cells.length; i<size; i++)
             smoothing.addCell(createCell(smoothing, cells[i], applied[i]));
+        smoothing.setOrder(smoothable.getMaxSmoothingOrder() + 1);
         return smoothing;
     }
     

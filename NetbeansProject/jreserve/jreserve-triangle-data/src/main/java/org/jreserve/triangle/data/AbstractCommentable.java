@@ -1,5 +1,6 @@
 package org.jreserve.triangle.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.system.ProjectElement;
@@ -53,7 +54,7 @@ public class AbstractCommentable<T> implements Commentable {
     @Override
     public void addComment(TriangleComment comment) {
         checkOwnerId(comment);
-        List<TriangleComment> smoothings = getComments();
+        List<TriangleComment> smoothings = new ArrayList<TriangleComment>(getComments());
         if(!smoothings.contains(comment))
             smoothings.add(comment);
         element.setProperty(COMMENT_PROPERTY, smoothings);
@@ -61,7 +62,7 @@ public class AbstractCommentable<T> implements Commentable {
 
     @Override
     public void removeComment(TriangleComment comment) {
-        List<TriangleComment> comments = getComments();
+        List<TriangleComment> comments = new ArrayList<TriangleComment>(getComments());
         comments.remove(comment);
         element.setProperty(COMMENT_PROPERTY, comments);
     }
