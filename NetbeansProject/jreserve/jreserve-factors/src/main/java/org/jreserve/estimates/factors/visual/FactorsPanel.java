@@ -4,17 +4,15 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 import org.jreserve.data.entities.ClaimValue;
+import org.jreserve.estimates.factors.Excludables;
 import org.jreserve.estimates.factors.FactorExclusion;
-import org.jreserve.estimates.factors.FactorSelection;
 import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.smoothing.Smoother;
 import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.data.Commentable;
-import org.jreserve.triangle.data.TriangleComment;
-import org.jreserve.triangle.data.TriangleCorrection;
+import org.jreserve.triangle.data.*;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.util.DataLoader;
@@ -94,6 +92,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
     
     private void initListener() {
         triangle.addPropertyChangeListener(this);
+        estimate.addPropertyChangeListener(this);
     }
     
     private void startLoader() {
@@ -120,7 +119,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
     }
     
     private List<TriangleCorrection> getTriangleCorrections() {
-        return (List<TriangleCorrection>) triangle.getProperty(Triangle.CORRECTION_PROPERTY);
+        return (List<TriangleCorrection>) triangle.getProperty(Correctable.CORRECTION_PROPERTY);
     }
     
     private List<Smoothing> getTriangleSmoothings() {
@@ -132,7 +131,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
     }
     
     private List<TriangleCorrection> getFactorCorrections() {
-        return (List<TriangleCorrection>) estimate.getProperty(FactorSelection.FACTOR_SELECTION_CORRECTIONS);
+        return (List<TriangleCorrection>) estimate.getProperty(Correctable.CORRECTION_PROPERTY);
     }
     
     private List<Smoothing> getFactorSmoothings() {
@@ -140,20 +139,45 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
     }
     
     private List<FactorExclusion> getFactorExclusions() {
-        return (List<FactorExclusion>) estimate.getProperty(FactorSelection.FACTOR_SELECTION_EXCLUSIONS);
+        return (List<FactorExclusion>) estimate.getProperty(Excludables.EXCLUSION_PROPERTY);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        if(evt.getSource() == triangle) {
+            trianglePropertyChange(evt);
+        } else {
+            factorPropertyChange(evt);
+        }
+    }
+    
+    private void trianglePropertyChange(PropertyChangeEvent evt) {
         String property = evt.getPropertyName();
         if(Triangle.GEOMETRY_PROPERTY.equals(property)) {
             factorInput.geometry = getTraingleGeometry();
             factorInput.calculateFactors();
-        } else if(Triangle.CORRECTION_PROPERTY.equals(property)) {
+        } else if(Correctable.CORRECTION_PROPERTY.equals(property)) {
             factorInput.triangleCorrections = getTriangleCorrections();
             factorInput.calculateFactors();
-        } else if(Triangle.GEOMETRY_PROPERTY.equals(property)) {
+        } else if(Smoothable.SMOOTHING_PROPERTY.equals(property)) {
             factorInput.triangleSmoothings = getTriangleSmoothings();
+            factorInput.calculateFactors();
+        }
+    }
+    
+    private void factorPropertyChange(PropertyChangeEvent evt) {
+        String property = evt.getPropertyName();
+        if(Correctable.CORRECTION_PROPERTY.equals(property)) {
+            factorInput.factorCorrections = getFactorCorrections();
+            factorInput.calculateFactors();
+        } else if(Smoothable.SMOOTHING_PROPERTY.equals(property)) {
+            factorInput.factorSmoothings = getFactorSmoothings();
+            factorInput.calculateFactors();
+        } else if(Commentable.COMMENT_PROPERTY.equals(property)) {
+            factorInput.factorComments = getFactorComments();
+            factorInput.applyComments();
+        } else if(Excludables.EXCLUSION_PROPERTY.equals(property)) {
+            factorInput.factorExclusions = getFactorExclusions();
             factorInput.calculateFactors();
         }
     }
@@ -166,7 +190,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
                 List<WidgetData<Double>> values = widget.getValueLayer(TriangleCell.CORRECTION_LAYER);
                 widget.setValueLayer(TriangleCell.CORRECTION_LAYER, values);
                 List<TriangleCorrection> datas = getCorrections(values);
-                estimate.setProperty(FactorSelection.FACTOR_SELECTION_CORRECTIONS, datas);
+                estimate.setProperty(Correctable.CORRECTION_PROPERTY, datas);
             }
         }
         
@@ -189,7 +213,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
             try {
                 factorInput.values = loader.getData();
                 factorInput.calculateFactors();
-                widget.setComments(DataUtil.convertComments(getFactorComments()));
+                factorInput.applyComments();
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             } finally {
@@ -209,6 +233,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
         private List<TriangleCorrection> factorCorrections;
         private List<Smoothing> factorSmoothings;
         private List<FactorExclusion> factorExclusions;
+        private List<TriangleComment> factorComments;
         
         FactorInput() {
             geometry = getTraingleGeometry();
@@ -218,6 +243,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
             factorCorrections = getFactorCorrections();
             factorSmoothings = getFactorSmoothings();
             factorExclusions = getFactorExclusions();
+            factorComments = getFactorComments();
         }
         
         void calculateFactors() {
@@ -322,6 +348,10 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
             if(d1==null || d2==null) return null;
             return new WidgetData<Double>(c1.getAccidentBegin(), c1.getDevelopmentBegin(), d2 / d1);
         }
-    
+        
+        private void applyComments() {
+            List<WidgetData<Comment>> comments = DataUtil.convertComments(factorComments);
+            widget.setComments(comments);
+        }
     }
 }

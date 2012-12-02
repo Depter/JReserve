@@ -34,8 +34,8 @@ public abstract class ExcludeCellAction extends AbstractSingleCellPopUpAction {
     public void actionPerformed(ActionEvent e) {
         boolean excluded = !cell.isExcluded();
         excludeCell();
-        cell.setExcluded(excluded);
-        widget.fireTriangleValuesChanged();
+        //cell.setExcluded(excluded);
+        //widget.fireTriangleValuesChanged();
     }
     
     protected abstract void excludeCell();

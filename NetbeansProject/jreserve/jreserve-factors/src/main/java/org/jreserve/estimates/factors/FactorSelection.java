@@ -22,9 +22,6 @@ import org.jreserve.triangle.data.TriangleCorrection;
 @Entity
 @Table(name="FACTOR_SELECTION", schema="JRESERVE")
 public class FactorSelection extends AbstractPersistentObject {
-
-    public final static String FACTOR_SELECTION_CORRECTIONS = "FACTOR_SELECTION_CORRECTIONS";
-    public final static String FACTOR_SELECTION_EXCLUSIONS = "FACTOR_SELECTION_EXCLUSIONS";
     
     @NotAudited
     @OneToMany(cascade=CascadeType.ALL)

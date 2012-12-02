@@ -28,7 +28,6 @@ import org.jreserve.triangle.data.TriangleCorrection;
 public class Triangle extends AbstractPersistentObject implements Serializable, DataStructure {
     
     public final static String GEOMETRY_PROPERTY = "TRIANGLE_GEOMETRY_PROPERTY";
-    public final static String CORRECTION_PROPERTY = "TRIANGLE_CORRECTION_PROPERTY";
 
     public final static int POSITION = 100;
     

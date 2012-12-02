@@ -1,12 +1,9 @@
 package org.jreserve.estimates.factors.actions;
 
 import java.util.Date;
-import java.util.List;
 import javax.swing.Action;
+import org.jreserve.estimates.factors.Excludables;
 import org.jreserve.estimates.factors.FactorExclusion;
-import org.jreserve.estimates.factors.FactorSelection;
-import org.jreserve.estimates.factors.FactorSelectionOwner;
-import org.jreserve.project.system.ProjectElement;
 import org.jreserve.triangle.widget.actions.ExcludeCellAction;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
@@ -18,8 +15,8 @@ import org.openide.util.Lookup.Result;
  */
 public class ExcludeFactorAction extends ExcludeCellAction {
     
-    private Result<ProjectElement> tResult;
-    private ProjectElement element;
+    private Result<Excludables> tResult;
+    private Excludables excludables;
     
     public ExcludeFactorAction() {
     }
@@ -32,7 +29,7 @@ public class ExcludeFactorAction extends ExcludeCellAction {
     protected void init(Lookup lookup) {
         if(tResult != null)
             return;
-        tResult = lookup.lookupResult(ProjectElement.class);
+        tResult = lookup.lookupResult(Excludables.class);
         tResult.addLookupListener(this);
         super.init(lookup);
     }
@@ -45,33 +42,20 @@ public class ExcludeFactorAction extends ExcludeCellAction {
     }
     
     private boolean initElement() {
-        element = getElement();
-        return element != null;
-    }
-    
-    private ProjectElement getElement() {
-        for(ProjectElement e : tResult.allInstances())
-            if(e.getValue() instanceof FactorSelectionOwner)
-                return e;
-        return null;
+        excludables = lookupOne(tResult);
+        return excludables != null;
     }
 
     @Override
     protected void excludeCell() {
         FactorExclusion fe = createFactorExclusion();
-        List<FactorExclusion> exclusions = (List<FactorExclusion>) element.getProperty(FactorSelection.FACTOR_SELECTION_EXCLUSIONS);
-        exclusions.add(fe);
-        element.setProperty(FactorSelection.FACTOR_SELECTION_EXCLUSIONS, exclusions);
+        excludables.addExclusion(fe);
     }
     
     private FactorExclusion createFactorExclusion() {
         Date accident = cell.getAccidentBegin();
         Date development = cell.getDevelopmentBegin();
-        return new FactorExclusion(getFactorSelection(), accident, development);
-    }
-    
-    private FactorSelection getFactorSelection() {
-        return ((FactorSelectionOwner) element.getValue()).getFactorSelection();
+        return new FactorExclusion(excludables.getOwner(), accident, development);
     }
 
     @Override

@@ -13,10 +13,7 @@ import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.smoothing.core.AbstractSmoothable;
 import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.data.AbstractCommentable;
-import org.jreserve.triangle.data.Commentable;
-import org.jreserve.triangle.data.TriangleComment;
-import org.jreserve.triangle.data.TriangleCorrection;
+import org.jreserve.triangle.data.*;
 import org.jreserve.triangle.entities.Triangle;
 import static org.jreserve.triangle.entities.Triangle.*;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -57,7 +54,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         super.setProperty(NAME_PROPERTY, triangle.getName());
         super.setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         super.setProperty(GEOMETRY_PROPERTY, triangle.getGeometry());
-        super.setProperty(CORRECTION_PROPERTY, triangle.getCorrections());
+        super.setProperty(Correctable.CORRECTION_PROPERTY, triangle.getCorrections());
         super.setProperty(Commentable.COMMENT_PROPERTY, triangle.getComments());
         super.setProperty(Smoothable.SMOOTHING_PROPERTY, triangle.getSmoothings());
     }
@@ -70,6 +67,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         super.addToLookup(new TriangleUndoRedo());
         super.addToLookup(new AbstractSmoothable<Triangle>(this, getValue()));
         super.addToLookup(new AbstractCommentable<Triangle>(this, getValue()));
+        super.addToLookup(new AbstractCorrectable<Triangle>(this, getValue()));
         new TriangleSavable();
     }
 
@@ -91,7 +89,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             getValue().setDescription((String) value);
         else if(GEOMETRY_PROPERTY.equals(property))
             getValue().setGeometry((TriangleGeometry) value);
-        else if(CORRECTION_PROPERTY.equals(property))
+        else if(Correctable.CORRECTION_PROPERTY.equals(property))
             getValue().setCorrections((List<TriangleCorrection>) value);
         else if(Commentable.COMMENT_PROPERTY.equals(property))
             getValue().setComments((List<TriangleComment>) value);
@@ -112,7 +110,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             originalProperties.put(NAME_PROPERTY, triangle.getName());
             originalProperties.put(DESCRIPTION_PROPERTY, triangle.getDescription());
             originalProperties.put(GEOMETRY_PROPERTY, triangle.getGeometry());
-            originalProperties.put(CORRECTION_PROPERTY, triangle.getCorrections());
+            originalProperties.put(Correctable.CORRECTION_PROPERTY, triangle.getCorrections());
             originalProperties.put(Commentable.COMMENT_PROPERTY, triangle.getComments());
             originalProperties.put(Smoothable.SMOOTHING_PROPERTY, triangle.getSmoothings());
         }
@@ -138,7 +136,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             DeleteUtil deleter = new DeleteUtil();
             addEntities(deleter, Smoothing.class, Smoothable.SMOOTHING_PROPERTY);
             addEntities(deleter, TriangleComment.class, Commentable.COMMENT_PROPERTY);
-            addEntities(deleter, TriangleCorrection.class, CORRECTION_PROPERTY);
+            addEntities(deleter, TriangleCorrection.class, Correctable.CORRECTION_PROPERTY);
             deleter.delete(session);
         }
     }
@@ -172,7 +170,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         protected String getPropertyName(String property) {
             if(GEOMETRY_PROPERTY.equals(property))
                 return Bundle.MSG_TriangleProjectElement_UndoRedo_Geometry();
-            else if(CORRECTION_PROPERTY.equals(property))
+            else if(Correctable.CORRECTION_PROPERTY.equals(property))
                 return Bundle.MSG_TriangleProjectElement_UndoRedo_Correction();
             else
                 return super.getPropertyName(property);

@@ -4,10 +4,10 @@ import java.awt.Image;
 import java.util.List;
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.estimates.chainladder.visual.Editor;
+import org.jreserve.estimates.factors.AbstractExcludables;
+import org.jreserve.estimates.factors.Excludables;
 import org.jreserve.estimates.factors.FactorExclusion;
 import org.jreserve.estimates.factors.FactorSelection;
-import static org.jreserve.estimates.factors.FactorSelection.FACTOR_SELECTION_CORRECTIONS;
-import static org.jreserve.estimates.factors.FactorSelection.FACTOR_SELECTION_EXCLUSIONS;
 import org.jreserve.persistence.DeleteUtil;
 import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.DefaultProjectNode;
@@ -19,10 +19,7 @@ import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.smoothing.core.AbstractSmoothable;
 import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.data.AbstractCommentable;
-import org.jreserve.triangle.data.Commentable;
-import org.jreserve.triangle.data.TriangleComment;
-import org.jreserve.triangle.data.TriangleCorrection;
+import org.jreserve.triangle.data.*;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.windows.TopComponent;
@@ -49,8 +46,8 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
     
     private void initProperties(FactorSelection fs) {
         super.setProperty(Commentable.COMMENT_PROPERTY, fs.getComments());
-        super.setProperty(FACTOR_SELECTION_CORRECTIONS, fs.getCorrections());
-        super.setProperty(FACTOR_SELECTION_EXCLUSIONS, fs.getExclusions());
+        super.setProperty(Correctable.CORRECTION_PROPERTY, fs.getCorrections());
+        super.setProperty(Excludables.EXCLUSION_PROPERTY, fs.getExclusions());
         super.setProperty(Smoothable.SMOOTHING_PROPERTY, fs.getSmoothings());
     }
     
@@ -62,6 +59,8 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
         super.addToLookup(new ProjectElementUndoRedo(this));
         super.addToLookup(createSmoothable());
         super.addToLookup(createCommentable());
+        super.addToLookup(createCorrectable());
+        super.addToLookup(createExcludables());
         new ChainLadderEstimateSavable();
     }
     
@@ -75,6 +74,16 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
         return new AbstractCommentable(this, owner);
     }
 
+    private Correctable createCorrectable() {
+        FactorSelection owner = getValue().getFactorSelection();
+        return new AbstractCorrectable(this, owner);
+    }
+
+    private Excludables createExcludables() {
+        FactorSelection owner = getValue().getFactorSelection();
+        return new AbstractExcludables(this, owner);
+    }
+    
     @Override
     public Node createNodeDelegate() {
         return new DefaultProjectNode(this, ICON);
@@ -91,9 +100,9 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
             getValue().setName((String) value);
         else if(DESCRIPTION_PROPERTY.equals(property))
             getValue().setDescription((String) value);
-        else if(FactorSelection.FACTOR_SELECTION_CORRECTIONS.equals(property))
+        else if(Correctable.CORRECTION_PROPERTY.equals(property))
             getValue().getFactorSelection().setCorrections((List<TriangleCorrection>) value);
-        else if(FactorSelection.FACTOR_SELECTION_EXCLUSIONS.equals(property))
+        else if(Excludables.EXCLUSION_PROPERTY.equals(property))
             getValue().getFactorSelection().setExclusions((List<FactorExclusion>) value);
         else if(Commentable.COMMENT_PROPERTY.equals(property))
             getValue().getFactorSelection().setComments((List<TriangleComment>) value);
@@ -125,8 +134,8 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
     
         private void initOriginalProperties(FactorSelection factors) {
             originalProperties.put(Commentable.COMMENT_PROPERTY, factors.getComments());
-            originalProperties.put(FactorSelection.FACTOR_SELECTION_CORRECTIONS, factors.getCorrections());
-            originalProperties.put(FactorSelection.FACTOR_SELECTION_EXCLUSIONS, factors.getExclusions());
+            originalProperties.put(Correctable.CORRECTION_PROPERTY, factors.getCorrections());
+            originalProperties.put(Excludables.EXCLUSION_PROPERTY, factors.getExclusions());
             originalProperties.put(Smoothable.SMOOTHING_PROPERTY, factors.getSmoothings());
         }
  
@@ -136,8 +145,8 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
             DeleteUtil deleter = new DeleteUtil();
             addEntities(deleter, Smoothing.class, Smoothable.SMOOTHING_PROPERTY);
             addEntities(deleter, TriangleComment.class, Commentable.COMMENT_PROPERTY);
-            addEntities(deleter, TriangleCorrection.class, FactorSelection.FACTOR_SELECTION_CORRECTIONS);
-            addEntities(deleter, TriangleCorrection.class, FactorSelection.FACTOR_SELECTION_EXCLUSIONS);
+            addEntities(deleter, TriangleCorrection.class, Correctable.CORRECTION_PROPERTY);
+            addEntities(deleter, TriangleCorrection.class, Excludables.EXCLUSION_PROPERTY);
             deleter.delete(session);
         }
     }   

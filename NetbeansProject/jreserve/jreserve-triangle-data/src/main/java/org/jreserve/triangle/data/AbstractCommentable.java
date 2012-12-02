@@ -54,10 +54,10 @@ public class AbstractCommentable<T> implements Commentable {
     @Override
     public void addComment(TriangleComment comment) {
         checkOwnerId(comment);
-        List<TriangleComment> smoothings = new ArrayList<TriangleComment>(getComments());
-        if(!smoothings.contains(comment))
-            smoothings.add(comment);
-        element.setProperty(COMMENT_PROPERTY, smoothings);
+        List<TriangleComment> comments = new ArrayList<TriangleComment>(getComments());
+        if(!comments.contains(comment))
+            comments.add(comment);
+        element.setProperty(COMMENT_PROPERTY, comments);
     }
 
     @Override

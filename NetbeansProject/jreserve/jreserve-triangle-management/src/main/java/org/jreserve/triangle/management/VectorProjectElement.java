@@ -13,12 +13,9 @@ import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.smoothing.core.AbstractSmoothable;
 import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.data.AbstractCommentable;
-import org.jreserve.triangle.data.Commentable;
-import org.jreserve.triangle.data.TriangleComment;
-import org.jreserve.triangle.data.TriangleCorrection;
+import org.jreserve.triangle.data.*;
 import org.jreserve.triangle.entities.Vector;
-import static org.jreserve.triangle.entities.Vector.*;
+import static org.jreserve.triangle.entities.Vector.GEOMETRY_PROPERTY;
 import org.jreserve.triangle.entities.VectorGeometry;
 import org.jreserve.triangle.management.editor.Editor;
 import org.openide.nodes.Node;
@@ -54,7 +51,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         super.setProperty(NAME_PROPERTY, vector.getName());
         super.setProperty(DESCRIPTION_PROPERTY, vector.getDescription());
         super.setProperty(GEOMETRY_PROPERTY, vector.getGeometry());
-        super.setProperty(CORRECTION_PROPERTY, vector.getCorrections());
+        super.setProperty(Correctable.CORRECTION_PROPERTY, vector.getCorrections());
         super.setProperty(Commentable.COMMENT_PROPERTY, vector.getComments());
         super.setProperty(Smoothable.SMOOTHING_PROPERTY, vector.getSmoothings());
     }
@@ -67,6 +64,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         super.addToLookup(new VectorUndoRedo());
         super.addToLookup(new AbstractSmoothable<Vector>(this, getValue()));
         super.addToLookup(new AbstractCommentable<Vector>(this, getValue()));
+        super.addToLookup(new AbstractCorrectable<Vector>(this, getValue()));
         new VectorSavable();
     }
 
@@ -88,7 +86,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             getValue().setDescription((String) value);
         else if(GEOMETRY_PROPERTY.equals(property))
             getValue().setGeometry((VectorGeometry) value);
-        else if(CORRECTION_PROPERTY.equals(property))
+        else if(Correctable.CORRECTION_PROPERTY.equals(property))
             getValue().setCorrections((List<TriangleCorrection>) value);
         else if(Commentable.COMMENT_PROPERTY.equals(property))
             getValue().setComments((List<TriangleComment>) value);
@@ -109,7 +107,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             originalProperties.put(NAME_PROPERTY, vector.getName());
             originalProperties.put(DESCRIPTION_PROPERTY, vector.getDescription());
             originalProperties.put(GEOMETRY_PROPERTY, vector.getGeometry());
-            originalProperties.put(CORRECTION_PROPERTY, vector.getCorrections());
+            originalProperties.put(Correctable.CORRECTION_PROPERTY, vector.getCorrections());
             originalProperties.put(Commentable.COMMENT_PROPERTY, vector.getComments());
             originalProperties.put(Smoothable.SMOOTHING_PROPERTY, vector.getSmoothings());
         }        
@@ -135,7 +133,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
             DeleteUtil deleter = new DeleteUtil();
             addEntities(deleter, Smoothing.class, Smoothable.SMOOTHING_PROPERTY);
             addEntities(deleter, TriangleComment.class, Commentable.COMMENT_PROPERTY);
-            addEntities(deleter, TriangleCorrection.class, CORRECTION_PROPERTY);
+            addEntities(deleter, TriangleCorrection.class, Correctable.CORRECTION_PROPERTY);
             deleter.delete(session);
         }
     }
@@ -171,7 +169,7 @@ public class VectorProjectElement extends ProjectElement<Vector> {
         protected String getPropertyName(String property) {
             if(GEOMETRY_PROPERTY.equals(property))
                 return Bundle.MSG_TriangleProjectElement_UndoRedo_Geometry();
-            else if(CORRECTION_PROPERTY.equals(property))
+            else if(Correctable.CORRECTION_PROPERTY.equals(property))
                 return Bundle.MSG_TriangleProjectElement_UndoRedo_Correction();
             else
                 return super.getPropertyName(property);

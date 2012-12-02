@@ -2,11 +2,7 @@ package org.jreserve.triangle.management.editor;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Date;
-import java.util.List;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.data.TriangleComment;
-import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
@@ -51,11 +47,6 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     }
 
     @Override
-    protected List<TriangleCorrection> getCorrectionData() {
-        return element.getValue().getCorrections();
-    }
-
-    @Override
     protected void setElementGeometry(TriangleGeometry geometry) {
         VectorGeometry vg = getVectorGeometry(geometry);
         element.setProperty(Vector.GEOMETRY_PROPERTY, vg);
@@ -82,11 +73,6 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     protected boolean isGeometryChanged(PropertyChangeEvent evt) {
         String property = evt.getPropertyName();
         return Vector.GEOMETRY_PROPERTY.equals(property);
-    }
-
-    @Override
-    protected void updateCorrections(List<TriangleCorrection> corrections) {
-        element.setProperty(Vector.CORRECTION_PROPERTY, corrections);
     }
     
     private static class TriangleDummy extends TriangleGeometry {

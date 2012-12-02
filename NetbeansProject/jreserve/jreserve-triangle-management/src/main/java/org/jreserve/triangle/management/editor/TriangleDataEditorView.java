@@ -1,16 +1,9 @@
 package org.jreserve.triangle.management.editor;
 
 import java.beans.PropertyChangeEvent;
-import java.util.List;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.data.TriangleComment;
-import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 
 /**
  *
@@ -69,11 +62,6 @@ class TriangleDataEditorView extends DataEditorView<Triangle> {
     }
 
     @Override
-    protected List<TriangleCorrection> getCorrectionData() {
-        return element.getValue().getCorrections();
-    }
-
-    @Override
     protected void setElementGeometry(TriangleGeometry geometry) {
         element.setProperty(Triangle.GEOMETRY_PROPERTY, geometry);
     }
@@ -87,10 +75,5 @@ class TriangleDataEditorView extends DataEditorView<Triangle> {
     protected boolean isGeometryChanged(PropertyChangeEvent evt) {
         String property = evt.getPropertyName();
         return Triangle.GEOMETRY_PROPERTY.equals(property);
-    }
-
-    @Override
-    protected void updateCorrections(List<TriangleCorrection> corrections) {
-        element.setProperty(Triangle.CORRECTION_PROPERTY, corrections);
     }
 }

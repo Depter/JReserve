@@ -4,29 +4,37 @@
 <filesystem>
     <folder name="JReserve">
         <folder name="Entities">
-            <file name="org-jreserve-triangle-entities-Triangle.entity">
-                <!--org.jreserve.triangle.entities.Triangle-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
-                <attr boolvalue="false" name="generatedId"/>
-            </file>
             <file name="org-jreserve-triangle-entities-Vector.entity">
                 <!--org.jreserve.triangle.entities.Vector-->
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.Vector"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
+            <file name="org-jreserve-triangle-entities-Triangle.entity">
+                <!--org.jreserve.triangle.entities.Triangle-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
         </folder>
         <folder name="Audit">
             <folder name="AuditedEntityFactories">
-                <file name="org-jreserve-triangle-audit-ProjectTriangleAuditedEntityFactory.instance">
-                    <!--org.jreserve.triangle.audit.ProjectTriangleAuditedEntityFactory-->
-                    <attr intvalue="100" name="priority"/>
-                </file>
                 <file name="org-jreserve-triangle-audit-ProjectVectorAuditedEntityFactory.instance">
                     <!--org.jreserve.triangle.audit.ProjectVectorAuditedEntityFactory-->
                     <attr intvalue="200" name="priority"/>
                 </file>
+                <file name="org-jreserve-triangle-audit-ProjectTriangleAuditedEntityFactory.instance">
+                    <!--org.jreserve.triangle.audit.ProjectTriangleAuditedEntityFactory-->
+                    <attr intvalue="100" name="priority"/>
+                </file>
             </folder>
             <folder name="AuditFactories">
+                <file name="org-jreserve-triangle-audit-TriangleAuditor.instance">
+                    <!--org.jreserve.triangle.audit.TriangleAuditor-->
+                    <attr intvalue="50" name="priority"/>
+                </file>
+                <file name="org-jreserve-triangle-audit-ProjectTriangleAuditor.instance">
+                    <!--org.jreserve.triangle.audit.ProjectTriangleAuditor-->
+                    <attr intvalue="100" name="priority"/>
+                </file>
                 <file name="org-jreserve-triangle-audit-ProjectVectorAuditor.instance">
                     <!--org.jreserve.triangle.audit.ProjectVectorAuditor-->
                     <attr intvalue="200" name="priority"/>
@@ -34,14 +42,6 @@
                 <file name="org-jreserve-triangle-audit-VectorAuditor.instance">
                     <!--org.jreserve.triangle.audit.VectorAuditor-->
                     <attr intvalue="200" name="priority"/>
-                </file>
-                <file name="org-jreserve-triangle-audit-ProjectTriangleAuditor.instance">
-                    <!--org.jreserve.triangle.audit.ProjectTriangleAuditor-->
-                    <attr intvalue="100" name="priority"/>
-                </file>
-                <file name="org-jreserve-triangle-audit-TriangleAuditor.instance">
-                    <!--org.jreserve.triangle.audit.TriangleAuditor-->
-                    <attr intvalue="50" name="priority"/>
                 </file>
             </folder>
         </folder>

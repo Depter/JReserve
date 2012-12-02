@@ -15,10 +15,7 @@ import org.jreserve.project.system.ProjectElement;
 import org.jreserve.smoothing.Smoother;
 import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
-import org.jreserve.triangle.data.Comment;
-import org.jreserve.triangle.data.Commentable;
-import org.jreserve.triangle.data.TriangleComment;
-import org.jreserve.triangle.data.TriangleCorrection;
+import org.jreserve.triangle.data.*;
 import org.jreserve.triangle.entities.DataStructure;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.util.DataLoader;
@@ -68,6 +65,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     protected TriangleWidget triangle;
     
     protected ProjectElement<T> element;
+    private Correctable correctable;
     private DataLoader<T> loader;
     
     private boolean userChanging = true;
@@ -76,6 +74,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     DataEditorView(ProjectElement<T> element, Image img) {
         super(Bundle.LBL_DataEditorView_Title(), img);
         this.element = element;
+        this.correctable = element.getLookup().lookup(Correctable.class);
         userChanging = false;
         initComponents();
         initLayers();
@@ -140,7 +139,8 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     private void initLayers() {
         triangle.addValueLayer(new ArrayList<WidgetData<Double>>());
         triangle.addValueLayer(new ArrayList<WidgetData<Double>>());
-        triangle.setEditableLayer(TriangleCell.CORRECTION_LAYER);
+        if(correctable != null)
+            triangle.setEditableLayer(TriangleCell.CORRECTION_LAYER);
     }
     
     private void addListeners() {
@@ -165,7 +165,11 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         }
     }
     
-    protected abstract List<TriangleCorrection> getCorrectionData();
+    private List<TriangleCorrection> getCorrectionData() {
+        if(correctable!=null)
+            return correctable.getCorrections();
+        return Collections.EMPTY_LIST;
+    }
     
     protected abstract void setElementGeometry(TriangleGeometry geometry);
     
@@ -173,7 +177,10 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     
     protected abstract boolean isGeometryChanged(PropertyChangeEvent evt);
     
-    protected abstract void updateCorrections(List<TriangleCorrection> datas);
+    private void updateCorrections(List<TriangleCorrection> datas) {
+        if(correctable!=null)
+            correctable.setCorrections(datas);
+    }
     
     private List<TriangleComment> getComments() {
         return (List<TriangleComment>) element.getProperty(Commentable.COMMENT_PROPERTY);
@@ -275,6 +282,8 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
             if(isGeometryChanged(evt)) {
                 TriangleGeometry geoemtry = getElementGeometry();
                 triangle.setTriangleGeometry(geoemtry);
+            } else if (Correctable.CORRECTION_PROPERTY.equals(evt.getPropertyName())) {
+                applyModifications();
             } else if (Smoothable.SMOOTHING_PROPERTY.equals(evt.getPropertyName())) {
                 applyModifications();
             } else if (Commentable.COMMENT_PROPERTY.equals(evt.getPropertyName())) {
