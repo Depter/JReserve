@@ -93,14 +93,4 @@ class TriangleDataEditorView extends DataEditorView<Triangle> {
     protected void updateCorrections(List<TriangleCorrection> corrections) {
         element.setProperty(Triangle.CORRECTION_PROPERTY, corrections);
     }
-
-    @Override
-    protected List<TriangleComment> getComments() {
-        return element.getValue().getComments();
-    }
-
-    @Override
-    protected List<Smoothing> getSmoothings() {
-        return element.getValue().getSmoothings();
-    }
 }

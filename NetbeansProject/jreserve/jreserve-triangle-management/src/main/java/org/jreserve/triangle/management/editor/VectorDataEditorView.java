@@ -10,9 +10,6 @@ import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.Vector;
 import org.jreserve.triangle.entities.VectorGeometry;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 
 /**
  *
@@ -90,16 +87,6 @@ public class VectorDataEditorView extends DataEditorView<Vector> {
     @Override
     protected void updateCorrections(List<TriangleCorrection> corrections) {
         element.setProperty(Vector.CORRECTION_PROPERTY, corrections);
-    }
-
-    @Override
-    protected List<TriangleComment> getComments() {
-        return element.getValue().getComments();
-    }
-
-    @Override
-    protected List<Smoothing> getSmoothings() {
-        return element.getValue().getSmoothings();
     }
     
     private static class TriangleDummy extends TriangleGeometry {

@@ -13,8 +13,10 @@ import javax.swing.JPanel;
 import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.smoothing.Smoother;
+import org.jreserve.smoothing.core.Smoothable;
 import org.jreserve.smoothing.core.Smoothing;
 import org.jreserve.triangle.data.Comment;
+import org.jreserve.triangle.data.Commentable;
 import org.jreserve.triangle.data.TriangleComment;
 import org.jreserve.triangle.data.TriangleCorrection;
 import org.jreserve.triangle.entities.DataStructure;
@@ -173,9 +175,48 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
     
     protected abstract void updateCorrections(List<TriangleCorrection> datas);
     
-    protected abstract List<TriangleComment> getComments();
+    private List<TriangleComment> getComments() {
+        return (List<TriangleComment>) element.getProperty(Commentable.COMMENT_PROPERTY);
+    }
     
-    protected abstract List<Smoothing> getSmoothings();
+    private List<Smoothing> getSmoothings() {
+        return (List<Smoothing>) element.getProperty(Smoothable.SMOOTHING_PROPERTY);
+    }
+    
+    private void applyModifications() {
+        setCorrections();
+        setSmoothings();
+    }
+    
+    private void setCorrections() {
+        List<TriangleCorrection> corrections = getCorrectionData();
+        List<WidgetData<Double>> escaped = DataUtil.convertCorrections(corrections);
+        triangle.setValueLayer(TriangleCell.CORRECTION_LAYER, escaped);
+    }
+        
+    private void setSmoothings() {
+        Smoother smoother = new Smoother(triangle, TriangleCell.SMOOTHING_LAYER);
+        for(Smoothing smoothing : getSortedSmoothings())
+            smoother.smooth(smoothing);
+    }
+        
+    private List<Smoothing> getSortedSmoothings() {
+        List<Smoothing> result = getSmoothings();
+        Collections.sort(result, new Comparator<Smoothing>() {
+
+            @Override
+            public int compare(Smoothing o1, Smoothing o2) {
+                return o1.getOrder() - o2.getOrder();
+            }
+        });
+        return result;
+    }
+        
+    private void setComments() {
+        List<TriangleComment> comments = getComments();
+        List<WidgetData<Comment>> escaped = DataUtil.convertComments(comments);
+        triangle.addComments(escaped);
+    }
     
     private class LoaderCallback implements DataLoader.Callback<T> {
         
@@ -183,8 +224,7 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
         public void finnished(DataLoader<T> loader) {
             try {
                 triangle.setValueLayer(TriangleCell.VALUE_LAYER, DataUtil.convertDatas(loader.getData()));
-                setCorrections();
-                setSmoothings();
+                applyModifications();
                 setComments();
             } catch (RuntimeException ex) {
                 Exceptions.printStackTrace(ex);
@@ -192,35 +232,6 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
                 triangle.setManualEvents(false);
                 triangle.fireTriangleStructureChanged();
             }
-        }
-    
-        private void setCorrections() {
-            List<TriangleCorrection> corrections = getCorrectionData();
-            List<WidgetData<Double>> escaped = DataUtil.convertCorrections(corrections);
-            triangle.setValueLayer(TriangleCell.CORRECTION_LAYER, escaped);
-        }
-        
-        private void setSmoothings() {
-            Smoother smoother = new Smoother(triangle, TriangleCell.SMOOTHING_LAYER);
-            for(Smoothing smoothing : getSortedSmoothings())
-                smoother.smooth(smoothing);
-        }
-        
-        private List<Smoothing> getSortedSmoothings() {
-            List<Smoothing> result = getSmoothings();
-            Collections.sort(result, new Comparator<Smoothing>() {
-                @Override
-                public int compare(Smoothing o1, Smoothing o2) {
-                    return o1.getOrder() - o2.getOrder();
-                }
-            });
-            return result;
-        }
-        
-        private void setComments() {
-            List<TriangleComment> comments = getComments();
-            List<WidgetData<Comment>> escaped = DataUtil.convertComments(comments);
-            triangle.addComments(escaped);
         }
     }
     
@@ -264,6 +275,10 @@ abstract class DataEditorView<T extends DataStructure> extends NavigablePanel {
             if(isGeometryChanged(evt)) {
                 TriangleGeometry geoemtry = getElementGeometry();
                 triangle.setTriangleGeometry(geoemtry);
+            } else if (Smoothable.SMOOTHING_PROPERTY.equals(evt.getPropertyName())) {
+                applyModifications();
+            } else if (Commentable.COMMENT_PROPERTY.equals(evt.getPropertyName())) {
+                setComments();
             }
         }
     }

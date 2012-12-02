@@ -21,5 +21,4 @@ public interface Commentable {
     public void addComment(TriangleComment comment);
     
     public void removeComment(TriangleComment comment);
-    
 }
