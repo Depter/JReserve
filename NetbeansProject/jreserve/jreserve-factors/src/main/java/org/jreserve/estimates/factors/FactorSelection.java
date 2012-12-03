@@ -1,5 +1,6 @@
 package org.jreserve.estimates.factors;
 
+import org.jreserve.triangle.data.TriangleExclusion;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -61,7 +62,7 @@ public class FactorSelection extends AbstractPersistentObject {
         joinColumns=@JoinColumn(name="FACTOR_SELECTION_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF),
         inverseJoinColumns=@JoinColumn(name="EXCLUSION_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF)
     )
-    private Set<FactorExclusion> exclusions = new HashSet<FactorExclusion>();
+    private Set<TriangleExclusion> exclusions = new HashSet<TriangleExclusion>();
     
     public List<TriangleCorrection> getCorrections() {
         return new ArrayList<TriangleCorrection>(corrections);
@@ -101,11 +102,11 @@ public class FactorSelection extends AbstractPersistentObject {
             this.comments.addAll(comments);
     }
     
-    public List<FactorExclusion> getExclusions() {
-        return new ArrayList<FactorExclusion>(exclusions);
+    public List<TriangleExclusion> getExclusions() {
+        return new ArrayList<TriangleExclusion>(exclusions);
     }
     
-    public void setExclusions(List<FactorExclusion> exclusions) {
+    public void setExclusions(List<TriangleExclusion> exclusions) {
         this.exclusions.clear();
         if(exclusions != null)
             this.exclusions.addAll(exclusions);

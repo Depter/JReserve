@@ -3,8 +3,8 @@ OpenIDE-Module-Layer: org/jreserve/smoothing/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/smoothing/Bundle.proper
  ties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20121202
-OpenIDE-Module-Build-Version: 201212021811
+OpenIDE-Module-Implementation-Version: 1.0-20121203
+OpenIDE-Module-Build-Version: 201212030848
 OpenIDE-Module: org.jreserve.jreserve.smoothing.util
 OpenIDE-Module-Public-Packages: org.jreserve.smoothing.*, org.jreserve
  .smoothing.actions.*, org.jreserve.smoothing.visual.*

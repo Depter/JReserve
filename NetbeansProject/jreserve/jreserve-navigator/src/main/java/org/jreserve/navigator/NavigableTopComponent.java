@@ -1,6 +1,8 @@
 package org.jreserve.navigator;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -30,6 +32,7 @@ public class NavigableTopComponent extends TopComponent implements NavigableComp
         addComponents(components);
         createLookup();
         initPanel();
+        scroller.addComponentListener(new ResizeListener());
     }
     
     private void addComponents(List<NavigableComponent> components) {
@@ -50,29 +53,19 @@ public class NavigableTopComponent extends TopComponent implements NavigableComp
     }
     
     private void initPanel() {
-        contentPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.gridx=0; gc.gridy=0; 
-        gc.weightx=1d;gc.weighty=0d;
-        gc.anchor=GridBagConstraints.NORTH;
-        gc.fill=GridBagConstraints.HORIZONTAL;
+        contentPanel = new JPanel(new NtcLayout(COMPONENT_SPACING));
         
-        for(int i=0, size=components.size(); i<size; i++) {
-            if(i == 1)
-                gc.insets = new Insets(COMPONENT_SPACING, 0, 0, 0);
-            contentPanel.add(components.get(i).getComponent(), gc);
-            gc.gridy++;
-        }
+        for(int i=0, size=components.size(); i<size; i++)
+            contentPanel.add(components.get(i).getComponent());
         
-        gc.weighty=1d;
-        gc.fill=GridBagConstraints.BOTH;
-        contentPanel.add(Box.createGlue(), gc);
+        contentPanel.add(Box.createVerticalGlue());
         
         contentPanel.setBorder(BorderFactory.createEmptyBorder(BORDER_WIDHT, BORDER_WIDHT, BORDER_WIDHT, BORDER_WIDHT));
         scroller = new JScrollPane(contentPanel);
         scroller.getVerticalScrollBar().setUnitIncrement(SCROLL_INCREMENT);
         scroller.getVerticalScrollBar().setBlockIncrement(SCROLL_INCREMENT);
-
+        scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        
         setLayout(new BorderLayout());
         add(scroller, BorderLayout.CENTER);
     }
@@ -118,9 +111,37 @@ public class NavigableTopComponent extends TopComponent implements NavigableComp
     }
 
     @Override
+    public int getPersistenceType() {
+        return PERSISTENCE_NEVER;
+    }
+    
+    @Override
     protected void componentClosed() {
         super.componentClosed();
         for(NavigableComponent comp : components)
             comp.parentClosed();
+    }
+    
+    private void setContentSize() {
+        int barWidth = scroller.getHorizontalScrollBar().getWidth();
+        int width = scroller.getWidth() - barWidth;
+        int height = contentPanel.getPreferredSize().height;
+        contentPanel.setPreferredSize(new Dimension(width, height));
+        scroller.revalidate();
+    }
+    
+    private class ResizeListener extends ComponentAdapter {
+        
+        private boolean firstCall = true;
+        
+        @Override
+        public void componentResized(ComponentEvent e) {
+            if(firstCall) {
+                firstCall = false;
+            } else {
+                setContentSize();
+            }
+        }
+   
     }
 }

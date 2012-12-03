@@ -4,9 +4,9 @@ import java.awt.Image;
 import java.util.List;
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.estimates.chainladder.visual.Editor;
-import org.jreserve.estimates.factors.AbstractExcludables;
-import org.jreserve.estimates.factors.Excludables;
-import org.jreserve.estimates.factors.FactorExclusion;
+import org.jreserve.triangle.data.AbstractExcludables;
+import org.jreserve.triangle.data.Excludables;
+import org.jreserve.triangle.data.TriangleExclusion;
 import org.jreserve.estimates.factors.FactorSelection;
 import org.jreserve.persistence.DeleteUtil;
 import org.jreserve.persistence.visual.PersistentOpenable;
@@ -103,7 +103,7 @@ public class ChainLadderEstimateProjectElement extends ProjectElement<ChainLadde
         else if(Correctable.CORRECTION_PROPERTY.equals(property))
             getValue().getFactorSelection().setCorrections((List<TriangleCorrection>) value);
         else if(Excludables.EXCLUSION_PROPERTY.equals(property))
-            getValue().getFactorSelection().setExclusions((List<FactorExclusion>) value);
+            getValue().getFactorSelection().setExclusions((List<TriangleExclusion>) value);
         else if(Commentable.COMMENT_PROPERTY.equals(property))
             getValue().getFactorSelection().setComments((List<TriangleComment>) value);
         else if(Smoothable.SMOOTHING_PROPERTY.equals(property))

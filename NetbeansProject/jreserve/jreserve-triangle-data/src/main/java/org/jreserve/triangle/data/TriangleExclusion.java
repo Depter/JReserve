@@ -1,4 +1,4 @@
-package org.jreserve.estimates.factors;
+package org.jreserve.triangle.data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,7 +14,7 @@ import org.jreserve.persistence.PersistentObject;
 @EntityRegistration
 @Entity
 @Table(schema="JRESERVE", name="FACTOR_EXCLUSIONS")
-public class FactorExclusion extends AbstractPersistentObject implements Serializable {
+public class TriangleExclusion extends AbstractPersistentObject implements Serializable {
     
     private final static String ERR_END_BEFORE_START = 
          "End date '%tF' is before start date '%tF'!";
@@ -30,10 +30,10 @@ public class FactorExclusion extends AbstractPersistentObject implements Seriali
     @Column(name="OWNER_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF, nullable=false)
     private String ownerId;
     
-    protected FactorExclusion() {
+    protected TriangleExclusion() {
     }
     
-    public FactorExclusion(PersistentObject owner, Date accidentDate, Date developmentDate) {
+    public TriangleExclusion(PersistentObject owner, Date accidentDate, Date developmentDate) {
         this.ownerId = owner.getId();
         initAccidentDate(accidentDate);
         initDevelopmentDate(developmentDate);
@@ -73,12 +73,12 @@ public class FactorExclusion extends AbstractPersistentObject implements Seriali
     
     @Override
     public boolean equals(Object o) {
-        if(o instanceof FactorExclusion)
-            return equals((FactorExclusion) o);
+        if(o instanceof TriangleExclusion)
+            return equals((TriangleExclusion) o);
         return false;
     }
     
-    private boolean equals(FactorExclusion o) {
+    private boolean equals(TriangleExclusion o) {
         return accidentDate.equals(o.accidentDate) &&
                developmentDate.equals(o.developmentDate);
     }

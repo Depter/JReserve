@@ -4,8 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 import org.jreserve.data.entities.ClaimValue;
-import org.jreserve.estimates.factors.Excludables;
-import org.jreserve.estimates.factors.FactorExclusion;
 import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.system.ProjectElement;
@@ -31,6 +29,16 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Peter Decsi
  */
 @ActionReferences({
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.widget.actions.ExcludeCellAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/FactorsPanel",
+        position=20
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.widget.actions.IncludeCellAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/FactorsPanel",
+        position=30
+    ),
     @ActionReference(
         id=@ActionID(id="org.jreserve.smoothing.actions.AddSmoothingAction", category="JReserve/Smoothing"),
         path="JReserve/Popup/FactorsPanel",
@@ -138,8 +146,8 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
         return (List<Smoothing>) estimate.getProperty(Smoothable.SMOOTHING_PROPERTY);
     }
     
-    private List<FactorExclusion> getFactorExclusions() {
-        return (List<FactorExclusion>) estimate.getProperty(Excludables.EXCLUSION_PROPERTY);
+    private List<TriangleExclusion> getFactorExclusions() {
+        return (List<TriangleExclusion>) estimate.getProperty(Excludables.EXCLUSION_PROPERTY);
     }
 
     @Override
@@ -232,7 +240,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
         
         private List<TriangleCorrection> factorCorrections;
         private List<Smoothing> factorSmoothings;
-        private List<FactorExclusion> factorExclusions;
+        private List<TriangleExclusion> factorExclusions;
         private List<TriangleComment> factorComments;
         
         FactorInput() {
@@ -294,7 +302,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
         }
         
         private void applyExclusions(TriangleCell[][] cells) {
-            for(FactorExclusion exclusion : factorExclusions)
+            for(TriangleExclusion exclusion : factorExclusions)
                 applyExclusion(exclusion.getAccidentDate(), exclusion.getDevelopmentDate(), cells);
         }
         

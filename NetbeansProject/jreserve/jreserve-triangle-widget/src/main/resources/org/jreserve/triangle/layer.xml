@@ -8,6 +8,10 @@
                 </file>
                 <file name="org-jreserve-triangle-widget-actions-DeleteCommentAction.instance">
                 </file>
+                <file name="org-jreserve-triangle-widget-actions-ExcludeCellAction.instance">
+                </file>
+                <file name="org-jreserve-triangle-widget-actions-IncludeCellAction.instance">
+                </file>
             </folder>
         </folder>
     </folder>

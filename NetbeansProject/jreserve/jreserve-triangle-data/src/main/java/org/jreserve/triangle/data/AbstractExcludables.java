@@ -1,8 +1,8 @@
-package org.jreserve.estimates.factors;
+package org.jreserve.triangle.data;
 
 import java.util.ArrayList;
 import java.util.List;
-import static org.jreserve.estimates.factors.Excludables.EXCLUSION_PROPERTY;
+import static org.jreserve.triangle.data.Excludables.EXCLUSION_PROPERTY;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.system.ProjectElement;
 
@@ -28,22 +28,22 @@ public class AbstractExcludables<T> implements Excludables {
     }
 
     @Override
-    public List<FactorExclusion> getExclusions() {
-        return (List<FactorExclusion>) element.getProperty(EXCLUSION_PROPERTY);
+    public List<TriangleExclusion> getExclusions() {
+        return (List<TriangleExclusion>) element.getProperty(EXCLUSION_PROPERTY);
     }
 
     @Override
-    public void setExclusions(List<FactorExclusion> exclusions) {
+    public void setExclusions(List<TriangleExclusion> exclusions) {
         checkOwnerId(exclusions);
         element.setProperty(EXCLUSION_PROPERTY, exclusions);
     }
     
-    private void checkOwnerId(List<FactorExclusion> exclusions) {
-        for(FactorExclusion exclusion : exclusions)
+    private void checkOwnerId(List<TriangleExclusion> exclusions) {
+        for(TriangleExclusion exclusion : exclusions)
             checkOwnerId(exclusion);
     }
 
-    private void checkOwnerId(FactorExclusion exclusion) {
+    private void checkOwnerId(TriangleExclusion exclusion) {
         if(!exclusion.getOwnerId().equals(owner.getId())) {
             String msg = String.format(WRONG_OWNER, exclusion, owner, exclusion.getOwnerId());
             throw new IllegalArgumentException(msg);
@@ -51,17 +51,17 @@ public class AbstractExcludables<T> implements Excludables {
     }
 
     @Override
-    public void addExclusion(FactorExclusion exclusion) {
+    public void addExclusion(TriangleExclusion exclusion) {
         checkOwnerId(exclusion);
-        List<FactorExclusion> exclusions = new ArrayList<FactorExclusion>(getExclusions());
+        List<TriangleExclusion> exclusions = new ArrayList<TriangleExclusion>(getExclusions());
         if(!exclusions.contains(exclusion))
             exclusions.add(exclusion);
         element.setProperty(EXCLUSION_PROPERTY, exclusions);
     }
 
     @Override
-    public void removeExclusion(FactorExclusion exclusion) {
-        List<FactorExclusion> exclusions = new ArrayList<FactorExclusion>(getExclusions());
+    public void removeExclusion(TriangleExclusion exclusion) {
+        List<TriangleExclusion> exclusions = new ArrayList<TriangleExclusion>(getExclusions());
         exclusions.remove(exclusion);
         element.setProperty(EXCLUSION_PROPERTY, exclusions);
     }
