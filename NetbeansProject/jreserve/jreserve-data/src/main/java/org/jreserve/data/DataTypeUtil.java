@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -146,7 +147,7 @@ public class DataTypeUtil {
         try {
             FileObject configHome = FileUtil.getConfigRoot();
             XML = FileUtil.createData(configHome, PATH);
-            logger.log(Level.INFO, "DataType settings home set to '%s'.", XML.getPath());
+            logger.log(Level.INFO, "DataType settings home set to \"{0}\".", XML.getPath());
             return true;
         } catch (IOException ex) {
             logger.log(Level.SEVERE, String.format("Unable to create file '%s' in user dir!", PATH), ex);

@@ -23,7 +23,6 @@ public abstract class RegistrationRegistry<T, V> {
     
     private List<T> values;
     
-    
     protected List<T> getValues() {
         if(values == null)
             initialize();

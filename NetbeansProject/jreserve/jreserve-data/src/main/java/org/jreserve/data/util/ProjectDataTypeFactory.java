@@ -79,6 +79,18 @@ public class ProjectDataTypeFactory extends SessionTask.AbstractTask<List<Projec
             return new ProjectDataType(claimType, dbId, name, isTriangle);
         }
 
+        public int getDbId() {
+            return dbId;
+        }
+
+        public boolean isTriangle() {
+            return isTriangle;
+        }
+
+        public String getName() {
+            return name;
+        }
+        
         @Override
         public int compareTo(DataTypeDummy o) {
             if(o == null)

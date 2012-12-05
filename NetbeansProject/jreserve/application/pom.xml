@@ -216,6 +216,12 @@
             <artifactId>jreserve-factors-estimate</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jreserve-factors-estimate-basic</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

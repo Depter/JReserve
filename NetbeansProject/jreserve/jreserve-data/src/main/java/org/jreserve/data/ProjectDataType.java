@@ -106,8 +106,7 @@ public class ProjectDataType extends AbstractPersistentObject implements Compara
     
     @Override
     public int hashCode() {
-        int hash = 31 + (claimType==null? 0 : claimType.hashCode());
-        return 17 * hash + dbId;
+        return dbId;
     }
     
     @Override

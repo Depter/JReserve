@@ -389,7 +389,22 @@ public class TriangleWidget extends JPanel implements Serializable {
     public boolean[][] flattenExclusions() {
         return table.flattenExclusions();
     }
+    
+    public double[][] flattenIncludedCells() {
+        double[][] values = flatten();
+        boolean[][] inclusions = flattenExclusions();
+        for(int r=0, rSize=values.length; r<rSize; r++)
+            flattenIncludedRow(values[r], inclusions[r]);
+        return values;
+    }
 
+    private void flattenIncludedRow(double[] row, boolean[] included) {
+        if(row == null)
+            return;
+        for(int i=0, size=row.length; i<size; i++)
+            if(!included[i])
+                row[i] = Double.NaN;
+    }
     public Lookup getLookup() {
         return lookup;
     }

@@ -89,7 +89,7 @@ public class TriangleCellRenderer extends JLabel implements TableCellRenderer {
         Color color = null;
         
         if(cell.isExcluded())
-            return TriangleWidget.EXCLUDED_BG;
+            return isSelected? bgFocused : TriangleWidget.EXCLUDED_BG;
         
         if (hasFocus && !isSelected && table.isCellEditable(row, column))
             color = getBgFocused(table, cell, isSelected, hasFocus, row, column);

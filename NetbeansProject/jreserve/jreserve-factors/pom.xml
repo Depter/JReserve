@@ -107,6 +107,12 @@
             <artifactId>jreserve-navigator</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-factors-estimate</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

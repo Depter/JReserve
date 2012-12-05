@@ -22,6 +22,7 @@ import org.openide.awt.ActionReferences;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
@@ -62,6 +63,9 @@ import org.openide.util.lookup.ProxyLookup;
         position=200
     )
 })
+@Messages({
+    "LBL.FactorsPanel.Title=Factors"
+})
 public class FactorsPanel extends NavigablePanel implements PropertyChangeListener {
     
     private final static String POPUP_PATH = "JReserve/Popup/FactorsPanel";
@@ -76,7 +80,7 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
     private Lookup lookup;
     
     public FactorsPanel(ProjectElement<Triangle> triangle, ProjectElement<? extends PersistentObject> estimate) {
-        super("Factors", IMG);
+        super(Bundle.LBL_FactorsPanel_Title(), IMG);
         this.triangle = triangle;
         this.estimate = estimate;
         this.factorInput = new FactorInput();
@@ -110,6 +114,10 @@ public class FactorsPanel extends NavigablePanel implements PropertyChangeListen
 
     public TriangleWidget getTriangleWidget() {
         return widget;
+    }
+    
+    public double[][] flattenIncludedInputs() {
+        return null;
     }
     
     @Override

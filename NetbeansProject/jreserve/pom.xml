@@ -87,6 +87,7 @@
         <module>jreserve-factors</module>
         <module>jreserve-triangle-data</module>
         <module>jreserve-factors-estimate</module>
+        <module>jreserve-factors-estimate-basic</module>
   </modules>
 
     <properties>

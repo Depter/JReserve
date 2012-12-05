@@ -2,6 +2,7 @@ package org.jreserve.estimates.factors;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jreserve.estimates.factors.visual.FactorSelectionPanel;
 import org.jreserve.estimates.factors.visual.FactorsPanel;
 import org.jreserve.navigator.NavigableComponent;
 import org.jreserve.project.system.ProjectElement;
@@ -22,6 +23,7 @@ public class FactorNavigatorUtil {
         components.add(factors);
         components.add(AccidentPeriodsChartData.createPanel(factors.getTriangleWidget()));
         components.add(DevelopmentPeriodsChartData.createPanel(factors.getTriangleWidget()));
+        components.add(new FactorSelectionPanel(factors));
         return components;
     }
 }

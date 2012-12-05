@@ -56,8 +56,8 @@ public class IncludeCellAction extends AbstractSingleCellPopUpAction {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        includeCell();
         cell.setExcluded(false);
+        includeCell();
         widget.fireTriangleValuesChanged();
     }
 
