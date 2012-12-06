@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="JReserve">
+        <folder name="Entities">
+            <file name="org-jreserve-triangle-entities-TriangleCorrection.entity">
+                <!--org.jreserve.triangle.entities.TriangleCorrection-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleCorrection"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
+            <file name="org-jreserve-triangle-entities-TriangleComment.entity">
+                <!--org.jreserve.triangle.entities.TriangleComment-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleComment"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

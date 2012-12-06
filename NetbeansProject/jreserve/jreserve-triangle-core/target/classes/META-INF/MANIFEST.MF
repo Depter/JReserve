@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Layer: org/jreserve/triangle/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/jreserve/triangle/Bundle.propert
+ ies
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-20121206
+OpenIDE-Module-Build-Version: 201212061725
+OpenIDE-Module: org.jreserve.jreserve.triangle.core
+OpenIDE-Module-Public-Packages: org.jreserve.triangle.*
+OpenIDE-Module-Display-Category: org.jreserve
+OpenIDE-Module-Name: Triangle Core
+OpenIDE-Module-Short-Description: <undefined>
+OpenIDE-Module-Long-Description: <undefined>
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
+ n/1 > 1.14.1, org.netbeans.api.progress/1 > 1.28.1, org.openide.util 
+ > 8.25.1, org.jreserve.jreserve.core.persistence > 1.0, org.jreserve.
+ jreserve.util.audit > 1.0, org.jreserve.jreserve.data.project > 1.0, 
+ org.jreserve.jreserve.data.data > 1.0
+

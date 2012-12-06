@@ -54,40 +54,45 @@
     </build>
 
     <modules>
-        <module>branding</module>
-        <module>application</module>
-        <module>jreserve-resources</module>
-        <module>jreserve-logging</module>
-        <module>jreserve-database</module>
-        <module>jreserve-database-derby</module>
-        <module>jreserve-database-oracle</module>
-        <module>jreserve-persistence</module>
-        <module>jreserve-audit</module>
-        <module>jreserve-project</module>
-        <module>jreserve-triangle</module>
-        <module>jreserve-project-system</module>
-        <module>jreserve-data</module>
-        <module>jreserve-dataimport</module>
-        <module>jreserve-dataimport-clipboardtable</module>
-        <module>jreserve-locale-settings</module>
-        <module>jreserve-apc-sample</module>
-        <module>jreserve-triangle-widget</module>
-        <module>jreserve-triangle-management</module>
-        <module>jreserve-smoothing-core</module>
-        <module>jreserve-smoothing-geometric</module>
-        <module>jreserve-smoothing-exponential</module>
-        <module>jreserve-smoothing-util</module>
-        <module>jreserve-navigator</module>
-        <module>jfreechart</module>
-        <module>jreserve-chart</module>
-        <module>jreserve-rutil</module>
-        <module>jreserve-chainladder</module>
-        <module>jreserve-estimates</module>
-        <module>jreserve-projectelement-container</module>
-        <module>jreserve-factors</module>
+        
+        <!-- CORE -->
+        <module>jreserve-core-branding</module>
+        <module>jreserve-core-app</module>
+        <module>jreserve-core-resources</module>
+        <module>jreserve-core-logging</module>
+        <module>jreserve-core-database</module>
+        <module>jreserve-core-persistence</module>
+        <module>jreserve-core-project-system</module>
+        <module>jreserve-core-locale-settings</module>
+        
+        
+        <!-- DATA -->
+        <module>jreserve-data-project</module>
+        <module>jreserve-data-data</module>
+        <module>jreserve-data-import</module>
+        
+        <!-- TRIANGLE -->
+        <module>jreserve-triangle-core</module>
         <module>jreserve-triangle-data</module>
-        <module>jreserve-factors-estimate</module>
-        <module>jreserve-factors-estimate-basic</module>
+        <module>jreserve-triangle-smoothing-core</module>
+        
+        <!-- ESTIMATES -->
+        
+        
+        <!-- UTIL -->
+        <module>jreserve-util-audit</module>
+        <module>jreserve-util-navigator</module>
+        <module>jreserve-util-jfreechart</module>
+        <module>jreserve-util-chart</module>
+        <module>jreserve-util-r</module>
+        <module>jreserve-util-projectelement-container</module>
+        
+        
+        <!-- MISC -->
+        <module>jreserve-misc-database-derby</module>
+        <module>jreserve-misc-database-oracle</module>
+        <module>jreserve-misc-data-import-clipboardtable</module>
+        <module>jreserve-misc-apc-sample</module>
   </modules>
 
     <properties>

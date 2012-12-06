@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.jreserve.jreserve.chainladder">
+    <module_version install_time="1354701866001" last="true" origin="installer" specification_version="1.0">
+        <file crc="1031371291" name="config/Modules/org-jreserve-jreserve-chainladder.xml"/>
+        <file crc="1329337794" name="modules/org-jreserve-jreserve-chainladder.jar"/>
+    </module_version>
+</module>

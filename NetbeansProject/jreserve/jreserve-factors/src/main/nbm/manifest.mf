@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module-Layer: org/jreserve/estimates/factors/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/jreserve/estimates/factors/Bundle.properties

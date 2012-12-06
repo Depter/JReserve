@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.netbeans.core.nativeaccess/1">
+    <module_version install_time="1354701849345" last="true" origin="installer" specification_version="1.16.1">
+        <file crc="1370516056" name="config/Modules/org-netbeans-core-nativeaccess.xml"/>
+        <file crc="1823659508" name="modules/ext/platform-3.4.0.jar"/>
+        <file crc="1598253123" name="modules/locale/org-netbeans-core-nativeaccess_ja.jar"/>
+        <file crc="603171832" name="modules/locale/org-netbeans-core-nativeaccess_pt_BR.jar"/>
+        <file crc="2815390897" name="modules/locale/org-netbeans-core-nativeaccess_ru.jar"/>
+        <file crc="986069960" name="modules/locale/org-netbeans-core-nativeaccess_zh_CN.jar"/>
+        <file crc="794310450" name="modules/org-netbeans-core-nativeaccess.jar"/>
+    </module_version>
+</module>

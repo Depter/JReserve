@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.jreserve.jreserve.project">
+    <module_version install_time="1354701864908" last="true" origin="installer" specification_version="1.0">
+        <file crc="2578864404" name="config/Modules/org-jreserve-jreserve-project.xml"/>
+        <file crc="3703659458" name="modules/org-jreserve-jreserve-project.jar"/>
+    </module_version>
+</module>

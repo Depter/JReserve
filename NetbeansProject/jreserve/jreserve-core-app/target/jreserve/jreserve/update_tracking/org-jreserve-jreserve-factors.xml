@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.jreserve.jreserve.factors">
+    <module_version install_time="1354701866314" last="true" origin="installer" specification_version="1.0">
+        <file crc="3646893006" name="config/Modules/org-jreserve-jreserve-factors.xml"/>
+        <file crc="442817579" name="modules/org-jreserve-jreserve-factors.jar"/>
+    </module_version>
+</module>

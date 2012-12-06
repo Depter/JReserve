@@ -14,8 +14,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <netbeans.run.params.ide/>
-        <netbeans.run.params>${netbeans.run.params.ide}</netbeans.run.params>
     </properties>
 
     <repositories>
@@ -26,6 +24,17 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>netbeans-snapshot</id>
+            <name>NetBeans Snapshots</name>
+            <url>http://bits.netbeans.org/netbeans/trunk/maven-snapshot/</url>
+        </repository>
+        <repository>
+            <url>http://repo1.maven.org/maven2/</url>
+            <id>junit_4</id>
+            <layout>default</layout>
+            <name>Repository for library Library[junit_4]</name>
         </repository>
     </repositories>
 
@@ -43,21 +52,46 @@
         </dependency>
         
         <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-progress</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-persistence</artifactId>
+            <artifactId>jreserve-core-persistence</artifactId>
             <version>${project.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-project-system</artifactId>
+            <artifactId>jreserve-data-project</artifactId>
             <version>${project.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-audit</artifactId>
+            <artifactId>jreserve-data-data</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-util-audit</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -69,7 +103,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>org.jreserve.triangle.data</publicPackage>
+                        <publicPackage>org.jreserve.triangle.data.entities</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

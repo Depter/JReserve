@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module-Layer: org/jreserve/smoothing/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/jreserve/smoothing/Bundle.properties

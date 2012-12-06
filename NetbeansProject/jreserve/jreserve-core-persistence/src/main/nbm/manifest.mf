@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Install: org/jreserve/persistence/connection/Installer.class
+OpenIDE-Module-Layer: org/jreserve/persistence/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/jreserve/persistence/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
