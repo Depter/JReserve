@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.triangle.TriangularData;
-import org.jreserve.triangle.data.entities.TriangleGeometry;
+import org.jreserve.triangle.entities.TriangleGeometry;
 
 /**
  *

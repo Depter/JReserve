@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.jreserve.jreserve.core.persistence">
+    <module_version install_time="1354891596968" last="true" origin="installer" specification_version="1.0">
+        <file crc="2339987798" name="config/Modules/org-jreserve-jreserve-core-persistence.xml"/>
+        <file crc="914671301" name="modules/ext/antlr/antlr-2.7.7.jar"/>
+        <file crc="4207353500" name="modules/ext/c3p0/c3p0-0.9.1.jar"/>
+        <file crc="2050839146" name="modules/ext/dom4j/dom4j-1.6.1.jar"/>
+        <file crc="390518467" name="modules/ext/org.hibernate.common/hibernate-commons-annotations-4.0.1.Final.jar"/>
+        <file crc="3061699236" name="modules/ext/org.hibernate.javax.persistence/hibernate-jpa-2.0-api-1.0.1.Final.jar"/>
+        <file crc="3644774239" name="modules/ext/org.hibernate/hibernate-c3p0-4.1.5.SP1.jar"/>
+        <file crc="949362783" name="modules/ext/org.hibernate/hibernate-core-4.1.5.SP1.jar"/>
+        <file crc="3688059713" name="modules/ext/org.hibernate/hibernate-entitymanager-4.1.7.Final.jar"/>
+        <file crc="3161604100" name="modules/ext/org.hibernate/hibernate-envers-4.1.7.Final.jar"/>
+        <file crc="1495595153" name="modules/ext/org.javassist/javassist-3.16.1-GA.jar"/>
+        <file crc="1691485744" name="modules/ext/org.jboss.logging/jboss-logging-3.1.0.GA.jar"/>
+        <file crc="216948112" name="modules/ext/org.jboss.spec.javax.transaction/jboss-transaction-api_1.1_spec-1.0.0.Final.jar"/>
+        <file crc="1888669852" name="modules/ext/org.slf4j/slf4j-api-1.6.6.jar"/>
+        <file crc="679423285" name="modules/ext/org.slf4j/slf4j-jdk14-1.6.6.jar"/>
+        <file crc="672531485" name="modules/org-jreserve-jreserve-core-persistence.jar"/>
+    </module_version>
+</module>

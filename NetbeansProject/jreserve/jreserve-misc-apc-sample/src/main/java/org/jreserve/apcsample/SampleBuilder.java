@@ -7,7 +7,7 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.container.ProjectDataContainerFactoy;
 import org.jreserve.data.util.ProjectDataTypeFactory;
 import org.jreserve.data.util.ProjectDataTypeFactory.DataTypeDummy;
-import org.jreserve.estimates.EstimateContainerFactory;
+import org.jreserve.estimate.core.container.factory.EstimateContainerFactory;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.ClaimType;
@@ -18,8 +18,7 @@ import org.jreserve.project.factories.LoBFactory;
 import org.jreserve.project.factories.ProjectFactory;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
-import org.jreserve.triangle.management.factories.TriangleFactory;
-import org.jreserve.triangle.management.factories.VectorFactory;
+import org.jreserve.triangle.data.factories.TriangleFactory;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -127,12 +126,12 @@ public class SampleBuilder {
     }
     
     private void createTriangle(ProjectElementContainer container, ProjectDataType dt) throws Exception {
-        TriangleFactory factory = new TriangleFactory(container.getProject(), dt, dt.getName(), InputData.TRIANGLE_GEOMETRY);
+        TriangleFactory factory = new TriangleFactory(container.getProject(), dt, dt.getName(), InputData.TRIANGLE_GEOMETRY, true);
         container.addElement(doWork(factory, null));
     }
     
     private void createVector(ProjectElementContainer container, ProjectDataType dt) throws Exception {
-        VectorFactory factory = new VectorFactory(container.getProject(), dt, dt.getName(), InputData.VECTOR_GEOMETRY);
+        TriangleFactory factory = new TriangleFactory(container.getProject(), dt, dt.getName(), InputData.VECTOR_GEOMETRY, false);
         container.addElement(doWork(factory, null));
     }    
     

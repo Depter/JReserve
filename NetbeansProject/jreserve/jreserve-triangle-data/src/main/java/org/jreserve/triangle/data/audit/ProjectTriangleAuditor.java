@@ -6,7 +6,7 @@ import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.query.AuditEntity;
 import org.jreserve.audit.Auditor;
 import org.jreserve.project.entities.Project;
-import org.jreserve.triangle.data.entities.Triangle;
+import org.jreserve.triangle.entities.Triangle;
 import org.openide.util.NbBundle.Messages;
 
 /**

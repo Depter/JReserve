@@ -7,7 +7,6 @@ import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.triangle.Comment;
 
 /**
  *
@@ -22,10 +21,10 @@ public class TriangleComment extends AbstractPersistentObject implements Comment
     
     private final static int NAME_SIZE = 64;
 
-    @Column(name="ACCIDENT_PERIOD", nullable=false)
+    @Column(name="ACCIDENT_PERIOD")
     private int accident;
     
-    @Column(name="DEVELOPMENT_PERIOD", nullable=false)
+    @Column(name="DEVELOPMENT_PERIOD")
     private int development;
     
     @Column(name="CREATION_DATE", nullable=false)

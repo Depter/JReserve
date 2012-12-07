@@ -11,7 +11,7 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.entities.Project;
-import org.jreserve.triangle.data.entities.DataStructure;
+import org.jreserve.triangle.entities.Triangle;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle.Messages;
@@ -25,7 +25,7 @@ import org.openide.util.RequestProcessor;
     "# {0} - name",
     "MSG.DataLoader.Loading=Loading data for \"{0}\"..."
 })
-public class DataLoader<T extends DataStructure> implements Runnable {
+public class DataLoader implements Runnable {
     
     private final static Logger logger = Logger.getLogger(DataLoader.class.getName());
 
@@ -35,7 +35,7 @@ public class DataLoader<T extends DataStructure> implements Runnable {
     private Project project;
     private ProjectDataType dataType;
     private final String name;
-    private final Callback<T> callback;
+    private final Callback callback;
     
     private Session session;
     private DataSource dataSource;
@@ -44,7 +44,7 @@ public class DataLoader<T extends DataStructure> implements Runnable {
     
     private volatile RuntimeException ex = null;
     
-    public DataLoader(T data, Callback<T> callback) {
+    public DataLoader(Triangle data, Callback callback) {
         this.callback = callback;
         this.project = data.getProject();
         this.dataType = data.getDataType();
@@ -111,8 +111,8 @@ public class DataLoader<T extends DataStructure> implements Runnable {
         task.cancel();
     }
     
-    public static interface Callback<T extends DataStructure> {
-        public void finnished(DataLoader<T> loader);
+    public static interface Callback {
+        public void finnished(DataLoader loader);
     }
 }
 

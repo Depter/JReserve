@@ -9,7 +9,7 @@ import org.jreserve.audit.AbstractAuditedEntityFactory;
 import org.jreserve.audit.AuditedEntity;
 import org.jreserve.audit.AuditedEntityFactory;
 import org.jreserve.project.entities.Project;
-import org.jreserve.triangle.data.entities.Triangle;
+import org.jreserve.triangle.entities.Triangle;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -19,7 +19,8 @@ import org.openide.util.ImageUtilities;
 @AuditedEntityFactory.Registration(100)
 public class ProjectTriangleAuditedEntityFactory extends AbstractAuditedEntityFactory<Triangle> {
     
-    private final static Image IMG = ImageUtilities.loadImage("resources/triangle.png", false);
+    private final static Image TRIANGLE_IMG = ImageUtilities.loadImage("resources/triangle.png", false);
+    private final static Image VECTOR_IMG = ImageUtilities.loadImage("resources/vector.png", false);
 
     @Override
     public boolean isInterested(Object value) {
@@ -40,6 +41,7 @@ public class ProjectTriangleAuditedEntityFactory extends AbstractAuditedEntityFa
     @Override
     protected AuditedEntity<Triangle> createAuditedEntity(Triangle entity) {
         String name = entity.getName();
-        return new AuditedEntity<Triangle>(entity, name, IMG);
+        Image img = entity.isTriangle()? TRIANGLE_IMG : VECTOR_IMG;
+        return new AuditedEntity<Triangle>(entity, name, img);
     }
 }

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module codename="org.jreserve.jreserve.smoothing.exponential">
-    <module_version install_time="1354701865564" last="true" origin="installer" specification_version="1.0">
-        <file crc="771989147" name="config/Modules/org-jreserve-jreserve-smoothing-exponential.xml"/>
-        <file crc="2698054490" name="modules/org-jreserve-jreserve-smoothing-exponential.jar"/>
-    </module_version>
-</module>

@@ -19,10 +19,10 @@ import org.jreserve.persistence.PersistentObject;
 public class TriangleCorrection extends AbstractPersistentObject implements Serializable {
     private final static long serialVersionUID = 1L;
     
-    @Column(name="ACCIDENT_PERIOD", nullable=false)
+    @Column(name="ACCIDENT_PERIOD")
     private int accident;
     
-    @Column(name="DEVELOPMENT_PERIOD", nullable=false)
+    @Column(name="DEVELOPMENT_PERIOD")
     private int development;
     
     @Column(name="CORRECTION", nullable=false)

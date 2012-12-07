@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module codename="org.jreserve.jreserve.apc.sample">
-    <module_version install_time="1354701865470" last="true" origin="installer" specification_version="1.0">
-        <file crc="954566641" name="config/Modules/org-jreserve-jreserve-apc-sample.xml"/>
-        <file crc="3445457114" name="modules/org-jreserve-jreserve-apc-sample.jar"/>
-    </module_version>
-</module>

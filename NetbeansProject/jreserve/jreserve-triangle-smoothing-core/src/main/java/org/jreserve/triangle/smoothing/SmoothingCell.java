@@ -18,10 +18,10 @@ public class SmoothingCell extends AbstractPersistentObject implements Comparabl
     @JoinColumn(name="SMOOTHING_ID", referencedColumnName="ID", nullable=false)
     private Smoothing smoothing;
     
-    @Column(name="ACCIDENT_PERIOD", nullable=false)
+    @Column(name="ACCIDENT_PERIOD")
     private int accident;
     
-    @Column(name="DEVELOPMENT_PERIOD", nullable=false)
+    @Column(name="DEVELOPMENT_PERIOD")
     private int development;
     
     @Column(name="APPLIED", nullable=false)

@@ -44,128 +44,128 @@
         </dependency>
         
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>org.jreserve</groupId>
             <artifactId>jreserve-core-branding</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-logging</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-resources</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-logging</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-database</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-persistence</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-project-system</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-locale-settings</artifactId>
             <version>${project.version}</version>
         </dependency>
         
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-resources</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-data-project</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-data-data</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-data-import</artifactId>
             <version>${project.version}</version>
         </dependency>
         
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-database</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-data</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-smoothing-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-database-derby</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-estimate-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-database-oracle</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-util-audit</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-persistence</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-util-navigator</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-audit</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-util-jfreechart</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-project-system</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-util-chart</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-projectelement-container</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-util-r</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-project</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-util-projectelement-container</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-data</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-misc-database-derby</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-dataimport</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-misc-database-oracle</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-dataimport-clipboardtable</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-misc-data-import-clipboardtable</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-locale-settings</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-triangle</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-apc-sample</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-navigator</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jfreechart</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-chart</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-rutil</artifactId>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-misc-apc-sample</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

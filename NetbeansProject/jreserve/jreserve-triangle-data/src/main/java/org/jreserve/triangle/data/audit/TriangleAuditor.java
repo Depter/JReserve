@@ -5,8 +5,8 @@ import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.query.AuditEntity;
 import org.jreserve.audit.AbstractAuditor;
 import org.jreserve.audit.Auditor;
-import org.jreserve.triangle.data.entities.Triangle;
-import org.jreserve.triangle.data.entities.TriangleGeometry;
+import org.jreserve.triangle.entities.Triangle;
+import org.jreserve.triangle.entities.TriangleGeometry;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -24,7 +24,8 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - old geometry",
     "# {1} - new geometry",
     "MSG.TriangleAuditor.GeometryChange=Geometry changed \"{0}\" => \"{1}\".",
-    "MSG.TriangleAuditor.TypeName=Triangle"
+    "MSG.TriangleAuditor.TypeName.Triangle=Triangle",
+    "MSG.TriangleAuditor.TypeName.Vector=Vector"
 })
 @Auditor.Registration(50)
 public class TriangleAuditor extends AbstractAuditor<Triangle>{
@@ -32,7 +33,7 @@ public class TriangleAuditor extends AbstractAuditor<Triangle>{
     private final static String GEOMETRY_FORMAT = "[%tF] [%d, %d] / [%d, %d]";
     
     public TriangleAuditor() {
-        factory.setType(Bundle.MSG_TriangleAuditor_TypeName());
+//        factory.setType(Bundle.MSG_TriangleAuditor_TypeName());
     }
     
     @Override
@@ -52,16 +53,26 @@ public class TriangleAuditor extends AbstractAuditor<Triangle>{
 
     @Override
     protected String getAddChange(Triangle current) {
+        setFactoryName(current);
         return Bundle.MSG_TriangleAuditor_Created();
+    }
+    
+    private void setFactoryName(Triangle current) {
+        if(current==null || current.isTriangle())
+            factory.setType(Bundle.MSG_TriangleAuditor_TypeName_Triangle());
+        else
+            factory.setType(Bundle.MSG_TriangleAuditor_TypeName_Vector());
     }
 
     @Override
     protected String getDeleteChange(Triangle current) {
+        setFactoryName(current);
         return Bundle.MSG_TriangleAuditor_Deleted();
     }
 
     @Override
     protected String getChange(Triangle previous, Triangle current) {
+        setFactoryName(current);
         StringBuilder sb = new StringBuilder(Bundle.MSG_TriangleAuditor_Saved());
         appendChange(sb, getNameChange(previous, current));
         appendChange(sb, getDescriptionChange(previous, current));

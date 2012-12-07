@@ -7,8 +7,7 @@ import java.util.Date;
 import java.util.List;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
-import org.jreserve.triangle.data.entities.TriangleGeometry;
-import org.jreserve.triangle.data.entities.VectorGeometry;
+import org.jreserve.triangle.entities.TriangleGeometry;
 
 /**
  *
@@ -269,7 +268,7 @@ public class InputData {
     private final static int MONTHS = 12;
     
     final static TriangleGeometry TRIANGLE_GEOMETRY = new TriangleGeometry(START, PERIODS, MONTHS);
-    final static VectorGeometry VECTOR_GEOMETRY = new VectorGeometry(START, PERIODS, MONTHS);
+    final static TriangleGeometry VECTOR_GEOMETRY = new TriangleGeometry(START, PERIODS, MONTHS, 1, PERIODS * MONTHS);
     
     static List<ClaimValue> getData(ProjectDataType dt) {
         DataDummy[] dummies = getDummies(dt);

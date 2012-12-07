@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module codename="org.jreserve.jreserve.factors.estimate.basic">
-    <module_version install_time="1354701866642" last="true" origin="installer" specification_version="1.0">
-        <file crc="3559443051" name="config/Modules/org-jreserve-jreserve-factors-estimate-basic.xml"/>
-        <file crc="79035048" name="modules/org-jreserve-jreserve-factors-estimate-basic.jar"/>
-    </module_version>
-</module>

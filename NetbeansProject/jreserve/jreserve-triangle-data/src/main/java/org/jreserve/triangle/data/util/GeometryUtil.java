@@ -3,8 +3,7 @@ package org.jreserve.triangle.data.util;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.SwingUtilities;
-import org.jreserve.triangle.data.entities.TriangleGeometry;
-import org.jreserve.triangle.data.entities.VectorGeometry;
+import org.jreserve.triangle.entities.TriangleGeometry;
 
 /**
  *
@@ -25,7 +24,7 @@ public class GeometryUtil {
     
     private final Calendar calendar = Calendar.getInstance();
     
-    public Date getAccidentBegin(VectorGeometry geometry, int period) {
+    public Date getAccidentBegin(TriangleGeometry geometry, int period) {
         Date start = geometry.getStartDate();
         if(period == 0)
             return start;
@@ -38,7 +37,7 @@ public class GeometryUtil {
         return calendar.getTime();
     }
 
-    public Date getAccidentEnd(VectorGeometry geometry, int period) {
+    public Date getAccidentEnd(TriangleGeometry geometry, int period) {
         Date start = geometry.getStartDate();
         if(++period == 0)
             return start;

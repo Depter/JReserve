@@ -53,6 +53,18 @@
         
         <dependency>
             <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-nodes</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-api-progress</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
@@ -60,6 +72,12 @@
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-core-persistence</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-project-system</artifactId>
             <version>${project.version}</version>
         </dependency>
         
@@ -78,6 +96,12 @@
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-util-audit</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-util-projectelement-container</artifactId>
             <version>${project.version}</version>
         </dependency>
         
@@ -104,6 +128,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.triangle.data.entities</publicPackage>
+                        <publicPackage>org.jreserve.triangle.data.factories</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

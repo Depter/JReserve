@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.jreserve.jreserve.misc.data.import.clipboardtable">
+    <module_version install_time="1354891598671" last="true" origin="installer" specification_version="1.0">
+        <file crc="1548374054" name="config/Modules/org-jreserve-jreserve-misc-data-import-clipboardtable.xml"/>
+        <file crc="3216532250" name="modules/org-jreserve-jreserve-misc-data-import-clipboardtable.jar"/>
+    </module_version>
+</module>

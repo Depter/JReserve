@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.netbeans.modules.sampler">
-    <module_version install_time="1354701862564" last="true" origin="installer" specification_version="1.1.1">
+    <module_version install_time="1354891596561" last="true" origin="installer" specification_version="1.1.1">
         <file crc="3630527653" name="config/Modules/org-netbeans-modules-sampler.xml"/>
         <file crc="3592699694" name="modules/locale/org-netbeans-modules-sampler_ja.jar"/>
         <file crc="576632547" name="modules/locale/org-netbeans-modules-sampler_pt_BR.jar"/>
