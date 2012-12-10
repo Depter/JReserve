@@ -13,7 +13,9 @@ import org.jreserve.triangle.TriangularData;
  * @version 1.0
  */
 public class TriangleInput implements TriangularData {
-
+    
+    public final static String LAYER_TYPE_ID = "INPUT_DATA";
+    
     private final int accidentCount;
     private final int developmentCount;
     private final Date[] accidentDates;
@@ -61,6 +63,18 @@ public class TriangleInput implements TriangularData {
     public double getValue(int accident, int development) {
         return values[accident][development];
     }
+
+    @Override
+    public double[][] getData() {
+        int accidents = values.length;
+        double[][] copy = new double[accidents][];
+        for(int a=0; a<accidents; a++) {
+            int developments = values[a].length;
+            copy[a] = new double[developments];
+            System.arraycopy(values[a], 0, copy[a], 0, developments);
+        }
+        return copy;
+    }
     
     @Override
     public String toString() {
@@ -82,5 +96,10 @@ public class TriangleInput implements TriangularData {
         ChangeEvent evt = new ChangeEvent(this);
         for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
             listener.stateChanged(evt);
+    }
+
+    @Override
+    public String getLayerTypeId(int accident, int development) {
+        return LAYER_TYPE_ID;
     }
 }

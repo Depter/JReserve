@@ -3,8 +3,8 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/branding/Bundle.propert
  ies
 AutoUpdate-Essential-Module: true
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20121207
-OpenIDE-Module-Build-Version: 201212071444
+OpenIDE-Module-Implementation-Version: 1.0-20121210
+OpenIDE-Module-Build-Version: 201212100947
 OpenIDE-Module: org.jreserve.jreserve.core.branding
 OpenIDE-Module-Public-Packages: -
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1

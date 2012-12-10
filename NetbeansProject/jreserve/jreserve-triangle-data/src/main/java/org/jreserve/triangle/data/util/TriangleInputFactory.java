@@ -67,7 +67,7 @@ public class TriangleInputFactory {
         
         while(dBegin.before(developmentEnd)) {
             dates.add(dBegin);
-            Date dEnd = util.getDevelopmentEnd(geometry, accident, dev);
+            Date dEnd = util.getDevelopmentEnd(geometry, accident, dev++);
             row.add(getCellValue(aBegin, aEnd, dBegin, dEnd));
             dBegin = dEnd;
         }

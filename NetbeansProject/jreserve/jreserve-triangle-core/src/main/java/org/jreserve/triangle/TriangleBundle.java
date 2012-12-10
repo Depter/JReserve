@@ -145,4 +145,14 @@ public class TriangleBundle implements TriangularData, ChangeListener {
     public void stateChanged(ChangeEvent e) {
         fireChangeEvent();
     }
+
+    @Override
+    public double[][] getData() {
+        return top.getData();
+    }
+
+    @Override
+    public String getLayerTypeId(int accident, int development) {
+        return top.getLayerTypeId(accident, development);
+    }
 }

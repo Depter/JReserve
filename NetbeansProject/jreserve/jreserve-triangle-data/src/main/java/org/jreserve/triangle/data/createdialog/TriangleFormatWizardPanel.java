@@ -4,11 +4,23 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.hibernate.Session;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
+import org.jreserve.persistence.SessionTask;
+import org.jreserve.project.entities.Project;
+import org.jreserve.project.system.ProjectElement;
+import org.jreserve.project.system.container.ProjectElementContainer;
+import org.jreserve.triangle.data.project.TriangleProjectElement;
+import org.jreserve.triangle.entities.Triangle;
+import org.jreserve.triangle.entities.TriangleGeometry;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
@@ -22,13 +34,15 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - triangle name",
     "# {1} - db id",
     "# {2} - db name",
-    "LOG.TriangleFormatWizard.Created=Created triangle \"{0}\" for data type {1} - {2}"
+    "LOG.TriangleFormatWizard.Created=Created triangle \"{0}\" for data type {1} - {2}",
+    "MSG.TriangleFormatWizardPanel.NoData=There is no data selected!"
 })
-class TriangleFormatWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
+class TriangleFormatWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor>, ChangeListener {
     
     private final static Logger logger = Logger.getLogger(TriangleFormatWizardPanel.class.getName());
     
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private final boolean isTriangle;
     private boolean isValid = false;
     private final Object lock = new Object();
     private TriangleData triangleData;
@@ -36,10 +50,14 @@ class TriangleFormatWizardPanel implements WizardDescriptor.AsynchronousValidati
     protected TriangleFormatVisualPanel panel;
     protected WizardDescriptor wizard;
 
+    TriangleFormatWizardPanel(boolean isTriangle) {
+        this.isTriangle = isTriangle;
+    }
+    
     @Override
     public Component getComponent() {
         if (panel == null) {
-            panel = new TriangleFormatVisualPanel();
+            panel = new TriangleFormatVisualPanel(isTriangle);
             panel.addChangeListener(this);
         }
         return panel;
@@ -54,16 +72,19 @@ class TriangleFormatWizardPanel implements WizardDescriptor.AsynchronousValidati
     public void readSettings(WizardDescriptor wizard) {
         this.wizard = wizard;
         List<ClaimValue> datas = (List<ClaimValue>) wizard.getProperty(NameSelectWizardPanel.PROP_DATA);
-        ProjectDataType dt = (ProjectDataType) wizard.getProperty(NameSelectWizardPanel.PROP_DATA_TYPE);
+        initPanel(datas);
+        validateState();
+    }
+    
+    private void initPanel(List<ClaimValue> datas) {
         setFirstDate(datas);
-        panel.triangle.addValueLayer(getWidgetData(datas));
-        validate();
+        panel.setClaims(datas);
     }
     
     private void setFirstDate(List<ClaimValue> datas) {
         Date start = getFirstDate(datas);
         if(start != null)
-            panel.geometrySetting.setStartDate(start);
+            panel.setStartDate(start);
     }
     
     private Date getFirstDate(List<ClaimValue> datas) {
@@ -75,12 +96,49 @@ class TriangleFormatWizardPanel implements WizardDescriptor.AsynchronousValidati
         }
         return first;
     }
-    
-    private List<WidgetData<Double>> getWidgetData(List<ClaimValue> datas) {
-        List<ClaimValue> escaped = new ArrayList<ClaimValue>(datas);
-        return DataUtil.convertDatas(escaped);
+
+    private void validateState() {
+        isValid = validateInput() && validateTable();
+        if (isValid) {
+            showError(null);
+        }
     }
 
+    private boolean validateInput() {
+        if (panel.isInputValid()) {
+            return true;
+        }
+        showError(panel.getErrorMsg());
+        return false;
+    }
+
+    private boolean validateTable() {
+        double[][] values = panel.getTriangleValues();
+        if (values == null || !validTable(values)) {
+            showError(Bundle.MSG_TriangleFormatWizardPanel_NoData());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validTable(double[][] values) {
+        for (double[] row : values)
+            if (validRow(row))
+                return true;
+        return false;
+    }
+
+    private boolean validRow(double[] row) {
+        for (double value : row)
+            if(!Double.isNaN(value))
+                return true;
+        return false;
+    }
+
+    private void showError(String msg) {
+        wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, msg);
+    }
+    
     @Override
     public void prepareValidation() {
         synchronized(lock) {
@@ -123,6 +181,49 @@ class TriangleFormatWizardPanel implements WizardDescriptor.AsynchronousValidati
         return (ProjectElementContainer) v;
     }
     
+    protected void clearProperties() {
+        synchronized(wizard) {
+            wizard.putProperty(NameSelectWizardPanel.PROP_DATA_NAME, null);
+            wizard.putProperty(NameSelectWizardPanel.PROP_DATA_TYPE, null);
+            wizard.putProperty(NameSelectWizardPanel.PROP_PROJECT, null);
+            wizard.putProperty(NameSelectWizardPanel.PROP_PROJECT_ELEMENT, null);
+            wizard.putProperty(NameSelectWizardPanel.PROP_DATA_DESCRIPTION, null);
+        }
+    }
+
+    @Override
+    public void storeSettings(WizardDescriptor data) {
+    }
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void addChangeListener(ChangeListener listener) {
+        if (!listeners.contains(listener))
+            listeners.add(listener);
+    }
+
+    @Override
+    public void removeChangeListener(ChangeListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        validateState();
+        fireChange();
+    }
+
+    private void fireChange() {
+        ChangeEvent evt = new ChangeEvent(this);
+        for (ChangeListener listener : new ArrayList<ChangeListener>(listeners)) {
+            listener.stateChanged(evt);
+        }
+    }
+    
     private class TriangleCreator extends SessionTask.AbstractTask<Triangle> {
 
         @Override
@@ -134,7 +235,7 @@ class TriangleFormatWizardPanel implements WizardDescriptor.AsynchronousValidati
         }
     
         private Triangle createTriangle(Project project) {
-            Triangle triangle = new Triangle(project, triangleData.dataType, triangleData.name);
+            Triangle triangle = new Triangle(project, triangleData.dataType, triangleData.name, isTriangle);
             triangle.setDescription(triangleData.description);
             triangle.setGeometry(triangleData.geometry);
             return triangle;
@@ -163,7 +264,7 @@ class TriangleFormatWizardPanel implements WizardDescriptor.AsynchronousValidati
         }
         
         private void readPanel() {
-            geometry = panel.getTriangleWidget().getTriangleGeometry();
+            geometry = panel.getTriangleGeometry();
         }
         
     }

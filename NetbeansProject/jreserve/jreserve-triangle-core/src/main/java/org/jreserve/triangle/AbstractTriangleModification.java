@@ -47,6 +47,23 @@ public abstract class AbstractTriangleModification implements ModifiedTriangular
     }
 
     @Override
+    public double[][] getData() {
+        int accidents = getAccidentCount();
+        double[][] data = new double[accidents][];
+        for(int a=0; a<accidents; a++)
+            data[a] = getRowData(a);
+        return data;
+    }
+    
+    private double[] getRowData(int accident) {
+        int developments = getDevelopmentCount(accident);
+        double[] row = new double[developments];
+        for(int d=0; d<developments; d++)
+            row[d] = getValue(accident, d);
+        return row;
+    }
+    
+    @Override
     public void addChangeListener(ChangeListener listener) {
         if(!listeners.contains(listener))
             listeners.add(listener);

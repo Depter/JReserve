@@ -97,6 +97,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.triangle</publicPackage>
+                        <publicPackage>org.jreserve.triangle.entities</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

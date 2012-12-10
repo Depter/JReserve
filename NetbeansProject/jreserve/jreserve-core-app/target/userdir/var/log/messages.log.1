@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Friday, December 7, 2012 3:47:18 PM CET
+>Log Session: Monday, December 10, 2012 5:32:02 PM CET
 >System Info: 
   Product Version         = JReserve 201207171143
   Operating System        = Windows XP version 5.1 running on x86
@@ -31,21 +31,13 @@ WARNING [org.jreserve.logging.LoggingSetting]: Logger level: "" => SEVERE
 WARNING [org.jreserve.logging.LoggingSetting]: Logger level: "org.hibernate.SQL" => FINE
 INFO [org.jreserve.database.DatabaseUtil]: Loading databases...
 INFO [org.jreserve.database.DatabaseUtil]: Database home directory set to "Databases".
+INFO [org.jreserve.database.DatabaseUtil]: Loading database file "Databases/db1.database".
 INFO [org.jreserve.database.explorer.ProviderRootChildren]: Loading database providers...
 INFO [org.jreserve.database.explorer.ProviderRootChildren]: DatabseProvider found: "Derby"
 INFO [org.jreserve.database.explorer.ProviderRootChildren]: DatabseProvider found: "Oracle"
-FINER [org.jreserve.database.DatabaseFactory]: Database [db1]: short.name => db1
-FINER [org.jreserve.database.DatabaseFactory]: Database [db1]: driver.class => org.apache.derby.jdbc.EmbeddedDriver
-FINER [org.jreserve.database.DatabaseFactory]: Database [db1]: opened => true
-FINER [org.jreserve.database.DatabaseFactory]: Database [db1]: used => false
-FINER [org.jreserve.database.DatabaseFactory]: Database [db1]: db.location => C:\Documents and Settings\aa461472\Desktop\db1
-INFO [org.jreserve.database.DatabaseFactory]: Database "db1" created in file "Databases/db1.database".
-INFO [org.jreserve.database.DatabaseUtil]: Loading databases...
-INFO [org.jreserve.database.DatabaseUtil]: Loading database file "Databases/db1.database".
-INFO [org.jreserve.persistence.connection.HibernateUtil]: CLosing SessionFactory...
 INFO [org.jreserve.persistence.connection.HibernateUtil]: Logging into database "db1".
 INFO [org.jreserve.persistence.connection.LoginDialog]: Checking connection to "jdbc:derby:C:\Documents and Settings\aa461472\Desktop\db1" with driver "org.apache.derby.jdbc.EmbeddedDriver".
-FINE [org.jreserve.persistence.connection.ProxyDriver]: Deregistering driver: "sun.jdbc.odbc.JdbcOdbcDriver@12cc66f"
+FINE [org.jreserve.persistence.connection.ProxyDriver]: Deregistering driver: "sun.jdbc.odbc.JdbcOdbcDriver@352b57"
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Hibernate property set: hibernate.connection.driver_class => org.jreserve.persistence.connection.ProxyDriver
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Hibernate property set: hibernate.c3p0.min_size => 5
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Hibernate property set: hibernate.c3p0.max_size => 5
@@ -65,41 +57,27 @@ FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file
 FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file "JReserve/Entities/org-jreserve-data-entities-ClaimValue.entity".
 FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file "JReserve/Entities/org-jreserve-triangle-entities-TriangleComment.entity".
 FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file "JReserve/Entities/org-jreserve-data-entities-DataLog.entity".
+FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file "JReserve/Entities/org-jreserve-triangle-entities-Triangle.entity".
 FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file "JReserve/Entities/org-jreserve-audit-JReserveRevisionEntity.entity".
 FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file "JReserve/Entities/org-jreserve-project-entities-ClaimType.entity".
-FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file "JReserve/Entities/org-jreserve-triangle-data-entities-Vector.entity".
-FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file "JReserve/Entities/org-jreserve-triangle-data-entities-Triangle.entity".
 FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file "JReserve/Entities/org-jreserve-triangle-smoothing-SmoothingCell.entity".
 FINE [org.jreserve.persistence.connection.EntityFactory]: Processing entity file "JReserve/Entities/org-jreserve-data-ProjectDataType.entity".
-FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.triangle.data.entities.Vector" added to configuration!
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.data.entities.DataLog" added to configuration!
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.triangle.entities.TriangleCorrection" added to configuration!
-FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.project.entities.LoB" added to configuration!
-FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.audit.JReserveRevisionEntity" added to configuration!
-FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.project.entities.Project" added to configuration!
-FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.triangle.entities.TriangleComment" added to configuration!
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.data.entities.ClaimValue" added to configuration!
-FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.data.ProjectDataType" added to configuration!
+FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.triangle.entities.TriangleComment" added to configuration!
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.triangle.smoothing.Smoothing" added to configuration!
-FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.triangle.smoothing.SmoothingCell" added to configuration!
-FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.persistence.AbstractPersistentObject" added to configuration!
+FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.audit.JReserveRevisionEntity" added to configuration!
+FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.data.ProjectDataType" added to configuration!
+FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.project.entities.Project" added to configuration!
+FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.triangle.entities.Triangle" added to configuration!
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.project.entities.ClaimType" added to configuration!
-FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.triangle.data.entities.Triangle" added to configuration!
+FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.persistence.AbstractPersistentObject" added to configuration!
+FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.project.entities.LoB" added to configuration!
+FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Entity class "org.jreserve.triangle.smoothing.SmoothingCell" added to configuration!
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Hibernate property set: hibernate.connection.url => jdbc:derby:C:\Documents and Settings\aa461472\Desktop\db1
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Hibernate property set: hibernate.connection.username => null
 FINE [org.jreserve.persistence.connection.SessionFactoryBuilder]: Hibernate property set: hibernate.connection.password => ****
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: HHH000388: Unsuccessful: alter table JRESERVE.SMOOTHING_CELL add column ACCIDENT_PERIOD integer not null
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: In an ALTER TABLE statement, the column 'ACCIDENT_PERIOD' has been specified as NOT NULL and either the DEFAULT clause was not specified or was specified as DEFAULT NULL.
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: HHH000388: Unsuccessful: alter table JRESERVE.SMOOTHING_CELL add column DEVELOPMENT_PERIOD integer not null
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: In an ALTER TABLE statement, the column 'DEVELOPMENT_PERIOD' has been specified as NOT NULL and either the DEFAULT clause was not specified or was specified as DEFAULT NULL.
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: HHH000388: Unsuccessful: alter table JRESERVE.TRIANGLE_COMMENT add column ACCIDENT_PERIOD integer not null
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: In an ALTER TABLE statement, the column 'ACCIDENT_PERIOD' has been specified as NOT NULL and either the DEFAULT clause was not specified or was specified as DEFAULT NULL.
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: HHH000388: Unsuccessful: alter table JRESERVE.TRIANGLE_COMMENT add column DEVELOPMENT_PERIOD integer not null
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: In an ALTER TABLE statement, the column 'DEVELOPMENT_PERIOD' has been specified as NOT NULL and either the DEFAULT clause was not specified or was specified as DEFAULT NULL.
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: HHH000388: Unsuccessful: alter table JRESERVE.TRIANGLE_CORRECTION add column ACCIDENT_PERIOD integer not null
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: In an ALTER TABLE statement, the column 'ACCIDENT_PERIOD' has been specified as NOT NULL and either the DEFAULT clause was not specified or was specified as DEFAULT NULL.
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: HHH000388: Unsuccessful: alter table JRESERVE.TRIANGLE_CORRECTION add column DEVELOPMENT_PERIOD integer not null
-ERROR [org.hibernate.tool.hbm2ddl.SchemaUpdate]: In an ALTER TABLE statement, the column 'DEVELOPMENT_PERIOD' has been specified as NOT NULL and either the DEFAULT clause was not specified or was specified as DEFAULT NULL.
 FINE [org.jreserve.persistence.connection.HibernateUtil]: SessionFactory initialized.
 INFO [org.jreserve.persistence.connection.HibernateUtil]: Database "db1" is marked as used.
 FINE [org.jreserve.project.system.util.FactoryUtil]: Loading ProjectElementFactories from "JReserve/Project/ElementFactories"...
@@ -108,42 +86,48 @@ FINE [org.jreserve.project.system.util.FactoryUtil]: Loaded ProjectElementFactor
 FINE [org.jreserve.project.system.util.FactoryUtil]: Loaded ProjectElementFactory: org.jreserve.project.entities.project.ProjectLoader
 FINE [org.jreserve.project.system.util.FactoryUtil]: Loaded ProjectElementFactory: org.jreserve.data.projectdatatype.ProjectDataTypeLoader
 FINE [org.jreserve.project.system.util.FactoryUtil]: Loaded ProjectElementFactory: org.jreserve.triangle.data.project.TriangleLoader
-FINE [org.jreserve.project.system.util.FactoryUtil]: Loaded ProjectElementFactory: org.jreserve.triangle.data.project.VectorLoader
-FINE [org.jreserve.project.system.util.FactoryUtil]: Loaded ProjectElementFactory: org.jreserve.data.container.ProjectDataContainerLoader
+FINE [org.jreserve.project.system.util.FactoryUtil]: Loaded ProjectElementFactory: org.jreserve.triangle.data.project.ProjectDataContainerLoader
 FINE [org.jreserve.project.system.util.FactoryUtil]: Loaded ProjectElementFactory: org.jreserve.estimate.core.container.EstimateContainerLoader
-DEBUG [org.hibernate.SQL]: select lob0_.ID as ID0_, lob0_.VERSION as VERSION0_, lob0_.LOB_NAME as LOB1_4_ from JRESERVE.LOB lob0_
+DEBUG [org.hibernate.SQL]: select lob0_.ID as ID0_, lob0_.VERSION as VERSION0_, lob0_.LOB_NAME as LOB1_11_ from JRESERVE.LOB lob0_
 FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: LoB [Motor]
-DEBUG [org.hibernate.SQL]: select claimtypes0_.LOB_ID as LOB2_0_1_, claimtypes0_.ID as ID1_, claimtypes0_.ID as ID0_0_, claimtypes0_.VERSION as VERSION0_0_, claimtypes0_.LOB_ID as LOB2_12_0_, claimtypes0_.CLAIM_TYPE_NAME as CLAIM1_12_0_ from JRESERVE.CLAIM_TYPE claimtypes0_ where claimtypes0_.LOB_ID=?
+DEBUG [org.hibernate.SQL]: select claimtypes0_.LOB_ID as LOB2_0_1_, claimtypes0_.ID as ID1_, claimtypes0_.ID as ID0_0_, claimtypes0_.VERSION as VERSION0_0_, claimtypes0_.LOB_ID as LOB2_10_0_, claimtypes0_.CLAIM_TYPE_NAME as CLAIM1_10_0_ from JRESERVE.CLAIM_TYPE claimtypes0_ where claimtypes0_.LOB_ID=?
 FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ClaimType [BI]
-DEBUG [org.hibernate.SQL]: select projects0_.CLAIM_TYPE_ID as CLAIM3_0_1_, projects0_.ID as ID1_, projects0_.ID as ID0_0_, projects0_.VERSION as VERSION0_0_, projects0_.CLAIM_TYPE_ID as CLAIM3_6_0_, projects0_.PROJECT_DESCRIPTION as PROJECT1_6_0_, projects0_.PROJECT_NAME as PROJECT2_6_0_ from JRESERVE.PROJECT projects0_ where projects0_.CLAIM_TYPE_ID=?
+DEBUG [org.hibernate.SQL]: select projects0_.CLAIM_TYPE_ID as CLAIM3_0_1_, projects0_.ID as ID1_, projects0_.ID as ID0_0_, projects0_.VERSION as VERSION0_0_, projects0_.CLAIM_TYPE_ID as CLAIM3_8_0_, projects0_.PROJECT_DESCRIPTION as PROJECT1_8_0_, projects0_.PROJECT_NAME as PROJECT2_8_0_ from JRESERVE.PROJECT projects0_ where projects0_.CLAIM_TYPE_ID=?
 FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Project [Base]
 FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: org.jreserve.project.system.container.ProjectElementContainer@c8
-DEBUG [org.hibernate.SQL]: select triangle0_.ID as ID0_, triangle0_.VERSION as VERSION0_, triangle0_.MONTH_IN_DEVELOPMENT as MONTH1_13_, triangle0_.DEVELOPMENT_PERIODS as DEVELOPM2_13_, triangle0_.MONTH_IN_ACCIDENT as MONTH3_13_, triangle0_.ACCIDENT_PERIODS as ACCIDENT4_13_, triangle0_.START_DATE as START5_13_, triangle0_.DATA_TYPE_ID as DATA8_13_, triangle0_.DESCRIPTION as DESCRIPT6_13_, triangle0_.NAME as NAME13_, triangle0_.PROJECT_ID as PROJECT9_13_ from JRESERVE.TRIANGLE triangle0_ where triangle0_.PROJECT_ID=?
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Triangle [Claim count;]
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Triangle [Incurred;]
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Triangle [Paid;]
-DEBUG [org.hibernate.SQL]: select vector0_.ID as ID0_, vector0_.VERSION as VERSION0_, vector0_.MONTH_IN_ACCIDENT as MONTH1_1_, vector0_.ACCIDENT_PERIODS as ACCIDENT2_1_, vector0_.START_DATE as START3_1_, vector0_.DATA_TYPE_ID as DATA6_1_, vector0_.DESCRIPTION as DESCRIPT4_1_, vector0_.NAME as NAME1_, vector0_.PROJECT_ID as PROJECT7_1_ from JRESERVE.VECTOR vector0_ where vector0_.PROJECT_ID=?
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Vector [Burning cost]
+DEBUG [org.hibernate.SQL]: select triangle0_.ID as ID0_, triangle0_.VERSION as VERSION0_, triangle0_.DATA_TYPE_ID as DATA9_9_, triangle0_.DESCRIPTION as DESCRIPT1_9_, triangle0_.MONTH_IN_ACCIDENT as MONTH2_9_, triangle0_.ACCIDENT_PERIODS as ACCIDENT3_9_, triangle0_.MONTH_IN_DEVELOPMENT as MONTH4_9_, triangle0_.DEVELOPMENT_PERIODS as DEVELOPM5_9_, triangle0_.START_DATE as START6_9_, triangle0_.IS_TRIANGLE as IS7_9_, triangle0_.NAME as NAME9_, triangle0_.PROJECT_ID as PROJECT10_9_ from JRESERVE.TRIANGLE triangle0_ where triangle0_.PROJECT_ID=?
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Triangle [Burning cost;]
 FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: org.jreserve.project.system.container.ProjectElementContainer@12c
-DEBUG [org.hibernate.SQL]: select projectdat0_.ID as ID0_, projectdat0_.VERSION as VERSION0_, projectdat0_.CLAIM_TYPE_ID as CLAIM4_9_, projectdat0_.DB_ID as DB1_9_, projectdat0_.IS_TRIANGLE as IS2_9_, projectdat0_.NAME as NAME9_ from JRESERVE.DATA_TYPE projectdat0_ where projectdat0_.CLAIM_TYPE_ID=? order by projectdat0_.DB_ID
+DEBUG [org.hibernate.SQL]: select projectdat0_.ID as ID0_, projectdat0_.VERSION as VERSION0_, projectdat0_.CLAIM_TYPE_ID as CLAIM4_7_, projectdat0_.DB_ID as DB1_7_, projectdat0_.IS_TRIANGLE as IS2_7_, projectdat0_.NAME as NAME7_ from JRESERVE.DATA_TYPE projectdat0_ where projectdat0_.CLAIM_TYPE_ID=? order by projectdat0_.DB_ID
 FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [100; Incurred; ClaimType [BI]]
 FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [200; Paid; ClaimType [BI]]
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [300; Claim count; ClaimType [BI]]
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [400; Burning cost; ClaimType [BI]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [300; Reserve; ClaimType [BI]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [400; Claim count; ClaimType [BI]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [500; Premium; ClaimType [BI]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [600; Policies; ClaimType [BI]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [700; Burning cost; ClaimType [BI]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [1000; Other Triangle; ClaimType [BI]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [1100; Other Vector; ClaimType [BI]]
 FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ClaimType [MD]
-DEBUG [org.hibernate.SQL]: select projects0_.CLAIM_TYPE_ID as CLAIM3_0_1_, projects0_.ID as ID1_, projects0_.ID as ID0_0_, projects0_.VERSION as VERSION0_0_, projects0_.CLAIM_TYPE_ID as CLAIM3_6_0_, projects0_.PROJECT_DESCRIPTION as PROJECT1_6_0_, projects0_.PROJECT_NAME as PROJECT2_6_0_ from JRESERVE.PROJECT projects0_ where projects0_.CLAIM_TYPE_ID=?
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Project [Base]
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: org.jreserve.project.system.container.ProjectElementContainer@c8
-DEBUG [org.hibernate.SQL]: select triangle0_.ID as ID0_, triangle0_.VERSION as VERSION0_, triangle0_.MONTH_IN_DEVELOPMENT as MONTH1_13_, triangle0_.DEVELOPMENT_PERIODS as DEVELOPM2_13_, triangle0_.MONTH_IN_ACCIDENT as MONTH3_13_, triangle0_.ACCIDENT_PERIODS as ACCIDENT4_13_, triangle0_.START_DATE as START5_13_, triangle0_.DATA_TYPE_ID as DATA8_13_, triangle0_.DESCRIPTION as DESCRIPT6_13_, triangle0_.NAME as NAME13_, triangle0_.PROJECT_ID as PROJECT9_13_ from JRESERVE.TRIANGLE triangle0_ where triangle0_.PROJECT_ID=?
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Triangle [Claim count;]
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Triangle [Incurred;]
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Triangle [Paid;]
-DEBUG [org.hibernate.SQL]: select vector0_.ID as ID0_, vector0_.VERSION as VERSION0_, vector0_.MONTH_IN_ACCIDENT as MONTH1_1_, vector0_.ACCIDENT_PERIODS as ACCIDENT2_1_, vector0_.START_DATE as START3_1_, vector0_.DATA_TYPE_ID as DATA6_1_, vector0_.DESCRIPTION as DESCRIPT4_1_, vector0_.NAME as NAME1_, vector0_.PROJECT_ID as PROJECT7_1_ from JRESERVE.VECTOR vector0_ where vector0_.PROJECT_ID=?
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: Vector [Burning cost]
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: org.jreserve.project.system.container.ProjectElementContainer@12c
-DEBUG [org.hibernate.SQL]: select projectdat0_.ID as ID0_, projectdat0_.VERSION as VERSION0_, projectdat0_.CLAIM_TYPE_ID as CLAIM4_9_, projectdat0_.DB_ID as DB1_9_, projectdat0_.IS_TRIANGLE as IS2_9_, projectdat0_.NAME as NAME9_ from JRESERVE.DATA_TYPE projectdat0_ where projectdat0_.CLAIM_TYPE_ID=? order by projectdat0_.DB_ID
+DEBUG [org.hibernate.SQL]: select projects0_.CLAIM_TYPE_ID as CLAIM3_0_1_, projects0_.ID as ID1_, projects0_.ID as ID0_0_, projects0_.VERSION as VERSION0_0_, projects0_.CLAIM_TYPE_ID as CLAIM3_8_0_, projects0_.PROJECT_DESCRIPTION as PROJECT1_8_0_, projects0_.PROJECT_NAME as PROJECT2_8_0_ from JRESERVE.PROJECT projects0_ where projects0_.CLAIM_TYPE_ID=?
+DEBUG [org.hibernate.SQL]: select projectdat0_.ID as ID0_, projectdat0_.VERSION as VERSION0_, projectdat0_.CLAIM_TYPE_ID as CLAIM4_7_, projectdat0_.DB_ID as DB1_7_, projectdat0_.IS_TRIANGLE as IS2_7_, projectdat0_.NAME as NAME7_ from JRESERVE.DATA_TYPE projectdat0_ where projectdat0_.CLAIM_TYPE_ID=? order by projectdat0_.DB_ID
 FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [100; Incurred; ClaimType [MD]]
 FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [200; Paid; ClaimType [MD]]
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [300; Claim count; ClaimType [MD]]
-FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [400; Burning cost; ClaimType [MD]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [300; Reserve; ClaimType [MD]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [400; Claim count; ClaimType [MD]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [500; Premium; ClaimType [MD]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [600; Policies; ClaimType [MD]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [700; Burning cost; ClaimType [MD]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [1000; Other Triangle; ClaimType [MD]]
+FINE [org.jreserve.project.system.AbstractProjectElementFactory]: Loaded project element: ProjectDataType [1100; Other Vector; ClaimType [MD]]
+FINER [org.jreserve.resources.ActionUtil]: Loading action org.jreserve.project.system.newdialog.NewProjectElementAction
+FINER [org.jreserve.resources.ActionUtil]: Loading action org.openide.awt.GeneralAction$DelegateAction
+FINER [org.jreserve.resources.ActionUtil]: Loading action javax.swing.JSeparator
+FINER [org.jreserve.resources.ActionUtil]: Loading action org.openide.awt.GeneralAction$DelegateAction
+FINE [org.jreserve.resources.annotation.RegistrationRegistry]: Loading values from "JReserve/Widget/WidgetTableModels"...
+FINE [org.jreserve.resources.annotation.RegistrationRegistry]: Loaded instance: org.jreserve.triangle.widget.model.DevelopmentPeriodWidgetTableModel
+FINE [org.jreserve.resources.annotation.RegistrationRegistry]: Loaded instance: org.jreserve.triangle.widget.model.CalendarPeriodWidgetTableModel
+DEBUG [org.hibernate.SQL]: select claimvalue0_.ID as ID0_, claimvalue0_.VERSION as VERSION0_, claimvalue0_.ACCIDENT_DATE as ACCIDENT1_3_, claimvalue0_.CLAIM_VALUE as CLAIM2_3_, claimvalue0_.DATA_TYPE_ID as DATA4_3_, claimvalue0_.DEVELOPMENT_DATE as DEVELOPM3_3_ from JRESERVE.CLAIM_DATA claimvalue0_ where claimvalue0_.DATA_TYPE_ID='1af57f74-6e1c-483a-a3ba-9f3cb74af7ca'
+DEBUG [org.hibernate.SQL]: select projectdat0_.ID as ID0_0_, projectdat0_.VERSION as VERSION0_0_, projectdat0_.CLAIM_TYPE_ID as CLAIM4_7_0_, projectdat0_.DB_ID as DB1_7_0_, projectdat0_.IS_TRIANGLE as IS2_7_0_, projectdat0_.NAME as NAME7_0_ from JRESERVE.DATA_TYPE projectdat0_ where projectdat0_.ID=?
+FINE [org.jreserve.resources.annotation.RegistrationRegistry]: Loading values from "JReserve/Widget/WidgetRenderer"...
 INFO [org.jreserve.persistence.connection.HibernateUtil]: CLosing SessionFactory...

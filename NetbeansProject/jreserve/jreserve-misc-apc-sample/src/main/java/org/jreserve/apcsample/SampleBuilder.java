@@ -4,7 +4,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.data.container.ProjectDataContainerFactoy;
+import org.jreserve.triangle.data.factories.ProjectDataContainerFactoy;
 import org.jreserve.data.util.ProjectDataTypeFactory;
 import org.jreserve.data.util.ProjectDataTypeFactory.DataTypeDummy;
 import org.jreserve.estimate.core.container.factory.EstimateContainerFactory;

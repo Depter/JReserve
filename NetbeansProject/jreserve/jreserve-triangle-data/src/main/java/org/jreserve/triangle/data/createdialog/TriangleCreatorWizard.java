@@ -1,11 +1,7 @@
 package org.jreserve.triangle.data.createdialog;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.jreserve.project.system.management.ElementCreatorWizard.Category;
 import org.jreserve.project.system.management.ElementCreatorWizard.Registration;
-import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -15,34 +11,18 @@ import org.openide.util.NbBundle.Messages;
  */
 @Registration(
     category=Category.DATA, 
-    displayName="#LBL.TriangleImportWizard.Name",
+    displayName="#LBL.TriangleCreatorWizard.Name",
     iconBase="resources/triangle.png",
     position=100
 )
 @Messages({
-    "LBL.TriangleImportWizard.Name=Triangle",
-    "LBL.TriangleImportWizard.Description=Create new triangle from existing data."
+    "LBL.TriangleCreatorWizard.Name=Triangle",
+    "LBL.TriangleCreatorWizard.Description=Create new triangle from existing data."
 })
-public class TriangleCreatorWizard implements ElementCreatorWizard {
-    
-    private List<WizardDescriptor.Panel> panels = null;
+public class TriangleCreatorWizard extends DataCreatorWizard {
 
-    @Override
-    public String getDescription() {
-        //return Bundle.LBL_TriangleImportWizard_Description();
-        return "";
-    }
-
-    @Override
-    public List<WizardDescriptor.Panel> getPanels() {
-        if(panels == null)
-            createPanels();
-        return panels;
-    }
-    
-    private void createPanels() {
-        panels = new ArrayList<WizardDescriptor.Panel>(2);
-        panels.add(new NameSelectWizardPanel(true));
-        panels.add(new TriangleFormatWizardPanel());
+    public TriangleCreatorWizard() {
+        super(Bundle.LBL_TriangleCreatorWizard_Description(), true);
     }
 }
+

@@ -1,22 +1,22 @@
 package org.jreserve.triangle.widget.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.widget.WidgetEditor;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractWidgetTableModel implements WidgetTableModel, ChangeListener {
+public abstract class AbstractWidgetTableModel extends AbstractTableModel implements WidgetTableModel, ChangeListener {
 
     protected TriangularData data;
-    protected List<TableModelListener> listeners = new ArrayList<TableModelListener>();
+    
+    protected boolean cummulated;
+    protected WidgetEditor editor;
     
     public AbstractWidgetTableModel() {
     }
@@ -40,13 +40,45 @@ public abstract class AbstractWidgetTableModel implements WidgetTableModel, Chan
     }
     
     @Override
+    public void setCummulated(boolean cummulated) {
+        this.cummulated = cummulated;
+        fireTableDataChanged();
+    }
+    
+    @Override
+    public boolean isCummulated() {
+        return cummulated;
+    }
+    
+    @Override
+    public void setWidgetEditor(WidgetEditor editor) {
+        this.editor = editor;
+    }
+    
+    @Override
+    public WidgetEditor getWidgetEditor() {
+        return editor;
+    }
+    
+    @Override
+    public String getLayerId(int row, int column) {
+        if(data == null || 
+           row > data.getAccidentCount() || 
+           --column >= data.getDevelopmentCount(row)) 
+            return null;
+        return data.getLayerTypeId(row, column);
+    }
+    
+    @Override
     public int getRowCount() {
         return data==null? 0 : data.getAccidentCount();
     }
 
     @Override
     public int getColumnCount() {
-        return data==null? 0 : data.getDevelopmentCount()+1;
+        if(data == null)
+            return 0;
+        return data.getDevelopmentCount()+1;
     }
 
     @Override
@@ -64,47 +96,33 @@ public abstract class AbstractWidgetTableModel implements WidgetTableModel, Chan
     public boolean isCellEditable(int row, int column) {
         if(column == 0)
             return false;
-        throw new UnsupportedOperationException("Not supported yet.");
+        return editor!=null && getData(row, column-1)!=null;
     }
 
     @Override
     public Object getValueAt(int row, int column) {
         if(column == 0)
             return data.getAccidentName(row);
-        return getData(row, column-1);
+        return cummulated? getCummulatedData(row, column-1) : getData(row, column-1);
     }
     
     protected abstract String getRowName(int row);
+    
+    private double getCummulatedData(int row, int column) {
+        double sum = 0d;
+        for(int c=column; c>=0; c--) {
+            double value = getData(row, c);
+            if(Double.isNaN(value))
+                return c==column? Double.NaN : sum;
+            sum += value;
+        }
+        return sum;
+    }
     
     protected abstract Double getData(int row, int column);
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        throw new UnsupportedOperationException("Set the value on the data object!");
-    }
-
-    @Override
-    public void addTableModelListener(TableModelListener listener) {
-        if(!listeners.contains(listener))
-            listeners.add(listener);
-    }
-
-    @Override
-    public void removeTableModelListener(TableModelListener listener) {
-        listeners.remove(listener);
-    }
-    
-    protected void fireTableDataChanged() {
-        fireTableChanged(new TableModelEvent(this, 0, Integer.MAX_VALUE));
-    }
-
-    protected void fireTableStructureChanged() {
-        fireTableChanged(new TableModelEvent(this, TableModelEvent.HEADER_ROW));
-    }
-
-    protected void fireTableChanged(TableModelEvent event) {
-        for(TableModelListener listener : new ArrayList<TableModelListener>(listeners))
-            listener.tableChanged(event);
     }
 
     @Override

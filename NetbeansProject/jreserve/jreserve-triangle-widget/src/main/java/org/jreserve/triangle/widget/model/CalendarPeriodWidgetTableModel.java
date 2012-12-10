@@ -2,12 +2,16 @@ package org.jreserve.triangle.widget.model;
 
 import java.util.Date;
 import org.jreserve.triangle.TriangularData;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "LBL.CalendarPeriodWidgetTableModel.Name=Calendar periods"
+})
 public class CalendarPeriodWidgetTableModel extends AbstractWidgetTableModel {
     
     public CalendarPeriodWidgetTableModel() {
