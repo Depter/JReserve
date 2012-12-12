@@ -75,6 +75,8 @@ public final class LoggingPanel extends javax.swing.JPanel implements ActionList
         levelTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         levelTable.setColumnSelectionAllowed(false);
         levelTable.getSelectionModel().addListSelectionListener(this);
+        levelTable.setDefaultRenderer(Level.class, new LevelTableRenderer());
+        levelTable.setDefaultEditor(Level.class, new LevelSelectEditor());
         levelScroll.setViewportView(levelTable);
 
         org.openide.awt.Mnemonics.setLocalizedText(addButton, Bundle.CTL_LoggingPanel_add());

@@ -99,7 +99,7 @@ class LogLevelTableModel extends DefaultTableModel {
             case COLUMN_LOGGER:
                 return logger;
             case COLUMN_LEVEL:
-                return levels.get(logger).getName();
+                return levels.get(logger);
             default:
                 throw new IllegalArgumentException("Unknown column index: "+column);
         }
@@ -112,25 +112,11 @@ class LogLevelTableModel extends DefaultTableModel {
 
     @Override
     public void setValueAt(Object value, int row, int column) {
-        Level level = getLevel((String) value);
+        Level level = (Level) value;
         if(level == null)
             return;
         levels.put(loggers.get(row), level);
         super.fireTableCellUpdated(row, column);
-    }
-
-    private Level getLevel(String strLevel) {
-        try {
-            return Level.parse(strLevel==null? "" : strLevel);
-        } catch (IllegalArgumentException ex) {
-            showError(Bundle.MSG_LogLevelTableModel_wronglevel(strLevel));
-            return null;
-        }
-    }
-    
-    private void showError(String msg) {
-        NotifyDescriptor nd = new NotifyDescriptor.Message(msg, NotifyDescriptor.ERROR_MESSAGE);
-        DialogDisplayer.getDefault().notify(nd);
     }
     
     @Override
@@ -139,7 +125,7 @@ class LogLevelTableModel extends DefaultTableModel {
             case COLUMN_LOGGER:
                 return String.class;
             case COLUMN_LEVEL:
-                return String.class;
+                return Level.class;
             default:
                 throw new IllegalArgumentException("Unknown column index: "+column);
         }

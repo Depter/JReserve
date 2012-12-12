@@ -21,7 +21,7 @@ public class ProjectTriangleAuditedEntityFactory extends AbstractAuditedEntityFa
     
     private final static Image TRIANGLE_IMG = ImageUtilities.loadImage("resources/triangle.png", false);
     private final static Image VECTOR_IMG = ImageUtilities.loadImage("resources/vector.png", false);
-
+    
     @Override
     public boolean isInterested(Object value) {
         return (value instanceof Project);

@@ -24,8 +24,8 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.GeometrySettingPanel.StartDate=Start date:",
     "LBL.GeometrySettingPanel.IsSymmetric=Symmetric:",
-    "LBL.GeometrySettingPanel.Periods=Periods",
-    "LBL.GeometrySettingPanel.Months=Month per period",
+    "LBL.GeometrySettingPanel.Periods=Periods:",
+    "LBL.GeometrySettingPanel.Months=Month per period:",
     "LBL.GeometrySettingPanel.Accident=Accident:",
     "LBL.GeometrySettingPanel.Development=Development:",
     "MSG.GeometrySettingPanel.Accident.Invalid.From=Field 'Start date' is invalid!",
@@ -48,14 +48,16 @@ public class GeometrySettingPanel extends JPanel {
     private final DateSpinner dateSpinner = new DateSpinner();
     private final JCheckBox symmetricCheck = new JCheckBox();
     private final JSpinner accidentPeriodsSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_PERIODS, 1, Integer.MAX_VALUE, 1));
-    private final JSpinner accidentMonthSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_STEPS, 1, Integer.MAX_VALUE, 1));
+    private final JSpinner accidentMonthsSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_STEPS, 1, Integer.MAX_VALUE, 1));
     private final JSpinner developmentPeriodsSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_PERIODS, 1, Integer.MAX_VALUE, 1));
-    private final JSpinner developmentMonthSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_STEPS, 1, Integer.MAX_VALUE, 1));
+    private final JSpinner developmentMonthsSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_STEPS, 1, Integer.MAX_VALUE, 1));
     
     private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
 
     private TriangleGeometry geometry;
     private boolean isValid = true;
+    
+    private boolean myAction = false;
     
     public GeometrySettingPanel(boolean isTriangle) {
         this.isTriangle = isTriangle;
@@ -71,95 +73,72 @@ public class GeometrySettingPanel extends JPanel {
 
         //ROW 1
         add(new JLabel(Bundle.LBL_GeometrySettingPanel_StartDate()));
-        
-        dateSpinner.setMinimumSize(new java.awt.Dimension(60, 17));
-        dateSpinner.setPreferredSize(new java.awt.Dimension(60, 17));
-        dateSpinner.addChangeListener(componentListener);
-        add(dateSpinner);
+        add(initDateSpinner());
         add(Box.createGlue());
 
         //ROW 2
         add(new JLabel(Bundle.LBL_GeometrySettingPanel_IsSymmetric()));
-
-        symmetricCheck.setMinimumSize(new java.awt.Dimension(21, 17));
-        symmetricCheck.setPreferredSize(new java.awt.Dimension(21, 17));
-        symmetricCheck.addChangeListener(componentListener);
-        symmetricCheck.setSelected(true);
-        add(symmetricCheck);
+        add(initSymmetricCheck());
         add(Box.createGlue());
         
         //ROW 3
         add(Box.createGlue());
-
         add(new JLabel(Bundle.LBL_GeometrySettingPanel_Accident(), SwingConstants.CENTER));
         add(new JLabel(Bundle.LBL_GeometrySettingPanel_Development(), SwingConstants.CENTER));
 
         //ROW 4
         add(new JLabel(Bundle.LBL_GeometrySettingPanel_Periods()));
-
-        accidentPeriodsSpinner.setMinimumSize(new java.awt.Dimension(60, 17));
-        accidentPeriodsSpinner.setPreferredSize(new java.awt.Dimension(60, 17));
-        accidentPeriodsSpinner.setEditor(new IntegerEditor(accidentPeriodsSpinner));
-        accidentPeriodsSpinner.addChangeListener(componentListener);
-        add(accidentPeriodsSpinner);
-
-        developmentPeriodsSpinner.setMinimumSize(new java.awt.Dimension(60, 17));
-        developmentPeriodsSpinner.setPreferredSize(new java.awt.Dimension(60, 17));
-        developmentPeriodsSpinner.setEditor(new IntegerEditor(developmentPeriodsSpinner));
-        developmentPeriodsSpinner.addChangeListener(componentListener);
-        developmentPeriodsSpinner.setEnabled(false);
-        add(developmentPeriodsSpinner);
+        add(initIntegerSpinner(accidentPeriodsSpinner, true));
+        add(initIntegerSpinner(developmentPeriodsSpinner, false));
         
         //ROW 5
         add(new JLabel(Bundle.LBL_GeometrySettingPanel_Months()));
-
-        accidentMonthSpinner.setMinimumSize(new java.awt.Dimension(60, 17));
-        accidentMonthSpinner.setPreferredSize(new java.awt.Dimension(60, 17));
-        accidentMonthSpinner.setEditor(new IntegerEditor(accidentMonthSpinner));
-        accidentMonthSpinner.addChangeListener(componentListener);
-        add(accidentMonthSpinner);
-
-        developmentMonthSpinner.setMinimumSize(new java.awt.Dimension(60, 17));
-        developmentMonthSpinner.setPreferredSize(new java.awt.Dimension(60, 17));
-        developmentMonthSpinner.setEditor(new IntegerEditor(developmentMonthSpinner));
-        developmentMonthSpinner.addChangeListener(componentListener);
-        developmentMonthSpinner.setEnabled(false);
-        add(developmentMonthSpinner);
+        add(initIntegerSpinner(accidentMonthsSpinner, true));
+        add(initIntegerSpinner(developmentMonthsSpinner, false));
+    }
+    
+    private JSpinner initDateSpinner() {
+        dateSpinner.setMinimumSize(new java.awt.Dimension(60, 17));
+        dateSpinner.setPreferredSize(new java.awt.Dimension(60, 17));
+        dateSpinner.getModel().addChangeListener(componentListener);
+        return dateSpinner;
     }
 
+    private JCheckBox initSymmetricCheck() {
+        symmetricCheck.setMinimumSize(new java.awt.Dimension(21, 17));
+        symmetricCheck.setPreferredSize(new java.awt.Dimension(21, 17));
+        symmetricCheck.addChangeListener(componentListener);
+        symmetricCheck.setSelected(true);
+        return symmetricCheck;
+    }
+    
+    private JSpinner initIntegerSpinner(JSpinner spinner, boolean enabled) {
+        spinner.setMinimumSize(new java.awt.Dimension(60, 17));
+        spinner.setPreferredSize(new java.awt.Dimension(60, 17));
+        spinner.setEditor(new IntegerEditor(spinner));
+        spinner.getModel().addChangeListener(componentListener);
+        spinner.setEnabled(enabled);
+        return spinner;
+    }
+    
     private void initVectorComponents() {
         setLayout(new GridLayout(4, 2, 5, 5));
 
         //ROW 1
         add(new JLabel(Bundle.LBL_GeometrySettingPanel_StartDate()));
-        
-        dateSpinner.setMinimumSize(new java.awt.Dimension(60, 17));
-        dateSpinner.setPreferredSize(new java.awt.Dimension(60, 17));
-        dateSpinner.addChangeListener(componentListener);
-        add(dateSpinner);
+        add(initDateSpinner());
         
         //ROW 2
         add(Box.createGlue());
-
         add(new JLabel(Bundle.LBL_GeometrySettingPanel_Accident(), SwingConstants.CENTER));
 
         //ROW 3
         add(new JLabel(Bundle.LBL_GeometrySettingPanel_Periods()));
-
-        accidentPeriodsSpinner.setMinimumSize(new java.awt.Dimension(60, 17));
-        accidentPeriodsSpinner.setPreferredSize(new java.awt.Dimension(60, 17));
-        accidentPeriodsSpinner.setEditor(new IntegerEditor(accidentPeriodsSpinner));
-        accidentPeriodsSpinner.addChangeListener(componentListener);
-        add(accidentPeriodsSpinner);
+        add(initIntegerSpinner(accidentPeriodsSpinner, true));
         
         //ROW 4
         add(new JLabel(Bundle.LBL_GeometrySettingPanel_Months()));
-
-        accidentMonthSpinner.setMinimumSize(new java.awt.Dimension(60, 17));
-        accidentMonthSpinner.setPreferredSize(new java.awt.Dimension(60, 17));
-        accidentMonthSpinner.setEditor(new IntegerEditor(accidentMonthSpinner));
-        accidentMonthSpinner.addChangeListener(componentListener);
-        add(accidentMonthSpinner);
+        add(initIntegerSpinner(accidentMonthsSpinner, true));
     }
     
     private void createGeometry() {
@@ -195,7 +174,7 @@ public class GeometrySettingPanel extends JPanel {
     }
     
     private int getAccidentMonths() {
-        return (Integer) accidentMonthSpinner.getValue();
+        return (Integer) accidentMonthsSpinner.getValue();
     }
     
     private int getDevelopmentPeriods() {
@@ -212,17 +191,20 @@ public class GeometrySettingPanel extends JPanel {
     
     private int getDevelopmentMonths(int aps, int amp) {
         if(isTriangle)
-            return (Integer) developmentMonthSpinner.getValue();
+            return (Integer) developmentMonthsSpinner.getValue();
         return aps * amp;
     }
     
     private void setSymmetric(boolean isSymmetric) {
         if(!isTriangle) return;
+        
         developmentPeriodsSpinner.setEnabled(!isSymmetric);
-        developmentMonthSpinner.setEnabled(!isSymmetric);
+        developmentMonthsSpinner.setEnabled(!isSymmetric);
         if(isSymmetric) {
+            myAction = true;
             developmentPeriodsSpinner.setValue(accidentPeriodsSpinner.getValue());
-            developmentMonthSpinner.setValue(accidentMonthSpinner.getValue());
+            developmentMonthsSpinner.setValue(accidentMonthsSpinner.getValue());
+            myAction = false;
         }
     }
     
@@ -304,8 +286,6 @@ public class GeometrySettingPanel extends JPanel {
     
     private class ComponentListener implements ChangeListener {
         
-        private boolean myAction = false;
-        
         @Override
         public void stateChanged(ChangeEvent e) {
             if(myAction) return;
@@ -320,7 +300,7 @@ public class GeometrySettingPanel extends JPanel {
         private void synchronizeDevelopments() {
             myAction = true;
             developmentPeriodsSpinner.setValue(accidentPeriodsSpinner.getValue());
-            developmentMonthSpinner.setValue(accidentMonthSpinner.getValue());
+            developmentMonthsSpinner.setValue(accidentMonthsSpinner.getValue());
             myAction = false;
         }
     }

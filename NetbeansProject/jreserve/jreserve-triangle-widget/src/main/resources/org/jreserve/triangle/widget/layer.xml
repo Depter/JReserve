@@ -17,6 +17,7 @@
                     <attr bundlevalue="org.jreserve.triangle.widget.model.Bundle#LBL_CalendarPeriodWidgetTableModel.Name" name="displayName"/>
                 </file>
             </folder>
+            <folder name="WidgetTableRenderer"/>
         </folder>
     </folder>
 </filesystem>

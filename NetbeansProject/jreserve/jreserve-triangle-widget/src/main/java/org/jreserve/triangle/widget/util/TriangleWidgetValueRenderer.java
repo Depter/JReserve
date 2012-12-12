@@ -2,9 +2,9 @@ package org.jreserve.triangle.widget.util;
 
 import java.awt.Component;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+import org.jreserve.triangle.widget.DefaultWidgetRenderer;
 import org.jreserve.triangle.widget.model.WidgetTableModel;
 
 /**
@@ -14,7 +14,7 @@ import org.jreserve.triangle.widget.model.WidgetTableModel;
  */
 public class TriangleWidgetValueRenderer implements TableCellRenderer {
     
-    private final TableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
+    private final TableCellRenderer defaultRenderer = new DefaultWidgetRenderer();
     
     public TriangleWidgetValueRenderer() {
     }

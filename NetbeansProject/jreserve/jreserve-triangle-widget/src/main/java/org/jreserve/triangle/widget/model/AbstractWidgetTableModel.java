@@ -30,7 +30,7 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
         if(this.data != null)
             this.data.removeChangeListener(this);
         initData(data);
-        fireTableStructureChanged();
+        super.fireTableStructureChanged();
     }
     
     private void initData(TriangularData data) {
@@ -71,21 +71,26 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     
     @Override
     public int getRowCount() {
-        return data==null? 0 : data.getAccidentCount();
+        if(data == null)
+            return 0;
+        else
+            return data.getAccidentCount();
     }
 
     @Override
     public int getColumnCount() {
         if(data == null)
             return 0;
-        return data.getDevelopmentCount()+1;
+        else
+            return data.getDevelopmentCount()+1;
     }
 
     @Override
     public Class<?> getColumnClass(int column) {
         if(column == 0)
             return getRowTitleClass();
-        return Double.class;
+        else
+            return Double.class;
     }
     
     protected Class<?> getRowTitleClass() {
@@ -103,7 +108,10 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     public Object getValueAt(int row, int column) {
         if(column == 0)
             return data.getAccidentName(row);
-        return cummulated? getCummulatedData(row, column-1) : getData(row, column-1);
+        else if(cummulated)
+            return getCummulatedData(row, column-1);
+        else
+            return getData(row, column-1);
     }
     
     protected abstract String getRowName(int row);
@@ -129,5 +137,4 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     public void stateChanged(ChangeEvent e) {
         fireTableStructureChanged();
     }
-
 }

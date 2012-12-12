@@ -5,7 +5,7 @@ import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.DefaultProjectNode;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.project.system.management.PersistentObjectDeletable;
+import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.openide.nodes.Node;
@@ -28,7 +28,7 @@ public class LoBElement extends ProjectElement<LoB> {
     public LoBElement(LoB lob) {
         super(lob);
         properties.put(NAME_PROPERTY, lob.getName());
-        super.addToLookup(new PersistentObjectDeletable(this, "LoB"));
+        super.addToLookup(new PersistentDeletable(this));
         super.addToLookup(new RenameableProjectElement(this));
         super.addToLookup(new AuditableProjectElement(this));
         new LobSavable();

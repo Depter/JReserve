@@ -22,7 +22,7 @@ import org.openide.util.lookup.ServiceProvider;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedAnnotationTypes("org.jreserve.triangle.widget.WidgetRendererRegistration")
 public class WidgetRendererRegistrationProcessor extends AbstractRegistrationProcessor {
-    final static String ENTITY_DIRECTORY = "JReserve/Widget/WidgetRenderer";
+    final static String ENTITY_DIRECTORY = "JReserve/Widget/WidgetTableRenderer";
     final static String LAYER_ID = "layerId";
     private final static String LOCATION = ENTITY_DIRECTORY + "/%s.instance";
     

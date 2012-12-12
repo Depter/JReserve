@@ -2,7 +2,7 @@ package org.jreserve.triangle.data.project;
 
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.project.system.management.PersistentObjectDeletable;
+import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -53,7 +53,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     }
     
     private void initLookup() {
-        super.addToLookup(new PersistentObjectDeletable(this, "Triangle"));
+        super.addToLookup(new PersistentDeletable(this));
 //        super.addToLookup(new TriangleOpenable());
         super.addToLookup(new RenameableProjectElement(this));
         super.addToLookup(new AuditableProjectElement(this));

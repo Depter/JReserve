@@ -211,6 +211,7 @@ public class TriangleWidget extends JPanel {
     
     private JScrollPane getTable() {
         table = new JTable();
+        table.setAutoCreateColumnsFromModel(true);
         table.putClientProperty(VISIBLE_DECIMALS_PROPERTY, 0);
         createTableRenderers();
         
@@ -228,7 +229,7 @@ public class TriangleWidget extends JPanel {
         table.getTableHeader().setDefaultRenderer(headerRenderer);
         table.setDefaultRenderer(Date.class, headerRenderer);
         
-        //table.setDefaultRenderer(Double.class, new TriangleWidgetValueRenderer());
+        table.setDefaultRenderer(Double.class, new TriangleWidgetValueRenderer());
         
         DoubleEditor editor = new DoubleEditor();
         table.setDefaultEditor(Double.class, editor);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.core.resources">
-    <module_version install_time="1355132963293" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1355332285028" last="true" origin="installer" specification_version="1.0">
         <file crc="3519483639" name="config/Modules/org-jreserve-jreserve-core-resources.xml"/>
-        <file crc="1175679313" name="modules/org-jreserve-jreserve-core-resources.jar"/>
+        <file crc="721337860" name="modules/org-jreserve-jreserve-core-resources.jar"/>
     </module_version>
 </module>

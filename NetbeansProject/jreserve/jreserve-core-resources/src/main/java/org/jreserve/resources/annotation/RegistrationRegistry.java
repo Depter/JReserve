@@ -42,6 +42,8 @@ public abstract class RegistrationRegistry<T, V> {
     
     private FileObject[] getFiles() {
         FileObject home = FileUtil.getConfigFile(getDirectory());
+        if(home == null)
+            return new FileObject[0];
         FileObject[] children = home.getChildren();
         Arrays.sort(children, getFileComparator());
         return children;

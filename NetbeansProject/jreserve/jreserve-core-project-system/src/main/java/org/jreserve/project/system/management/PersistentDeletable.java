@@ -2,7 +2,6 @@ package org.jreserve.project.system.management;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.system.ProjectElement;
@@ -11,7 +10,7 @@ import org.jreserve.project.system.ProjectElement;
  *
  * @author Peter Decsi
  */
-public abstract class PersistentDeletable<T> extends AbstractProjectElementDeletable<T> {
+public class PersistentDeletable<T> extends AbstractProjectElementDeletable<T> {
     
     protected final static Logger logger = Logger.getLogger(PersistentDeletable.class.getName());
 
@@ -47,10 +46,9 @@ public abstract class PersistentDeletable<T> extends AbstractProjectElementDelet
     }
     
     protected void deleteEntity(Session session, T entity) {
-        createQuery(session, entity).executeUpdate();
+        Object contained = session.merge(entity);
+        session.delete(contained);
     }
-    
-    protected abstract Query createQuery(Session session, T entity);
     
     protected void cleanUpAfterEntity(Session session) {
     }

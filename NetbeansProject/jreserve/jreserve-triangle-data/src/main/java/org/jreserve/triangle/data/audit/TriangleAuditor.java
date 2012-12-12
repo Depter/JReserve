@@ -57,7 +57,7 @@ public class TriangleAuditor extends AbstractAuditor<Triangle>{
         return Bundle.MSG_TriangleAuditor_Created();
     }
     
-    private void setFactoryName(Triangle current) {
+    protected void setFactoryName(Triangle current) {
         if(current==null || current.isTriangle())
             factory.setType(Bundle.MSG_TriangleAuditor_TypeName_Triangle());
         else

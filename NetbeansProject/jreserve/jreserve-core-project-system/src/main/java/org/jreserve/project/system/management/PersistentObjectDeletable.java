@@ -20,6 +20,10 @@ public class PersistentObjectDeletable<T extends PersistentObject> extends Persi
     }
     
     @Override
+    protected void deleteEntity(Session session, T entity) {
+        createQuery(session, entity).executeUpdate();
+    }
+    
     protected Query createQuery(Session session, T entity) {
         Query query = session.createQuery(hql);
         query.setString("id", entity.getId());

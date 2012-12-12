@@ -47,12 +47,14 @@ public class ProjectTriangleAuditor extends TriangleAuditor {
 
     @Override
     protected String getAddChange(Triangle current) {
+        setFactoryName(current);
         String name = current.getName();
         return Bundle.MSG_ProjectTriangleAuditor_Created(name);
     }
 
     @Override
     protected String getDeleteChange(Triangle current) {
+        setFactoryName(current);
         String name = current.getName();
         return Bundle.MSG_ProjectTriangleAuditor_Deleted(name);
     }
@@ -60,6 +62,7 @@ public class ProjectTriangleAuditor extends TriangleAuditor {
 
     @Override
     protected String getChange(Triangle previous, Triangle current) {
+        setFactoryName(current);
         String change = super.getChange(previous, current);
         String name = previous.getName();
         return Bundle.MSG_ProjectTriangleAuditor_Change(name, change);

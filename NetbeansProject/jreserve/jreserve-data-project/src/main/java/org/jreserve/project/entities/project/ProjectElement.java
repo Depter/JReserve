@@ -9,7 +9,7 @@ import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.entities.project.editor.ProjectEditor;
 import org.jreserve.project.system.DefaultProjectNode;
-import org.jreserve.project.system.management.PersistentObjectDeletable;
+import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
@@ -71,13 +71,13 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
         getValue().setDescription(newDescription);
     }
     
-    private class ProjectDeletable extends PersistentObjectDeletable<Project> {
+    private class ProjectDeletable extends PersistentDeletable<Project> {
 
         private Project project;
         private ClaimType claimType;
         
         private ProjectDeletable() {
-            super(ProjectElement.this, "Project");
+            super(ProjectElement.this);
             this.project = getValue();
             claimType = project.getClaimType();
         }
@@ -92,8 +92,6 @@ public class ProjectElement extends org.jreserve.project.system.ProjectElement<P
             ProjectOpenable openable = getLookup().lookup(ProjectOpenable.class);
             if(openable != null)
                 closeEditor(openable);
-//            if(openable != null && openable.editor != null)
-//                closeEditor(openable.editor);
         }
         
         private void closeEditor(final ProjectOpenable openable) {

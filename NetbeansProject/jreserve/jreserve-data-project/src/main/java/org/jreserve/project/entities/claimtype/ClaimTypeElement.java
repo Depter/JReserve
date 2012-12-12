@@ -7,7 +7,7 @@ import org.jreserve.project.entities.ClaimType;
 import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.DefaultProjectNode;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.project.system.management.PersistentObjectDeletable;
+import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.openide.nodes.Node;
@@ -48,10 +48,10 @@ public class ClaimTypeElement extends ProjectElement<ClaimType> {
         super.setProperty(property, value);
     }
     
-    private class ClaimTypeDeletable extends PersistentObjectDeletable<ClaimType> {
+    private class ClaimTypeDeletable extends PersistentDeletable<ClaimType> {
 
         private ClaimTypeDeletable() {
-            super(ClaimTypeElement.this, "ClaimType");
+            super(ClaimTypeElement.this);
         }
         
         @Override

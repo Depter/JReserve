@@ -121,7 +121,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="levelTable.addMouseListener(new LoggerPopUp());&#xa;levelTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);&#xa;levelTable.setColumnSelectionAllowed(false);&#xa;levelTable.getSelectionModel().addListSelectionListener(this);"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="levelTable.addMouseListener(new LoggerPopUp());&#xa;levelTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);&#xa;levelTable.setColumnSelectionAllowed(false);&#xa;levelTable.getSelectionModel().addListSelectionListener(this);&#xa;levelTable.setDefaultRenderer(Level.class, new LevelTableRenderer());&#xa;levelTable.setDefaultEditor(Level.class, new LevelSelectEditor());"/>
             <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="levelModel = new LogLevelTableModel();"/>
           </AuxValues>
         </Component>

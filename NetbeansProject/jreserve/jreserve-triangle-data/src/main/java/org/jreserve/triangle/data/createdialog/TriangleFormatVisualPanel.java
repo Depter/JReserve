@@ -23,6 +23,7 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
+    "LBL.TriangleFormatVisualPanel.Name=Geometry",
     "LBL.TriangleFormatVisualPanel.Geometry.Title=Geometry"
 })
 class TriangleFormatVisualPanel extends JPanel {
@@ -31,10 +32,11 @@ class TriangleFormatVisualPanel extends JPanel {
     private GeometrySettingPanel geometrySetting;
     private TriangleWidget triangle;
     private List<ClaimValue> datas = new ArrayList<ClaimValue>();
-    private TriangularData data = null;
+    private TriangularData data;
     
     TriangleFormatVisualPanel(boolean isTriangle) {
         initComponents(isTriangle);
+        setName(Bundle.LBL_TriangleFormatVisualPanel_Name());
     }
     
     private void initComponents(boolean isTriangle) {
@@ -114,7 +116,7 @@ class TriangleFormatVisualPanel extends JPanel {
     }
     
     public double[][] getTriangleValues() {
-        return data.getData();
+        return data==null? null : data.getData();
     }
     
     public void addChangeListener(ChangeListener listener) {
