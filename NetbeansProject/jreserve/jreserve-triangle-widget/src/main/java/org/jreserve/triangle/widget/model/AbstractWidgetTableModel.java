@@ -40,6 +40,11 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     }
     
     @Override
+    public TriangularData getData() {
+        return data;
+    }
+    
+    @Override
     public void setCummulated(boolean cummulated) {
         this.cummulated = cummulated;
         fireTableDataChanged();
@@ -116,13 +121,15 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     
     protected abstract String getRowName(int row);
     
-    private double getCummulatedData(int row, int column) {
-        double sum = 0d;
+    private Double getCummulatedData(int row, int column) {
+        Double sum = null;
         for(int c=column; c>=0; c--) {
-            double value = getData(row, c);
+            Double value = getData(row, c);
+            if(value == null)
+                return sum;
             if(Double.isNaN(value))
                 return c==column? Double.NaN : sum;
-            sum += value;
+            sum = sum==null? value : sum+value;
         }
         return sum;
     }

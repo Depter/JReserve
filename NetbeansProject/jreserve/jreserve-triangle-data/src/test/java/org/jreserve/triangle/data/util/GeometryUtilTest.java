@@ -5,11 +5,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import org.jreserve.triangle.data.TestUtil;
 import org.jreserve.triangle.entities.TriangleGeometry;
-import org.junit.AfterClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
 /**
  *

@@ -80,4 +80,8 @@ public interface TriangularData {
             return "EMPTY";
         }
     };
+    
+    public static interface Provider {
+        public TriangularData getTriangularData();
+    }
 }

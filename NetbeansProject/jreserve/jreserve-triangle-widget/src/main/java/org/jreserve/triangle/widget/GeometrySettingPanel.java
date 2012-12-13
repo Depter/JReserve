@@ -149,6 +149,16 @@ public class GeometrySettingPanel extends JPanel {
         geometry = new TriangleGeometry(dateSpinner.getDate(), aps, amp, dps, dmp);
     }
     
+    public void setGeometry(TriangleGeometry geometry) {
+        setStartDate(geometry.getStartDate());
+        accidentPeriodsSpinner.setValue(geometry.getAccidentPeriods());
+        accidentMonthsSpinner.setValue(geometry.getAccidentMonths());
+        if(isTriangle && !symmetricCheck.isSelected()) {
+            developmentPeriodsSpinner.setValue(geometry.getDevelopmentPeriods());
+            developmentMonthsSpinner.setValue(geometry.getDevelopmentMonths());
+        }
+    }
+    
     public void setStartDate(Date date) {
         if(date == null)
             date = new Date();

@@ -101,7 +101,7 @@ public class AbstractWidgetTableModelTest {
         public String getRowName(int row) {
             return "";
         }
-
+        
         @Override
         public Double getData(int row, int column) {
             return null;

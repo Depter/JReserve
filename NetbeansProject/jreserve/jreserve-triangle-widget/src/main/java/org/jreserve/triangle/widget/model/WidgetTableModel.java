@@ -13,6 +13,8 @@ public interface WidgetTableModel extends TableModel {
 
     public void setData(TriangularData data);
 
+    public TriangularData getData();
+    
     public void setCummulated(boolean cummulated);
     
     public boolean isCummulated();

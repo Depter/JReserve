@@ -40,7 +40,8 @@ public class TriangleBundle implements TriangularData, ChangeListener {
     private void initTop() {
         if(modifications.isEmpty())
             top = data;
-        top = modifications.last();
+        else
+            top = modifications.last();
     }
     
     public void setData(TriangularData data) {

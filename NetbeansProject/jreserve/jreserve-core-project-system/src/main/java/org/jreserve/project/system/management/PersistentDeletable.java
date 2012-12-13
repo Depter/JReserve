@@ -3,6 +3,7 @@ package org.jreserve.project.system.management;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.jreserve.persistence.SessionFactory;
 import org.jreserve.project.system.ProjectElement;
 
@@ -20,11 +21,17 @@ public class PersistentDeletable<T> extends AbstractProjectElementDeletable<T> {
     
     @Override
     protected void handleSave() {
-        Session session = SessionFactory.getCurrentSession();
+        Session session = SessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        //Session session = SessionFactory.getCurrentSession();
         try {
             super.handleSave();
             deleteEntity(session);
+            tx.commit();
+            session.close();
         } catch (RuntimeException ex) {
+            tx.rollback();
+            session.close();
             throw ex;
         }
     }

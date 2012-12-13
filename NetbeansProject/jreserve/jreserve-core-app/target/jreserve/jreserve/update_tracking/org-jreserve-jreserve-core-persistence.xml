@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.core.persistence">
-    <module_version install_time="1355132966403" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1355434899350" last="true" origin="installer" specification_version="1.0">
         <file crc="2339987798" name="config/Modules/org-jreserve-jreserve-core-persistence.xml"/>
         <file crc="914671301" name="modules/ext/antlr/antlr-2.7.7.jar"/>
         <file crc="4207353500" name="modules/ext/c3p0/c3p0-0.9.1.jar"/>
@@ -16,6 +16,6 @@
         <file crc="216948112" name="modules/ext/org.jboss.spec.javax.transaction/jboss-transaction-api_1.1_spec-1.0.0.Final.jar"/>
         <file crc="1888669852" name="modules/ext/org.slf4j/slf4j-api-1.6.6.jar"/>
         <file crc="679423285" name="modules/ext/org.slf4j/slf4j-jdk14-1.6.6.jar"/>
-        <file crc="647664505" name="modules/org-jreserve-jreserve-core-persistence.jar"/>
+        <file crc="2011373979" name="modules/org-jreserve-jreserve-core-persistence.jar"/>
     </module_version>
 </module>

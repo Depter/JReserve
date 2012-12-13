@@ -48,7 +48,7 @@ import org.openide.util.lookup.ProxyLookup;
     "LBL.TriangleWidget.ToolTip.Deummulate=Decummulate",
     "LBL.TriangleWidget.ToolTip.Cummulate=Cummulate"
 })
-public class TriangleWidget extends JPanel {
+public class TriangleWidget extends JPanel implements Lookup.Provider {
     
     public final static String VISIBLE_DECIMALS_PROPERTY = "VISIBLE_DECIMALS";
     
@@ -241,6 +241,11 @@ public class TriangleWidget extends JPanel {
         table.getInputMap().put(stroke, DefaultEditorKit.copyAction);
         getActionMap().put(DefaultEditorKit.copyAction, new CopyDataAction());
     }
+
+    @Override
+    public Lookup getLookup() {
+        return lookup;
+    }
     
     private class ActionHandler implements ActionListener {
         @Override
@@ -310,6 +315,7 @@ public class TriangleWidget extends JPanel {
         }
         
         private void initModelFromOld(WidgetTableModel oldModel) {
+            model.setData(oldModel.getData());
             model.setCummulated(oldModel.isCummulated());
             model.setWidgetEditor(oldModel.getWidgetEditor());
         }

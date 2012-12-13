@@ -4,9 +4,9 @@
 <filesystem>
     <folder name="JReserve">
         <folder name="Entities">
-            <file name="org-jreserve-triangle-entities-TriangleComment.entity">
-                <!--org.jreserve.triangle.entities.TriangleComment-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleComment"/>
+            <file name="org-jreserve-triangle-entities-Triangle.entity">
+                <!--org.jreserve.triangle.entities.Triangle-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
             <file name="org-jreserve-triangle-entities-TriangleCorrection.entity">
@@ -14,9 +14,9 @@
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleCorrection"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
-            <file name="org-jreserve-triangle-entities-Triangle.entity">
-                <!--org.jreserve.triangle.entities.Triangle-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
+            <file name="org-jreserve-triangle-entities-TriangleComment.entity">
+                <!--org.jreserve.triangle.entities.TriangleComment-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleComment"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
         </folder>

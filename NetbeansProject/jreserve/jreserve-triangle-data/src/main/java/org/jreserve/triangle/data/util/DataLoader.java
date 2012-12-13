@@ -63,6 +63,7 @@ public class DataLoader implements Runnable {
         handle.start();
         handle.switchToIndeterminate();
         try {
+            logger.log(Level.FINE, "Loading data for: {0}", name);
             initSession();
             datas = dataSource.getClaimData(new DataCriteria(dataType));
         } catch (RuntimeException rex) {
