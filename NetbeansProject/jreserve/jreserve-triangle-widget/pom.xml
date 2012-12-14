@@ -88,6 +88,19 @@
             <artifactId>jreserve-triangle-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-util-chart</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-util-navigator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -105,6 +118,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.triangle.widget</publicPackage>
+                        <publicPackage>org.jreserve.triangle.widget.charts</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

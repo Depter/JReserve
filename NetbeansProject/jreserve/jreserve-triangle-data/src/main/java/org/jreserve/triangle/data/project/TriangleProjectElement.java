@@ -45,7 +45,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
     private int position;
     private AsynchronousTriangleInput input;
     private TriangleBundle data;
-    
+
     public TriangleProjectElement(Triangle triangle) {
         super(triangle);
         this.position = triangle.isTriangle()? TRIANGLE_POSITION : VECTOR_POSITION;

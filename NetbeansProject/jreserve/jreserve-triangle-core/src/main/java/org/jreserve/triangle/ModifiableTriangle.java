@@ -12,4 +12,6 @@ public interface ModifiableTriangle {
     public PersistentObject getOwner();
     
     public int getMaxModificationOrder();
+    
+    public void addModification(ModifiedTriangularData modification);
 }

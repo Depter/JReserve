@@ -8,7 +8,12 @@ import org.jreserve.navigator.NavigableTopComponent;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.visual.ProjectElementCloseHandler;
 import org.jreserve.project.system.visual.TabNameAdapter;
+import org.jreserve.triangle.TriangularDataAdapter;
 import org.jreserve.triangle.data.project.TriangleProjectElement;
+import org.jreserve.triangle.widget.charts.AccidentPeriodsChartData;
+import org.jreserve.triangle.widget.charts.AccidentTotalChartData;
+import org.jreserve.triangle.widget.charts.CalendarYearTotalChartData;
+import org.jreserve.triangle.widget.charts.DevelopmentPeriodsChartData;
 import org.openide.awt.UndoRedo;
 import org.openide.util.ImageUtilities;
 import org.openide.windows.TopComponent;
@@ -30,7 +35,8 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         List<NavigableComponent> components = new ArrayList<NavigableComponent>();
         components.add(new EditorView(element));
         
-        DataEditorView ew = new DataEditorView(element);
+        TriangularDataAdapter data = new TriangularDataAdapter(element.getTriangularData());
+        DataEditorView ew = new DataEditorView(element, data);
         components.add(ew);
         
         if(isTriangle)
@@ -40,20 +46,20 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         
 //        components.add(RCodeView.getTriangleView(element, ew.triangle));
         
-        return new Editor(components, element);
+        return new Editor(components, element, data);
     }
     
     private static void addTriangleCharts(DataEditorView ew, List<NavigableComponent> components) {
-//        components.add(AccidentTotalChartData.createPanel(ew.triangle));
-//        components.add(AccidentPeriodsChartData.createPanel(ew.triangle));
-//        components.add(AccidentPeriodsChartData.createScaledPanel(ew.triangle));
-//        components.add(CalendarYearTotalChartData.createPanel(ew.triangle));
-//        components.add(DevelopmentPeriodsChartData.createPanel(ew.triangle));
-//        components.add(DevelopmentPeriodsChartData.createScaledPanel(ew.triangle));
+        components.add(AccidentTotalChartData.createPanel(ew.triangle));
+        components.add(AccidentPeriodsChartData.createPanel(ew.triangle));
+        components.add(AccidentPeriodsChartData.createScaledPanel(ew.triangle));
+        components.add(CalendarYearTotalChartData.createPanel(ew.triangle));
+        components.add(DevelopmentPeriodsChartData.createPanel(ew.triangle));
+        components.add(DevelopmentPeriodsChartData.createScaledPanel(ew.triangle));
     }
     
     private static void addVectorCharts(DataEditorView ew, List<NavigableComponent> components) {
-//        components.add(DevelopmentPeriodsChartData.createPanel(ew.triangle));
+        components.add(DevelopmentPeriodsChartData.createPanel(ew.triangle));
     }
     
     static Image getImage(TriangleProjectElement element) {
@@ -63,13 +69,15 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
     }
     
     private TriangleProjectElement element;
+    private TriangularDataAdapter data;
     private ProjectElementCloseHandler closeHandler;
     private boolean isTriangle;
     
-    private Editor(List<NavigableComponent> components, TriangleProjectElement element) {
+    private Editor(List<NavigableComponent> components, TriangleProjectElement element, TriangularDataAdapter data) {
         super(components);
         this.element = element;
         this.isTriangle = element.getValue().isTriangle();
+        this.data = data;
         this.closeHandler = new ProjectElementCloseHandler(element);
         initTopComponent();
     }
@@ -96,5 +104,12 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
     @Override
     public boolean canClose() {
         return closeHandler.canClose();
+    }
+    
+    
+    @Override
+    protected void componentClosed() {
+        super.componentClosed();
+        this.data.releaseData();
     }
 }

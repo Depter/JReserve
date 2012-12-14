@@ -18,6 +18,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.text.DefaultEditorKit;
 import org.jreserve.localesettings.util.DecimalSpinner;
 import org.jreserve.resources.ToolBarButton;
@@ -80,6 +81,8 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
     private JScrollPane scroll;
     private Lookup lookup;
     private WidgetEditor widgetEditor;
+    private TableModelListener dataListener = new DataListener();
+    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
     public TriangleWidget() {
         initComponent();
@@ -170,8 +173,10 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
             viewButtonComponents.add(strut);
             toolBar.add(strut);
         }
-        if(!models.isEmpty())
+        if(!models.isEmpty()) {
             table.setModel(models.get(0).getModel());
+            table.getModel().addTableModelListener(dataListener);
+        }
     }
     
     private JToggleButton createTriangleModelButton(ButtonGroup group, WidgetTableModelImpl model, boolean selected) {
@@ -241,10 +246,34 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
         table.getInputMap().put(stroke, DefaultEditorKit.copyAction);
         getActionMap().put(DefaultEditorKit.copyAction, new CopyDataAction());
     }
+    
+    public TriangularData getData() {
+        TriangularData data = ((WidgetTableModel) table.getModel()).getData();
+        return data==null? TriangularData.EMPTY : data;
+    }
+    
+    public boolean isCummulated() {
+        return cummulatedButton.isSelected();
+    }
 
     @Override
     public Lookup getLookup() {
         return lookup;
+    }
+    
+    public void addChangeListener(ChangeListener listener) {
+        if(!listeners.contains(listener))
+            listeners.add(listener);
+    }
+    
+    public void removeChangeListener(ChangeListener listener) {
+        listeners.remove(listener);
+    }
+    
+    private void fireChangeEvent() {
+        ChangeEvent evt = new ChangeEvent(this);
+        for(ChangeListener l : new ArrayList<ChangeListener>(listeners))
+            l.stateChanged(evt);
     }
     
     private class ActionHandler implements ActionListener {
@@ -315,9 +344,18 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
         }
         
         private void initModelFromOld(WidgetTableModel oldModel) {
+            oldModel.removeTableModelListener(dataListener);
             model.setData(oldModel.getData());
             model.setCummulated(oldModel.isCummulated());
             model.setWidgetEditor(oldModel.getWidgetEditor());
+            model.addTableModelListener(dataListener);
         }
     }    
+    
+    private class DataListener implements TableModelListener {
+        @Override
+        public void tableChanged(TableModelEvent e) {
+            fireChangeEvent();
+        }
+    }
 }

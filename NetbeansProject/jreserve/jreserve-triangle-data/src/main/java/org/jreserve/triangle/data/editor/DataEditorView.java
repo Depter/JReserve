@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.navigator.NavigablePanel;
+import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.data.project.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -36,13 +37,13 @@ class DataEditorView extends NavigablePanel {
     
     protected TriangleProjectElement element;
     
-    DataEditorView(TriangleProjectElement element) {
+    DataEditorView(TriangleProjectElement element, TriangularData data) {
         super(Bundle.LBL_DataEditorView_Title(), Editor.getImage(element));
         this.element = element;
-        initComponents();
+        initComponents(data);
     }
     
-    private void initComponents() {
+    private void initComponents(TriangularData data) {
         JPanel panel = new LookupPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         panel.setLayout(new GridBagLayout());
@@ -70,7 +71,7 @@ class DataEditorView extends NavigablePanel {
 
         triangle = new TriangleWidget();
         triangle.setPreferredSize(new java.awt.Dimension(400, 200));
-        triangle.setData(element.getTriangularData());
+        triangle.setData(data);
         //triangle.setPopUpActionPath(POP_UP_PATH);
         gc.gridx = 0; gc.gridy = 1;
         gc.gridwidth = 2;
