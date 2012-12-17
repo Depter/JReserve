@@ -106,10 +106,15 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         return closeHandler.canClose();
     }
     
-    
     @Override
     protected void componentClosed() {
         super.componentClosed();
         this.data.releaseData();
+    }
+    
+    @Override
+    public String toString() {
+        return String.format(
+            "TriangleEdtior [%s]", element.toString());
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.triangle.smoothing.core">
-    <module_version install_time="1355755197107" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1355777686167" last="true" origin="installer" specification_version="1.0">
         <file crc="684483075" name="config/Modules/org-jreserve-jreserve-triangle-smoothing-core.xml"/>
-        <file crc="658912223" name="modules/org-jreserve-jreserve-triangle-smoothing-core.jar"/>
+        <file crc="1675994193" name="modules/org-jreserve-jreserve-triangle-smoothing-core.jar"/>
     </module_version>
 </module>

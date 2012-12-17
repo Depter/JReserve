@@ -1,5 +1,7 @@
 package org.jreserve.triangle.widget;
 
+import org.jreserve.triangle.widget.model.WidgetTableModel;
+
 /**
  *
  * @author Peter Decsi
@@ -9,7 +11,7 @@ public interface WidgetEditor {
 
     public boolean isCellEditable(int accident, int development);
     
-    public boolean setCellValue(int accident, int development, double value);
+    public boolean setCellValue(WidgetTableModel model, int accident, int development, double value);
     
     public static @interface Registration {
         public String category();

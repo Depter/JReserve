@@ -1,14 +1,16 @@
 package org.jreserve.triangle.data.project;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
 import org.jreserve.audit.AuditableProjectElement;
+import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
-import org.jreserve.triangle.TriangleBundle;
-import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.*;
 import org.jreserve.triangle.data.editor.Editor;
 import org.jreserve.triangle.data.util.AsynchronousTriangleInput;
 import org.jreserve.triangle.entities.Triangle;
@@ -37,15 +39,16 @@ import org.openide.windows.TopComponent;
     "MSG.TriangleProjectElement.UndoRedo.Geometry=geometry change",
     "MSG.TriangleProjectElement.UndoRedo.Correction=correction change"
 })
-public class TriangleProjectElement extends ProjectElement<Triangle> implements TriangularData.Provider {
+public class TriangleProjectElement extends ProjectElement<Triangle> implements TriangularData.Provider, ModifiableTriangle {
     
     public final static int TRIANGLE_POSITION = 100;
     public final static int VECTOR_POSITION = 200;
-    
+    private final static String MODIFICATION_PROPERTY = "MODIFICATION_PROPERTY"; 
+            
     private int position;
     private AsynchronousTriangleInput input;
     private TriangleBundle data;
-
+    
     public TriangleProjectElement(Triangle triangle) {
         super(triangle);
         this.position = triangle.isTriangle()? TRIANGLE_POSITION : VECTOR_POSITION;
@@ -63,6 +66,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
         super.setProperty(NAME_PROPERTY, triangle.getName());
         super.setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         super.setProperty(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
+        super.setProperty(MODIFICATION_PROPERTY, new ArrayList<TriangleModification>(0));
         //super.setProperty(Correctable.CORRECTION_PROPERTY, triangle.getCorrections());
         //super.setProperty(Commentable.COMMENT_PROPERTY, triangle.getComments());
         //super.setProperty(Smoothable.SMOOTHING_PROPERTY, triangle.getSmoothings());
@@ -91,6 +95,15 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
     }
     
     @Override
+    public Object getProperty(Object property) {
+        if(MODIFICATION_PROPERTY.equals(property)) {
+            List<ModifiedTriangularData> mods = (List<ModifiedTriangularData>) super.getProperty(property);
+            return new ArrayList<ModifiedTriangularData>(mods);
+        }
+        return super.getProperty(property);
+    }
+    
+    @Override
     public void setProperty(String property, Object value) {
         if(NAME_PROPERTY.equals(property))
             getValue().setName((String) value);
@@ -98,6 +111,11 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
             getValue().setDescription((String) value);
         else if(Triangle.GEOMETRY_PROPERTY.equals(property))
             setTriangleGeometryProperty((TriangleGeometry) value);
+        else if(MODIFICATION_PROPERTY.equals(property)) {
+            List<ModifiedTriangularData> mods = (List<ModifiedTriangularData>) value;
+            data.setModifications(mods);
+            value = new ArrayList<ModifiedTriangularData>(mods);
+        }
 //        else if(Correctable.CORRECTION_PROPERTY.equals(property))
 //            getValue().setCorrections((List<TriangleCorrection>) value);
 //        else if(Commentable.COMMENT_PROPERTY.equals(property))
@@ -115,6 +133,48 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
     @Override
     public TriangularData getTriangularData() {
         return data;
+    }
+
+    @Override
+    public PersistentObject getOwner() {
+        return getValue();
+    }
+
+    @Override
+    public int getMaxModificationOrder() {
+        int order = 0;
+        for(ModifiedTriangularData modification : getModifications())
+            if(modification.getOrder() > order)
+                order = modification.getOrder();
+        return order;
+    }
+    
+    private List<ModifiedTriangularData> getModifications() {
+        return (List<ModifiedTriangularData>) getProperty(properties);
+    }
+
+    @Override
+    public void addModification(ModifiedTriangularData modification) {
+        checkOrder(modification);
+        List<ModifiedTriangularData> mods = getModifications();
+        mods.add(modification);
+        setProperty(MODIFICATION_PROPERTY, mods);
+    }
+    
+    private void checkOrder(ModifiedTriangularData modification) {
+        int order = modification.getOrder();
+        if(containsOrder(order)) {
+            String msg = "Modification with order %d already contained! %s can not be added!";
+            msg = String.format(msg, order, modification);
+            throw new IllegalArgumentException(msg);
+        }
+    }
+    
+    private boolean containsOrder(int order) {
+        for(ModifiedTriangularData modification : getModifications())
+            if(modification.getOrder() == order)
+                return true;
+        return false;
     }
     
 //    private class TriangleSavable extends PersistentSavable<Triangle> {

@@ -47,4 +47,11 @@ class ProjectElementContainerElement extends ProjectElement<ProjectElementContai
     public int getPosition() {
         return position;
     }
+    
+    @Override
+    public String toString() {
+        return String.format(
+            "ProjectElementContainer [%s]",
+            getProperty(NAME_PROPERTY));
+    }
 }

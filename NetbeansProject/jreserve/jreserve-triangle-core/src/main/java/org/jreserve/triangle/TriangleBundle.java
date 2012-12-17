@@ -18,6 +18,7 @@ public class TriangleBundle implements TriangularData, ChangeListener {
     private TriangularData top;
     private TreeSet<ModifiedTriangularData> modifications = new TreeSet<ModifiedTriangularData>();
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private boolean fireEvent = true;
     
     public TriangleBundle(TriangularData data) {
         initData(data);
@@ -54,6 +55,16 @@ public class TriangleBundle implements TriangularData, ChangeListener {
     private void setModificationSource() {
         if(!modifications.isEmpty())
             modifications.first().setSource(data);
+    }
+    
+    public void setModifications(List<ModifiedTriangularData> modifications) {
+        fireEvent = false;
+        for(ModifiedTriangularData mod : new ArrayList<ModifiedTriangularData>(this.modifications))
+            removeModification(mod);
+        for(ModifiedTriangularData mod : modifications)
+            addModification(mod);
+        fireEvent = true;
+        fireChangeEvent();
     }
     
     public void addModification(ModifiedTriangularData modification) {
@@ -137,6 +148,8 @@ public class TriangleBundle implements TriangularData, ChangeListener {
     }
     
     private void fireChangeEvent() {
+        if(!fireEvent)
+            return;
         ChangeEvent evt = new ChangeEvent(this);
         for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
             listener.stateChanged(evt);

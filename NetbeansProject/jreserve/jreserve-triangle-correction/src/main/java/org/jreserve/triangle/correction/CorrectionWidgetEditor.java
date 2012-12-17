@@ -3,6 +3,7 @@ package org.jreserve.triangle.correction;
 import java.util.Collection;
 import org.jreserve.triangle.ModifiableTriangle;
 import org.jreserve.triangle.widget.WidgetEditor;
+import org.jreserve.triangle.widget.model.WidgetTableModel;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -25,7 +26,7 @@ public class CorrectionWidgetEditor implements WidgetEditor {
     }
     
     @Override
-    public boolean setCellValue(int row, int column, double value) {
+    public boolean setCellValue(WidgetTableModel model, int row, int column, double value) {
         if(Math.abs(value) < EPSILON)
             deleteCorrection(row, column);
         else
@@ -37,6 +38,7 @@ public class CorrectionWidgetEditor implements WidgetEditor {
     }
     
     private void addCorrection(int row, int column, double value) {
+        
     }
 
     @Override

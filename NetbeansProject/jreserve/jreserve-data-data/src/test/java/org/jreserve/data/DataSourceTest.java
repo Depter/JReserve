@@ -1,13 +1,7 @@
 package org.jreserve.data;
 
-import org.easymock.EasyMock;
-import org.hibernate.Session;
-import org.jreserve.persistence.SessionFactory;
-import org.junit.AfterClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
 /**
  *
