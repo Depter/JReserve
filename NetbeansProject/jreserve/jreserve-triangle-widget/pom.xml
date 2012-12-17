@@ -72,6 +72,18 @@
         </dependency>
         
         <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-nodes</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-loaders</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-core-locale-settings</artifactId>
             <version>${project.version}</version>
@@ -98,6 +110,12 @@
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-util-navigator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-project-system</artifactId>
             <version>${project.version}</version>
         </dependency>
         

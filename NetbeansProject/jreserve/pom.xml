@@ -73,10 +73,10 @@
         
         <!-- TRIANGLE -->
         <module>jreserve-triangle-core</module>
-        <module>jreserve-triangle-data</module>
-        <module>jreserve-triangle-smoothing-core</module>
         <module>jreserve-triangle-widget</module>
         <module>jreserve-triangle-correction</module>
+        <module>jreserve-triangle-data</module>
+        <module>jreserve-triangle-smoothing-core</module>
         
         <!-- ESTIMATES -->
         <module>jreserve-estimate-core</module>

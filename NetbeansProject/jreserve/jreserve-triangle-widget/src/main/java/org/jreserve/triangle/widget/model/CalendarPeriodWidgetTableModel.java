@@ -36,16 +36,14 @@ public class CalendarPeriodWidgetTableModel extends AbstractWidgetTableModel {
     private String parseDate(Date date) {
         return date.toString();
     }
-
+    
     @Override
-    protected Double getData(int row, int column) {
-        int development = getDevelopmentIndex(row, column);
-        if(development < 0)
-            return null;
-        return data.getValue(row, development);
+    protected int getAccident(int row, int column) {
+        return row;
     }
     
-    private int getDevelopmentIndex(int row, int column) {
+    @Override
+    protected int getDevelopment(int row, int column) {
         int maxDev = data.getDevelopmentCount();
         int maxRowDev = data.getDevelopmentCount(row);
         int correction = maxDev - maxRowDev;

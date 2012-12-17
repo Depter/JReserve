@@ -33,10 +33,12 @@ class DevelopmentPeriodWidgetTableModel extends AbstractWidgetTableModel {
     }
 
     @Override
-    protected Double getData(int row, int column) {
-        int devCount = data.getDevelopmentCount(row);
-        if(column >= devCount)
-            return null;
-        return data.getValue(row, column);
+    protected int getAccident(int row, int column) {
+        return row;
+    }
+
+    @Override
+    protected int getDevelopment(int row, int column) {
+        return column;
     }
 }

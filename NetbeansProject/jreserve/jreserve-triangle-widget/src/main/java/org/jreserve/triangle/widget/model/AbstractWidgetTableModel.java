@@ -104,37 +104,55 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        if(column == 0)
+        if(column == 0 || getValueAt(row, column) == null || editor == null)
             return false;
-        return editor!=null && getData(row, column-1)!=null;
+        int accident = getAccident(row, column - 1);
+        int development = getDevelopment(row, column - 1);
+        return editor.isCellEditable(accident, development);
     }
+    
+    protected abstract int getAccident(int row, int column);
 
+    protected abstract int getDevelopment(int row, int column);
+    
     @Override
     public Object getValueAt(int row, int column) {
         if(column == 0)
             return data.getAccidentName(row);
-        else if(cummulated)
-            return getCummulatedData(row, column-1);
-        else
-            return getData(row, column-1);
+        int accident = getAccident(row, column-1);
+        int development = getDevelopment(row, column-1);
+        return getValue(accident, development);
     }
     
     protected abstract String getRowName(int row);
     
-    private Double getCummulatedData(int row, int column) {
+    private Double getValue(int accident, int development) {
+        if(cummulated)
+            return getCummulatedData(accident, development);
+        else
+            return getData(accident, development);
+    }
+    
+    private Double getCummulatedData(int accident, int development) {
         Double sum = null;
-        for(int c=column; c>=0; c--) {
-            Double value = getData(row, c);
+        for(int d=development; d>=0; d--) {
+            Double value = getData(accident, d);
             if(value == null)
                 return sum;
             if(Double.isNaN(value))
-                return c==column? Double.NaN : sum;
+                return d==development? Double.NaN : sum;
             sum = sum==null? value : sum+value;
         }
         return sum;
     }
     
-    protected abstract Double getData(int row, int column);
+    private Double getData(int accident, int development) {
+        if(accident < 0 || accident >= data.getAccidentCount())
+            return null;
+        if(development < 0 || development >= data.getDevelopmentCount(accident))
+            return null;
+        return data.getValue(accident, development);
+    }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {

@@ -31,6 +31,7 @@ import org.openide.util.NbBundle.Messages;
 class DataEditorView extends NavigablePanel {
     
     private final static String POP_UP_PATH = "JReserve/Popup/DataEditor";
+    private final static String EDITOR_CATEGORY = "Triangle";
     
     protected GeometrySettingPanel geometrySetting;
     protected TriangleWidget triangle;
@@ -69,9 +70,10 @@ class DataEditorView extends NavigablePanel {
         Dimension max = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
         panel.add(new Filler(min, min, max), gc);
 
-        triangle = new TriangleWidget();
+        triangle = new TriangleWidget(element);
         triangle.setPreferredSize(new java.awt.Dimension(400, 200));
         triangle.setData(data);
+        triangle.setWidgetEditorFolder(EDITOR_CATEGORY);
         //triangle.setPopUpActionPath(POP_UP_PATH);
         gc.gridx = 0; gc.gridy = 1;
         gc.gridwidth = 2;

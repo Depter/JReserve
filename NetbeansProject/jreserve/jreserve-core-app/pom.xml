@@ -43,68 +43,93 @@
             <scope>test</scope>
         </dependency>
         
+        <!-- CORE -->
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-core-branding</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-core-resources</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-core-logging</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-core-database</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-core-persistence</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-core-project-system</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-core-locale-settings</artifactId>
             <version>${project.version}</version>
         </dependency>
         
+        <!-- DATA -->
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-data-project</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-data-data</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-data-import</artifactId>
             <version>${project.version}</version>
         </dependency>
         
+        <!-- TRIANGLE -->
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-triangle-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-widget</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-correction</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-triangle-data</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-triangle-smoothing-core</artifactId>

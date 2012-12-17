@@ -45,8 +45,8 @@
     <tc-list>
   <tc-id id="ProjectExplorerTopComponent"/>
   <tc-id id="DatabaseExplorerTopComponent"/>
-  <tc-id id="NavigatorExplorerTopComponent"/>
   <tc-id id="LayerExplorerTopComponent"/>
+  <tc-id id="NavigatorExplorerTopComponent"/>
   <tc-id id="LookupExplorerTopComponent"/>
     </tc-list>
 </windowmanager>

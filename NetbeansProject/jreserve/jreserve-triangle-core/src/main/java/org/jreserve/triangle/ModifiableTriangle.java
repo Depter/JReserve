@@ -14,4 +14,6 @@ public interface ModifiableTriangle {
     public int getMaxModificationOrder();
     
     public void addModification(ModifiedTriangularData modification);
+    
+    public TriangularData getData();
 }

@@ -9,11 +9,6 @@
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
-            <file name="org-jreserve-triangle-entities-TriangleCorrection.entity">
-                <!--org.jreserve.triangle.entities.TriangleCorrection-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleCorrection"/>
-                <attr boolvalue="false" name="generatedId"/>
-            </file>
             <file name="org-jreserve-triangle-entities-TriangleComment.entity">
                 <!--org.jreserve.triangle.entities.TriangleComment-->
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleComment"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.util.chart">
-    <module_version install_time="1355434901147" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1355755201373" last="true" origin="installer" specification_version="1.0">
         <file crc="4188336815" name="config/Modules/org-jreserve-jreserve-util-chart.xml"/>
-        <file crc="3911722012" name="modules/org-jreserve-jreserve-util-chart.jar"/>
+        <file crc="3482979275" name="modules/org-jreserve-jreserve-util-chart.jar"/>
     </module_version>
 </module>

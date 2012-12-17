@@ -7,6 +7,12 @@ package org.jreserve.triangle.widget;
  */
 public interface WidgetEditor {
 
-    public boolean setCellValue(int row, int column, double value);
+    public boolean isCellEditable(int accident, int development);
     
+    public boolean setCellValue(int accident, int development, double value);
+    
+    public static @interface Registration {
+        public String category();
+        public int position() default Integer.MAX_VALUE;
+    }
 }

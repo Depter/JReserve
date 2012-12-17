@@ -21,15 +21,13 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.text.DefaultEditorKit;
 import org.jreserve.localesettings.util.DecimalSpinner;
+import org.jreserve.project.system.ProjectElement;
 import org.jreserve.resources.ToolBarButton;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.widget.model.WidgetTableModel;
 import org.jreserve.triangle.widget.model.util.WidgetTableModelImpl;
 import org.jreserve.triangle.widget.model.util.WidgetTableModelRegistry;
-import org.jreserve.triangle.widget.util.DoubleEditor;
-import org.jreserve.triangle.widget.util.HeaderRenderer;
-import org.jreserve.triangle.widget.util.TextExtractor;
-import org.jreserve.triangle.widget.util.TriangleWidgetValueRenderer;
+import org.jreserve.triangle.widget.util.*;
 import org.openide.actions.CopyAction;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -89,6 +87,14 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
         lookup = new ProxyLookup(Lookups.fixed(this, getActionMap()));
         super.addComponentListener(new ResizeListener());
         registerCopyAction();
+        setPreferredSize(PREFFERED_SIZE);    
+    }
+    
+    public TriangleWidget(ProjectElement element) {
+        initComponent();
+        lookup = new ProxyLookup(Lookups.fixed(this, getActionMap(), element));
+        super.addComponentListener(new ResizeListener());
+        registerCopyAction();
         setPreferredSize(PREFFERED_SIZE);
     }
     
@@ -98,11 +104,11 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
             ((WidgetTableModel)model).setData(data);
     }
     
-    public void setWidgetEditor(WidgetEditor editor) {
-        this.widgetEditor = editor;
+    public void setWidgetEditorFolder(String path) {
+        this.widgetEditor = WidgetEditorLoader.loadEditor(path);
         Object model = table.getModel();
         if(model instanceof WidgetTableModel)
-            ((WidgetTableModel)model).setWidgetEditor(editor);
+            ((WidgetTableModel)model).setWidgetEditor(widgetEditor);
     }
     
     public void setDecimalDigits(int digits) {
@@ -223,7 +229,8 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
         table.setFillsViewportHeight(false);
         table.setIntercellSpacing(INTERNAL_SPACING);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
+        table.setCellSelectionEnabled(true);
+                
         scroll = new JScrollPane(table);
         scroll.setBorder(BorderFactory.createEmptyBorder());
         return scroll;

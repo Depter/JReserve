@@ -101,10 +101,15 @@ public class AbstractWidgetTableModelTest {
         public String getRowName(int row) {
             return "";
         }
-        
+
         @Override
-        public Double getData(int row, int column) {
-            return null;
+        protected int getAccident(int row, int column) {
+            return row;
+        }
+
+        @Override
+        protected int getDevelopment(int row, int column) {
+            return column;
         }
     }
 

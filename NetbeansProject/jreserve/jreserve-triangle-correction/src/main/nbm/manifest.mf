@@ -1,2 +1,3 @@
 Manifest-Version: 1.0
+OpenIDE-Module-Layer: org/jreserve/triangle/correction/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/triangle/correction/Bundle.properties
