@@ -43,8 +43,8 @@ public class RootElement extends ProjectElement {
         return DEFAULT;
     }
     
-    public static List<ProjectElementFactory> getFactories(Object value) {
-        return FactoryUtil.getInterestedFactories(value);
+    public static List<ProjectElementFactory> getFactories(ProjectElement element) {
+        return FactoryUtil.getInterestedFactories(element);
     }
     
     private Result<org.hibernate.SessionFactory> puResult;
@@ -152,8 +152,8 @@ public class RootElement extends ProjectElement {
 
         private List<ProjectElement> loadElements() {
             List<ProjectElement> result = new ArrayList<ProjectElement>();
-            for(ProjectElementFactory factory : FactoryUtil.getInterestedFactories(VALUE))
-                result.addAll(factory.createChildren(VALUE));
+            for(ProjectElementFactory factory : FactoryUtil.getInterestedFactories(null))
+                result.addAll(factory.createChildren(null));
             return result;
         }
         

@@ -137,6 +137,7 @@
                     <publicPackages>
                         <publicPackage>org.jreserve.triangle.widget</publicPackage>
                         <publicPackage>org.jreserve.triangle.widget.charts</publicPackage>
+                        <publicPackage>org.jreserve.triangle.widget.model</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

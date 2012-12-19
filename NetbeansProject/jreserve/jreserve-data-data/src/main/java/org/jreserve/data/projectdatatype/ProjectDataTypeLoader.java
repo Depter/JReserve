@@ -24,15 +24,16 @@ public class ProjectDataTypeLoader extends AbstractProjectElementFactory<Project
         "order by t.dbId";
     
     @Override
-    public boolean isInterested(Object value) {
-        return (value instanceof ClaimType);
+    public boolean isInterested(ProjectElement parent) {
+        return parent != null &&
+              (parent.getValue() instanceof ClaimType);
     }
 
     @Override
-    protected List<ProjectDataType> getChildValues(Object value) {
+    protected List<ProjectDataType> getChildValues(ProjectElement parent) {
         Session session = SessionFactory.getCurrentSession();
         Query query = session.createQuery(SQL);
-        query.setParameter("claimTypeId", ((ClaimType) value).getId());
+        query.setParameter("claimTypeId", ((ClaimType) parent.getValue()).getId());
         return query.list();
     }
 

@@ -1,6 +1,8 @@
 package org.jreserve.triangle.widget.model;
 
+import java.text.DateFormat;
 import java.util.Date;
+import org.jreserve.localesettings.util.LocaleSettings;
 import org.jreserve.triangle.TriangularData;
 import org.openide.util.NbBundle.Messages;
 
@@ -14,6 +16,8 @@ import org.openide.util.NbBundle.Messages;
 })
 public class CalendarPeriodWidgetTableModel extends AbstractWidgetTableModel {
     
+    private DateFormat df = LocaleSettings.getDateFormat();
+    
     public CalendarPeriodWidgetTableModel() {
     }
     
@@ -23,18 +27,16 @@ public class CalendarPeriodWidgetTableModel extends AbstractWidgetTableModel {
 
     @Override
     protected String getRowName(int row) {
-        return parseDate(data.getAccidentName(row));
+        Date date = data.getAccidentName(row);
+        return df.format(date);
     }
 
     @Override
     public String getColumnName(int column) {
         if(column == 0)
             return "";
-        return parseDate(data.getDevelopmentName(0, column-1));
-    }
-    
-    private String parseDate(Date date) {
-        return date.toString();
+        Date date = data.getDevelopmentName(0, column-1);
+        return df.format(date);
     }
     
     @Override

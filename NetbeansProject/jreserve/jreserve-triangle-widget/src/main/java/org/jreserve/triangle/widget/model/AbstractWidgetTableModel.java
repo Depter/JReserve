@@ -3,6 +3,7 @@ package org.jreserve.triangle.widget.model;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
+import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.widget.WidgetEditor;
 
@@ -17,6 +18,7 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     
     protected boolean cummulated;
     protected WidgetEditor editor;
+    private double[][] values;
     
     public AbstractWidgetTableModel() {
     }
@@ -37,6 +39,13 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
         this.data = data;
         if(this.data != null)
             this.data.addChangeListener(this);
+        initValues();
+    }
+    
+    private void initValues() {
+        this.values = data==null? null : data.getData();
+        if(values != null && cummulated)
+            TriangleUtil.cummulate(values);
     }
     
     @Override
@@ -46,7 +55,10 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     
     @Override
     public void setCummulated(boolean cummulated) {
+        if(this.cummulated == cummulated)
+            return;
         this.cummulated = cummulated;
+        initValues();
         fireTableDataChanged();
     }
     
@@ -147,19 +159,30 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     }
     
     private Double getData(int accident, int development) {
-        if(accident < 0 || accident >= data.getAccidentCount())
-            return null;
-        if(development < 0 || development >= data.getDevelopmentCount(accident))
-            return null;
-        return data.getValue(accident, development);
+        if(isValidCoordiantes(accident, development))
+            return data.getValue(accident, development);
+        return null;
+    }
+    
+    private boolean isValidCoordiantes(int accident, int development) {
+        return accident >= 0 && development >= 0 &&
+               accident < data.getAccidentCount() &&
+               development < data.getDevelopmentCount(accident);
     }
 
     @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+    public void setValueAt(Object value, int row, int column) {
+        if(editor == null) 
+            return;
+        int accident = getAccident(row, column-1);
+        int development = getDevelopment(row, column-1);
+        if(isValidCoordiantes(accident, development))
+            editor.setCellValue(this, accident, development, (Double) value);
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
+        initValues();
         fireTableStructureChanged();
     }
 }

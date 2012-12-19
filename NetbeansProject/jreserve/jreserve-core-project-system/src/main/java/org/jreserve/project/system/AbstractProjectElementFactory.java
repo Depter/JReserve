@@ -24,7 +24,7 @@ public abstract class AbstractProjectElementFactory<T> implements ProjectElement
     private final static Logger logger = Logger.getLogger(AbstractProjectElementFactory.class.getName());
     
     @Override
-    public List<ProjectElement> createChildren(Object value) {
+    public List<ProjectElement> createChildren(ProjectElement value) {
         List<ProjectElement> result = new ArrayList<ProjectElement>();
         for(T child : getChildValues(value))
             result.add(getChildElement(child));
@@ -34,7 +34,7 @@ public abstract class AbstractProjectElementFactory<T> implements ProjectElement
     /**
      * Loads the child values for the given object (ie. claim types for a given lob).
      */
-    protected abstract List<T> getChildValues(Object value);
+    protected abstract List<T> getChildValues(ProjectElement value);
 
     /**
      * Creates an element for each value created by {@link #getChildValues(java.lang.Object, org.jreserve.persistence.Session) getChildValues()}.
@@ -47,7 +47,7 @@ public abstract class AbstractProjectElementFactory<T> implements ProjectElement
     protected ProjectElement getChildElement(T value) {
         logger.log(Level.FINE, "Loaded project element: {0}", value);
         ProjectElement element = createProjectElement(value);
-        for(ProjectElement child : getChildren(value))
+        for(ProjectElement child : getChildren(element))
             element.addChild(child);
         return element;
     }
@@ -62,10 +62,10 @@ public abstract class AbstractProjectElementFactory<T> implements ProjectElement
         return new ProjectElement(value);
     }
     
-    private List<ProjectElement> getChildren(T value) {
+    private List<ProjectElement> getChildren(ProjectElement element) {
         List<ProjectElement> children = new ArrayList<ProjectElement>();
-        for(ProjectElementFactory factory : RootElement.getFactories(value))
-            children.addAll(factory.createChildren(value));
+        for(ProjectElementFactory factory : RootElement.getFactories(element))
+            children.addAll(factory.createChildren(element));
         return children;
     }
 }

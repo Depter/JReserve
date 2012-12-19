@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.util.audit">
-    <module_version install_time="1355777686230" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1355951247540" last="true" origin="installer" specification_version="1.0">
         <file crc="3188965938" name="config/Modules/org-jreserve-jreserve-util-audit.xml"/>
-        <file crc="3081345948" name="modules/org-jreserve-jreserve-util-audit.jar"/>
+        <file crc="2449106122" name="modules/org-jreserve-jreserve-util-audit.jar"/>
     </module_version>
 </module>

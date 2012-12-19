@@ -9,7 +9,6 @@ import org.jreserve.project.entities.LoB;
 import org.jreserve.project.system.AbstractProjectElementFactory;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.ProjectElementFactory;
-import org.jreserve.project.system.RootElement;
 
 /**
  *
@@ -29,12 +28,12 @@ public class LoBLoader extends AbstractProjectElementFactory<LoB> {
     };
 
     @Override
-    public boolean isInterested(Object value) {
-        return (value instanceof RootElement.RootValue);
+    public boolean isInterested(ProjectElement parent) {
+        return parent == null;
     }
 
     @Override
-    protected List<LoB> getChildValues(Object value) {
+    protected List<LoB> getChildValues(ProjectElement parent) {
         List<LoB> lobs = loadLobs();
         Collections.sort(lobs, LOB_COMPARATOR);
         return lobs;

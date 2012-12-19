@@ -14,14 +14,15 @@ import org.jreserve.project.system.ProjectElement;
 public abstract class AbstractProjectElementContainerLoader extends AbstractProjectElementFactory<ProjectElementContainer> {
     
     @Override
-    public boolean isInterested(Object value) {
-        return (value instanceof Project);
+    public boolean isInterested(ProjectElement parent) {
+        return parent != null &&
+              (parent.getValue() instanceof Project);
     }
 
     @Override
-    protected List<ProjectElementContainer> getChildValues(Object value) {
+    protected List<ProjectElementContainer> getChildValues(ProjectElement parent) {
         List<ProjectElementContainer> result = new ArrayList<ProjectElementContainer>(1);
-        Project project = (Project) value;
+        Project project = (Project) parent.getValue();
         result.add(getFactory().createContainer(project));
         return result;
     }

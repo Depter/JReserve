@@ -11,7 +11,7 @@ public interface WidgetEditor {
 
     public boolean isCellEditable(int accident, int development);
     
-    public boolean setCellValue(WidgetTableModel model, int accident, int development, double value);
+    public boolean setCellValue(WidgetTableModel model, int accident, int development, Double value);
     
     public static @interface Registration {
         public String category();

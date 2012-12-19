@@ -31,7 +31,7 @@ public interface TriangularData {
     public String getLayerTypeId(int accident, int development);
     
     public static TriangularData EMPTY = new TriangularData() {
-
+        
         @Override
         public int getAccidentCount() {
             return 0;
@@ -56,7 +56,7 @@ public interface TriangularData {
         public Date getDevelopmentName(int accident, int development) {
             return null;
         }
-
+        
         @Override
         public double getValue(int accident, int development) {
             return 0d;

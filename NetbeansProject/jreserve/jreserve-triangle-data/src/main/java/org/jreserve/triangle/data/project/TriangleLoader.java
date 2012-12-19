@@ -34,15 +34,21 @@ public class TriangleLoader extends AbstractProjectElementFactory<Triangle> {
     };
     
     @Override
-    public boolean isInterested(Object value) {
+    public boolean isInterested(ProjectElement parent) {
+        if(parent == null)
+            return false;
+        return isInterested(parent.getValue());
+    }
+    
+    private boolean isInterested(Object value) {
         if(value instanceof ProjectElementContainer)
             return ((ProjectElementContainer)value).getPosition() == ProjectDataContainerFactoy.POSITION;
         return false;
     }
 
     @Override
-    protected List<Triangle> getChildValues(Object value) {
-        Project project = ((ProjectElementContainer) value).getProject();
+    protected List<Triangle> getChildValues(ProjectElement parent) {
+        Project project = ((ProjectElementContainer) parent.getValue()).getProject();
         List<Triangle> triangles = getTriangles(project);
         Collections.sort(triangles, COMPARATOR);
         return triangles;

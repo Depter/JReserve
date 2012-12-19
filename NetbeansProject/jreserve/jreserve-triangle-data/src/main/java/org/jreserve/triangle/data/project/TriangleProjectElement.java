@@ -3,14 +3,19 @@ package org.jreserve.triangle.data.project;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Session;
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
+import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
-import org.jreserve.triangle.*;
+import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.ModifiedTriangularData;
+import org.jreserve.triangle.TriangleBundle;
+import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.data.editor.Editor;
 import org.jreserve.triangle.data.util.AsynchronousTriangleInput;
 import org.jreserve.triangle.entities.Triangle;
@@ -66,14 +71,14 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
         super.setProperty(NAME_PROPERTY, triangle.getName());
         super.setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         super.setProperty(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
-        super.setProperty(MODIFICATION_PROPERTY, new ArrayList<TriangleModification>(0));
+        super.setProperty(MODIFICATION_PROPERTY, new ArrayList<ModifiedTriangularData>(0));
         //super.setProperty(Correctable.CORRECTION_PROPERTY, triangle.getCorrections());
         //super.setProperty(Commentable.COMMENT_PROPERTY, triangle.getComments());
         //super.setProperty(Smoothable.SMOOTHING_PROPERTY, triangle.getSmoothings());
     }
     
     private void initLookup() {
-        super.addToLookup(new PersistentDeletable(this));
+        super.addToLookup(new TriangleDeletable());
         super.addToLookup(new TriangleOpenable());
         super.addToLookup(new RenameableProjectElement(this));
         super.addToLookup(new AuditableProjectElement(this));
@@ -81,7 +86,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
 //        super.addToLookup(new AbstractSmoothable<Triangle>(this, getValue()));
 //        super.addToLookup(new AbstractCommentable<Triangle>(this, getValue()));
 //        super.addToLookup(new AbstractCorrectable<Triangle>(this, getValue()));
-//        new TriangleSavable();
+        new TriangleSavable();
     }
 
     @Override
@@ -116,12 +121,8 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
             data.setModifications(mods);
             value = new ArrayList<ModifiedTriangularData>(mods);
         }
-//        else if(Correctable.CORRECTION_PROPERTY.equals(property))
-//            getValue().setCorrections((List<TriangleCorrection>) value);
 //        else if(Commentable.COMMENT_PROPERTY.equals(property))
 //            getValue().setComments((List<TriangleComment>) value);
-//        else if(Smoothable.SMOOTHING_PROPERTY.equals(property))
-//            getValue().setSmoothings((List<Smoothing>) value);
         super.setProperty(property, value);
     }
     
@@ -149,8 +150,9 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
         return order;
     }
     
-    private List<ModifiedTriangularData> getModifications() {
-        return (List<ModifiedTriangularData>) getProperty(properties);
+    @Override
+    public List<ModifiedTriangularData> getModifications() {
+        return (List<ModifiedTriangularData>) getProperty(MODIFICATION_PROPERTY);
     }
 
     @Override
@@ -176,49 +178,63 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
                 return true;
         return false;
     }
+
+    @Override
+    public void removeModification(ModifiedTriangularData modification) {
+        List<ModifiedTriangularData> mods = getModifications();
+        mods.remove(modification);
+        setProperty(MODIFICATION_PROPERTY, mods);
+    }
     
-//    private class TriangleSavable extends PersistentSavable<Triangle> {
-//        
-//        public TriangleSavable() {
-//            super(TriangleProjectElement.this);
-//        }
-//
-//        @Override
-//        protected void initOriginalProperties() {
-//            Triangle triangle = element.getValue();
-//            originalProperties.put(NAME_PROPERTY, triangle.getName());
-//            originalProperties.put(DESCRIPTION_PROPERTY, triangle.getDescription());
-//            originalProperties.put(GEOMETRY_PROPERTY, triangle.getGeometry());
-//            originalProperties.put(Correctable.CORRECTION_PROPERTY, triangle.getCorrections());
-//            originalProperties.put(Commentable.COMMENT_PROPERTY, triangle.getComments());
-//            originalProperties.put(Smoothable.SMOOTHING_PROPERTY, triangle.getSmoothings());
-//        }
-//        
-//        @Override
-//        protected boolean isChanged(String property, Object o1, Object o2) {
-//            if(GEOMETRY_PROPERTY.equals(property)) {
-//                return isChanged((TriangleGeometry) o1, (TriangleGeometry) o2);
-//            } else {
-//                return super.isChanged(property, o1, o2);
-//            }
-//        }
-//        
-//        private boolean isChanged(TriangleGeometry g1, TriangleGeometry g2) {
-//            if(g1==null) return g2!=null;
-//            if(g2==null) return true;
-//            return !g1.isEqualGeometry(g2);
-//        }
-//
-//        @Override
-//        protected void saveEntity() {
-//            super.saveEntity();
-//            DeleteUtil deleter = new DeleteUtil();
-//            addEntities(deleter, Smoothing.class, Smoothable.SMOOTHING_PROPERTY);
-//            addEntities(deleter, TriangleComment.class, Commentable.COMMENT_PROPERTY);
-//            addEntities(deleter, TriangleCorrection.class, Correctable.CORRECTION_PROPERTY);
-//            deleter.delete(session);
-//        }
-//    }
+    private class TriangleDeletable extends PersistentDeletable<Triangle> {
+        
+        private TriangleDeletable() {
+            super(TriangleProjectElement.this);
+        }
+    
+        @Override
+        protected void cleanUpAfterEntity(Session session) {
+            for(ModifiedTriangularData mod : getModifications())
+                mod.delete(session);
+        }
+    }
+    
+    private class TriangleSavable extends PersistentSavable<Triangle> {
+        
+        private TriangleSavable() {
+            super(TriangleProjectElement.this);
+        }
+
+        @Override
+        protected void initOriginalProperties() {
+            Triangle triangle = element.getValue();
+            originalProperties.put(NAME_PROPERTY, triangle.getName());
+            originalProperties.put(DESCRIPTION_PROPERTY, triangle.getDescription());
+            originalProperties.put(MODIFICATION_PROPERTY, getModifications());
+        }
+        
+        @Override
+        protected boolean isChanged(String property, Object o1, Object o2) {
+            if(Triangle.GEOMETRY_PROPERTY.equals(property)) {
+                return isChanged((TriangleGeometry) o1, (TriangleGeometry) o2);
+            } else {
+                return super.isChanged(property, o1, o2);
+            }
+        }
+        
+        private boolean isChanged(TriangleGeometry g1, TriangleGeometry g2) {
+            if(g1==null) return g2!=null;
+            if(g2==null) return true;
+            return !g1.isEqualGeometry(g2);
+        }
+
+        @Override
+        protected void saveEntity() {
+            super.saveEntity();
+            for(ModifiedTriangularData mod : getModifications())
+                mod.save(session);
+        }
+    }
     
     private class TriangleOpenable extends PersistentOpenable {
         @Override

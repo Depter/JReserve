@@ -116,6 +116,7 @@ public class AbstractWidgetTableModelTest {
     private static class TriangularDataImpl implements TriangularData {
 
         private double[][] data;
+        private boolean cummulated;
         
         @Override
         public int getAccidentCount() {
@@ -166,6 +167,5 @@ public class AbstractWidgetTableModelTest {
         public String getLayerTypeId(int accident, int development) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-    
     }
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.triangle.TriangularData;
 
 /**
@@ -21,7 +22,7 @@ public class TriangleInput implements TriangularData {
     private final Date[] accidentDates;
     private final Date[][] developmentDates;
     private final double[][] values;
-
+    
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
     TriangleInput(Date[] accidentDates, Date[][] developmentDates, double[][] values) {

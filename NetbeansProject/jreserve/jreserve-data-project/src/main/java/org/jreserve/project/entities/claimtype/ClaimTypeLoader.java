@@ -27,13 +27,14 @@ public class ClaimTypeLoader extends AbstractProjectElementFactory<ClaimType> {
     };
 
     @Override
-    public boolean isInterested(Object value) {
-        return (value instanceof LoB);
+    public boolean isInterested(ProjectElement parent) {
+        return parent != null &&
+               (parent.getValue() instanceof LoB);
     }
 
     @Override
-    protected List<ClaimType> getChildValues(Object value) {
-        List<ClaimType> claimTypes = ((LoB)value).getClaimTypes();
+    protected List<ClaimType> getChildValues(ProjectElement parent) {
+        List<ClaimType> claimTypes = ((LoB)parent.getValue()).getClaimTypes();
         Collections.sort(claimTypes, COMPARATOR);
         return claimTypes;
     }

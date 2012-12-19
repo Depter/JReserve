@@ -123,7 +123,7 @@ public class AsynchronousTriangleInput implements TriangularData {
     }
     
     private void buildData() {
-        this.data = new TriangleInputFactory(geometry).buildTriangle(values);
+        data = new TriangleInputFactory(geometry).buildTriangle(values);
         fireChange();
     }
     

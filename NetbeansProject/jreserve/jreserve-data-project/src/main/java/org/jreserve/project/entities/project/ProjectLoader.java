@@ -26,13 +26,14 @@ public class ProjectLoader extends AbstractProjectElementFactory<Project> {
     };
 
     @Override
-    public boolean isInterested(Object value) {
-        return (value instanceof ClaimType);
+    public boolean isInterested(org.jreserve.project.system.ProjectElement parent) {
+        return parent != null &&
+              (parent.getValue() instanceof ClaimType);
     }
 
     @Override
-    protected List<Project> getChildValues(Object value) {
-        List<Project> projects = ((ClaimType)value).getProjects();
+    protected List<Project> getChildValues(org.jreserve.project.system.ProjectElement parent) {
+        List<Project> projects = ((ClaimType)parent.getValue()).getProjects();
         Collections.sort(projects, COMPARATOR);
         return projects;
     }

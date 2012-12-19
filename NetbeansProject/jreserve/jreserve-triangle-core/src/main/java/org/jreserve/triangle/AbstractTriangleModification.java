@@ -45,7 +45,7 @@ public abstract class AbstractTriangleModification implements ModifiedTriangular
     public Date getDevelopmentName(int accident, int development) {
         return source.getDevelopmentName(accident, development);
     }
-
+    
     @Override
     public double[][] getData() {
         int accidents = getAccidentCount();

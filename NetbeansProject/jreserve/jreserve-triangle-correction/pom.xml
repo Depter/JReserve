@@ -62,6 +62,12 @@
         
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-project-system</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>jreserve-util-audit</artifactId>
             <version>${project.version}</version>
         </dependency>

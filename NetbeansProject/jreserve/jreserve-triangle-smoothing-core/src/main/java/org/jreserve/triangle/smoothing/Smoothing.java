@@ -11,7 +11,6 @@ import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.IdGenerator;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.rutil.RFunction;
-import org.jreserve.triangle.TriangleModification;
 
 /**
  *
@@ -23,7 +22,7 @@ import org.jreserve.triangle.TriangleModification;
 @Entity
 @Table(name="SMOOTHING", schema="JRESERVE")
 @Inheritance(strategy= InheritanceType.JOINED)
-public abstract class Smoothing implements PersistentObject, TriangleModification {
+public abstract class Smoothing implements PersistentObject {
 
     private final static int NAME_LENGTH = 64;
     
@@ -71,7 +70,6 @@ public abstract class Smoothing implements PersistentObject, TriangleModificatio
         this.order = order;
     }
     
-    @Override
     public int getOrder() {
         return order;
     }
@@ -85,7 +83,6 @@ public abstract class Smoothing implements PersistentObject, TriangleModificatio
         this.version = version;
     }
     
-    @Override
     public String getOwnerId() {
         return ownerId;
     }    

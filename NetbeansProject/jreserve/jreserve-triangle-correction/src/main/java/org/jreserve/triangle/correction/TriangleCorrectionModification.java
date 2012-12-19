@@ -1,5 +1,6 @@
 package org.jreserve.triangle.correction;
 
+import org.hibernate.Session;
 import org.jreserve.triangle.AbstractTriangleModification;
 import org.jreserve.triangle.correction.entities.TriangleCorrection;
 
@@ -8,9 +9,13 @@ import org.jreserve.triangle.correction.entities.TriangleCorrection;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleCorrectionModification extends AbstractTriangleModification {
+class TriangleCorrectionModification extends AbstractTriangleModification {
 
     private TriangleCorrection correction;
+    
+    TriangleCorrectionModification(TriangleCorrection correction) {
+        this.correction = correction;
+    }
     
     @Override
     public int getOrder() {
@@ -19,23 +24,21 @@ public class TriangleCorrectionModification extends AbstractTriangleModification
 
     @Override
     public double getValue(int accident, int development) {
-        double base = source.getValue(accident, development);
         if(myCell(accident, development))
             return correction.getCorrigatedValue();
-        return base;
+        return source.getValue(accident, development);
     }
     
-    private boolean myCell(int accident, int development) {
+    public boolean myCell(int accident, int development) {
         return accident == correction.getAccident() &&
                development == correction.getDevelopment();
     }
 
     @Override
     public String getLayerTypeId(int accident, int development) {
-        String sourceId = source.getLayerTypeId(accident, development);
         if(myCell(accident, development))
             return TriangleCorrection.LAYER_ID;
-        return sourceId;
+        return source.getLayerTypeId(accident, development);
     }
     
     @Override
@@ -44,5 +47,21 @@ public class TriangleCorrectionModification extends AbstractTriangleModification
                 getOrder(), 
                 correction.getAccident(), correction.getDevelopment(),
                 correction.getCorrigatedValue());
+    }
+
+    @Override
+    public String getOwnerId() {
+        return correction.getOwnerId();
+    }
+
+    @Override
+    public void save(Session session) {
+        session.saveOrUpdate(correction);
+    }
+
+    @Override
+    public void delete(Session session) {
+        Object contained = session.merge(correction);
+        session.delete(contained);
     }
 }

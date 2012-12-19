@@ -57,9 +57,9 @@ public interface ProjectElementFactory {
     
     /**
      * Returns true if the factory wishes to provide child elements
-     * to the <i>value</i>.
+     * to the given project element.
      */
-    public boolean isInterested(Object value);
+    public boolean isInterested(ProjectElement parent);
     
     /**
      * Creates zero or more child elements for the given value. The caller should
@@ -73,11 +73,10 @@ public interface ProjectElementFactory {
      * will be thrown.
      * </p>
      * 
-     * @param value The value the children are created for.
-     * @param session The session, to load the children.
+     * @param parent The value the children are created for.
      * @return List of children for the value.
      */
-    public List<ProjectElement> createChildren(Object value);
+    public List<ProjectElement> createChildren(ProjectElement parent);
 
     /**
      * Registers a {@link ProjectElementFactory ProjectElementFactory} in the 

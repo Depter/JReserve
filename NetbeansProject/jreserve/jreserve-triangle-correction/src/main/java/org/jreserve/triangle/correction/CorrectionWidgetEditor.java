@@ -1,7 +1,11 @@
 package org.jreserve.triangle.correction;
 
 import java.util.Collection;
+import java.util.List;
 import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.ModifiedTriangularData;
+import org.jreserve.triangle.TriangleUtil;
+import org.jreserve.triangle.correction.entities.TriangleCorrection;
 import org.jreserve.triangle.widget.WidgetEditor;
 import org.jreserve.triangle.widget.model.WidgetTableModel;
 import org.openide.util.Lookup.Result;
@@ -26,21 +30,64 @@ public class CorrectionWidgetEditor implements WidgetEditor {
     }
     
     @Override
-    public boolean setCellValue(WidgetTableModel model, int row, int column, double value) {
-        if(Math.abs(value) < EPSILON)
-            deleteCorrection(row, column);
+    public boolean setCellValue(WidgetTableModel model, int accident, int development, Double value) {
+        Double originalValue = (Double) model.getValueAt(accident, development+1);
+        if(value==null || value.equals(originalValue))
+            deleteCorrection(accident, development);
         else
-            addCorrection(row, column, value);
+            addCorrection(model, accident, development, value);
         return true;
     }
     
-    private void deleteCorrection(int row, int column) {
+    private void deleteCorrection(int accident, int development) {
+        ModifiedTriangularData mod = getCorrectionAt(accident, development);
+        if(mod != null)
+            triangle.removeModification(mod);
     }
     
-    private void addCorrection(int row, int column, double value) {
-        
+    private ModifiedTriangularData getCorrectionAt(int accident, int development) {
+        for(ModifiedTriangularData mod : triangle.getModifications())
+            if(isMyCorrection(mod, accident, development))
+                return mod;
+        return null;
+    }
+    
+    private boolean isMyCorrection(ModifiedTriangularData mod, int accident, int development) {
+        if(!(mod instanceof TriangleCorrectionModification))
+            return false;
+        TriangleCorrectionModification corr = (TriangleCorrectionModification) mod;
+        return corr.myCell(accident, development);
+    }
+    
+    private void addCorrection(WidgetTableModel model, int accident, int development, double value) {
+        deleteCorrection(accident, development);
+        TriangleCorrection correction = createCorrection(model, accident, development, value);
+        TriangleCorrectionModification modification = new TriangleCorrectionModification(correction);
+        triangle.addModification(modification);
+    }
+    
+    private TriangleCorrection createCorrection(WidgetTableModel model, int accident, int development, double value) {
+        value = getCorrigatedValue(model, accident, development, value);
+        int order = triangle.getMaxModificationOrder() + 1;
+        String ownerId = triangle.getOwner().getId();
+        return new TriangleCorrection(ownerId, order, accident, development, value);
     }
 
+    private double getCorrigatedValue(WidgetTableModel model, int accident, int development, double value) {
+        if(development > 0 && model.isCummulated()) {
+            double prev = getPreviousModelValue(model, accident, development);
+            if(!Double.isNaN(prev))
+                value -= prev;
+        }
+        return value;
+    }
+    
+    private double getPreviousModelValue(WidgetTableModel model, int accident, int development) {
+        double[][] values = model.getData().getData();
+        TriangleUtil.cummulate(values);
+        return values[accident][development-1];
+    }
+    
     @Override
     public boolean isCellEditable(int accident, int development) {
         return triangle != null;

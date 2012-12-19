@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.ProjectElementFactory;
 import static org.jreserve.project.system.util.ProjectElementFactoryRegistrationProcessor.ENTITY_DIRECTORY;
 import static org.jreserve.project.system.util.ProjectElementFactoryRegistrationProcessor.PRIORITY;
@@ -71,11 +72,11 @@ public class FactoryUtil {
         } 
     }
     
-    public static synchronized List<ProjectElementFactory> getInterestedFactories(Object value) {
+    public static synchronized List<ProjectElementFactory> getInterestedFactories(ProjectElement element) {
         loadFactories();
         List<ProjectElementFactory> result = new ArrayList<ProjectElementFactory>(factories.size());
         for(ProjectElementFactory factory : factories)
-            if(factory.isInterested(value))
+            if(factory.isInterested(element))
                 result.add(factory);
         return result;
     }

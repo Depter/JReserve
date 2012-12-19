@@ -37,7 +37,7 @@ public class TriangleCorrection extends AbstractPersistentObject {
     protected TriangleCorrection() {
     }
     
-    public TriangleCorrection(String ownerId, int order, int accident, int development, int corrigatedValue) {
+    public TriangleCorrection(String ownerId, int order, int accident, int development, double corrigatedValue) {
         this.ownerId = ownerId;
         this.order = order;
         this.accident = accident;
@@ -59,5 +59,9 @@ public class TriangleCorrection extends AbstractPersistentObject {
     
     public double getCorrigatedValue() {
         return corrigatedValue;
+    }
+    
+    public String getOwnerId() {
+        return ownerId;
     }
 }
