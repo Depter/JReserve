@@ -39,7 +39,8 @@ public class AuditTable extends javax.swing.JPanel {
         String format = LocaleSettings.getDateFormatString();
         format += " hh:mm:ss";
         Locale locale = LocaleSettings.getLocale();
-        df = new SimpleDateFormat(format, locale);
+        df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
+        //df = new SimpleDateFormat(format);
     }
     
     public void setAuditable(Auditable auditable) {

@@ -2,7 +2,6 @@ package org.jreserve.data.projectdatatype;
 
 import java.util.List;
 import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.jreserve.audit.AbstractAuditor;
 import org.jreserve.audit.Auditor;

@@ -1,5 +1,12 @@
 package org.jreserve.triangle;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.hibernate.Session;
+import org.jreserve.persistence.PersistentObject;
+import org.openide.util.Lookup;
+
 /**
  *
  * @author Peter Decsi
@@ -32,5 +39,29 @@ public class TriangleUtil {
             if(!Double.isNaN(prev) && !Double.isNaN(current))
                 row[i] = current - prev;
         }
+    }
+    
+    public static List<ModifiedTriangularData> loadData(PersistentObject owner) {
+        List<ModifiedTriangularData> result = new ArrayList<ModifiedTriangularData>();
+        for(ModificationLoader loader : Lookup.getDefault().lookupAll(ModificationLoader.class))
+            result.addAll(loader.loadModifications(owner));
+        Collections.sort(result);
+        return result;
+    }
+    
+    public static void save(Session session, List<ModifiedTriangularData> original, List<ModifiedTriangularData> current) {
+        deleteOld(session, original, current);
+        saveExisting(session, current);
+    }
+    
+    private static void deleteOld(Session session, List<ModifiedTriangularData> original, List<ModifiedTriangularData> current) {
+        for(ModifiedTriangularData mod : original)
+            if(!current.contains(mod))
+                mod.delete(session);
+    }
+    
+    private static void saveExisting(Session session, List<ModifiedTriangularData> currents) {
+        for(ModifiedTriangularData mod : currents)
+            mod.save(session);
     }
 }

@@ -12,10 +12,7 @@ import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
-import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.ModifiedTriangularData;
-import org.jreserve.triangle.TriangleBundle;
-import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.*;
 import org.jreserve.triangle.data.editor.Editor;
 import org.jreserve.triangle.data.util.AsynchronousTriangleInput;
 import org.jreserve.triangle.entities.Triangle;
@@ -71,10 +68,16 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
         super.setProperty(NAME_PROPERTY, triangle.getName());
         super.setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         super.setProperty(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
-        super.setProperty(MODIFICATION_PROPERTY, new ArrayList<ModifiedTriangularData>(0));
+        initModifications();
         //super.setProperty(Correctable.CORRECTION_PROPERTY, triangle.getCorrections());
         //super.setProperty(Commentable.COMMENT_PROPERTY, triangle.getComments());
         //super.setProperty(Smoothable.SMOOTHING_PROPERTY, triangle.getSmoothings());
+    }
+    
+    private void initModifications() {
+        List<ModifiedTriangularData> mods = TriangleUtil.loadData(getValue());
+        super.setProperty(MODIFICATION_PROPERTY, mods);
+        data.setModifications(mods);
     }
     
     private void initLookup() {
@@ -231,8 +234,12 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
         @Override
         protected void saveEntity() {
             super.saveEntity();
-            for(ModifiedTriangularData mod : getModifications())
-                mod.save(session);
+            TriangleUtil.save(session, getOriginalModifications(), getModifications());
+        }
+        
+        private List<ModifiedTriangularData> getOriginalModifications() {
+            Object mods = originalProperties.get(MODIFICATION_PROPERTY);
+            return (List<ModifiedTriangularData>) mods;
         }
     }
     
