@@ -213,6 +213,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
             Triangle triangle = element.getValue();
             originalProperties.put(NAME_PROPERTY, triangle.getName());
             originalProperties.put(DESCRIPTION_PROPERTY, triangle.getDescription());
+            originalProperties.put(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
             originalProperties.put(MODIFICATION_PROPERTY, getModifications());
         }
         

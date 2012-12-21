@@ -125,6 +125,12 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-comment</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -136,6 +142,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.triangle.widget</publicPackage>
+                        <publicPackage>org.jreserve.triangle.widget.actions</publicPackage>
                         <publicPackage>org.jreserve.triangle.widget.charts</publicPackage>
                         <publicPackage>org.jreserve.triangle.widget.model</publicPackage>
                     </publicPackages>

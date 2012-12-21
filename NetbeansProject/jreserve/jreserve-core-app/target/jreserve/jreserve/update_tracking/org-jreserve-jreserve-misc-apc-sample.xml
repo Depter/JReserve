@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.misc.apc.sample">
-    <module_version install_time="1355951247770" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1356111621877" last="true" origin="installer" specification_version="1.0">
         <file crc="3879447144" name="config/Modules/org-jreserve-jreserve-misc-apc-sample.xml"/>
-        <file crc="3553741636" name="modules/org-jreserve-jreserve-misc-apc-sample.jar"/>
+        <file crc="2809917468" name="modules/org-jreserve-jreserve-misc-apc-sample.jar"/>
     </module_version>
 </module>

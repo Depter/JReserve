@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.estimate.core">
-    <module_version install_time="1355951247530" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1356111621346" last="true" origin="installer" specification_version="1.0">
         <file crc="1973627787" name="config/Modules/org-jreserve-jreserve-estimate-core.xml"/>
-        <file crc="2336413180" name="modules/org-jreserve-jreserve-estimate-core.jar"/>
+        <file crc="2750696783" name="modules/org-jreserve-jreserve-estimate-core.jar"/>
     </module_version>
 </module>

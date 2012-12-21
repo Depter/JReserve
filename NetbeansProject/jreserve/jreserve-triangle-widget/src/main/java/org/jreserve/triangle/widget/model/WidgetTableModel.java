@@ -1,7 +1,9 @@
 package org.jreserve.triangle.widget.model;
 
+import java.util.List;
 import javax.swing.table.TableModel;
 import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.widget.WidgetCell;
 import org.jreserve.triangle.widget.WidgetEditor;
 
 /**
@@ -24,6 +26,8 @@ public interface WidgetTableModel extends TableModel {
     public WidgetEditor getWidgetEditor();
     
     public String getLayerId(int row, int column);
+    
+    public List<WidgetCell> getCells(int[] rows, int[] columns);
     
     public @interface Registration {
         public int position() default Integer.MAX_VALUE;

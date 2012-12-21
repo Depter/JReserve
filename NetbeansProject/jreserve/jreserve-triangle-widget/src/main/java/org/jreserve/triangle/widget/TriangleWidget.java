@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.swing.*;
@@ -283,6 +284,14 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
             l.stateChanged(evt);
     }
     
+    public List<WidgetCell> getSelectedCells() {
+        int[] rows = table.getSelectedRows();
+        int[] columns = table.getSelectedColumns();
+        List<WidgetCell> cells = ((WidgetTableModel) table.getModel()).getCells(rows, columns);
+        Collections.sort(cells);
+        return cells;
+    }
+    
     private class ActionHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -364,5 +373,5 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
         public void tableChanged(TableModelEvent e) {
             fireChangeEvent();
         }
-    }
+    }    
 }

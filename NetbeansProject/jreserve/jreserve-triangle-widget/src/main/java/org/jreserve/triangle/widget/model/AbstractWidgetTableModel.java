@@ -1,10 +1,13 @@
 package org.jreserve.triangle.widget.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.widget.WidgetCell;
 import org.jreserve.triangle.widget.WidgetEditor;
 
 /**
@@ -184,5 +187,21 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     public void stateChanged(ChangeEvent e) {
         initValues();
         fireTableStructureChanged();
+    }
+    
+    @Override
+    public List<WidgetCell> getCells(int[] rows, int[] columns) {
+        List<WidgetCell> cells = new ArrayList<WidgetCell>();
+        for(int row : rows)
+            for(int column : columns)
+                addCell(cells, row, column);
+        return cells;
+    }
+    
+    private void addCell(List<WidgetCell> cells, int row, int column) {
+        int accident = getAccident(row, column - 1);
+        int development = getDevelopment(row, column - 1);
+        if(isValidCoordiantes(accident, development))
+            cells.add(new WidgetCell(accident, development));
     }
 }
