@@ -43,11 +43,11 @@ public class AddCommentAction extends AbstractSingleCellPopUpAction {
     @Override
     protected boolean checkEnabled() {
         if(super.checkEnabled())
-            return initCommentable();
+            return initElement();
         return false;
     }
     
-    private boolean initCommentable() {
+    private boolean initElement() {
         commentable = lookupOne(tResult);
         return commentable != null;
     }

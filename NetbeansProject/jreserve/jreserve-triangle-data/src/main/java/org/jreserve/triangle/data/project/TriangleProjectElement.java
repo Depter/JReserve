@@ -13,6 +13,10 @@ import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.triangle.*;
+import org.jreserve.triangle.comment.AbstractCommentable;
+import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.comment.TriangleComment;
+import org.jreserve.triangle.comment.TriangleCommentUtil;
 import org.jreserve.triangle.data.editor.Editor;
 import org.jreserve.triangle.data.util.AsynchronousTriangleInput;
 import org.jreserve.triangle.entities.Triangle;
@@ -69,8 +73,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
         super.setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         super.setProperty(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
         initModifications();
-        //super.setProperty(Correctable.CORRECTION_PROPERTY, triangle.getCorrections());
-        //super.setProperty(Commentable.COMMENT_PROPERTY, triangle.getComments());
+        initComments();
         //super.setProperty(Smoothable.SMOOTHING_PROPERTY, triangle.getSmoothings());
     }
     
@@ -80,14 +83,19 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
         data.setModifications(mods);
     }
     
+    private void initComments() {
+        List<TriangleComment> comments = TriangleCommentUtil.loadComments(getValue());
+        super.setProperty(Commentable.COMMENT_PROPERTY, comments);
+    }
+    
     private void initLookup() {
         super.addToLookup(new TriangleDeletable());
         super.addToLookup(new TriangleOpenable());
         super.addToLookup(new RenameableProjectElement(this));
         super.addToLookup(new AuditableProjectElement(this));
         super.addToLookup(new TriangleUndoRedo());
+        super.addToLookup(new AbstractCommentable(this, getValue()));
 //        super.addToLookup(new AbstractSmoothable<Triangle>(this, getValue()));
-//        super.addToLookup(new AbstractCommentable<Triangle>(this, getValue()));
 //        super.addToLookup(new AbstractCorrectable<Triangle>(this, getValue()));
         new TriangleSavable();
     }
@@ -123,9 +131,9 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
             List<ModifiedTriangularData> mods = (List<ModifiedTriangularData>) value;
             data.setModifications(mods);
             value = new ArrayList<ModifiedTriangularData>(mods);
+        } else if(Commentable.COMMENT_PROPERTY.equals(property)) {
+            value = new ArrayList<TriangleComment>((List<TriangleComment>) value);
         }
-//        else if(Commentable.COMMENT_PROPERTY.equals(property))
-//            getValue().setComments((List<TriangleComment>) value);
         super.setProperty(property, value);
     }
     
@@ -189,6 +197,10 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
         setProperty(MODIFICATION_PROPERTY, mods);
     }
     
+    public List<TriangleComment> getComments() {
+        return (List<TriangleComment>) getProperty(Commentable.COMMENT_PROPERTY);
+    }
+    
     private class TriangleDeletable extends PersistentDeletable<Triangle> {
         
         private TriangleDeletable() {
@@ -215,6 +227,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
             originalProperties.put(DESCRIPTION_PROPERTY, triangle.getDescription());
             originalProperties.put(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
             originalProperties.put(MODIFICATION_PROPERTY, getModifications());
+            originalProperties.put(Commentable.COMMENT_PROPERTY, element.getProperty(Commentable.COMMENT_PROPERTY));
         }
         
         @Override
@@ -236,11 +249,17 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
         protected void saveEntity() {
             super.saveEntity();
             TriangleUtil.save(session, getOriginalModifications(), getModifications());
+            TriangleCommentUtil.save(session, getOriginalComments(), getComments());
         }
         
         private List<ModifiedTriangularData> getOriginalModifications() {
             Object mods = originalProperties.get(MODIFICATION_PROPERTY);
             return (List<ModifiedTriangularData>) mods;
+        }
+        
+        private List<TriangleComment> getOriginalComments() {
+            Object comments = originalProperties.get(Commentable.COMMENT_PROPERTY);
+            return (List<TriangleComment>) comments;
         }
     }
     

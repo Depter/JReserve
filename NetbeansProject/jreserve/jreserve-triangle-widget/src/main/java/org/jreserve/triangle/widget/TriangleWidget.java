@@ -1,15 +1,9 @@
 package org.jreserve.triangle.widget;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -22,9 +16,10 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.text.DefaultEditorKit;
 import org.jreserve.localesettings.util.DecimalSpinner;
-import org.jreserve.project.system.ProjectElement;
+import org.jreserve.resources.ActionUtil;
 import org.jreserve.resources.ToolBarButton;
 import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.comment.Commentable;
 import org.jreserve.triangle.widget.model.WidgetTableModel;
 import org.jreserve.triangle.widget.model.util.WidgetTableModelImpl;
 import org.jreserve.triangle.widget.model.util.WidgetTableModelRegistry;
@@ -33,6 +28,7 @@ import org.openide.actions.CopyAction;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.WeakListeners;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -59,8 +55,9 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
     private final static String NOT_CUMMULATED_ACTION = "NOT_CUMMLATED_ACTION";
     private final static String NOT_CUMMULATED_ICON = "resources/arrow_down.png";
     
+    private final static int TOOLTIP_DISMISS_DELAY = 10 * 60 * 1000;
+    
     private final static int TOOLBAR_STRUT = 5;
-    private final static int DEFAULT_COLUMN_WIDTH = 75;
     private final static Dimension PREFFERED_SIZE = new Dimension(500, 200);
     
     private JToolBar toolBar;
@@ -82,6 +79,9 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
     private WidgetEditor widgetEditor;
     private TableModelListener dataListener = new DataListener();
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private ChangeListener commentListener = new CommentListener();
+    
+    private String popUpActionPath = null;
     
     public TriangleWidget() {
         initComponent();
@@ -89,14 +89,6 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
         super.addComponentListener(new ResizeListener());
         registerCopyAction();
         setPreferredSize(PREFFERED_SIZE);    
-    }
-    
-    public TriangleWidget(ProjectElement element) {
-        initComponent();
-        lookup = new ProxyLookup(Lookups.fixed(this, getActionMap(), element));
-        super.addComponentListener(new ResizeListener());
-        registerCopyAction();
-        setPreferredSize(PREFFERED_SIZE);
     }
     
     public void setData(TriangularData data) {
@@ -231,6 +223,7 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
         table.setIntercellSpacing(INTERNAL_SPACING);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setCellSelectionEnabled(true);
+        table.addMouseListener(new MouseHandler());
                 
         scroll = new JScrollPane(table);
         scroll.setBorder(BorderFactory.createEmptyBorder());
@@ -290,6 +283,24 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
         List<WidgetCell> cells = ((WidgetTableModel) table.getModel()).getCells(rows, columns);
         Collections.sort(cells);
         return cells;
+    }
+    
+    public void setPopupActionPath(String path) {
+        this.popUpActionPath = path;
+    }
+    
+    public String getPopupActionPath() {
+        return this.popUpActionPath;
+    }
+    
+    public void setCommentable(Commentable commentable) {
+        if(commentable != null)
+            commentable.addChangeListener(WeakListeners.change(commentListener, commentable));
+        ((WidgetTableModel) table.getModel()).setCommentable(commentable);
+    }
+    
+    public WidgetTableModel getModel() {
+        return (WidgetTableModel) table.getModel();
     }
     
     private class ActionHandler implements ActionListener {
@@ -364,6 +375,7 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
             model.setData(oldModel.getData());
             model.setCummulated(oldModel.isCummulated());
             model.setWidgetEditor(oldModel.getWidgetEditor());
+            model.setCommentable(oldModel.getCommentable());
             model.addTableModelListener(dataListener);
         }
     }    
@@ -374,4 +386,58 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
             fireChangeEvent();
         }
     }    
+    
+    
+    private class MouseHandler extends MouseAdapter {
+
+        private int originalDismissDelay;
+        
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if(isPopupTrigger(e))
+                showPopUp(e);
+        }
+
+        private boolean isPopupTrigger(MouseEvent e) {
+            return popUpActionPath != null &&
+                   e.isPopupTrigger();
+        }
+        
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if(isPopupTrigger(e))
+                showPopUp(e);
+        }
+        
+        private void showPopUp(MouseEvent e) {
+            JPopupMenu menu = ActionUtil.createPopupForPath(popUpActionPath);
+            if(menu != null) {
+                Point p = e.getPoint();
+                menu.show(TriangleWidget.this.table, p.x, p.y);
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            ToolTipManager mg = ToolTipManager.sharedInstance();
+            originalDismissDelay = mg.getDismissDelay();
+            mg.setDismissDelay(TOOLTIP_DISMISS_DELAY);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            if(originalDismissDelay == 0)
+                originalDismissDelay = 5 * 1000;
+            ToolTipManager.sharedInstance().setDismissDelay(originalDismissDelay);
+        }
+    }
+    
+    private class CommentListener implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            TableModelEvent evt = new TableModelEvent(table.getModel(), 0, Integer.MAX_VALUE);
+            table.tableChanged(evt);
+        }
+    }
 }

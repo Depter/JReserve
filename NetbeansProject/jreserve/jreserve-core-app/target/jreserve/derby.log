@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Fri Dec 21 18:54:41 CET 2012:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-013b-be9a-4802-000000b892a0 
-on database directory C:\Documents and Settings\aa461472\Desktop\db1  with class loader ModuleCL@1758cd1[org.jreserve.jreserve.misc.database.derby] 
+Thu Dec 27 19:44:03 CET 2012:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-013b-ddad-a349-000000ab9868 
+on database directory C:\Documents and Settings\aa461472\Desktop\db1  with class loader ModuleCL@e555bd[org.jreserve.jreserve.misc.database.derby] 
 Loaded from jar:file:/D:/Eigen/GitRepos/JReserve/NetbeansProject/jreserve/jreserve-core-app/target/jreserve/jreserve/modules/ext/org.apache.derby/derby-10.9.1.0.jar!/
 java.vendor=Sun Microsystems Inc.
 java.runtime.version=1.6.0_17-b04

@@ -123,6 +123,7 @@ public class AuditTable extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         table.setModel(new ChangeTableModel());
+        table.setFillsViewportHeight(true);
         table.setDefaultRenderer(Date.class, new DateCellRenderer(df));
         tableScroll.setViewportView(table);
 

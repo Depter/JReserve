@@ -1,7 +1,6 @@
 package org.jreserve.triangle.correction;
 
 import java.util.Collection;
-import java.util.List;
 import org.jreserve.triangle.ModifiableTriangle;
 import org.jreserve.triangle.ModifiedTriangularData;
 import org.jreserve.triangle.TriangleUtil;
@@ -20,8 +19,6 @@ import org.openide.util.Utilities;
  */
 @WidgetEditor.Registration(category="Triangle")
 public class CorrectionWidgetEditor implements WidgetEditor {
-
-    private final static Double EPSILON = 0.0000000001;
     
     private ModifiableTriangle triangle;
 

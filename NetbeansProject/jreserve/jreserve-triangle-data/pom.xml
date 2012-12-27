@@ -141,6 +141,12 @@
         
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-comment</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>jreserve-util-navigator</artifactId>
             <version>${project.version}</version>
         </dependency>

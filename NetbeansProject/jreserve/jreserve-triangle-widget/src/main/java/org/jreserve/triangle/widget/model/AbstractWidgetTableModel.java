@@ -1,12 +1,15 @@
 package org.jreserve.triangle.widget.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.comment.TriangleComment;
 import org.jreserve.triangle.widget.WidgetCell;
 import org.jreserve.triangle.widget.WidgetEditor;
 
@@ -20,6 +23,7 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     protected TriangularData data;
     
     protected boolean cummulated;
+    protected Commentable commentable;
     protected WidgetEditor editor;
     private double[][] values;
     
@@ -203,5 +207,37 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
         int development = getDevelopment(row, column - 1);
         if(isValidCoordiantes(accident, development))
             cells.add(new WidgetCell(accident, development));
+    }
+    
+    @Override
+    public void setCommentable(Commentable commentable) {
+        this.commentable = commentable;
+    }
+    
+    @Override
+    public Commentable getCommentable() {
+        return this.commentable;
+    }
+    
+    @Override
+    public List<TriangleComment> getComments(int row, int column) {
+        int accident = getAccident(row, column - 1);
+        int development = getDevelopment(row, column - 1);
+        if(commentable != null && isValidCoordiantes(accident, development))
+            return queryComments(accident, development);
+        return Collections.EMPTY_LIST;
+    }
+    
+    private List<TriangleComment> queryComments(int accident, int development) {
+        List<TriangleComment> comments = new ArrayList<TriangleComment>();
+        for(TriangleComment comment : commentable.getComments())
+            if(isCellComment(comment, accident, development))
+                comments.add(comment);
+        return comments;
+    }
+    
+    private boolean isCellComment(TriangleComment comment, int accident, int development) {
+        return comment.getAccidentPeriod() == accident &&
+               comment.getDevelopmentPeriod() == development;
     }
 }

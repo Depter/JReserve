@@ -1,6 +1,7 @@
 package org.jreserve.triangle.comment;
 
 import java.util.List;
+import javax.swing.event.ChangeListener;
 import org.jreserve.persistence.PersistentObject;
 
 /**
@@ -21,4 +22,9 @@ public interface Commentable {
     public void addComment(TriangleComment comment);
     
     public void removeComment(TriangleComment comment);
+
+    public void addChangeListener(ChangeListener listener);
+    
+    public void removeChangeListener(ChangeListener listener);
+
 }

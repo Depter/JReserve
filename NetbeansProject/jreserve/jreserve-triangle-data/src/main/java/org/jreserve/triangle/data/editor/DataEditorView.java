@@ -11,11 +11,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.comment.Commentable;
 import org.jreserve.triangle.data.project.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.widget.GeometrySettingPanel;
 import org.jreserve.triangle.widget.TriangleWidget;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
@@ -24,6 +28,19 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  * @version 1.0
  */
+@ActionReferences({
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.widget.actions.AddCommentAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/DataEditor",
+        position=100,
+        separatorBefore=90
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.widget.actions.DeleteCommentsAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/DataEditor",
+        position=200
+    )
+})
 @Messages({
     "LBL.DataEditorView.Title=Geometry",
     "LBL.DataEditorView.GeometrySetting.Title=Geometry"
@@ -70,11 +87,12 @@ class DataEditorView extends NavigablePanel {
         Dimension max = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
         panel.add(new Filler(min, min, max), gc);
 
-        triangle = new TriangleWidget(element);
+        triangle = new TriangleWidget();
         triangle.setPreferredSize(new java.awt.Dimension(400, 200));
         triangle.setData(data);
         triangle.setWidgetEditorFolder(EDITOR_CATEGORY);
-        //triangle.setPopUpActionPath(POP_UP_PATH);
+        triangle.setPopupActionPath(POP_UP_PATH);
+        triangle.setCommentable(element.getLookup().lookup(Commentable.class));
         gc.gridx = 0; gc.gridy = 1;
         gc.gridwidth = 2;
         gc.fill = java.awt.GridBagConstraints.BOTH;

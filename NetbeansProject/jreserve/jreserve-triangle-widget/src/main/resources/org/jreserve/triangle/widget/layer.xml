@@ -20,4 +20,12 @@
             <folder name="WidgetTableRenderer"/>
         </folder>
     </folder>
+    <folder name="Actions">
+        <folder name="JReserve">
+            <folder name="TriangleWidget">
+                <file name="org-jreserve-triangle-widget-actions-AddCommentAction.instance" />
+                <file name="org-jreserve-triangle-widget-actions-DeleteCommentsAction.instance" />
+            </folder>
+        </folder>
+    </folder>
 </filesystem>

@@ -1,7 +1,12 @@
 package org.jreserve.triangle.comment;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import org.hibernate.Session;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.project.system.ProjectElement;
 
@@ -10,15 +15,17 @@ import org.jreserve.project.system.ProjectElement;
  * @author Peter Decsi
  * @version 1.0
  */
-public class AbstractCommentable implements Commentable {
+public class AbstractCommentable implements Commentable, PropertyChangeListener {
 
     private final static String WRONG_OWNER = "Comment '%s' belongs to another owner than '%s'! OwnerId = '%s'.";
     
     protected ProjectElement element;
     protected PersistentObject owner;
-
+    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    
     public AbstractCommentable(ProjectElement element, PersistentObject owner) {
         this.element = element;
+        this.element.addPropertyChangeListener(this);
         this.owner = owner;
     }
     
@@ -29,7 +36,7 @@ public class AbstractCommentable implements Commentable {
 
     @Override
     public List<TriangleComment> getComments() {
-        return (List<TriangleComment>) element.getProperty(COMMENT_PROPERTY);
+        return new ArrayList<TriangleComment>((List<TriangleComment>) element.getProperty(COMMENT_PROPERTY));
     }
 
     @Override
@@ -65,7 +72,7 @@ public class AbstractCommentable implements Commentable {
         comments.remove(comment);
         element.setProperty(COMMENT_PROPERTY, comments);
     }
-    
+   
     @Override
     public boolean equals(Object o) {
         if(o instanceof Commentable)
@@ -81,5 +88,33 @@ public class AbstractCommentable implements Commentable {
     @Override
     public String toString() {
         return String.format("AbstractCommentable [%s; %s]", element, owner);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(isCommentProperty(evt))
+            fireChange();
+    }
+    
+    private boolean isCommentProperty(PropertyChangeEvent evt) {
+        return evt.getSource() == element &&
+               evt.getPropertyName().equals(Commentable.COMMENT_PROPERTY);
+    }
+    
+    private void fireChange() {
+        ChangeEvent evt = new ChangeEvent(this);
+        for(ChangeListener listener : listeners)
+            listener.stateChanged(evt);
+    }
+    
+    @Override
+    public void addChangeListener(ChangeListener listener) {
+        if(!listeners.contains(listener))
+            listeners.add(listener);
+    }
+    
+    @Override
+    public void removeChangeListener(ChangeListener listener) {
+        listeners.remove(listener);
     }
 }

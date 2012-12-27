@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
+import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;
@@ -11,6 +12,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Lookup;
+import org.openide.util.actions.Presenter;
 
 /**
  * The main purpose of this class is to provide similar functionality as of
@@ -93,6 +95,31 @@ public class ActionUtil {
         } catch (Exception ex) {
             String msg = String.format("Unable to instantiate '%s'!", cookie.instanceName());
             logger.log(Level.WARNING, msg, ex);
+        }
+    }
+    
+    public static JPopupMenu createPopupForPath(String... path) {
+        List<? extends Action> actions = actionsForPath(path);
+        if(actions.isEmpty())
+            return null;
+        return createPopup(actions);
+    }
+    
+    private static JPopupMenu createPopup(List<? extends Action> actions) {
+        JPopupMenu popUp = new JPopupMenu();
+        for(Action action : actions)
+            addAction(popUp, action);
+        return popUp;
+    }
+    
+    private static void addAction(JPopupMenu menu, Action action) {
+        if(action == null) {
+            if(menu.getComponentCount() > 0)
+                menu.add(new JSeparator());
+        } else if(action instanceof Presenter.Popup) {
+            menu.add(((Presenter.Popup)action).getPopupPresenter());
+        } else {
+            menu.add(action);
         }
     }
     

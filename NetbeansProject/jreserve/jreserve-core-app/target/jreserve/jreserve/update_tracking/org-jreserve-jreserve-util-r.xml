@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.util.r">
-    <module_version install_time="1356111621690" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1356625116762" last="true" origin="installer" specification_version="1.0">
         <file crc="234471459" name="config/Modules/org-jreserve-jreserve-util-r.xml"/>
-        <file crc="3904409547" name="modules/org-jreserve-jreserve-util-r.jar"/>
+        <file crc="248096021" name="modules/org-jreserve-jreserve-util-r.jar"/>
     </module_version>
 </module>

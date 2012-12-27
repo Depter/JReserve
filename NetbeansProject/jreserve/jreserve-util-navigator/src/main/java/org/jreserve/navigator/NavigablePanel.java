@@ -263,7 +263,6 @@ public class NavigablePanel extends JPanel implements NavigableComponent, Action
         this.opened = opened;
         openButton.setOpened(opened);
         contentPanel.setVisible(opened);
-        System.out.printf("[%s]: Prefered size: w=%d; h=%d%n", getDisplayName(), getPreferredSize().width, getPreferredSize().height);
     }
 
     @Override

@@ -1,15 +1,17 @@
 package org.jreserve.triangle.widget;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
+import java.awt.*;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 import org.jreserve.localesettings.util.DoubleRenderer;
+import org.jreserve.triangle.comment.TriangleComment;
+import org.jreserve.triangle.widget.model.WidgetTableModel;
 
 /**
  *
@@ -30,7 +32,12 @@ public class DefaultWidgetRenderer extends JLabel implements TableCellRenderer {
     protected Border focusedNotSelected =  UIManager.getBorder("Table.focusCellHighlightBorder");
     protected Border selected = createCellBorder();
     protected Border notSelected = selected;
+    
     protected boolean hasRemark;
+    protected Color COLOR_REMARK = Color.RED;
+    protected int REMARK_SIZE = 6;
+    protected int REMARK_MAX_ROW_WIDTH = 40;
+    protected String REMARK_TITLE = "%tF / %s:";
     
     private static Border createCellBorder() {
         Color color = UIManager.getColor("InternalFrame.borderDarkShadow");
@@ -75,6 +82,7 @@ public class DefaultWidgetRenderer extends JLabel implements TableCellRenderer {
         super.setForeground(getForeground(table, value, isSelected, hasFocus, row, column));
         super.setFont(getFont(table, value, isSelected, hasFocus, row, column));
         super.setBorder(getBorder(table, value, isSelected, hasFocus, row, column));
+        createToolTip(table, row, column);
     }
     
     protected String getStringValue(JTable table, Object value) {
@@ -184,4 +192,92 @@ public class DefaultWidgetRenderer extends JLabel implements TableCellRenderer {
     protected Border getNotSelectedBorder(JTable table) {
         return notSelected;
     }
+    
+    
+    protected void createToolTip(JTable table, int row, int column) {
+        java.util.List<TriangleComment> list = getComments(table, row, column);
+        if((hasRemark = !list.isEmpty()))
+            setToolTipText(renderComments(list));
+        else
+            setToolTipText(null);
+    }
+    
+    private List<TriangleComment> getComments(JTable table, int row, int column) {
+        TableModel model = table.getModel();
+        if(model instanceof WidgetTableModel)
+            return ((WidgetTableModel) model).getComments(row, column);
+        return java.util.Collections.EMPTY_LIST;
+    }
+    
+    protected String renderComments(List<TriangleComment> comments) {
+        StringBuilder sb = new StringBuilder("<html>");
+        for(int i=0, size=comments.size(); i<size; i++) {
+            if(i > 0) 
+                sb.append("<br><br>");
+            appendComment(sb, comments.get(i));
+        }
+        return sb.append("</html>").toString();
+    }
+
+    private void appendComment(StringBuilder sb, TriangleComment comment) {
+        sb.append("<b>").append(getTitle(comment)).append("</b><br>");
+        String commentText = comment.getCommentText();
+        if(commentText!=null && commentText.length() > 0)
+            appendMessage(sb, commentText.toCharArray());
+    }
+
+    private String getTitle(TriangleComment comment) {
+        java.util.Date date = comment.getCreationDate();
+        String user = comment.getUserName();
+        return String.format(REMARK_TITLE, date, user);
+    }
+
+    private void appendMessage(StringBuilder sb, char[] comment) {
+        int count = 0;
+        for(int i=0, size=comment.length; i<size; i++) {
+            char c = comment[i];
+
+            if(count >= REMARK_MAX_ROW_WIDTH && i<(size-1) && (Character.isSpaceChar(c) || (count - REMARK_MAX_ROW_WIDTH) > 10)) {
+                sb.append("<br>");
+                count=0;
+            } else {
+                sb.append(c);
+                count++;
+            }
+        }
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if(hasRemark)
+            paintRemark(g);
+    }
+    
+    private void paintRemark(Graphics g) {
+        int size = getTriangleSize();
+        Polygon triangle = createTriangle(size);
+        
+        Color oldColor = g.getColor();
+        g.setColor(COLOR_REMARK);
+        g.fillPolygon(triangle);
+        g.setColor(oldColor);
+    }
+    
+    private int getTriangleSize() {
+        java.awt.Dimension dim = super.getSize();
+        int size = REMARK_SIZE;
+        if(size > dim.width)
+            size = dim.width;
+        if(size > dim.height)
+            size = dim.height;
+        return size;
+    }
+    
+    private Polygon createTriangle(int size) {
+        java.awt.Dimension dim = getSize();
+        int x[] = {dim.width - size, dim.width, dim.width     };
+        int y[] = {0, 0, size};
+        return new Polygon(x, y, 3);
+    }    
 }

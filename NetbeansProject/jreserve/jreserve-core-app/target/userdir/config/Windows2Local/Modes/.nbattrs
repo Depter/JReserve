@@ -2,7 +2,7 @@
 <!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
 <attributes version="1.0">
     <fileobject name="editor">
-        <attr name="WinSys-TCRef-Order" stringvalue="ContextAuditorTopComponent/RFunctionExplorerTopComponent"/>
+        <attr name="WinSys-TCRef-Order" stringvalue="RFunctionExplorerTopComponent"/>
     </fileobject>
     <fileobject name="explorer">
         <attr name="WinSys-TCRef-Order" stringvalue="ProjectExplorerTopComponent/DatabaseExplorerTopComponent/AuditedEntityExplorerTopComponent/favorites"/>

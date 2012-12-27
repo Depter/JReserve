@@ -24,7 +24,7 @@ import org.openide.util.NbBundle.Messages;
     "# {2} - value",
     "MSG.CorrectionAuditor.Deleted=Deleted [{0}; {1}] = {2}"
 })
-@Auditor.Registration(200)
+@Auditor.Registration(300)
 public class CorrectionAuditor extends AbstractAuditor<TriangleCorrection> {
 
     public CorrectionAuditor() {

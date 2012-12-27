@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.netbeans.api.search">
-    <module_version install_time="1356111609815" last="true" origin="installer" specification_version="1.2.1">
+    <module_version install_time="1356625103669" last="true" origin="installer" specification_version="1.2.1">
         <file crc="3710953649" name="config/Modules/org-netbeans-api-search.xml"/>
         <file crc="1627309092" name="modules/locale/org-netbeans-api-search_ja.jar"/>
         <file crc="565810751" name="modules/locale/org-netbeans-api-search_pt_BR.jar"/>
