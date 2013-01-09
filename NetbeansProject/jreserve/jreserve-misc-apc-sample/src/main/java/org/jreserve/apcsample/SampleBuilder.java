@@ -4,7 +4,6 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
-import org.jreserve.triangle.data.factories.ProjectDataContainerFactoy;
 import org.jreserve.data.util.ProjectDataTypeFactory;
 import org.jreserve.data.util.ProjectDataTypeFactory.DataTypeDummy;
 import org.jreserve.estimate.core.container.factory.EstimateContainerFactory;
@@ -19,9 +18,14 @@ import org.jreserve.project.factories.ProjectFactory;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.data.factories.TriangleFactory;
-import org.openide.util.NbBundle.Messages;
+import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.comment.TriangleCommentFactory;
 import org.jreserve.triangle.correction.factory.TriangleCorrectionFactory;
+import org.jreserve.triangle.data.factories.ProjectDataContainerFactoy;
+import org.jreserve.triangle.data.factories.TriangleFactory;
+import org.jreserve.triangle.smoothing.geometric.factory.GeometricSmoothingFactory;
+import org.netbeans.api.actions.Savable;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -34,7 +38,11 @@ import org.jreserve.triangle.correction.factory.TriangleCorrectionFactory;
     "# {0} - name",
     "MSG.SampleBuilder.Create.ClaimType=Creating claim type \"{0}\"...",
     "# {0} - claim type",
-    "MSG.SampleBuilder.Create.DataType=Creating data types for claim type \"{0}\"..."
+    "MSG.SampleBuilder.Create.DataType=Creating data types for claim type \"{0}\"...",
+    "MSG.SampleBuilder.Comment.Correction=Original value is 56.",
+    "# {0} - index",
+    "MSG.SampleBuilder.Smoothing.Name=Smoothing {0}",
+    "MSG.SampleBuilder.Smoothing.Comment=Value of 767 smoothed with geometric smoothing, useing the next and the previous accident year."
 })
 public class SampleBuilder {
     
@@ -134,12 +142,27 @@ public class SampleBuilder {
         
         if(isBiClaimCountTriangle(dt)) {
             addCorrection(triangle);
+            addComment(triangle, 0, 1, Bundle.MSG_SampleBuilder_Comment_Correction());
+            addGeometricSmoothing(triangle, 1, new int[][]{{3, 0}, {4, 0}, {5, 0}}, new boolean[]{false, true, false});
+            addComment(triangle, 4, 0, Bundle.MSG_SampleBuilder_Smoothing_Comment());
         }
     }
     
-    private void addCorrection(ProjectElement element) {
+    private void addCorrection(ProjectElement element) throws Exception {
         ModifiableTriangle triangle = (ModifiableTriangle) element;
         TriangleCorrectionFactory factory = new TriangleCorrectionFactory(triangle, 0, 1, 60);
+        doWork(factory, null);
+    }
+    
+    private void addComment(ProjectElement element, int accident, int development, String msg) throws Exception {
+        Commentable commentable = element.getLookup().lookup(Commentable.class);
+        TriangleCommentFactory factory = new TriangleCommentFactory(commentable, accident, development, msg);
+        doWork(factory, null);
+    }
+    
+    private void addGeometricSmoothing(ProjectElement element, int index, int[][] cells, boolean[] applied) throws Exception {
+        ModifiableTriangle triangle = (ModifiableTriangle) element;
+        GeometricSmoothingFactory factory = new GeometricSmoothingFactory(triangle, Bundle.MSG_SampleBuilder_Smoothing_Name(index), cells, applied);
         doWork(factory, null);
     }
     

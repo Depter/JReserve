@@ -97,7 +97,7 @@ public class AsynchronousTriangleInput implements TriangularData {
     @Override
     public String getLayerTypeId(int accident, int development) {
         checkLoaded();
-            return data.getLayerTypeId(accident, development);
+        return data.getLayerTypeId(accident, development);
     }
 
     @Override

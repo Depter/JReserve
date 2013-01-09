@@ -24,12 +24,12 @@ public class GeometricSmoothing extends Smoothing {
     protected GeometricSmoothing() {
     }
     
-    protected GeometricSmoothing(PersistentObject owner, int order, String name) {
+    public GeometricSmoothing(PersistentObject owner, int order, String name) {
         super(owner, order, name);
     }
 
     @Override
-    protected void addCell(SmoothingCell cell) {
+    public void addCell(SmoothingCell cell) {
         super.addCell(cell);
     }
     

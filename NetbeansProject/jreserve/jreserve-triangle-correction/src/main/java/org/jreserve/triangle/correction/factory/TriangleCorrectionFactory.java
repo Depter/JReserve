@@ -42,5 +42,4 @@ public class TriangleCorrectionFactory extends SessionTask.AbstractTask<Void> {
         int order = triangle.getMaxModificationOrder() + 1;
         return new TriangleCorrection(ownerId, order, accident, development, value);
     }
-
 }

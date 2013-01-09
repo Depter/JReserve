@@ -97,7 +97,6 @@
         <module>jreserve-misc-database-oracle</module>
         <module>jreserve-misc-data-import-clipboardtable</module>
         <module>jreserve-misc-apc-sample</module>
-    <module>jreserve-triangle-smoothing-geometric</module>
   </modules>
 
     <properties>

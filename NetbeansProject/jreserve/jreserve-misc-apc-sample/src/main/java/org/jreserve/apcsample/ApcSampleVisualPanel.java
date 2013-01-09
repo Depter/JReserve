@@ -16,7 +16,8 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "LBL.ApcSampleVisualPanel.PanelName=Set name"
+    "LBL.ApcSampleVisualPanel.PanelName=Set name",
+    "LBL.ApcSampleVisualPanel.LoB.Name=Motor"
 })
 public class ApcSampleVisualPanel extends javax.swing.JPanel implements DocumentListener {
 
@@ -31,7 +32,8 @@ public class ApcSampleVisualPanel extends javax.swing.JPanel implements Document
 
     void readSettings(WizardDescriptor wizard) {
         String name = (String) wizard.getProperty(NAME_PROPERTY);
-        nameText.setText(name);
+        if(name != null)
+            nameText.setText(name);
     }
     
     void storeSettings(WizardDescriptor wizard) {
@@ -89,7 +91,7 @@ public class ApcSampleVisualPanel extends javax.swing.JPanel implements Document
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         add(nameLabel, gridBagConstraints);
 
-        nameText.setText(null);
+        nameText.setText(Bundle.LBL_ApcSampleVisualPanel_LoB_Name());
         nameText.getDocument().addDocumentListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;

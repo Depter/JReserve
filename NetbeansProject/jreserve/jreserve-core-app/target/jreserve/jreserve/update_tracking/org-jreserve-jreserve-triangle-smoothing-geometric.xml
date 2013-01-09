@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.triangle.smoothing.geometric">
-    <module_version install_time="1357747435497" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1357762649525" last="true" origin="installer" specification_version="1.0">
         <file crc="3208831417" name="config/Modules/org-jreserve-jreserve-triangle-smoothing-geometric.xml"/>
-        <file crc="1509642396" name="modules/org-jreserve-jreserve-triangle-smoothing-geometric.jar"/>
+        <file crc="3555047062" name="modules/org-jreserve-jreserve-triangle-smoothing-geometric.jar"/>
     </module_version>
 </module>

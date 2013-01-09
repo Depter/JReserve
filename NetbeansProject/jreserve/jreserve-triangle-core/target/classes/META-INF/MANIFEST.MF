@@ -5,7 +5,7 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/triangle/Bundle.propert
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
 OpenIDE-Module-Implementation-Version: 1.0-20130109
-OpenIDE-Module-Build-Version: 201301091539
+OpenIDE-Module-Build-Version: 201301091938
 OpenIDE-Module: org.jreserve.jreserve.triangle.core
 OpenIDE-Module-Public-Packages: org.jreserve.triangle.*, org.jreserve.
  triangle.entities.*, org.jreserve.triangle.util.*

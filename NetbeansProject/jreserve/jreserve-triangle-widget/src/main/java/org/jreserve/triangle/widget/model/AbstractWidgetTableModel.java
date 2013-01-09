@@ -86,11 +86,11 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     
     @Override
     public String getLayerId(int row, int column) {
-        if(data == null || 
-           row > data.getAccidentCount() || 
-           --column >= data.getDevelopmentCount(row)) 
+        if(data == null)
             return null;
-        return data.getLayerTypeId(row, column);
+        int accident = getAccident(row, column - 1);
+        int development = getDevelopment(row, column - 1);
+        return data.getLayerTypeId(accident, development);
     }
     
     @Override
