@@ -1,2 +1,3 @@
 Manifest-Version: 1.0
+OpenIDE-Module-Layer: org/jreserve/triangle/smoothing/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/triangle/smoothing/Bundle.properties

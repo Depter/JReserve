@@ -52,6 +52,10 @@ public class TriangleBundle implements TriangularData, ChangeListener {
         fireChangeEvent();
     }
     
+    public TriangularData getSourceData() {
+        return data;
+    }
+    
     private void setModificationSource() {
         if(!modifications.isEmpty())
             modifications.first().setSource(data);
@@ -161,8 +165,8 @@ public class TriangleBundle implements TriangularData, ChangeListener {
     }
 
     @Override
-    public double[][] getData() {
-        return top.getData();
+    public double[][] toArray() {
+        return top.toArray();
     }
 
     @Override

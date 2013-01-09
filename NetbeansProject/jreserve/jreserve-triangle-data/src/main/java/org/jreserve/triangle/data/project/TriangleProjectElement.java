@@ -153,6 +153,11 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
     }
 
     @Override
+    public TriangularData getBaseData() {
+        return data.getSourceData();
+    }
+    
+    @Override
     public int getMaxModificationOrder() {
         int order = 0;
         for(ModifiedTriangularData modification : getModifications())

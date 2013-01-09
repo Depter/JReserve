@@ -38,7 +38,7 @@ abstract class TriangleChartData<R extends Comparable<R>, C extends Comparable<C
     }
     
     protected double[][] getValues() {
-        double[][] values = widget.getData().getData();
+        double[][] values = widget.getData().toArray();
         if(widget.isCummulated())
             cummulate(values);
         return values;

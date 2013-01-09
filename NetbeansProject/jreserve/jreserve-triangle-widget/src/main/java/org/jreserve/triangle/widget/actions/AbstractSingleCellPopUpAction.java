@@ -1,7 +1,7 @@
 package org.jreserve.triangle.widget.actions;
 
 import java.util.List;
-import org.jreserve.triangle.widget.WidgetCell;
+import org.jreserve.triangle.TriangleCoordiante;
 import org.openide.util.Lookup;
 
 /**
@@ -11,7 +11,7 @@ import org.openide.util.Lookup;
  */
 public abstract class AbstractSingleCellPopUpAction extends AbstractPopUpAction {
     
-    protected WidgetCell cell;
+    protected TriangleCoordiante cell;
     
     protected AbstractSingleCellPopUpAction() {
     }
@@ -33,7 +33,7 @@ public abstract class AbstractSingleCellPopUpAction extends AbstractPopUpAction 
     }
     
     private boolean initCell() {
-        List<WidgetCell> cells = widget.getSelectedCells();
+        List<TriangleCoordiante> cells = widget.getSelectedCells();
         cell = null;
         if(cells.size() == 1)
             cell = cells.get(0);

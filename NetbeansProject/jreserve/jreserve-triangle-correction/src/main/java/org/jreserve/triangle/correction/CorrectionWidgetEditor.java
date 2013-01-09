@@ -80,7 +80,7 @@ public class CorrectionWidgetEditor implements WidgetEditor {
     }
     
     private double getPreviousModelValue(WidgetTableModel model, int accident, int development) {
-        double[][] values = model.getData().getData();
+        double[][] values = model.getData().toArray();
         TriangleUtil.cummulate(values);
         return values[accident][development-1];
     }

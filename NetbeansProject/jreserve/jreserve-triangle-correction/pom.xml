@@ -91,14 +91,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
-                <!--
                 <configuration>
                     <publicPackages>
-                        <publicPackage>org.jreserve.triangle.data.entities</publicPackage>
-                        <publicPackage>org.jreserve.triangle.data.factories</publicPackage>
+                        <publicPackage>org.jreserve.triangle.correction.factory</publicPackage>
                     </publicPackages>
                 </configuration>
-                -->
             </plugin>
 
             <plugin>

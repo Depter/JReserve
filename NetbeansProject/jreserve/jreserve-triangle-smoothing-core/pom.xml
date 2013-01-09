@@ -14,6 +14,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <netbeans.run.params.ide/>
+        <netbeans.run.params>${netbeans.run.params.ide}</netbeans.run.params>
     </properties>
 
     <repositories>
@@ -24,12 +26,6 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-        </repository>
-        
-        <repository>
-            <id>netbeans-snapshot</id>
-            <name>NetBeans Snapshots</name>
-            <url>http://bits.netbeans.org/netbeans/trunk/maven-snapshot/</url>
         </repository>
     </repositories>
 
@@ -42,8 +38,26 @@
         
         <dependency>
             <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-filesystems</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util</artifactId>
             <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-locale-settings</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -55,6 +69,12 @@
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-util-audit</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-core-resources</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -69,6 +89,12 @@
             <artifactId>jreserve-triangle-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-widget</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -80,6 +106,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.triangle.smoothing</publicPackage>
+                        <publicPackage>org.jreserve.triangle.smoothing.visual</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

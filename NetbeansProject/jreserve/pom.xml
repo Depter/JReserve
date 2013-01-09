@@ -78,6 +78,7 @@
         <module>jreserve-triangle-comment</module>
         <module>jreserve-triangle-data</module>
         <module>jreserve-triangle-smoothing-core</module>
+        <module>jreserve-triangle-smoothing-geometric</module>
         
         <!-- ESTIMATES -->
         <module>jreserve-estimate-core</module>
@@ -96,6 +97,7 @@
         <module>jreserve-misc-database-oracle</module>
         <module>jreserve-misc-data-import-clipboardtable</module>
         <module>jreserve-misc-apc-sample</module>
+    <module>jreserve-triangle-smoothing-geometric</module>
   </modules>
 
     <properties>

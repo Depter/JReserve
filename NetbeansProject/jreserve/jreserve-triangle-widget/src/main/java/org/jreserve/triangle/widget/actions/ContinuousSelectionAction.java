@@ -1,6 +1,6 @@
 package org.jreserve.triangle.widget.actions;
 
-import org.jreserve.triangle.widget.WidgetCell;
+import org.jreserve.triangle.TriangleCoordiante;
 import org.openide.util.Lookup;
 
 /**
@@ -33,7 +33,7 @@ public abstract class ContinuousSelectionAction extends AbstractMultiCellPopUpAc
     private boolean checkSameAccident() {
         int accident = -1;
         int development = -1;
-        for(WidgetCell cell : cells) {
+        for(TriangleCoordiante cell : cells) {
             int a = cell.getAccident();
             int d = cell.getDevelopment();
             if(accident == -1) {
@@ -50,7 +50,7 @@ public abstract class ContinuousSelectionAction extends AbstractMultiCellPopUpAc
     private boolean checkSameDevelopment() {
         int accident = -1;
         int development = -1;
-        for(WidgetCell cell : cells) {
+        for(TriangleCoordiante cell : cells) {
             int a = cell.getAccident();
             int d = cell.getDevelopment();
             if(development == -1) {

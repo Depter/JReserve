@@ -24,6 +24,7 @@ import org.jreserve.rutil.RFunction;
 @Inheritance(strategy= InheritanceType.JOINED)
 public abstract class Smoothing implements PersistentObject {
 
+    public final static String LAYER_ID = "smoothing-layer";
     private final static int NAME_LENGTH = 64;
     
     @Id
@@ -52,8 +53,9 @@ public abstract class Smoothing implements PersistentObject {
     protected Smoothing() {
     }
     
-    protected Smoothing(PersistentObject owner, String name) {
+    protected Smoothing(PersistentObject owner, int order, String name) {
         this.ownerId = owner.getId();
+        this.order = order;
         this.name = name;
     }
     
@@ -64,10 +66,6 @@ public abstract class Smoothing implements PersistentObject {
     
     protected void setId(String id) {
         this.id = id;
-    }
-    
-    public void setOrder(int order) {
-        this.order = order;
     }
     
     public int getOrder() {

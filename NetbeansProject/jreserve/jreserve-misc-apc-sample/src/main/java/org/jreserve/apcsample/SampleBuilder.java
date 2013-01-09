@@ -18,8 +18,10 @@ import org.jreserve.project.factories.LoBFactory;
 import org.jreserve.project.factories.ProjectFactory;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
+import org.jreserve.triangle.ModifiableTriangle;
 import org.jreserve.triangle.data.factories.TriangleFactory;
 import org.openide.util.NbBundle.Messages;
+import org.jreserve.triangle.correction.factory.TriangleCorrectionFactory;
 
 /**
  *
@@ -127,7 +129,24 @@ public class SampleBuilder {
     
     private void createTriangle(ProjectElementContainer container, ProjectDataType dt) throws Exception {
         TriangleFactory factory = new TriangleFactory(container.getProject(), dt, dt.getName(), InputData.TRIANGLE_GEOMETRY, true);
-        container.addElement(doWork(factory, null));
+        ProjectElement triangle = doWork(factory, null);
+        container.addElement(triangle);
+        
+        if(isBiClaimCountTriangle(dt)) {
+            addCorrection(triangle);
+        }
+    }
+    
+    private void addCorrection(ProjectElement element) {
+        ModifiableTriangle triangle = (ModifiableTriangle) element;
+        TriangleCorrectionFactory factory = new TriangleCorrectionFactory(triangle, 0, 1, 60);
+        doWork(factory, null);
+    }
+    
+    private boolean isBiClaimCountTriangle(ProjectDataType dt) {
+        return dt.isTriangle() &&
+               BODILY_INJURY.equals(dt.getClaimType().getName()) &&
+               dt.getDbId() == NUMBER;
     }
     
     private void createVector(ProjectElementContainer container, ProjectDataType dt) throws Exception {

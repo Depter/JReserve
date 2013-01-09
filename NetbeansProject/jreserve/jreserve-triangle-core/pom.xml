@@ -110,6 +110,7 @@
                     <publicPackages>
                         <publicPackage>org.jreserve.triangle</publicPackage>
                         <publicPackage>org.jreserve.triangle.entities</publicPackage>
+                        <publicPackage>org.jreserve.triangle.util</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

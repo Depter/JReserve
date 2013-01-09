@@ -83,8 +83,6 @@ public class ActionUtil {
     }
     
     private static void addAction(List<Action> actions, InstanceCookie cookie) {
-        String name = cookie.instanceName();
-        logger.log(Level.FINER, "Loading action {0}", name);
         try {
             Object o = cookie.instanceCreate();
             if(o instanceof Action) { 

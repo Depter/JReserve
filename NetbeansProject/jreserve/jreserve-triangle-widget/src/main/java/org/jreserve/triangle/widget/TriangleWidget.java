@@ -18,6 +18,7 @@ import javax.swing.text.DefaultEditorKit;
 import org.jreserve.localesettings.util.DecimalSpinner;
 import org.jreserve.resources.ActionUtil;
 import org.jreserve.resources.ToolBarButton;
+import org.jreserve.triangle.TriangleCoordiante;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.comment.Commentable;
 import org.jreserve.triangle.widget.model.WidgetTableModel;
@@ -277,10 +278,10 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
             l.stateChanged(evt);
     }
     
-    public List<WidgetCell> getSelectedCells() {
+    public List<TriangleCoordiante> getSelectedCells() {
         int[] rows = table.getSelectedRows();
         int[] columns = table.getSelectedColumns();
-        List<WidgetCell> cells = ((WidgetTableModel) table.getModel()).getCells(rows, columns);
+        List<TriangleCoordiante> cells = ((WidgetTableModel) table.getModel()).getCells(rows, columns);
         Collections.sort(cells);
         return cells;
     }

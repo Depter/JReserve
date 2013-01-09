@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.triangle.TriangularData;
 
 /**
@@ -66,7 +65,7 @@ public class TriangleInput implements TriangularData {
     }
 
     @Override
-    public double[][] getData() {
+    public double[][] toArray() {
         int accidents = values.length;
         double[][] copy = new double[accidents][];
         for(int a=0; a<accidents; a++) {

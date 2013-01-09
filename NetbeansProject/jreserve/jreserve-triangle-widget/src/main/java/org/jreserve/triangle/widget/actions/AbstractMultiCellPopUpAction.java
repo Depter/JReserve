@@ -1,7 +1,7 @@
 package org.jreserve.triangle.widget.actions;
 
 import java.util.List;
-import org.jreserve.triangle.widget.WidgetCell;
+import org.jreserve.triangle.TriangleCoordiante;
 import org.openide.util.Lookup;
 
 /**
@@ -11,7 +11,7 @@ import org.openide.util.Lookup;
  */
 public abstract class AbstractMultiCellPopUpAction extends AbstractPopUpAction {
   
-    protected List<WidgetCell> cells;
+    protected List<TriangleCoordiante> cells;
     
     protected AbstractMultiCellPopUpAction() {
     }

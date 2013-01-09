@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.util.navigator">
-    <module_version install_time="1356625116434" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1357638305666" last="true" origin="installer" specification_version="1.0">
         <file crc="541394453" name="config/Modules/org-jreserve-jreserve-util-navigator.xml"/>
-        <file crc="691080711" name="modules/org-jreserve-jreserve-util-navigator.jar"/>
+        <file crc="4286294904" name="modules/org-jreserve-jreserve-util-navigator.jar"/>
     </module_version>
 </module>

@@ -52,8 +52,8 @@ public class TriangularDataAdapter implements TriangularData, ChangeListener {
     }
 
     @Override
-    public double[][] getData() {
-        return data.getData();
+    public double[][] toArray() {
+        return data.toArray();
     }
 
     @Override

@@ -12,6 +12,8 @@ public interface ModifiableTriangle extends TriangularData.Provider {
 
     public PersistentObject getOwner();
     
+    public TriangularData getBaseData();
+    
     public int getMaxModificationOrder();
     
     public List<ModifiedTriangularData> getModifications();

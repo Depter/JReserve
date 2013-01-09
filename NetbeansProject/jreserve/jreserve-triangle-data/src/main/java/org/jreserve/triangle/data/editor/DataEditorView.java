@@ -39,6 +39,17 @@ import org.openide.util.NbBundle.Messages;
         id=@ActionID(id="org.jreserve.triangle.widget.actions.DeleteCommentsAction", category="JReserve/TriangleWidget"),
         path="JReserve/Popup/DataEditor",
         position=200
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.smoothing.actions.AddSmoothingAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/DataEditor",
+        position=300,
+        separatorBefore=290
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.smoothing.actions.DeleteSmoothingAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/DataEditor",
+        position=400
     )
 })
 @Messages({

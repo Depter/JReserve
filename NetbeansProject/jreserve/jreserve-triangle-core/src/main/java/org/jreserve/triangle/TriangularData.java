@@ -26,9 +26,13 @@ public interface TriangularData {
     
     public void removeChangeListener(ChangeListener listener);
 
-    public double[][] getData();
+    public double[][] toArray();
     
     public String getLayerTypeId(int accident, int development);
+    
+    public static interface Provider {
+        public TriangularData getTriangularData();
+    }
     
     public static TriangularData EMPTY = new TriangularData() {
         
@@ -63,7 +67,7 @@ public interface TriangularData {
         }
         
         @Override
-        public double[][] getData() {
+        public double[][] toArray() {
             return new double[0][];
         }
 
@@ -80,8 +84,4 @@ public interface TriangularData {
             return "EMPTY";
         }
     };
-    
-    public static interface Provider {
-        public TriangularData getTriangularData();
-    }
 }

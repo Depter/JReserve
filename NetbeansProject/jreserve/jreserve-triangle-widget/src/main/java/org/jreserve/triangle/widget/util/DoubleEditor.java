@@ -90,13 +90,14 @@ public class DoubleEditor implements TableCellEditor {
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        editor.setText(getStringValue(value));
+        String text = getStringValue(value);
+        editor.setText(text);
         return editor;
     }
     
     private String getStringValue(Object value) {
         if(value instanceof Double)
-            return renderer.toString((Double) value);
+            return renderer.toString((Double) value).trim();
         return null;
     }
 }

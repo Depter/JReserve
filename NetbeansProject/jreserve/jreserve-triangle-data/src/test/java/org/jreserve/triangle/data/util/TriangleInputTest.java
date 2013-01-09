@@ -85,8 +85,8 @@ public class TriangleInputTest {
     }
 
     @Test
-    public void testGetData() {
-        double[][] found = data.getData();
+    public void testToArray() {
+        double[][] found = data.toArray();
         
         assertEquals(DATA.length, found.length);
         for(int a=0; a<DATA.length; a++) {

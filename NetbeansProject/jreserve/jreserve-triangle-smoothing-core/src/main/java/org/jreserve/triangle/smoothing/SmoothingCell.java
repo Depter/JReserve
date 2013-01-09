@@ -3,6 +3,7 @@ package org.jreserve.triangle.smoothing;
 import javax.persistence.*;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
+import org.jreserve.triangle.TriangleCoordiante;
 
 /**
  *
@@ -30,6 +31,10 @@ public class SmoothingCell extends AbstractPersistentObject implements Comparabl
     protected SmoothingCell() {
     }
     
+    public SmoothingCell(Smoothing smoothing, TriangleCoordiante coordiante, boolean applied) {
+        this(smoothing, coordiante.getAccident(), coordiante.getDevelopment(), applied);
+    }
+    
     public SmoothingCell(Smoothing smoothing, int accident, int development, boolean applied) {
         this.smoothing = smoothing;
         this.accident = accident;
@@ -43,6 +48,11 @@ public class SmoothingCell extends AbstractPersistentObject implements Comparabl
     
     public int getDevelopmentPeriod() {
         return development;
+    }
+    
+    public boolean isSameCell(int accident, int development) {
+        return this.accident == accident &&
+               this.development == development;
     }
 
     public boolean isApplied() {

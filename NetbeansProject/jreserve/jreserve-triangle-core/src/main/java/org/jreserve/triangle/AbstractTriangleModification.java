@@ -47,7 +47,7 @@ public abstract class AbstractTriangleModification implements ModifiedTriangular
     }
     
     @Override
-    public double[][] getData() {
+    public double[][] toArray() {
         int accidents = getAccidentCount();
         double[][] data = new double[accidents][];
         for(int a=0; a<accidents; a++)

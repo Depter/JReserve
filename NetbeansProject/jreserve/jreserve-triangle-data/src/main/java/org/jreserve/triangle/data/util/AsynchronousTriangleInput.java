@@ -89,9 +89,9 @@ public class AsynchronousTriangleInput implements TriangularData {
     }
 
     @Override
-    public double[][] getData() {
+    public double[][] toArray() {
         checkLoaded();
-        return data.getData();
+        return data.toArray();
     }
 
     @Override

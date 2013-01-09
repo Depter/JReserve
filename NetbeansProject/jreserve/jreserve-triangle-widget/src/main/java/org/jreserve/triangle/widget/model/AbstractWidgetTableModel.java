@@ -6,11 +6,11 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
+import org.jreserve.triangle.TriangleCoordiante;
 import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.comment.Commentable;
 import org.jreserve.triangle.comment.TriangleComment;
-import org.jreserve.triangle.widget.WidgetCell;
 import org.jreserve.triangle.widget.WidgetEditor;
 
 /**
@@ -50,7 +50,7 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     }
     
     private void initValues() {
-        this.values = data==null? null : data.getData();
+        this.values = data==null? null : data.toArray();
         if(values != null && cummulated)
             TriangleUtil.cummulate(values);
     }
@@ -194,19 +194,19 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     }
     
     @Override
-    public List<WidgetCell> getCells(int[] rows, int[] columns) {
-        List<WidgetCell> cells = new ArrayList<WidgetCell>();
+    public List<TriangleCoordiante> getCells(int[] rows, int[] columns) {
+        List<TriangleCoordiante> cells = new ArrayList<TriangleCoordiante>();
         for(int row : rows)
             for(int column : columns)
                 addCell(cells, row, column);
         return cells;
     }
     
-    private void addCell(List<WidgetCell> cells, int row, int column) {
+    private void addCell(List<TriangleCoordiante> cells, int row, int column) {
         int accident = getAccident(row, column - 1);
         int development = getDevelopment(row, column - 1);
         if(isValidCoordiantes(accident, development))
-            cells.add(new WidgetCell(accident, development));
+            cells.add(new TriangleCoordiante(accident, development));
     }
     
     @Override

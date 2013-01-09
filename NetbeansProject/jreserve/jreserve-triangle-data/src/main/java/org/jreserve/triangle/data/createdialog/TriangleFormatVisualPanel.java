@@ -116,7 +116,7 @@ class TriangleFormatVisualPanel extends JPanel {
     }
     
     public double[][] getTriangleValues() {
-        return data==null? null : data.getData();
+        return data==null? null : data.toArray();
     }
     
     public void addChangeListener(ChangeListener listener) {

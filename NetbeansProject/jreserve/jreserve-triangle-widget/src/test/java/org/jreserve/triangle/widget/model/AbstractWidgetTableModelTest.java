@@ -159,7 +159,7 @@ public class AbstractWidgetTableModelTest {
         }
 
         @Override
-        public double[][] getData() {
+        public double[][] toArray() {
             return data;
         }
 

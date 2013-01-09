@@ -9,11 +9,11 @@ import org.jreserve.triangle.correction.entities.TriangleCorrection;
  * @author Peter Decsi
  * @version 1.0
  */
-class TriangleCorrectionModification extends AbstractTriangleModification {
+public class TriangleCorrectionModification extends AbstractTriangleModification {
 
     private TriangleCorrection correction;
     
-    TriangleCorrectionModification(TriangleCorrection correction) {
+    public TriangleCorrectionModification(TriangleCorrection correction) {
         this.correction = correction;
     }
     
