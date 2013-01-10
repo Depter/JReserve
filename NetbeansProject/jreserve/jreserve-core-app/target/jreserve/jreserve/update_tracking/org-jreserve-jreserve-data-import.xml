@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.data.import">
-    <module_version install_time="1357760353637" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1357851258784" last="true" origin="installer" specification_version="1.0">
         <file crc="525257292" name="config/Modules/org-jreserve-jreserve-data-import.xml"/>
         <file crc="2249807121" name="modules/org-jreserve-jreserve-data-import.jar"/>
     </module_version>

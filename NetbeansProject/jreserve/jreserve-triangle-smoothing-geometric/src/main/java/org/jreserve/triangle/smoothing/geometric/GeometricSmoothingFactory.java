@@ -1,8 +1,8 @@
 package org.jreserve.triangle.smoothing.geometric;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.triangle.ModifiableTriangle;
 import org.jreserve.triangle.TriangleCoordiante;
@@ -11,6 +11,8 @@ import org.jreserve.triangle.smoothing.Smoothing;
 import org.jreserve.triangle.smoothing.SmoothingCell;
 import org.jreserve.triangle.smoothing.SmoothingNameChecker;
 import org.jreserve.triangle.smoothing.TriangleSmoothing;
+import static org.jreserve.triangle.smoothing.visual.SmoothingCreatorPanel.SMOOTHING_APPLIED_CELLS_PROPERTY;
+import static org.jreserve.triangle.smoothing.visual.SmoothingCreatorPanel.SMOOTHING_NAME_PROPERTY;
 import org.jreserve.triangle.util.ClassCounterTriangleStackQuery;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -31,7 +33,7 @@ import org.openide.util.NbBundle.Messages;
     "MSG.GeometricSmoothingFactory.Name.Exists=Name \"{0}\" already exists!",
     "MSG.GeometricSmoothingFactory.No.Cells=At least one cell must be smoothed!"
 })
-class GeometricSmoothingFactory implements ChangeListener {
+class GeometricSmoothingFactory implements PropertyChangeListener {
     
     private final static boolean IS_MODAL = true;
     private final static int OPTION_TYPE = DialogDescriptor.OK_CANCEL_OPTION;
@@ -40,7 +42,7 @@ class GeometricSmoothingFactory implements ChangeListener {
     private ModifiableTriangle triangle;
     private List<TriangleCoordiante> cells;
     
-    private GeometricSmoothingCreateDialog panel;
+    private GeometricSmoothingCreatorPanel panel;
     private DialogDescriptor dd; 
     private NotificationLineSupport nls;
     
@@ -54,9 +56,9 @@ class GeometricSmoothingFactory implements ChangeListener {
     
     private void createPanel(int visibleDigits) {
         double[] input = getInput();
-        panel = new GeometricSmoothingCreateDialog(visibleDigits, input);
+        panel = new GeometricSmoothingCreatorPanel(visibleDigits, input);
         setDefaultSmoothingName();
-        panel.addChangeListener(this);
+        panel.addPropertyChangeListener(this, SMOOTHING_NAME_PROPERTY, SMOOTHING_APPLIED_CELLS_PROPERTY);
     }
     
     private double[] getInput() {
@@ -78,7 +80,7 @@ class GeometricSmoothingFactory implements ChangeListener {
     }
 
     @Override
-    public void stateChanged(ChangeEvent e) {
+    public void propertyChange(PropertyChangeEvent e) {
         boolean valid = checkSmoothingName() && hasAppliedCells();
         dd.setValid(valid);
         if(valid)

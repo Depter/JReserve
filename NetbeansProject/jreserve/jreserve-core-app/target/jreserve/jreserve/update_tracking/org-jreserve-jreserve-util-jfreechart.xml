@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.util.jfreechart">
-    <module_version install_time="1357760353903" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1357851260413" last="true" origin="installer" specification_version="1.0">
         <file crc="2411349506" name="config/Modules/org-jreserve-jreserve-util-jfreechart.xml"/>
         <file crc="3858031784" name="modules/ext/bouncycastle/bcmail-jdk14-138.jar"/>
         <file crc="401457712" name="modules/ext/bouncycastle/bcprov-jdk14-138.jar"/>

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE properties PUBLIC "-//org.jreserve.rutil.visual//RFunctionExplorer//EN" "http://www.netbeans.org/dtds/properties-1_0.dtd">
-<properties>
-    <property name="rfunctionexplorer.mainsplit.location" value="173"/>
-    <property name="rfunctionexplorer.contentsplit.location" value="328"/>
-</properties>

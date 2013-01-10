@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.core.persistence">
-    <module_version install_time="1357760353477" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1357851258413" last="true" origin="installer" specification_version="1.0">
         <file crc="2339987798" name="config/Modules/org-jreserve-jreserve-core-persistence.xml"/>
         <file crc="914671301" name="modules/ext/antlr/antlr-2.7.7.jar"/>
         <file crc="4207353500" name="modules/ext/c3p0/c3p0-0.9.1.jar"/>

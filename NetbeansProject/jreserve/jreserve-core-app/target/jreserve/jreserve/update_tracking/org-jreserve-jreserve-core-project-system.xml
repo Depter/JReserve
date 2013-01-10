@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.core.project.system">
-    <module_version install_time="1357760353548" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1357851258541" last="true" origin="installer" specification_version="1.0">
         <file crc="3313521113" name="config/Modules/org-jreserve-jreserve-core-project-system.xml"/>
         <file crc="4099137698" name="modules/org-jreserve-jreserve-core-project-system.jar"/>
     </module_version>

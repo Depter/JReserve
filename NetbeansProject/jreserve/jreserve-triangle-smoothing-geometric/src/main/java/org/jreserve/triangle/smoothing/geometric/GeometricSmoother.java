@@ -13,7 +13,7 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Smoother.Registration(
-    position = 100,
+    position = 200,
     displayName = "#LBL.GeometricSmoother.DisplayName"
 )
 @Messages({

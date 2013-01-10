@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.core.logging">
-    <module_version install_time="1357760352911" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1357851257701" last="true" origin="installer" specification_version="1.0">
         <file crc="4000825479" name="config/Modules/org-jreserve-jreserve-core-logging.xml"/>
         <file crc="3646246446" name="logging/logging.properties"/>
         <file crc="1991180966" name="modules/org-jreserve-jreserve-core-logging.jar"/>

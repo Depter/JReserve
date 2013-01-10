@@ -149,6 +149,12 @@
             <version>${project.version}</version>
         </dependency>
         
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-smoothing-arithmetic</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <!-- ESTIMATE -->
         <dependency>
             <groupId>org.jreserve</groupId>
