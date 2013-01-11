@@ -20,7 +20,7 @@ import org.jreserve.rutil.r.Token;
  * @author Peter Decsi
  * @version 1.0
  */
-public class RCodeTextPane extends JTextPane implements ChangeListener {
+public class RCodeTextPane extends JTextPane {
 
     private RCode code;
     private DefaultStyledDocument document;
@@ -31,8 +31,7 @@ public class RCodeTextPane extends JTextPane implements ChangeListener {
         initStyles();
         super.setDocument(document);
         this.code = code;
-        this.code.addChangeListener(this);
-        stateChanged(null);
+        this.code.addChangeListener(new RCodeListener());
     }
     
     private void initStyles() {
@@ -49,6 +48,7 @@ public class RCodeTextPane extends JTextPane implements ChangeListener {
         //COMMENT
         Style comment = document.addStyle("comment", base);
         StyleConstants.setForeground(comment, Color.DARK_GRAY);
+        StyleConstants.setBold(comment, true);
         styles.put(RTokenType.COMMENT, comment);
         
         //STRING,
@@ -72,16 +72,8 @@ public class RCodeTextPane extends JTextPane implements ChangeListener {
         //NUMBER
         Style number = document.addStyle("number", base);
         StyleConstants.setForeground(number, new Color(00, 96, 00));
-        //StyleConstants.setBold(number, true);
+        StyleConstants.setBold(number, true);
         styles.put(RTokenType.NUMBER, number);
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        super.setText(code.toRCode());
-        try {
-            format();
-        } catch (BadLocationException ex) {}
     }
     
     private void format() throws BadLocationException {
@@ -96,5 +88,15 @@ public class RCodeTextPane extends JTextPane implements ChangeListener {
         int offset = token.getBegin();
         int length = token.getLength();
         document.setCharacterAttributes(offset, length, style, true);
+    }
+    
+    private class RCodeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            setText(code.toRCode());
+            try {
+                format();
+            } catch (BadLocationException ex) {}
+        }
     }
 }

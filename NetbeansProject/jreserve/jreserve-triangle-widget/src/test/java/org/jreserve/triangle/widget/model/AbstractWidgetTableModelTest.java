@@ -2,6 +2,7 @@ package org.jreserve.triangle.widget.model;
 
 import java.util.Date;
 import javax.swing.event.ChangeListener;
+import org.jreserve.rutil.RCode;
 import org.jreserve.triangle.TriangularData;
 import org.junit.Before;
 import org.junit.Test;
@@ -165,6 +166,11 @@ public class AbstractWidgetTableModelTest {
 
         @Override
         public String getLayerTypeId(int accident, int development) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void createTriangle(String triangleName, RCode rCode) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }

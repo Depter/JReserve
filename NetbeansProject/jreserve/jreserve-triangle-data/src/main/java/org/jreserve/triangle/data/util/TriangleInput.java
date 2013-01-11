@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.rutil.RCode;
+import org.jreserve.rutil.RUtil;
 import org.jreserve.triangle.TriangularData;
 
 /**
@@ -101,5 +103,11 @@ public class TriangleInput implements TriangularData {
     @Override
     public String getLayerTypeId(int accident, int development) {
         return LAYER_TYPE_ID;
+    }
+
+    @Override
+    public void createTriangle(String triangleName, RCode rCode) {
+        String data = RUtil.createArray(values);
+        rCode.addSource(String.format("%s <- %s%n", triangleName, data));
     }
 }

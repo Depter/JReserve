@@ -76,11 +76,15 @@ public class SmoothingTablePanel extends JPanel implements ChangeListener {
         return applied;
     }
     
-    public void setInput(double[] input) {
+    public void setInputValues(double[] input) {
         table.setInputValues(input);
     }
     
-    public void setSmoothed(double[] smoothed) {
+    public double[] getInputValues() {
+        return table.getInputValues();
+    }
+    
+    public void setSmoothedValues(double[] smoothed) {
         table.setSmoothedValues(smoothed);
     }
     

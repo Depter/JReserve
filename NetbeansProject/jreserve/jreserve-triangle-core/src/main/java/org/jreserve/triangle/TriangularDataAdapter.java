@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.rutil.RCode;
 
 /**
  *
@@ -82,5 +83,10 @@ public class TriangularDataAdapter implements TriangularData, ChangeListener {
     public void releaseData() {
         this.data.removeChangeListener(this);
         this.data = TriangularData.EMPTY;
+    }
+
+    @Override
+    public void createTriangle(String triangleName, RCode rCode) {
+        data.createTriangle(triangleName, rCode);
     }
 }

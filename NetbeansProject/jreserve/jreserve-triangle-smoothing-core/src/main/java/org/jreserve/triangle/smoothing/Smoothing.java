@@ -10,7 +10,9 @@ import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.IdGenerator;
 import org.jreserve.persistence.PersistentObject;
+import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RFunction;
+import org.jreserve.rutil.RUtil;
 
 /**
  *
@@ -103,6 +105,31 @@ public abstract class Smoothing implements PersistentObject {
     public abstract String getRSmoothing(String triangle, String x, String y, String used);
     
     public abstract RFunction getRFunction();
+    
+    public void appendSmoothing(String triangleName, RCode rCode) {
+        rCode.addFunction(getRFunction());
+        
+        int size = cells.size();
+        int[] x = new int[size];
+        int[] y = new int[size];
+        boolean[] used = new boolean[size];
+        for(int i=0; i<size; i++) {
+            SmoothingCell cell = cells.get(i);
+            x[i] = cell.getAccidentPeriod() + 1;
+            y[i] = cell.getDevelopmentPeriod() + 1;
+            used[i] = cell.isApplied();
+        }
+        
+        String r = String.format("%s <- %s%n", triangleName, getRSmoothingString(triangleName, x, y, used));
+        rCode.addSource(r);
+    }
+    
+    private String getRSmoothingString(String triangle, int[] x, int[] y, boolean[] applied) {
+        return getRSmoothing(triangle, 
+              RUtil.createVector(x), 
+              RUtil.createVector(y), 
+              RUtil.createVector(applied));
+    }
     
     @Override
     public boolean equals(Object o) {

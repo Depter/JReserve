@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.rutil.RCode;
 
 /**
  *
@@ -172,5 +173,10 @@ public class TriangleBundle implements TriangularData, ChangeListener {
     @Override
     public String getLayerTypeId(int accident, int development) {
         return top.getLayerTypeId(accident, development);
+    }
+
+    @Override
+    public void createTriangle(String triangleName, RCode rCode) {
+        top.createTriangle(triangleName, rCode);
     }
 }

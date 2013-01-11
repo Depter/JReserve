@@ -80,6 +80,7 @@
         <module>jreserve-triangle-smoothing-core</module>
         <module>jreserve-triangle-smoothing-geometric</module>
         <module>jreserve-triangle-smoothing-arithmetic</module>
+        <module>jreserve-triangle-smoothing-exponential</module>
         
         <!-- ESTIMATES -->
         <module>jreserve-estimate-core</module>

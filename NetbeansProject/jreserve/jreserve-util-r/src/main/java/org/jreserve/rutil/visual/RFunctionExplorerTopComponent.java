@@ -2,6 +2,7 @@ package org.jreserve.rutil.visual;
 
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RFunction;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -78,6 +79,16 @@ public final class RFunctionExplorerTopComponent extends TopComponent implements
             htmlText.setText(getHtml(function));
             setRCode(function);
         }
+        scrollHtmlTextToTop();
+    }
+    
+    private void scrollHtmlTextToTop() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                htmlText.scrollRectToVisible(new java.awt.Rectangle(1, 1));
+            }
+        });
     }
     
     private String getHtml(RFunction function) {
@@ -161,6 +172,7 @@ public final class RFunctionExplorerTopComponent extends TopComponent implements
         splitPanel.setLeftComponent(functionList);
 
         contentSplit.setDividerLocation(0.2);
+        contentSplit.setDividerLocation(0.5d);
         contentSplit.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         htmlText.setContentType(org.openide.util.NbBundle.getMessage(RFunctionExplorerTopComponent.class, "RFunctionExplorerTopComponent.htmlText.contentType")); // NOI18N

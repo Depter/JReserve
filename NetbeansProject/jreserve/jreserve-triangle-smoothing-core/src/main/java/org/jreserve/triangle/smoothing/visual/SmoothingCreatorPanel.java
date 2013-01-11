@@ -1,6 +1,9 @@
 package org.jreserve.triangle.smoothing.visual;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.BorderFactory;
@@ -67,8 +70,8 @@ public abstract class SmoothingCreatorPanel extends JPanel {
     private void initTable(int visibleDigits, double[] input) {
         table = new SmoothingTablePanel();
         table.setVisibleDigits(visibleDigits);
-        table.setInput(input);
-        table.setSmoothed(getSmoothedValues(input));
+        table.setInputValues(input);
+        table.setSmoothedValues(getSmoothedValues(input));
         table.addChangeListener(new TableListener());
     }
     
@@ -98,6 +101,12 @@ public abstract class SmoothingCreatorPanel extends JPanel {
     
     public boolean[] getApplied() {
         return table.getApplied();
+    }
+    
+    protected void updateSmoothedValues() {
+        double[] input = table.getInputValues();
+        double[] smoothed = getSmoothedValues(input);
+        table.setSmoothedValues(smoothed);
     }
     
     private class NameListener implements DocumentListener {

@@ -15,6 +15,7 @@ import org.jreserve.data.DataSource;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.persistence.SessionTask;
+import org.jreserve.rutil.RCode;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.entities.TriangleGeometry;
 
@@ -136,6 +137,12 @@ public class AsynchronousTriangleInput implements TriangularData {
     private void setValues(List<ClaimValue> values) {
         this.values = new ArrayList<ClaimValue>(values);
         buildData();
+    }
+
+    @Override
+    public void createTriangle(String triangleName, RCode rCode) {
+        checkLoaded();
+        data.createTriangle(triangleName, rCode);
     }
     
     private class SwingLoader extends SwingWorker<List<ClaimValue>, Void> {

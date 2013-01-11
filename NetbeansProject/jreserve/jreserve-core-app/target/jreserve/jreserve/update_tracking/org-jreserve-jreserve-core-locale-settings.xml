@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.core.locale.settings">
-    <module_version install_time="1357851258645" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1357894477851" last="true" origin="installer" specification_version="1.0">
         <file crc="535704827" name="config/Modules/org-jreserve-jreserve-core-locale-settings.xml"/>
-        <file crc="899213737" name="modules/org-jreserve-jreserve-core-locale-settings.jar"/>
+        <file crc="239140342" name="modules/org-jreserve-jreserve-core-locale-settings.jar"/>
     </module_version>
 </module>

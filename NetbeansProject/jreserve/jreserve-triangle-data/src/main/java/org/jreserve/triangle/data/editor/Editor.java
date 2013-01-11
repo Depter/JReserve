@@ -44,7 +44,7 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
         else
             addVectorCharts(ew, components);
         
-//        components.add(RCodeView.getTriangleView(element, ew.triangle));
+        components.add(new RCodeDataView(element));
         
         return new Editor(components, element, data);
     }
@@ -71,12 +71,10 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
     private TriangleProjectElement element;
     private TriangularDataAdapter data;
     private ProjectElementCloseHandler closeHandler;
-    private boolean isTriangle;
     
     private Editor(List<NavigableComponent> components, TriangleProjectElement element, TriangularDataAdapter data) {
         super(components);
         this.element = element;
-        this.isTriangle = element.getValue().isTriangle();
         this.data = data;
         this.closeHandler = new ProjectElementCloseHandler(element);
         initTopComponent();

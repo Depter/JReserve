@@ -32,6 +32,10 @@ public class SmoothingTable extends JTable {
         model.setInputValues(input);
     }
     
+    public double[] getInputValues() {
+        return model.getInputValues();
+    }
+    
     public void setSmoothedValues(double[] smoothed) {
         model.setSmoothedValues(smoothed);
     }

@@ -2,6 +2,7 @@ package org.jreserve.triangle.smoothing;
 
 import java.util.List;
 import org.hibernate.Session;
+import org.jreserve.rutil.RCode;
 import org.jreserve.triangle.AbstractTriangleModification;
 
 /**
@@ -48,6 +49,12 @@ public class TriangleSmoothing extends AbstractTriangleModification {
 
     @Override
     public double getValue(int accident, int development) {
+        if(cellsWithinSourceBounds())
+            return getSmoothedValue(accident, development);
+        return source.getValue(accident, development);
+    }
+    
+    private double getSmoothedValue(int accident, int development) {
         int index = getSmoothedIndex(accident, development);
         if(index < 0)
             return source.getValue(accident, development);
@@ -82,9 +89,34 @@ public class TriangleSmoothing extends AbstractTriangleModification {
 
     @Override
     public String getLayerTypeId(int accident, int development) {
+        if(!cellsWithinSourceBounds())
+            return source.getLayerTypeId(accident, development);
+        return getSmoothedLayerTypeId(accident, development);
+    }
+    
+    private String getSmoothedLayerTypeId(int accident, int development) {
         int index = getSmoothedIndex(accident, development);
         if(index < 0)
             return source.getLayerTypeId(accident, development);
         return Smoothing.LAYER_ID;
+    }
+    
+    @Override
+    protected void appendModification(String triangleName, RCode rCode) {
+        if(cellsWithinSourceBounds())
+            smoothing.appendSmoothing(triangleName, rCode);
+    }
+    
+    private boolean cellsWithinSourceBounds() {
+        for(SmoothingCell cell : smoothing.getCells())
+            if(!cellWithinSourceBounds(cell))
+                return false;
+        return true;
+    }
+    
+    private boolean cellWithinSourceBounds(SmoothingCell cell) {
+        return withinSourceBounds(
+                cell.getAccidentPeriod(), 
+                cell.getDevelopmentPeriod());
     }
 }

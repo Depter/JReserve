@@ -118,6 +118,12 @@
             <artifactId>jreserve-core-project-system</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-comment</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>junit</groupId>
@@ -125,11 +131,12 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-triangle-comment</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
+            <artifactId>jreserve-util-r</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

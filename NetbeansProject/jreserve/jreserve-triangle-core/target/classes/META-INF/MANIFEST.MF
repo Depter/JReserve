@@ -4,8 +4,8 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/triangle/Bundle.propert
  ies
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130109
-OpenIDE-Module-Build-Version: 201301091938
+OpenIDE-Module-Implementation-Version: 1.0-20130111
+OpenIDE-Module-Build-Version: 201301111143
 OpenIDE-Module: org.jreserve.jreserve.triangle.core
 OpenIDE-Module-Public-Packages: org.jreserve.triangle.*, org.jreserve.
  triangle.entities.*, org.jreserve.triangle.util.*
@@ -18,5 +18,6 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
  > 8.25.1, org.openide.util.lookup > 8.15.1, org.jreserve.jreserve.cor
  e.persistence > 1.0, org.jreserve.jreserve.core.project.system > 1.0,
   org.jreserve.jreserve.util.audit > 1.0, org.jreserve.jreserve.data.p
- roject > 1.0, org.jreserve.jreserve.data.data > 1.0
+ roject > 1.0, org.jreserve.jreserve.data.data > 1.0, org.jreserve.jre
+ serve.util.r > 1.0
 

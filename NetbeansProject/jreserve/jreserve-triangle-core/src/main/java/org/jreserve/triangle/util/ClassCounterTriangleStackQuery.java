@@ -11,12 +11,12 @@ import org.jreserve.triangle.TriangularData;
  */
 public class ClassCounterTriangleStackQuery extends AbstractTriangleStackQuery<Integer> {
     
-    public static int getMaxOrder(Class<?> clazz, ModifiableTriangle triangle) {
+    public static int getCount(Class<?> clazz, ModifiableTriangle triangle) {
         return new ClassCounterTriangleStackQuery(clazz).query(triangle);
     }
     
     private final Class<?> clazz;
-    private int maxOrder = 0;
+    private int count = 0;
     
     public ClassCounterTriangleStackQuery(Class<?> clazz) {
         this.clazz = clazz;
@@ -32,13 +32,11 @@ public class ClassCounterTriangleStackQuery extends AbstractTriangleStackQuery<I
 
     @Override
     protected void processData(TriangularData data) {
-        int order = ((ModifiedTriangularData) data).getOrder();
-        if(maxOrder < order)
-            maxOrder = order;
+        count++;
     }
 
     @Override
     protected Integer getResult() {
-        return maxOrder;
+        return count;
     }
 }

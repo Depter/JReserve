@@ -66,7 +66,7 @@ class ArithmeticSmoothingFactory implements PropertyChangeListener {
     }
     
     private void setDefaultSmoothingName() {
-        int order = ClassCounterTriangleStackQuery.getMaxOrder(TriangleSmoothing.class, triangle);
+        int order = ClassCounterTriangleStackQuery.getCount(TriangleSmoothing.class, triangle);
         String name = Bundle.LBL_ArithmeticSmoothingFactory_Default_Name(order + 1);
         panel.setSmoothingName(name);
     }

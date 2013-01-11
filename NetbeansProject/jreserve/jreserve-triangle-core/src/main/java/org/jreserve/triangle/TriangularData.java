@@ -2,6 +2,8 @@ package org.jreserve.triangle;
 
 import java.util.Date;
 import javax.swing.event.ChangeListener;
+import org.jreserve.rutil.RCode;
+import org.jreserve.rutil.RUtil;
 
 /**
  *
@@ -29,6 +31,8 @@ public interface TriangularData {
     public double[][] toArray();
     
     public String getLayerTypeId(int accident, int development);
+    
+    public void createTriangle(String triangleName, RCode rCode);
     
     public static interface Provider {
         public TriangularData getTriangularData();
@@ -82,6 +86,12 @@ public interface TriangularData {
         @Override
         public String getLayerTypeId(int accident, int development) {
             return "EMPTY";
+        }
+        
+        @Override
+        public void createTriangle(String triangleName, RCode rCode) {
+            String values = RUtil.createArray(new double[0][0]);
+            rCode.addSource(String.format("%s <- %s%n", triangleName, values));
         }
     };
 }

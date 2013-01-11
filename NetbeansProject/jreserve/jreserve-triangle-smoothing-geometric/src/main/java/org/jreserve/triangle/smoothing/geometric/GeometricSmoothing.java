@@ -51,11 +51,11 @@ public class GeometricSmoothing extends Smoothing {
 
     @Override
     public String getRSmoothing(String triangle, String x, String y, String used) {
-        return RGeometricFunction.getSmoothing(triangle, x, y, used);
+        return RGeometricSmoothing.getSmoothing(triangle, x, y, used);
     }
 
     @Override
     public RFunction getRFunction() {
-        return new RGeometricFunction();
+        return new RGeometricSmoothing();
     }
 }

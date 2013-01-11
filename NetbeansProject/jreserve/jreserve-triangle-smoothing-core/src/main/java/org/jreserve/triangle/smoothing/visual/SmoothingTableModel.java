@@ -30,6 +30,14 @@ class SmoothingTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
     
+    double[] getInputValues() {
+        int size = dummies.size();
+        double[] result = new double[size];
+        for(int i=0; i<size; i++)
+            result[i] = dummies.get(i).input;
+        return result;
+    }
+    
     void setSmoothedValues(double[] smoothed) {
         if(smoothed == null) {
             for(SmoothDummy dummy : dummies)

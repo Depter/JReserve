@@ -11,7 +11,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "MSG.ArithmeticSmoothingAuditor.TypeName=Arithmetic smoothing"
 })
-@Auditor.Registration(400)
+@Auditor.Registration(500)
 public class ArithmeticSmoothingAuditor extends SmoothingAuditor<ArithmeticSmoothing> {
     
     public ArithmeticSmoothingAuditor() {

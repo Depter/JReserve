@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.data.data">
-    <module_version install_time="1357851258748" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1357894477913" last="true" origin="installer" specification_version="1.0">
         <file crc="238254599" name="config/Modules/org-jreserve-jreserve-data-data.xml"/>
-        <file crc="1035620203" name="modules/org-jreserve-jreserve-data-data.jar"/>
+        <file crc="3269009953" name="modules/org-jreserve-jreserve-data-data.jar"/>
     </module_version>
 </module>

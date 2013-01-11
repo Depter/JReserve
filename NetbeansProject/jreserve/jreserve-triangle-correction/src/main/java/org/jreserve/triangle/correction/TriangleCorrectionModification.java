@@ -1,6 +1,7 @@
 package org.jreserve.triangle.correction;
 
 import org.hibernate.Session;
+import org.jreserve.rutil.RCode;
 import org.jreserve.triangle.AbstractTriangleModification;
 import org.jreserve.triangle.correction.entities.TriangleCorrection;
 
@@ -63,5 +64,25 @@ public class TriangleCorrectionModification extends AbstractTriangleModification
     public void delete(Session session) {
         Object contained = session.merge(correction);
         session.delete(contained);
+    }
+
+    @Override
+    protected void appendModification(String triangleName, RCode rCode) {
+        if(withinSourceBounds())
+            rCode.addSource(getRCorrectionString(triangleName));
+    }
+    
+    private boolean withinSourceBounds() {
+        return withinSourceBounds(
+                 correction.getAccident(), 
+                 correction.getDevelopment());
+    }
+    
+    private String getRCorrectionString(String triangleName) {
+        return String.format("%s[%d, %d] = %f%n",
+                triangleName,
+                correction.getAccident() + 1, 
+                correction.getDevelopment() + 1,
+                correction.getCorrigatedValue());
     }
 }

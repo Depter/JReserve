@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.rutil.RCode;
 
 /**
  *
@@ -102,5 +103,18 @@ public abstract class AbstractTriangleModification implements ModifiedTriangular
     @Override
     public String toString() {
         return String.format("AbstractTriangleModification [%d]", getOrder());
+    }
+    
+    @Override
+    public void createTriangle(String trinagleName, RCode rCode) {
+        source.createTriangle(trinagleName, rCode);
+        appendModification(trinagleName, rCode);
+    }
+    
+    protected abstract void appendModification(String triangleName, RCode rCode);
+    
+    protected boolean withinSourceBounds(int accident, int development) {
+        return accident < source.getAccidentCount() &&
+               development < source.getDevelopmentCount(accident);
     }
 }

@@ -22,7 +22,7 @@ import org.openide.util.lookup.ServiceProvider;
     "LBL.RGeometricFunction.Return.Description=The smoothed triangle."
 })
 @ServiceProvider(service=RFunction.class)
-public class RGeometricFunction implements RFunction {
+public class RGeometricSmoothing implements RFunction {
 
     private final static Map<String, String> PARAMS = new LinkedHashMap<String, String>(4);
     static {
