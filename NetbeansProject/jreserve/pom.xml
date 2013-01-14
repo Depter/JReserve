@@ -81,9 +81,13 @@
         <module>jreserve-triangle-smoothing-geometric</module>
         <module>jreserve-triangle-smoothing-arithmetic</module>
         <module>jreserve-triangle-smoothing-exponential</module>
+    
+        <!-- FACTORS -->
+        <module>jreserve-factor-core</module>
         
         <!-- ESTIMATES -->
         <module>jreserve-estimate-core</module>
+        <module>jreserve-estimate-expectedratio</module>
         
         <!-- UTIL -->
         <module>jreserve-util-audit</module>

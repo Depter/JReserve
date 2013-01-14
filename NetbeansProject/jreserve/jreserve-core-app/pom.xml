@@ -161,10 +161,23 @@
             <version>${project.version}</version>
         </dependency>
         
+        <!-- FACTOR -->
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-factor-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <!-- ESTIMATE -->
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-estimate-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-estimate-expectedratio</artifactId>
             <version>${project.version}</version>
         </dependency>
         
