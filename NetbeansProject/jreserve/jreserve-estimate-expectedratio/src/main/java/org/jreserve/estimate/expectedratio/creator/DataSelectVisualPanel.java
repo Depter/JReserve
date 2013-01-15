@@ -2,6 +2,7 @@ package org.jreserve.estimate.expectedratio.creator;
 
 import java.awt.GridBagConstraints;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -11,6 +12,7 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.project.system.visual.ProjectElementComboBox;
+import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.data.factories.ProjectDataContainerFactoy;
 import org.jreserve.triangle.entities.Triangle;
 import org.openide.util.LookupEvent;
@@ -40,8 +42,28 @@ class DataSelectVisualPanel extends JPanel {
 
     void setProject(ProjectElement element) {
         element = element.getFirstChild(ProjectDataContainerFactoy.POSITION, ProjectElementContainer.class);
-        List<ProjectElement> triangles = element.getChildren(Triangle.class);
-        triangleCombo.setElements(triangles);
+        triangleCombo.setElements(getTriangles(element));
+        exposureCombo.setElements(getExposures(element));
+    }
+    
+    private List<ProjectElement> getTriangles(ProjectElement container) {
+        List<ProjectElement> triangles = container.getChildren(Triangle.class);
+        for(Iterator<ProjectElement> it = triangles.iterator(); it.hasNext();)
+            if(!isTriangle(it.next()))
+                it.remove();
+        return triangles;
+    }
+    
+    private boolean isTriangle(ProjectElement element) {
+        return ((Triangle) element.getValue()).isTriangle();
+    }
+    
+    private List<ProjectElement> getExposures(ProjectElement container) {
+        List<ProjectElement> triangles = container.getChildren(Triangle.class);
+        for(Iterator<ProjectElement> it = triangles.iterator(); it.hasNext();)
+            if(isTriangle(it.next()))
+                it.remove();
+        return triangles;
     }
     
     Triangle getTriangle() {
@@ -52,12 +74,20 @@ class DataSelectVisualPanel extends JPanel {
         triangleCombo.setSelectedItem(triangle);
     }
     
+    TriangularData getTriangleData() {
+        return triangleCombo.getSelectedItem(TriangularData.class);
+    }
+    
     Triangle getExposure() {
         return exposureCombo.getSelectedItem(Triangle.class);
     }
     
     void setExposure(Triangle exposure) {
         exposureCombo.setSelectedItem(exposure);
+    }
+    
+    TriangularData getExposureData() {
+        return exposureCombo.getSelectedItem(TriangularData.class);
     }
     
     void addChangeListener(ChangeListener listener) {

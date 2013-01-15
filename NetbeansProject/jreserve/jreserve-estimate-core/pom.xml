@@ -78,6 +78,12 @@
         
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>jreserve-triangle-data</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -92,6 +98,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.estimate.core.container.factory</publicPackage>
+                        <publicPackage>org.jreserve.estimate.core.util</publicPackage>
                         <publicPackage>org.jreserve.estimate.core.visual</publicPackage>
                     </publicPackages>
                 </configuration>

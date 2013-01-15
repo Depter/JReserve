@@ -11,6 +11,7 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.project.system.visual.ProjectElementComboBox;
+import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.data.factories.ProjectDataContainerFactoy;
 import org.jreserve.triangle.entities.Triangle;
 import org.openide.util.LookupEvent;
@@ -26,7 +27,7 @@ import org.openide.util.NbBundle.Messages;
     "LBL.TriangleSelectVisualPanel.PanelName=Select triangle",
     "LBL.TriangleSelectVisualPanel.Triangle=Triangle:"
 })
-class TriangleSelectVisualPanel extends JPanel {
+public class TriangleSelectVisualPanel extends JPanel {
     
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     private ProjectElementComboBox triangleCombo;
@@ -36,26 +37,30 @@ class TriangleSelectVisualPanel extends JPanel {
         setName(Bundle.LBL_TriangleSelectVisualPanel_PanelName());
     }
 
-    void setProject(ProjectElement element) {
+    public void setProject(ProjectElement element) {
         element = element.getFirstChild(ProjectDataContainerFactoy.POSITION, ProjectElementContainer.class);
         List<ProjectElement> triangles = element.getChildren(Triangle.class);
         triangleCombo.setElements(triangles);
     }
     
-    Triangle getTriangle() {
+    public Triangle getTriangle() {
         return triangleCombo.getSelectedItem(Triangle.class);
     }
     
-    void setTriangle(Triangle triangle) {
+    public void setTriangle(Triangle triangle) {
         triangleCombo.setSelectedItem(triangle);
     }
     
-    void addChangeListener(ChangeListener listener) {
+    public TriangularData getTriangleData() {
+        return triangleCombo.getSelectedItem(TriangularData.class);
+    }
+    
+    public void addChangeListener(ChangeListener listener) {
         if(!listeners.contains(listener))
             listeners.add(listener);
     }
     
-    void removeChangeListener(ChangeListener listenener) {
+    public void removeChangeListener(ChangeListener listenener) {
         listeners.remove(listenener);
     }
     

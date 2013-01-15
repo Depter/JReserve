@@ -1,6 +1,6 @@
-#Fri Jan 11 14:28:30 CET 2013
+#Tue Jan 15 17:10:42 CET 2013
 used=true
 short.name=db1
 driver.class=org.apache.derby.jdbc.EmbeddedDriver
-db.location=C\:\\Documents and Settings\\aa461472\\Desktop\\db1
 opened=true
+db.location=C\:\\Documents and Settings\\aa461472\\Desktop\\db1

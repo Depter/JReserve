@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.core.database">
-    <module_version install_time="1357894477038" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1358246480475" last="true" origin="installer" specification_version="1.0">
         <file crc="1775078647" name="config/Modules/org-jreserve-jreserve-core-database.xml"/>
-        <file crc="830692945" name="modules/org-jreserve-jreserve-core-database.jar"/>
+        <file crc="521672448" name="modules/org-jreserve-jreserve-core-database.jar"/>
     </module_version>
 </module>

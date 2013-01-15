@@ -31,7 +31,7 @@ import org.openide.util.NbBundle.Messages;
     "LBL.NameSelectVisualPanel.Name=Name:",
     "LBL.NameSelectVisualPanel.Description=Description:"
 })
-class NameSelectVisualPanel extends JPanel {
+public class NameSelectVisualPanel extends JPanel {
     
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
 
@@ -46,61 +46,61 @@ class NameSelectVisualPanel extends JPanel {
         setName(Bundle.LBL_NameSelectVisualPanel_PanelName());
     }
 
-    void setLoB(LoB lob) {
+    public void setLoB(LoB lob) {
         lobCombo.setSelectedItem(lob);
     }
     
-    LoB getLoB() {
+    public LoB getLoB() {
         return lobCombo.getSelectedItem(LoB.class);
     }
     
-    void setClaimType(ClaimType claimType) {
+    public void setClaimType(ClaimType claimType) {
         setLoB(claimType.getLoB());
         claimTypeCombo.setSelectedItem(claimType);
     }
     
-    ClaimType getClaimType() {
+    public ClaimType getClaimType() {
         return claimTypeCombo.getSelectedItem(ClaimType.class);
     }
     
-    void setProject(Project project) {
+    public void setProject(Project project) {
         setClaimType(project.getClaimType());
         projectCombo.setSelectedItem(project);
     }
     
-    Project getProject() {
+    public Project getProject() {
         return projectCombo.getSelectedItem(Project.class);
     }
     
-    ProjectElement<Project> getProjectElement() {
+    public ProjectElement<Project> getProjectElement() {
         return projectCombo.getSelectedItem();
     }
     
-    void setEstimateName(String name) {
+    public void setEstimateName(String name) {
         nameText.setText(name);
     }
     
-    String getEstimateName() {
+    public String getEstimateName() {
         return nameText.getText();
     }
     
-    String getDescription() {
+    public String getDescription() {
         String str = descriptionText.getText();
         if(str == null || str.trim().length() == 0)
             return null;
         return str;
     }
     
-    void setDescription(String description) {
+    public void setDescription(String description) {
         descriptionText.setText(description);
     }
     
-    void addChangeListener(ChangeListener listener) {
+    public void addChangeListener(ChangeListener listener) {
         if(!listeners.contains(listener))
             listeners.add(listener);
     }
     
-    void removeChangeListener(ChangeListener listenener) {
+    public void removeChangeListener(ChangeListener listenener) {
         listeners.remove(listenener);
     }
     

@@ -34,8 +34,8 @@ public class NameSelectWizardPanel implements WizardDescriptor.Panel<WizardDescr
     public final static String PROP_PROJECT = "PROJECT_PROPERTY";
     public final static String PROP_PROJECT_ELEMENT = "PROJECT_ELEMENT_PROPERTY";
     
-    private NameSelectVisualPanel component;
-    private WizardDescriptor wizard;
+    protected NameSelectVisualPanel component;
+    protected WizardDescriptor wizard;
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     private PanelValidator validator;
     
@@ -65,7 +65,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.Panel<WizardDescr
         validator.validatePanel();
     }
     
-    private boolean setProject(Lookup lookup) {
+    protected boolean setProject(Lookup lookup) {
         Project project = lookup.lookup(Project.class);
         if(project != null) {
             component.setProject(project);
@@ -74,7 +74,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.Panel<WizardDescr
         return false;
     }
     
-    private boolean setClaimType(Lookup lookup) {
+    protected boolean setClaimType(Lookup lookup) {
         ClaimType ct = lookup.lookup(ClaimType.class);
         if(ct != null) {
             component.setClaimType(ct);
@@ -83,7 +83,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.Panel<WizardDescr
         return false;
     }
     
-    private boolean setLoB(Lookup lookup) {
+    protected boolean setLoB(Lookup lookup) {
         LoB lob = lookup.lookup(LoB.class);
         if(lob != null) {
             component.setLoB(lob);
@@ -92,7 +92,7 @@ public class NameSelectWizardPanel implements WizardDescriptor.Panel<WizardDescr
         return false;
     }
     
-    private void setEstimateName() {
+    protected void setEstimateName() {
         String name = (String) wizard.getProperty(PROP_NAME);
         component.setEstimateName(name);
     }

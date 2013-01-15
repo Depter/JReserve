@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.triangle.comment">
-    <module_version install_time="1357894478101" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1358246481787" last="true" origin="installer" specification_version="1.0">
         <file crc="3874738791" name="config/Modules/org-jreserve-jreserve-triangle-comment.xml"/>
-        <file crc="3479101946" name="modules/org-jreserve-jreserve-triangle-comment.jar"/>
+        <file crc="3616519333" name="modules/org-jreserve-jreserve-triangle-comment.jar"/>
     </module_version>
 </module>

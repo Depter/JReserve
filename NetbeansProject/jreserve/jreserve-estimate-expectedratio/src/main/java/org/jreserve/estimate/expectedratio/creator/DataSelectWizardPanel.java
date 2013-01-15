@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.estimate.core.util.TriangleValidator;
 import org.jreserve.estimate.core.visual.NameSelectWizardPanel;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.ElementCreatorWizard;
+import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.entities.Triangle;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -23,6 +25,8 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "MSG.DataSelectWizardPanel.Triangle.Empty=Triangle not selected!",
+    "MSG.DataSelectWizardPanel.Triangle.NoValues=Triangle does not contain any values!",
+    "MSG.DataSelectWizardPanel.Triangle.NotContinuous=Triangle can not contain any gaps (NaN's between values)!",
     "MSG.DataSelectWizardPanel.Exposure.Empty=Exposure not selected!"
 })
 public class DataSelectWizardPanel implements WizardDescriptor.ValidatingPanel<WizardDescriptor>, ChangeListener {
@@ -106,7 +110,7 @@ public class DataSelectWizardPanel implements WizardDescriptor.ValidatingPanel<W
     }
     
     private void validatePanel() {
-        isValid = checkTriangle();
+        isValid = checkTriangle() && checkExposure();
         if(isValid)
             showError(null);
     }
@@ -117,6 +121,18 @@ public class DataSelectWizardPanel implements WizardDescriptor.ValidatingPanel<W
             showError(Bundle.MSG_DataSelectWizardPanel_Triangle_Empty());
             return false;
         }
+        
+        TriangularData data = component.getTriangleData();
+        if(TriangleValidator.isEmpty(data)) {
+            showError(Bundle.MSG_DataSelectWizardPanel_Triangle_NoValues());
+            return false;
+        }
+        
+        if(!TriangleValidator.isContinuous(data)) {
+            showError(Bundle.MSG_DataSelectWizardPanel_Triangle_NotContinuous());
+            return false;
+        }
+        
         return true;
     }
     
@@ -144,4 +160,6 @@ public class DataSelectWizardPanel implements WizardDescriptor.ValidatingPanel<W
         String msg = "Not supported yet.";
         throw new WizardValidationException(component, msg, msg);
     }
+    
+    
 }

@@ -2,7 +2,6 @@ package org.jreserve.estimate.expectedratio.creator;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.estimate.core.visual.NameSelectWizardPanel;
 import org.jreserve.project.system.management.ElementCreatorWizard;
 import org.openide.WizardDescriptor;
 import org.openide.WizardDescriptor.Panel;
@@ -32,7 +31,7 @@ public class ExpectedRatioCreator implements ElementCreatorWizard {
     @Override
     public List<Panel> getPanels() {
         List<WizardDescriptor.Panel> panels = new ArrayList<WizardDescriptor.Panel>(2);
-        panels.add(new NameSelectWizardPanel());
+        panels.add(new ERNameSelectWizardPanel());
         panels.add(new DataSelectWizardPanel());
         return panels;
     }
