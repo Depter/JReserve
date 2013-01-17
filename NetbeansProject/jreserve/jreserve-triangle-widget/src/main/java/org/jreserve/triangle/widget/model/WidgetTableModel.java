@@ -2,9 +2,9 @@ package org.jreserve.triangle.widget.model;
 
 import java.util.List;
 import javax.swing.table.TableModel;
-import org.jreserve.triangle.TriangleCoordiante;
+import org.jreserve.triangle.value.TriangleCoordiante;
 import org.jreserve.triangle.TriangularData;
-import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.comment.TriangleComment;
 import org.jreserve.triangle.widget.WidgetEditor;
 
@@ -31,9 +31,9 @@ public interface WidgetTableModel extends TableModel {
     
     public List<TriangleCoordiante> getCells(int[] rows, int[] columns);
     
-    public void setCommentable(Commentable commentable);
+    public void setCommentable(CommentableTriangle commentable);
     
-    public Commentable getCommentable();
+    public CommentableTriangle getCommentable();
     
     public List<TriangleComment> getComments(int row, int column);
     

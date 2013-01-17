@@ -2,7 +2,7 @@ package org.jreserve.triangle.widget.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
-import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.comment.TriangleComment;
 import org.jreserve.triangle.comment.visual.AddCommentDialog;
 import org.openide.util.Lookup;
@@ -19,8 +19,8 @@ import org.openide.util.NbBundle.Messages;
 })
 public class AddCommentAction extends AbstractSingleCellPopUpAction {
     
-    private Result<Commentable> tResult;
-    private Commentable commentable;
+    private Result<CommentableTriangle> tResult;
+    private CommentableTriangle commentable;
     
     public AddCommentAction() {
         putValue(NAME, Bundle.CTL_AddCommentAction());
@@ -35,7 +35,7 @@ public class AddCommentAction extends AbstractSingleCellPopUpAction {
     protected void init(Lookup lookup) {
         if(tResult != null)
             return;
-        tResult = lookup.lookupResult(Commentable.class);
+        tResult = lookup.lookupResult(CommentableTriangle.class);
         tResult.addLookupListener(this);
         super.init(lookup);
     }

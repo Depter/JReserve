@@ -17,8 +17,8 @@ import org.jreserve.project.factories.LoBFactory;
 import org.jreserve.project.factories.ProjectFactory;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
-import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.comment.TriangleCommentFactory;
 import org.jreserve.triangle.correction.factory.TriangleCorrectionFactory;
 import org.jreserve.triangle.data.factories.ProjectDataContainerFactoy;
@@ -149,19 +149,19 @@ public class SampleBuilder {
     }
     
     private void addCorrection(ProjectElement element) throws Exception {
-        ModifiableTriangle triangle = (ModifiableTriangle) element;
+        ModifiableTriangularData triangle = (ModifiableTriangularData) element;
         TriangleCorrectionFactory factory = new TriangleCorrectionFactory(triangle, 0, 1, 60);
         doWork(factory, null);
     }
     
     private void addComment(ProjectElement element, int accident, int development, String msg) throws Exception {
-        Commentable commentable = element.getLookup().lookup(Commentable.class);
+        CommentableTriangle commentable = element.getLookup().lookup(CommentableTriangle.class);
         TriangleCommentFactory factory = new TriangleCommentFactory(commentable, accident, development, msg);
         doWork(factory, null);
     }
     
     private void addGeometricSmoothing(ProjectElement element, int index, int[][] cells, boolean[] applied) throws Exception {
-        ModifiableTriangle triangle = (ModifiableTriangle) element;
+        ModifiableTriangularData triangle = (ModifiableTriangularData) element;
         GeometricSmoothingFactory factory = new GeometricSmoothingFactory(triangle, Bundle.MSG_SampleBuilder_Smoothing_Name(index), cells, applied);
         doWork(factory, null);
     }

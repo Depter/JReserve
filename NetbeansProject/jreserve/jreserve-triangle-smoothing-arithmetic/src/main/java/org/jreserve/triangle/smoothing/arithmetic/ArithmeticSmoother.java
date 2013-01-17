@@ -1,8 +1,8 @@
 package org.jreserve.triangle.smoothing.arithmetic;
 
 import java.util.List;
-import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangleCoordiante;
+import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.value.TriangleCoordiante;
 import org.jreserve.triangle.smoothing.Smoother;
 import org.jreserve.triangle.smoothing.Smoothing;
 import org.openide.util.NbBundle.Messages;
@@ -21,7 +21,7 @@ import org.openide.util.NbBundle.Messages;
 public class ArithmeticSmoother implements Smoother {
 
     @Override
-    public Smoothing createSmoothing(ModifiableTriangle triangle, List<TriangleCoordiante> cells, int visibleDigits) {
+    public Smoothing createSmoothing(ModifiableTriangularData triangle, List<TriangleCoordiante> cells, int visibleDigits) {
         ArithmeticSmoothingFactory factory = new ArithmeticSmoothingFactory(triangle, cells, visibleDigits);
         return factory.createSmoothing();
     }

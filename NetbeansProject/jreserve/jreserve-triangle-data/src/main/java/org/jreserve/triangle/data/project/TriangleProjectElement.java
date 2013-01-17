@@ -1,5 +1,10 @@
 package org.jreserve.triangle.data.project;
 
+import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.value.TriangleUtil;
+import org.jreserve.triangle.value.TriangleBundle;
+import org.jreserve.triangle.TriangularDataModification;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +17,8 @@ import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
-import org.jreserve.triangle.*;
 import org.jreserve.triangle.comment.AbstractCommentable;
-import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.comment.TriangleComment;
 import org.jreserve.triangle.comment.TriangleCommentUtil;
 import org.jreserve.triangle.data.editor.Editor;
@@ -45,7 +49,7 @@ import org.openide.windows.TopComponent;
     "MSG.TriangleProjectElement.UndoRedo.Geometry=geometry change",
     "MSG.TriangleProjectElement.UndoRedo.Correction=correction change"
 })
-public class TriangleProjectElement extends ProjectElement<Triangle> implements TriangularData.Provider, ModifiableTriangle {
+public class TriangleProjectElement extends ProjectElement<Triangle> implements TriangularData.Provider, ModifiableTriangularData {
     
     public final static int TRIANGLE_POSITION = 100;
     public final static int VECTOR_POSITION = 200;
@@ -78,14 +82,14 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
     }
     
     private void initModifications() {
-        List<ModifiedTriangularData> mods = TriangleUtil.loadData(getValue());
+        List<TriangularDataModification> mods = TriangleUtil.loadData(getValue());
         super.setProperty(MODIFICATION_PROPERTY, mods);
         data.setModifications(mods);
     }
     
     private void initComments() {
         List<TriangleComment> comments = TriangleCommentUtil.loadComments(getValue());
-        super.setProperty(Commentable.COMMENT_PROPERTY, comments);
+        super.setProperty(CommentableTriangle.COMMENT_PROPERTY, comments);
     }
     
     private void initLookup() {
@@ -113,8 +117,8 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
     @Override
     public Object getProperty(Object property) {
         if(MODIFICATION_PROPERTY.equals(property)) {
-            List<ModifiedTriangularData> mods = (List<ModifiedTriangularData>) super.getProperty(property);
-            return new ArrayList<ModifiedTriangularData>(mods);
+            List<TriangularDataModification> mods = (List<TriangularDataModification>) super.getProperty(property);
+            return new ArrayList<TriangularDataModification>(mods);
         }
         return super.getProperty(property);
     }
@@ -128,10 +132,10 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
         else if(Triangle.GEOMETRY_PROPERTY.equals(property))
             setTriangleGeometryProperty((TriangleGeometry) value);
         else if(MODIFICATION_PROPERTY.equals(property)) {
-            List<ModifiedTriangularData> mods = (List<ModifiedTriangularData>) value;
+            List<TriangularDataModification> mods = (List<TriangularDataModification>) value;
             data.setModifications(mods);
-            value = new ArrayList<ModifiedTriangularData>(mods);
-        } else if(Commentable.COMMENT_PROPERTY.equals(property)) {
+            value = new ArrayList<TriangularDataModification>(mods);
+        } else if(CommentableTriangle.COMMENT_PROPERTY.equals(property)) {
             value = new ArrayList<TriangleComment>((List<TriangleComment>) value);
         }
         super.setProperty(property, value);
@@ -160,26 +164,26 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
     @Override
     public int getMaxModificationOrder() {
         int order = 0;
-        for(ModifiedTriangularData modification : getModifications())
+        for(TriangularDataModification modification : getModifications())
             if(modification.getOrder() > order)
                 order = modification.getOrder();
         return order;
     }
     
     @Override
-    public List<ModifiedTriangularData> getModifications() {
-        return (List<ModifiedTriangularData>) getProperty(MODIFICATION_PROPERTY);
+    public List<TriangularDataModification> getModifications() {
+        return (List<TriangularDataModification>) getProperty(MODIFICATION_PROPERTY);
     }
 
     @Override
-    public void addModification(ModifiedTriangularData modification) {
+    public void addModification(TriangularDataModification modification) {
         checkOrder(modification);
-        List<ModifiedTriangularData> mods = getModifications();
+        List<TriangularDataModification> mods = getModifications();
         mods.add(modification);
         setProperty(MODIFICATION_PROPERTY, mods);
     }
     
-    private void checkOrder(ModifiedTriangularData modification) {
+    private void checkOrder(TriangularDataModification modification) {
         int order = modification.getOrder();
         if(containsOrder(order)) {
             String msg = "Modification with order %d already contained! %s can not be added!";
@@ -189,21 +193,21 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
     }
     
     private boolean containsOrder(int order) {
-        for(ModifiedTriangularData modification : getModifications())
+        for(TriangularDataModification modification : getModifications())
             if(modification.getOrder() == order)
                 return true;
         return false;
     }
 
     @Override
-    public void removeModification(ModifiedTriangularData modification) {
-        List<ModifiedTriangularData> mods = getModifications();
+    public void removeModification(TriangularDataModification modification) {
+        List<TriangularDataModification> mods = getModifications();
         mods.remove(modification);
         setProperty(MODIFICATION_PROPERTY, mods);
     }
     
     public List<TriangleComment> getComments() {
-        return (List<TriangleComment>) getProperty(Commentable.COMMENT_PROPERTY);
+        return (List<TriangleComment>) getProperty(CommentableTriangle.COMMENT_PROPERTY);
     }
     
     private class TriangleDeletable extends PersistentDeletable<Triangle> {
@@ -214,7 +218,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
     
         @Override
         protected void cleanUpAfterEntity(Session session) {
-            for(ModifiedTriangularData mod : getModifications())
+            for(TriangularDataModification mod : getModifications())
                 mod.delete(session);
         }
     }
@@ -232,7 +236,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
             originalProperties.put(DESCRIPTION_PROPERTY, triangle.getDescription());
             originalProperties.put(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
             originalProperties.put(MODIFICATION_PROPERTY, getModifications());
-            originalProperties.put(Commentable.COMMENT_PROPERTY, element.getProperty(Commentable.COMMENT_PROPERTY));
+            originalProperties.put(CommentableTriangle.COMMENT_PROPERTY, element.getProperty(CommentableTriangle.COMMENT_PROPERTY));
         }
         
         @Override
@@ -257,13 +261,13 @@ public class TriangleProjectElement extends ProjectElement<Triangle> implements 
             TriangleCommentUtil.save(session, getOriginalComments(), getComments());
         }
         
-        private List<ModifiedTriangularData> getOriginalModifications() {
+        private List<TriangularDataModification> getOriginalModifications() {
             Object mods = originalProperties.get(MODIFICATION_PROPERTY);
-            return (List<ModifiedTriangularData>) mods;
+            return (List<TriangularDataModification>) mods;
         }
         
         private List<TriangleComment> getOriginalComments() {
-            Object comments = originalProperties.get(Commentable.COMMENT_PROPERTY);
+            Object comments = originalProperties.get(CommentableTriangle.COMMENT_PROPERTY);
             return (List<TriangleComment>) comments;
         }
     }

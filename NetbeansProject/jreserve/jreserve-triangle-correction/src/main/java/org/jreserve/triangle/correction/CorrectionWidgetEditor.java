@@ -1,9 +1,9 @@
 package org.jreserve.triangle.correction;
 
 import java.util.Collection;
-import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.ModifiedTriangularData;
-import org.jreserve.triangle.TriangleUtil;
+import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.TriangularDataModification;
+import org.jreserve.triangle.value.TriangleUtil;
 import org.jreserve.triangle.correction.entities.TriangleCorrection;
 import org.jreserve.triangle.widget.WidgetEditor;
 import org.jreserve.triangle.widget.model.WidgetTableModel;
@@ -20,7 +20,7 @@ import org.openide.util.Utilities;
 @WidgetEditor.Registration(category="Triangle")
 public class CorrectionWidgetEditor implements WidgetEditor {
     
-    private ModifiableTriangle triangle;
+    private ModifiableTriangularData triangle;
 
     public CorrectionWidgetEditor() {
         new TriangleListener();
@@ -37,19 +37,19 @@ public class CorrectionWidgetEditor implements WidgetEditor {
     }
     
     private void deleteCorrection(int accident, int development) {
-        ModifiedTriangularData mod = getCorrectionAt(accident, development);
+        TriangularDataModification mod = getCorrectionAt(accident, development);
         if(mod != null)
             triangle.removeModification(mod);
     }
     
-    private ModifiedTriangularData getCorrectionAt(int accident, int development) {
-        for(ModifiedTriangularData mod : triangle.getModifications())
+    private TriangularDataModification getCorrectionAt(int accident, int development) {
+        for(TriangularDataModification mod : triangle.getModifications())
             if(isMyCorrection(mod, accident, development))
                 return mod;
         return null;
     }
     
-    private boolean isMyCorrection(ModifiedTriangularData mod, int accident, int development) {
+    private boolean isMyCorrection(TriangularDataModification mod, int accident, int development) {
         if(!(mod instanceof TriangleCorrectionModification))
             return false;
         TriangleCorrectionModification corr = (TriangleCorrectionModification) mod;
@@ -92,10 +92,10 @@ public class CorrectionWidgetEditor implements WidgetEditor {
     
     private class TriangleListener implements LookupListener {
         
-        private Result<ModifiableTriangle> result;
+        private Result<ModifiableTriangularData> result;
 
         private TriangleListener() {
-            result = Utilities.actionsGlobalContext().lookupResult(ModifiableTriangle.class);
+            result = Utilities.actionsGlobalContext().lookupResult(ModifiableTriangularData.class);
             result.addLookupListener(this);
             resultChanged(null);
         }
@@ -103,7 +103,7 @@ public class CorrectionWidgetEditor implements WidgetEditor {
         @Override
         public void resultChanged(LookupEvent le) {
             triangle = null;
-            Collection<? extends ModifiableTriangle> items = result.allInstances();
+            Collection<? extends ModifiableTriangularData> items = result.allInstances();
             if(!items.isEmpty())
                 triangle = items.iterator().next();
         }

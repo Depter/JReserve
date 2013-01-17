@@ -1,8 +1,7 @@
 package org.jreserve.triangle.util;
 
 import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.ModifiedTriangularData;
-import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.TriangleModification;
 
 /**
  *
@@ -25,13 +24,12 @@ public class ClassCounterTriangleStackQuery extends AbstractTriangleStackQuery<I
     @Override protected void initQuery() {}
 
     @Override
-    protected boolean acceptsData(TriangularData data) {
-        return (data instanceof ModifiedTriangularData) &&
-               clazz.isAssignableFrom(data.getClass());
+    protected boolean accepts(TriangleModification modification) {
+        return clazz.isAssignableFrom(modification.getClass());
     }
 
     @Override
-    protected void processData(TriangularData data) {
+    protected void process(TriangleModification modification) {
         count++;
     }
 

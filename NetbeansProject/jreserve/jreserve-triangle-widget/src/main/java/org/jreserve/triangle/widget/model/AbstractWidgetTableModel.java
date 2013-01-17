@@ -6,10 +6,10 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
-import org.jreserve.triangle.TriangleCoordiante;
-import org.jreserve.triangle.TriangleUtil;
+import org.jreserve.triangle.value.TriangleCoordiante;
+import org.jreserve.triangle.value.TriangleUtil;
 import org.jreserve.triangle.TriangularData;
-import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.comment.TriangleComment;
 import org.jreserve.triangle.widget.WidgetEditor;
 
@@ -23,7 +23,7 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     protected TriangularData data;
     
     protected boolean cummulated;
-    protected Commentable commentable;
+    protected CommentableTriangle commentable;
     protected WidgetEditor editor;
     private double[][] values;
     
@@ -210,12 +210,12 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     }
     
     @Override
-    public void setCommentable(Commentable commentable) {
+    public void setCommentable(CommentableTriangle commentable) {
         this.commentable = commentable;
     }
     
     @Override
-    public Commentable getCommentable() {
+    public CommentableTriangle getCommentable() {
         return this.commentable;
     }
     

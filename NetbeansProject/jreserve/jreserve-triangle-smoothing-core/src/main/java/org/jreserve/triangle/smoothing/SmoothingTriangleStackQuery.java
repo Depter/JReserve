@@ -2,8 +2,8 @@ package org.jreserve.triangle.smoothing;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangleCoordiante;
+import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.value.TriangleCoordiante;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.util.AbstractTriangleStackQuery;
 
@@ -14,11 +14,11 @@ import org.jreserve.triangle.util.AbstractTriangleStackQuery;
  */
 public class SmoothingTriangleStackQuery extends AbstractTriangleStackQuery<List<TriangleSmoothing>> {
     
-    public static List<TriangleSmoothing> getSmoothings(ModifiableTriangle triangle, TriangleCoordiante cell) {
+    public static List<TriangleSmoothing> getSmoothings(ModifiableTriangularData triangle, TriangleCoordiante cell) {
         return new SmoothingTriangleStackQuery(cell).query(triangle);
     }
     
-    public static List<TriangleSmoothing> getSmoothings(ModifiableTriangle triangle, int accident, int development) {
+    public static List<TriangleSmoothing> getSmoothings(ModifiableTriangularData triangle, int accident, int development) {
         return new SmoothingTriangleStackQuery(accident, development).query(triangle);
     }
     

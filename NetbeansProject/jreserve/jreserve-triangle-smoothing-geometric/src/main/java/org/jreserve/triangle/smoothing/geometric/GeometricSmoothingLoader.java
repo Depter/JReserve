@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.SessionFactory;
-import org.jreserve.triangle.ModificationLoader;
+import org.jreserve.triangle.value.ModificationLoader;
 import org.jreserve.triangle.smoothing.AbstractSmoothingLoader;
 import org.jreserve.triangle.smoothing.Smoothing;
 import org.openide.util.lookup.ServiceProvider;

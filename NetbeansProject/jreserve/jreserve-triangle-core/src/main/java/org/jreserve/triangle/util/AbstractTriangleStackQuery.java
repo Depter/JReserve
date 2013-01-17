@@ -1,7 +1,7 @@
 package org.jreserve.triangle.util;
 
 import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.TriangleModification;
 
 /**
  *
@@ -12,28 +12,21 @@ public abstract class AbstractTriangleStackQuery<R> {
     
     public R query(ModifiableTriangle triangle) {
         initQuery();
-        processModifications(triangle);
-        processBase(triangle);
+        processLayers(triangle);
         return getResult();
     }
     
     protected abstract void initQuery();
     
-    private void processModifications(ModifiableTriangle triangle) {
-        for(TriangularData data : triangle.getModifications())
-            if(acceptsData(data))
-                processData(data);
+    private void processLayers(ModifiableTriangle triangle) {
+        for(TriangleModification modification : triangle.getModifications())
+            if(accepts(modification))
+                process(modification);
     }
     
-    private void processBase(ModifiableTriangle triangle) {
-        TriangularData base = triangle.getBaseData();
-        if(acceptsData(base))
-            processData(base);
-    }
+    protected abstract boolean accepts(TriangleModification modification);
     
-    protected abstract boolean acceptsData(TriangularData data);
-    
-    protected abstract void processData(TriangularData data);
+    protected abstract void process(TriangleModification modification);
     
     protected abstract R getResult();
 }

@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.SessionFactory;
-import org.jreserve.triangle.ModificationLoader;
-import org.jreserve.triangle.ModifiedTriangularData;
+import org.jreserve.triangle.value.ModificationLoader;
+import org.jreserve.triangle.TriangularDataModification;
 import org.jreserve.triangle.correction.entities.TriangleCorrection;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -23,8 +23,8 @@ public class TriangleCorrectionLoader implements ModificationLoader {
     private final static String HQL = "from TriangleCorrection c where c.ownerId = :ownerId";
 
     @Override
-    public List<ModifiedTriangularData> loadModifications(PersistentObject owner) {
-        List<ModifiedTriangularData> mods = new ArrayList<ModifiedTriangularData>();
+    public List<TriangularDataModification> loadModifications(PersistentObject owner) {
+        List<TriangularDataModification> mods = new ArrayList<TriangularDataModification>();
         for(TriangleCorrection correction : loadCorrections(owner))
             mods.add(new TriangleCorrectionModification(correction));
         return mods;

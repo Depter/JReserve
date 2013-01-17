@@ -1,8 +1,8 @@
 package org.jreserve.triangle.smoothing.util;
 
 import java.util.List;
-import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangleCoordiante;
+import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.value.TriangleCoordiante;
 import org.jreserve.triangle.smoothing.Smoother;
 import org.jreserve.triangle.smoothing.Smoothing;
 
@@ -32,7 +32,7 @@ public class SmootherImpl implements Smoother {
     }
 
     @Override
-    public Smoothing createSmoothing(ModifiableTriangle triangle, List<TriangleCoordiante> cells, int visibleDigits) {
+    public Smoothing createSmoothing(ModifiableTriangularData triangle, List<TriangleCoordiante> cells, int visibleDigits) {
         return smoother.createSmoothing(triangle, cells, visibleDigits);
     }
     

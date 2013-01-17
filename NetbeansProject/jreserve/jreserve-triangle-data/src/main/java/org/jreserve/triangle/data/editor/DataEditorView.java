@@ -11,7 +11,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.navigator.NavigablePanel;
 import org.jreserve.triangle.TriangularData;
-import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.data.project.TriangleProjectElement;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
@@ -103,7 +103,7 @@ class DataEditorView extends NavigablePanel {
         triangle.setData(data);
         triangle.setWidgetEditorFolder(EDITOR_CATEGORY);
         triangle.setPopupActionPath(POP_UP_PATH);
-        triangle.setCommentable(element.getLookup().lookup(Commentable.class));
+        triangle.setCommentable(element.getLookup().lookup(CommentableTriangle.class));
         gc.gridx = 0; gc.gridy = 1;
         gc.gridwidth = 2;
         gc.fill = java.awt.GridBagConstraints.BOTH;

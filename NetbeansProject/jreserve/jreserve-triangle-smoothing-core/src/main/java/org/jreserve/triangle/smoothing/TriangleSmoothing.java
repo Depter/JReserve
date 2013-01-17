@@ -3,7 +3,7 @@ package org.jreserve.triangle.smoothing;
 import java.util.List;
 import org.hibernate.Session;
 import org.jreserve.rutil.RCode;
-import org.jreserve.triangle.AbstractTriangleModification;
+import org.jreserve.triangle.value.AbstractTriangleModification;
 
 /**
  *

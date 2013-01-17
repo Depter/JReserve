@@ -3,7 +3,7 @@ package org.jreserve.triangle.smoothing;
 import javax.persistence.*;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
-import org.jreserve.triangle.TriangleCoordiante;
+import org.jreserve.triangle.value.TriangleCoordiante;
 
 /**
  *

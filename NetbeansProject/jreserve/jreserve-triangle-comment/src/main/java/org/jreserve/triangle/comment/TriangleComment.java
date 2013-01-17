@@ -7,7 +7,6 @@ import org.hibernate.envers.Audited;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.persistence.PersistentObject;
 
 /**
  *
@@ -40,14 +39,10 @@ public class TriangleComment extends AbstractPersistentObject {
     @Type(type="org.hibernate.type.TextType")
     private String commentText;
     
-    @Column(name="OWNER_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF, nullable=false)
-    private String ownerId;
-    
     protected TriangleComment() {
     }
     
-    public TriangleComment(PersistentObject owner, int accident, int development, String user, String comment) {
-        this.ownerId = owner.getId();
+    public TriangleComment(int accident, int development, String user, String comment) {
         this.accident = accident;
         this.development = development;
         initUserName(user);
@@ -88,10 +83,6 @@ public class TriangleComment extends AbstractPersistentObject {
     
     public void setCommentText(String comment) {
         initComment(comment);
-    }
-    
-    public String getOwnerId() {
-        return ownerId;
     }
     
     @Override

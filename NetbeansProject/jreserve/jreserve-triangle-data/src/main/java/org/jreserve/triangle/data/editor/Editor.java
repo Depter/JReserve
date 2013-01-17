@@ -8,7 +8,7 @@ import org.jreserve.navigator.NavigableTopComponent;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.visual.ProjectElementCloseHandler;
 import org.jreserve.project.system.visual.TabNameAdapter;
-import org.jreserve.triangle.TriangularDataAdapter;
+import org.jreserve.triangle.value.TriangularDataAdapter;
 import org.jreserve.triangle.data.project.TriangleProjectElement;
 import org.jreserve.triangle.widget.charts.AccidentPeriodsChartData;
 import org.jreserve.triangle.widget.charts.AccidentTotalChartData;

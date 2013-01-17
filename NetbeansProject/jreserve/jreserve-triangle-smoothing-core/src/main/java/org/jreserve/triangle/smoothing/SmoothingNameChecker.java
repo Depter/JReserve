@@ -1,6 +1,6 @@
 package org.jreserve.triangle.smoothing;
 
-import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.ModifiableTriangularData;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.util.AbstractTriangleStackQuery;
 
@@ -11,7 +11,7 @@ import org.jreserve.triangle.util.AbstractTriangleStackQuery;
  */
 public class SmoothingNameChecker extends AbstractTriangleStackQuery<Boolean> {
 
-    public static boolean isValidName(ModifiableTriangle triangle, String name) {
+    public static boolean isValidName(ModifiableTriangularData triangle, String name) {
         SmoothingNameChecker query = new SmoothingNameChecker(name);
         return query.query(triangle);
     }

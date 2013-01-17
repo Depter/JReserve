@@ -9,7 +9,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.ModifiableTriangularData;
 import org.jreserve.triangle.smoothing.SmoothingTriangleStackQuery;
 import org.jreserve.triangle.smoothing.TriangleSmoothing;
 import org.jreserve.triangle.widget.actions.AbstractSingleCellPopUpAction;
@@ -36,8 +36,8 @@ public class DeleteSmoothingAction extends AbstractSingleCellPopUpAction impleme
         }
     };
     
-    private Lookup.Result<ModifiableTriangle> tResult;
-    private ModifiableTriangle triangle;
+    private Lookup.Result<ModifiableTriangularData> tResult;
+    private ModifiableTriangularData triangle;
     
     public DeleteSmoothingAction() {
     }
@@ -50,7 +50,7 @@ public class DeleteSmoothingAction extends AbstractSingleCellPopUpAction impleme
     protected void init(Lookup lookup) {
         if(tResult != null)
             return;
-        tResult = lookup.lookupResult(ModifiableTriangle.class);
+        tResult = lookup.lookupResult(ModifiableTriangularData.class);
         tResult.addLookupListener(this);
         super.init(lookup);
     }

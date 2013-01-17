@@ -1,7 +1,7 @@
 package org.jreserve.triangle.widget.actions;
 
 import java.util.List;
-import org.jreserve.triangle.TriangleCoordiante;
+import org.jreserve.triangle.value.TriangleCoordiante;
 import org.openide.util.Lookup;
 
 /**

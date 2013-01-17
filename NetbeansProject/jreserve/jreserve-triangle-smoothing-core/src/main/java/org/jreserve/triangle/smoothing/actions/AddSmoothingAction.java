@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.ModifiableTriangularData;
 import org.jreserve.triangle.smoothing.Smoothing;
 import org.jreserve.triangle.smoothing.TriangleSmoothing;
 import org.jreserve.triangle.smoothing.util.SmootherImpl;
@@ -27,8 +27,8 @@ import org.openide.util.actions.Presenter;
 })
 public class AddSmoothingAction extends ContinuousSelectionAction implements Presenter.Popup {
     
-    private Result<ModifiableTriangle> tResult;
-    private ModifiableTriangle triangle;
+    private Result<ModifiableTriangularData> tResult;
+    private ModifiableTriangularData triangle;
     
     public AddSmoothingAction() {
     }
@@ -41,7 +41,7 @@ public class AddSmoothingAction extends ContinuousSelectionAction implements Pre
     protected void init(Lookup lookup) {
         if(tResult != null)
             return;
-        tResult = lookup.lookupResult(ModifiableTriangle.class);
+        tResult = lookup.lookupResult(ModifiableTriangularData.class);
         tResult.addLookupListener(this);
         super.init(lookup);
     }

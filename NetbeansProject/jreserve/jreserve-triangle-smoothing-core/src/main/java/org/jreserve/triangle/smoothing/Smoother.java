@@ -1,8 +1,8 @@
 package org.jreserve.triangle.smoothing;
 
 import java.util.List;
-import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangleCoordiante;
+import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.value.TriangleCoordiante;
 
 /**
  *
@@ -11,7 +11,7 @@ import org.jreserve.triangle.TriangleCoordiante;
  */
 public interface Smoother {
 
-    public Smoothing createSmoothing(ModifiableTriangle triangle, List<TriangleCoordiante> cells, int visibleDigits);
+    public Smoothing createSmoothing(ModifiableTriangularData triangle, List<TriangleCoordiante> cells, int visibleDigits);
     
     public static @interface Registration {
         

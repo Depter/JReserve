@@ -18,9 +18,9 @@ import javax.swing.text.DefaultEditorKit;
 import org.jreserve.localesettings.util.DecimalSpinner;
 import org.jreserve.resources.ActionUtil;
 import org.jreserve.resources.ToolBarButton;
-import org.jreserve.triangle.TriangleCoordiante;
+import org.jreserve.triangle.value.TriangleCoordiante;
 import org.jreserve.triangle.TriangularData;
-import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.widget.model.WidgetTableModel;
 import org.jreserve.triangle.widget.model.util.WidgetTableModelImpl;
 import org.jreserve.triangle.widget.model.util.WidgetTableModelRegistry;
@@ -294,7 +294,7 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
         return this.popUpActionPath;
     }
     
-    public void setCommentable(Commentable commentable) {
+    public void setCommentable(CommentableTriangle commentable) {
         if(commentable != null)
             commentable.addChangeListener(WeakListeners.change(commentListener, commentable));
         ((WidgetTableModel) table.getModel()).setCommentable(commentable);

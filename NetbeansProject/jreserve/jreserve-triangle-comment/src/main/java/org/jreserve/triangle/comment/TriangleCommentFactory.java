@@ -3,7 +3,6 @@ package org.jreserve.triangle.comment;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Session;
-import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.SessionTask;
 
 /**
@@ -14,12 +13,12 @@ public class TriangleCommentFactory extends SessionTask.AbstractTask<Void> {
 
     private final static Logger logger = Logger.getLogger(TriangleCommentFactory.class.getName());
     
-    private final Commentable commentable;
+    private final CommentableTriangle commentable;
     private final int accident;
     private final int development;
     private final String commentText;
     
-    public TriangleCommentFactory(Commentable commentable, int accident, int development, String comment) {
+    public TriangleCommentFactory(CommentableTriangle commentable, int accident, int development, String comment) {
         this.commentable = commentable;
         this.accident = accident;
         this.development = development;
@@ -35,8 +34,7 @@ public class TriangleCommentFactory extends SessionTask.AbstractTask<Void> {
     }
     
     private TriangleComment createComment() {
-        PersistentObject owner = commentable.getOwner();
         String user = System.getProperty("user.name");
-        return new TriangleComment(owner, accident, development, user, commentText);
+        return new TriangleComment(accident, development, user, commentText);
     }
 }

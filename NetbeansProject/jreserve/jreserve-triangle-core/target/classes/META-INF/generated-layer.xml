@@ -9,6 +9,11 @@
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
+            <file name="org-jreserve-triangle-entities-AbstractTriangleModification.entity">
+                <!--org.jreserve.triangle.entities.AbstractTriangleModification-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.AbstractTriangleModification"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
         </folder>
     </folder>
 </filesystem>

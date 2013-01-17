@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
-import org.jreserve.triangle.comment.Commentable;
+import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.comment.TriangleComment;
 import org.jreserve.triangle.comment.visual.DeleteCommentDialog;
 import org.openide.util.Lookup;
@@ -21,8 +21,8 @@ import org.openide.util.NbBundle.Messages;
 })
 public class DeleteCommentsAction extends AbstractSingleCellPopUpAction {
     
-    private Result<Commentable> tResult;
-    private Commentable commentable;
+    private Result<CommentableTriangle> tResult;
+    private CommentableTriangle commentable;
     
     public DeleteCommentsAction() {
         putValue(NAME, Bundle.CTL_DeleteCommentsAction());
@@ -37,7 +37,7 @@ public class DeleteCommentsAction extends AbstractSingleCellPopUpAction {
     protected void init(Lookup lookup) {
         if(tResult != null)
             return;
-        tResult = lookup.lookupResult(Commentable.class);
+        tResult = lookup.lookupResult(CommentableTriangle.class);
         tResult.addLookupListener(this);
         super.init(lookup);
     }

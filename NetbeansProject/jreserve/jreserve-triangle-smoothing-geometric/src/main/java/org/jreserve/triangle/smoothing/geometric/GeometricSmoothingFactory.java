@@ -4,8 +4,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangleCoordiante;
+import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.value.TriangleCoordiante;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.smoothing.Smoothing;
 import org.jreserve.triangle.smoothing.SmoothingCell;
@@ -39,14 +39,14 @@ class GeometricSmoothingFactory implements PropertyChangeListener {
     private final static int OPTION_TYPE = DialogDescriptor.OK_CANCEL_OPTION;
     private final static Object DEFAULT_OPTION = DialogDescriptor.OK_OPTION;
     
-    private ModifiableTriangle triangle;
+    private ModifiableTriangularData triangle;
     private List<TriangleCoordiante> cells;
     
     private GeometricSmoothingCreatorPanel panel;
     private DialogDescriptor dd; 
     private NotificationLineSupport nls;
     
-    GeometricSmoothingFactory(ModifiableTriangle triangle, List<TriangleCoordiante> cells, int visibleDigits) {
+    GeometricSmoothingFactory(ModifiableTriangularData triangle, List<TriangleCoordiante> cells, int visibleDigits) {
         this.triangle = triangle;
         this.cells = cells;
         createPanel(visibleDigits);

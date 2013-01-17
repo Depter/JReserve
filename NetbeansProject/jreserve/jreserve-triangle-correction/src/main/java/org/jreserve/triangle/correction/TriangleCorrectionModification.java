@@ -2,7 +2,7 @@ package org.jreserve.triangle.correction;
 
 import org.hibernate.Session;
 import org.jreserve.rutil.RCode;
-import org.jreserve.triangle.AbstractTriangleModification;
+import org.jreserve.triangle.value.AbstractTriangleModification;
 import org.jreserve.triangle.correction.entities.TriangleCorrection;
 
 /**

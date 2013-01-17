@@ -4,8 +4,8 @@ import java.util.List;
 import org.jreserve.factor.core.CummulatedTriangularData;
 import org.jreserve.factor.core.SimpleTriangularFactors;
 import org.jreserve.persistence.PersistentObject;
-import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.ModifiedTriangularData;
+import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.TriangularDataModification;
 import org.jreserve.triangle.TriangularData;
 
 /**
@@ -13,7 +13,7 @@ import org.jreserve.triangle.TriangularData;
  * @author Peter Decsi
  * @version 1.0
  */
-public class SingleFactors implements ModifiableTriangle {
+public class SingleFactors implements ModifiableTriangularData {
     
     private TriangularData inputData;
     private TriangularData factors;
@@ -38,17 +38,17 @@ public class SingleFactors implements ModifiableTriangle {
     }
 
     @Override
-    public List<ModifiedTriangularData> getModifications() {
+    public List<TriangularDataModification> getModifications() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void addModification(ModifiedTriangularData modification) {
+    public void addModification(TriangularDataModification modification) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void removeModification(ModifiedTriangularData modification) {
+    public void removeModification(TriangularDataModification modification) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -1,9 +1,12 @@
 package org.jreserve.triangle;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
-import javax.swing.event.ChangeListener;
+import java.util.List;
 import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RUtil;
+import org.jreserve.triangle.comment.TriangleComment;
 
 /**
  *
@@ -23,12 +26,12 @@ public interface TriangularData {
     public Date getDevelopmentName(int accident, int development);
     
     public double getValue(int accident, int development);
-    
-    public void addChangeListener(ChangeListener listener);
-    
-    public void removeChangeListener(ChangeListener listener);
 
     public double[][] toArray();
+    
+    public List<TriangleComment> getComments(int accident, int development);
+    
+    public List<TriangularData> getLayers();
     
     public String getLayerTypeId(int accident, int development);
     
@@ -74,24 +77,28 @@ public interface TriangularData {
         public double[][] toArray() {
             return new double[0][];
         }
-
-        @Override
-        public void addChangeListener(ChangeListener listener) {
-        }
-
-        @Override
-        public void removeChangeListener(ChangeListener listener) {
-        }
         
         @Override
-        public String getLayerTypeId(int accident, int development) {
-            return "EMPTY";
+        public List<TriangleComment> getComments(int accident, int development) {
+            return Collections.EMPTY_LIST;
         }
         
         @Override
         public void createTriangle(String triangleName, RCode rCode) {
             String values = RUtil.createArray(new double[0][0]);
             rCode.addSource(String.format("%s <- %s%n", triangleName, values));
+        }
+        
+        @Override
+        public List<TriangularData> getLayers() {
+            List<TriangularData> layers = new ArrayList<TriangularData>();
+            layers.add(this);
+            return layers;
+        }
+        
+        @Override
+        public String getLayerTypeId(int accident, int development) {
+            return "EMPTY";
         }
     };
 }

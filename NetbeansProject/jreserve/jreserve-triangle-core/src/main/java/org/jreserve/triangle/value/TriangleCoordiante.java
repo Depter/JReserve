@@ -1,6 +1,6 @@
-package org.jreserve.triangle;
+package org.jreserve.triangle.value;
 
-import java.util.List;
+import org.jreserve.triangle.TriangularData;
 
 /**
  *
@@ -8,22 +8,6 @@ import java.util.List;
  * @version 1.0
  */
 public class TriangleCoordiante implements Comparable<TriangleCoordiante> {
-    
-    public static double[] getValues(List<TriangleCoordiante> coordiantes, TriangularData data) {
-        int size = coordiantes.size();
-        double[] result = new double[size];
-        for(int i=0; i<size; i++)
-            result[i] = coordiantes.get(i).getValue(data);
-        return result;
-    }
-
-    public static double[] getValues(List<TriangleCoordiante> coordiantes, double[][] data) {
-        int size = coordiantes.size();
-        double[] result = new double[size];
-        for(int i=0; i<size; i++)
-            result[i] = coordiantes.get(i).getValue(data);
-        return result;
-    }
     
     private final int accident;
     private final int development;

@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import org.hibernate.Session;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.persistence.SessionTask;
-import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.ModifiableTriangularData;
 import org.jreserve.triangle.smoothing.SmoothingCell;
 import org.jreserve.triangle.smoothing.TriangleSmoothing;
 import org.jreserve.triangle.smoothing.geometric.GeometricSmoothing;
@@ -18,12 +18,12 @@ public class GeometricSmoothingFactory extends SessionTask.AbstractTask<Void> {
 
     private final static Logger logger = Logger.getLogger(GeometricSmoothingFactory.class.getName());
     
-    private final ModifiableTriangle triangle;
+    private final ModifiableTriangularData triangle;
     private final String name;
     private final int[][] cells;
     private final boolean[] applied;
     
-    public GeometricSmoothingFactory(ModifiableTriangle triangle, String name, int[][] cells, boolean[] applied) {
+    public GeometricSmoothingFactory(ModifiableTriangularData triangle, String name, int[][] cells, boolean[] applied) {
         this.triangle = triangle;
         this.name = name;
         this.cells = cells;

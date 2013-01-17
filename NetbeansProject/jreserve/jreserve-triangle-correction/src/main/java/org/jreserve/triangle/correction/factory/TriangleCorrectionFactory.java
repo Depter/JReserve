@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Session;
 import org.jreserve.persistence.SessionTask;
-import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.ModifiableTriangularData;
 import org.jreserve.triangle.correction.TriangleCorrectionModification;
 import org.jreserve.triangle.correction.entities.TriangleCorrection;
 
@@ -17,12 +17,12 @@ public class TriangleCorrectionFactory extends SessionTask.AbstractTask<Void> {
 
     private final static Logger logger = Logger.getLogger(TriangleCorrectionFactory.class.getName());
     
-    private final ModifiableTriangle triangle;
+    private final ModifiableTriangularData triangle;
     private final int accident;
     private final int development;
     private final double value;
     
-    public TriangleCorrectionFactory(ModifiableTriangle triangle, int accident, int development, double value) {
+    public TriangleCorrectionFactory(ModifiableTriangularData triangle, int accident, int development, double value) {
         this.triangle = triangle;
         this.accident = accident;
         this.development = development;
