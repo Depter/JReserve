@@ -2,7 +2,7 @@ package org.jreserve.triangle;
 
 import java.util.Date;
 import java.util.List;
-import org.jreserve.triangle.comment.TriangleComment;
+import org.jreserve.triangle.entities.TriangleComment;
 
 /**
  *
@@ -78,4 +78,12 @@ public abstract class AbstractTriangularDataModification implements TriangularDa
         layers.add(this);
         return layers;
     }
+
+    @Override
+    public void close() {
+        if(source != null)
+            source.close();
+    }
+    
+    
 }

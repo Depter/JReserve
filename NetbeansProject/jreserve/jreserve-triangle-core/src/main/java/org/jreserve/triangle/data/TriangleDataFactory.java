@@ -12,7 +12,7 @@ import org.jreserve.triangle.entities.TriangleGeometry;
  * @author Peter Decsi
  * @version 1.0
  */
-class TriangleDataFactory {
+public class TriangleDataFactory {
 
     private TriangleGeometry geometry;
     private List<ClaimValue> values;

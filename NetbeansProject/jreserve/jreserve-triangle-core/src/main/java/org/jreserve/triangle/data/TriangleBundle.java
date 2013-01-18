@@ -7,12 +7,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.rutil.RCode;
 import org.jreserve.triangle.ChangeableTriangularData;
+import org.jreserve.triangle.TriangleModification;
 import org.jreserve.triangle.TriangularData;
-import org.jreserve.triangle.comment.TriangleComment;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleAdapter;
+import org.jreserve.triangle.entities.TriangleComment;
 import org.jreserve.triangle.entities.TriangleListener;
-import org.jreserve.triangle.TriangleModification;
 import org.openide.util.WeakListeners;
 
 /**
@@ -24,6 +24,7 @@ public class TriangleBundle implements ChangeableTriangularData {
     
     private Triangle triangle;
     private TriangleListener updateListener;
+    private TriangleListener weakUpdateListener;
     private AsynchronousTriangleInput source;
     private List<TriangularData> mods = new ArrayList<TriangularData>();
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
@@ -38,7 +39,8 @@ public class TriangleBundle implements ChangeableTriangularData {
     
     private void registerTriangleListener() {
         updateListener = new UpdateListener();
-        triangle.addTriangleListener(WeakListeners.create(TriangleListener.class, updateListener, triangle));
+        weakUpdateListener = WeakListeners.create(TriangleListener.class, updateListener, triangle);
+        triangle.addTriangleListener(weakUpdateListener);
     }
     
     private void update() {
@@ -141,6 +143,13 @@ public class TriangleBundle implements ChangeableTriangularData {
         ChangeEvent evt = new ChangeEvent(this);
         for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
             listener.stateChanged(evt);
+    }
+    
+    @Override
+    public void close() {
+        top.close();
+        triangle.removeTriangleListener(weakUpdateListener);
+        this.triangle = null;
     }
     
     private class UpdateListener extends TriangleAdapter {

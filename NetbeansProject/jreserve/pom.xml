@@ -73,10 +73,7 @@
         
         <!-- TRIANGLE -->
         <module>jreserve-triangle-core</module>
-        <module>jreserve-triangle-widget</module>
         <module>jreserve-triangle-correction</module>
-        <module>jreserve-triangle-comment</module>
-        <module>jreserve-triangle-data</module>
         <module>jreserve-triangle-smoothing-core</module>
         <module>jreserve-triangle-smoothing-geometric</module>
         <module>jreserve-triangle-smoothing-arithmetic</module>

@@ -88,7 +88,7 @@
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-triangle-comment</artifactId>
+            <artifactId>jreserve-util-chart</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
@@ -121,9 +121,13 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.triangle</publicPackage>
+                        <publicPackage>org.jreserve.triangle.comment</publicPackage>
                         <publicPackage>org.jreserve.triangle.entities</publicPackage>
                         <publicPackage>org.jreserve.triangle.util</publicPackage>
-                        <publicPackage>org.jreserve.triangle.value</publicPackage>
+                        <publicPackage>org.jreserve.triangle.visual</publicPackage>
+                        <publicPackage>org.jreserve.triangle.visual.widget</publicPackage>
+                        <publicPackage>org.jreserve.triangle.visual.widget.action</publicPackage>
+                        <publicPackage>org.jreserve.triangle.visual.widget.chart</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

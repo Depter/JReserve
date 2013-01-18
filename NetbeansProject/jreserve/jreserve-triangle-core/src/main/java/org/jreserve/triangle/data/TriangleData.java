@@ -1,11 +1,10 @@
 package org.jreserve.triangle.data;
 
 import java.util.*;
-import javax.swing.event.ChangeListener;
 import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RUtil;
 import org.jreserve.triangle.TriangularData;
-import org.jreserve.triangle.comment.TriangleComment;
+import org.jreserve.triangle.entities.TriangleComment;
 
 /**
  *
@@ -16,14 +15,12 @@ class TriangleData implements TriangularData {
     
     public final static String LAYER_TYPE_ID = "INPUT_DATA";
     
-    private final int accidentCount;
-    private final int developmentCount;
-    private final Date[] accidentDates;
-    private final Date[][] developmentDates;
-    private final double[][] values;
+    private int accidentCount;
+    private int developmentCount;
+    private Date[] accidentDates;
+    private Date[][] developmentDates;
+    private double[][] values;
     private List<TriangleComment> comments = Collections.EMPTY_LIST;
-    
-    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
     TriangleData(Date[] accidentDates, Date[][] developmentDates, double[][] values) {
         this.accidentCount = values.length;
@@ -87,14 +84,9 @@ class TriangleData implements TriangularData {
     public List<TriangleComment> getComments(int accident, int development) {
         List<TriangleComment> result = new ArrayList<TriangleComment>();
         for(TriangleComment comment : comments)
-            if(withinCell(comment, accident, development))
+            if(comment.getTriangleCell().equals(accident, development))
                 result.add(comment);
         return result;
-    }
-
-    private boolean withinCell(TriangleComment comment, int accident, int development) {
-        return accident == comment.getAccidentPeriod() &&
-               development == comment.getDevelopmentPeriod();
     }
     
     void setComments(List<TriangleComment> comments) {
@@ -114,5 +106,15 @@ class TriangleData implements TriangularData {
     @Override
     public List<TriangularData> getLayers() {
         return Arrays.asList((TriangularData)this);
+    }
+    
+    @Override
+    public void close() {
+        accidentCount = 0;
+        developmentCount = 0;
+        accidentDates = null;
+        developmentDates = null;
+        values = null;
+        comments = null;
     }
 }

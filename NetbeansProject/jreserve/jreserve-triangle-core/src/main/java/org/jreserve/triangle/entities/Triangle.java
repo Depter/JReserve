@@ -17,7 +17,6 @@ import org.jreserve.triangle.ChangeableTriangularData;
 import org.jreserve.triangle.ModifiableTriangle;
 import org.jreserve.triangle.TriangleModification;
 import org.jreserve.triangle.comment.CommentableTriangle;
-import org.jreserve.triangle.comment.TriangleComment;
 import org.jreserve.triangle.data.TriangleBundle;
 
 /**
@@ -210,11 +209,11 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     }
     
     @Override
-    public void addComment(TriangleComment comment) {
-        if(comment == null) 
-            throw new NullPointerException("Comment is null!");
-        comments.add(comment);
+    public TriangleComment createComment(int accident, int development, String user, String comment) {
+        TriangleComment tc = new TriangleComment(this, accident, development, user, comment);
+        comments.add(tc);
         fireCommentsChanged();
+        return tc;
     }
     
     @Override

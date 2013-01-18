@@ -1,6 +1,6 @@
 package org.jreserve.triangle;
 
-import org.jreserve.triangle.value.TriangleUtil;
+import org.jreserve.triangle.util.TriangleUtil;
 import org.junit.AfterClass;
 import org.junit.Test;
 import static org.junit.Assert.*;

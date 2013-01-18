@@ -18,7 +18,7 @@ import org.jreserve.persistence.SessionTask;
 import org.jreserve.rutil.RCode;
 import org.jreserve.triangle.ChangeableTriangularData;
 import org.jreserve.triangle.TriangularData;
-import org.jreserve.triangle.comment.TriangleComment;
+import org.jreserve.triangle.entities.TriangleComment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 
 /**
@@ -39,6 +39,7 @@ public class AsynchronousTriangleInput implements ChangeableTriangularData {
     
     private TriangularData data = TriangularData.EMPTY;
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private SwingLoader loader = null;
     
     public AsynchronousTriangleInput(ProjectDataType dataType) {
         this(null, dataType);
@@ -59,7 +60,8 @@ public class AsynchronousTriangleInput implements ChangeableTriangularData {
         if(values == null && !loading) {
             loading = true;
             logger.log(Level.INFO, "Loading claim values for ProjectDataType [{0}; {1}]", new Object[]{dataType.getDbId(), dataType.getName()});
-            new SwingLoader().execute();
+            loader = new SwingLoader();
+            loader.execute();
         }
     }
 
@@ -170,6 +172,17 @@ public class AsynchronousTriangleInput implements ChangeableTriangularData {
         return layers;
     }
     
+    @Override
+    public void close() {
+        if(loading)
+            loader.cancel(true);
+        geometry = null;
+        comments = null;
+        values = null;
+        data.close();
+        data = TriangularData.EMPTY;
+    }
+    
     private class SwingLoader extends SwingWorker<List<ClaimValue>, Void> {
 
         @Override
@@ -183,6 +196,7 @@ public class AsynchronousTriangleInput implements ChangeableTriangularData {
         protected void done() {
             setValues(getValues());
             loading = false;
+            loader = null;
         }
         
         private List<ClaimValue> getValues() {

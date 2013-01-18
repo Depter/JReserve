@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RUtil;
-import org.jreserve.triangle.comment.TriangleComment;
+import org.jreserve.triangle.entities.TriangleComment;
 
 /**
  *
@@ -36,6 +36,8 @@ public interface TriangularData {
     public String getLayerTypeId(int accident, int development);
     
     public void createTriangle(String triangleName, RCode rCode);
+    
+    public void close();
     
     public static interface Provider {
         public TriangularData getTriangularData();
@@ -99,6 +101,9 @@ public interface TriangularData {
         @Override
         public String getLayerTypeId(int accident, int development) {
             return "EMPTY";
+        }
+        
+        public void close(){
         }
     };
 }
