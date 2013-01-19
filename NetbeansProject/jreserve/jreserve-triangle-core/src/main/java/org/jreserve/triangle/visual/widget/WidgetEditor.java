@@ -1,5 +1,7 @@
 package org.jreserve.triangle.visual.widget;
 
+import org.openide.util.Lookup;
+
 /**
  *
  * @author Peter Decsi
@@ -8,6 +10,8 @@ package org.jreserve.triangle.visual.widget;
 public interface WidgetEditor {
 
     public boolean isCellEditable(int accident, int development);
+    
+    public void setLookup(Lookup lookup);
     
     public boolean setCellValue(WidgetTableModel model, int accident, int development, Double value);
     

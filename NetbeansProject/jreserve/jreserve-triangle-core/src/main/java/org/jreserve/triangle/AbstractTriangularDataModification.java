@@ -2,6 +2,7 @@ package org.jreserve.triangle;
 
 import java.util.Date;
 import java.util.List;
+import org.jreserve.triangle.entities.TriangleCell;
 import org.jreserve.triangle.entities.TriangleComment;
 
 /**
@@ -12,9 +13,6 @@ import org.jreserve.triangle.entities.TriangleComment;
 public abstract class AbstractTriangularDataModification implements TriangularDataModification {
 
     protected TriangularData source = TriangularData.EMPTY;
-    
-    protected AbstractTriangularDataModification() {
-    }
     
     protected AbstractTriangularDataModification(TriangularData source) {
         this.source = source==null? TriangularData.EMPTY : source;
@@ -85,5 +83,20 @@ public abstract class AbstractTriangularDataModification implements TriangularDa
             source.close();
     }
     
+    protected boolean withinSourceBounds(TriangleCell.Provider cell) {
+        return withinSourceBounds(cell.getTriangleCell());
+    }
     
+    protected boolean withinSourceBounds(TriangleCell cell) {
+        int accident = cell.getAccident();
+        int development = cell.getDevelopment();
+        return withinSourceBounds(accident, development);
+    }
+    
+    protected boolean withinSourceBounds(int accident, int development) {
+        return accident >= 0 && 
+               accident < source.getAccidentCount() &&
+               development >= 0 && 
+               development < source.getDevelopmentCount(accident);
+    }    
 }

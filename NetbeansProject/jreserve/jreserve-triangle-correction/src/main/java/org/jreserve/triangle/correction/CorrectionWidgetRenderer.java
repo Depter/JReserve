@@ -3,8 +3,8 @@ package org.jreserve.triangle.correction;
 import java.awt.Color;
 import javax.swing.JTable;
 import org.jreserve.triangle.correction.entities.TriangleCorrection;
-import org.jreserve.triangle.widget.DefaultWidgetRenderer;
-import org.jreserve.triangle.widget.WidgetRendererRegistration;
+import org.jreserve.triangle.visual.widget.DefaultWidgetRenderer;
+import org.jreserve.triangle.visual.widget.DefaultWidgetRenderer.WidgetRendererRegistration;
 
 /**
  *

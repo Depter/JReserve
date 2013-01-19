@@ -32,7 +32,7 @@ public class RenameableProjectElement implements Renameable {
     }
     
     protected boolean checkName(String name) {
-        String original = getEntityName();
+        String original = getOriginalName();
         if(original.equals(name))
             return false;
         if(original.equalsIgnoreCase(name))
@@ -40,7 +40,7 @@ public class RenameableProjectElement implements Renameable {
         return checkNotNull(name) && checkNotExists(name);
     }
     
-    private String getEntityName() {
+    protected String getOriginalName() {
         return (String) element.getProperty(ProjectElement.NAME_PROPERTY);
     }
     
@@ -82,7 +82,7 @@ public class RenameableProjectElement implements Renameable {
             String msg = Bundle.MSG_RenameableProjectElement_name_exists(name, pName);
             showError(msg);
     }
-    
+   
     protected void setNewName(String newName) {
         element.setProperty(ProjectElement.NAME_PROPERTY, newName);
     }

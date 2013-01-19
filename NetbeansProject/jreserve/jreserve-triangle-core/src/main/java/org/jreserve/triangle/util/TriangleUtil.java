@@ -46,8 +46,10 @@ public class TriangleUtil {
     }
     
     public static double getValue(TriangleCell coordinate, double[][] data) {
-        int accident = coordinate.getAccident();
-        int development = coordinate.getDevelopment();
+        return getValue(coordinate.getAccident(), coordinate.getDevelopment(), data);
+    }
+    
+    public static double getValue(int accident, int development, double[][] data) {
         if(data.length < accident)
             if(data[accident].length < development)
                 return data[accident][development];
@@ -59,6 +61,14 @@ public class TriangleUtil {
         double[] result = new double[size];
         for(int i=0; i<size; i++)
             result[i] = getValue(coordiantes.get(i), data);
+        return result;
+    }
+    
+    public static double[] getCellValues(List<? extends TriangleCell.Provider> coordiantes, TriangularData data) {
+        int size = coordiantes.size();
+        double[] result = new double[size];
+        for(int i=0; i<size; i++)
+            result[i] = getValue(coordiantes.get(i).getTriangleCell(), data);
         return result;
     }
 

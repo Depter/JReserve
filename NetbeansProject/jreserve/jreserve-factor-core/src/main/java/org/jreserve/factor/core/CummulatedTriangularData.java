@@ -6,82 +6,29 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.rutil.RCode;
+import org.jreserve.triangle.AbstractChangeableTriangularDataModification;
+import org.jreserve.triangle.ChangeableTriangularData;
 import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.entities.TriangleComment;
+import org.jreserve.triangle.util.TriangleUtil;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class CummulatedTriangularData implements TriangularData {
-
-    private SourceListener sourceListener;
-    private TriangularData source;
-    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+public class CummulatedTriangularData extends AbstractChangeableTriangularDataModification {
+    
     private double[][] values;
     
     public CummulatedTriangularData(TriangularData source) {
-        sourceListener = new SourceListener();
-        this.source = source;
-        source.addChangeListener(sourceListener);
+        super(source);
         cummulateSource();
     }
     
     private void cummulateSource() {
-        int accidents = source.getAccidentCount();
-        values = new double[accidents][];
-        for(int a=0; a<accidents; a++)
-            values[a] = cummulateAccident(a);
-    }
-    
-    private double[] cummulateAccident(int accident) {
-        int developments = source.getDevelopmentCount(accident);
-        double[] result = new double[developments];
-        if(developments > 0)
-            result[0] = source.getValue(accident, 0);
-        
-        for(int d=1; d<developments; d++) {
-            double prev = result[d - 1];
-            double value = source.getValue(accident, d);
-            result[d] = cummulate(prev, value);
-        }
-        
-        return result;
-    }
-    
-    private double cummulate(double prev, double current) {
-        if(Double.isNaN(prev))
-            return current;
-        return prev + current;
-    }
-    
-    public void releaseSource() {
-        this.source.removeChangeListener(sourceListener);
-    }
-    
-    @Override
-    public int getAccidentCount() {
-        return source.getAccidentCount();
-    }
-
-    @Override
-    public int getDevelopmentCount() {
-        return source.getDevelopmentCount();
-    }
-
-    @Override
-    public int getDevelopmentCount(int accident) {
-        return source.getDevelopmentCount(accident);
-    }
-
-    @Override
-    public Date getAccidentName(int accident) {
-        return source.getAccidentName(accident);
-    }
-
-    @Override
-    public Date getDevelopmentName(int accident, int development) {
-        return source.getDevelopmentName(accident, development);
+        values = source.toArray();
+        TriangleUtil.cummulate(values);
     }
 
     @Override
@@ -90,32 +37,16 @@ public class CummulatedTriangularData implements TriangularData {
     }
 
     @Override
-    public void addChangeListener(ChangeListener listener) {
-        if(!listeners.contains(listener))
-            listeners.add(listener);
+    public void createTriangle(String triangleName, RCode rCode) {
+        source.createTriangle(triangleName, rCode);
+        rCode.addFunction(RCummulateFunction.NAME);
+        rCode.addSource(RCummulateFunction.cummulate(triangleName));
     }
 
     @Override
-    public void removeChangeListener(ChangeListener listener) {
-        listeners.remove(listener);
-    }
-    
-    private void fireChange() {
-        ChangeEvent evt = new ChangeEvent(this);
-        for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
-            listener.stateChanged(evt);
-    }
-
-    @Override
-    public double[][] toArray() {
-        int accidents = values.length;
-        double[][] copy = new double[accidents][];
-        for(int a=0; a<accidents; a++) {
-            int developments = values[a].length;
-            copy[a] = new double[developments];
-            System.arraycopy(values[a], 0, copy[a], 0, developments);
-        }
-        return copy;
+    protected void sourceChanged() {
+        cummulateSource();
+        fireChange();
     }
 
     @Override
@@ -124,17 +55,8 @@ public class CummulatedTriangularData implements TriangularData {
     }
 
     @Override
-    public void createTriangle(String triangleName, RCode rCode) {
-        source.createTriangle(triangleName, rCode);
-        rCode.addFunction(RCummulateFunction.NAME);
-        rCode.addSource(RCummulateFunction.cummulate(triangleName));
-    }
-    
-    private class SourceListener implements ChangeListener {
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            cummulateSource();
-            fireChange();
-        }
+    public void close() {
+        super.close();
+        sourceChanged();
     }
 }

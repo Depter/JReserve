@@ -14,7 +14,7 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.data.entities.ClaimValue;
 import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.Project;
-import org.jreserve.project.entities.project.ProjectElement;
+import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;

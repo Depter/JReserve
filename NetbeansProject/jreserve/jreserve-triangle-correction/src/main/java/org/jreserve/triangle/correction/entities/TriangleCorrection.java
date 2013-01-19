@@ -4,6 +4,11 @@ import javax.persistence.*;
 import org.hibernate.envers.Audited;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
+import org.jreserve.triangle.TriangleModification;
+import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.TriangularDataModification;
+import org.jreserve.triangle.correction.TriangleCorrectionModification;
+import org.jreserve.triangle.entities.TriangleCell;
 
 /**
  *
@@ -15,53 +20,55 @@ import org.jreserve.persistence.EntityRegistration;
 @Entity
 @Table(name="TRIANGLE_CORRECTION", schema="JRESERVE")
 @Inheritance(strategy=InheritanceType.JOINED)
-public class TriangleCorrection extends AbstractPersistentObject {
+public class TriangleCorrection extends AbstractPersistentObject implements TriangleModification, TriangleCell.Provider {
     
     public final static String LAYER_ID = "TRIANGLE_CORRECTION";
-    
-    @Column(name="OWNER_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF, nullable=false)
-    private String ownerId;
-    
-    @Column(name="ACCIDENT_PERIOD")
-    private int accident;
-    
-    @Column(name="DEVELOPMENT_PERIOD")
-    private int development;
 
-    @Column(name="CORRIGATED_VALUE")
+    @Column(name="CORRIGATED_VALUE", nullable=false)
     private double corrigatedValue;
     
     @Column(name="MODIFICATION_ORDER", nullable=false)
     private int order;
     
+    @Embedded
+    private TriangleCell cell;
+    
     protected TriangleCorrection() {
     }
     
-    public TriangleCorrection(String ownerId, int order, int accident, int development, double corrigatedValue) {
-        this.ownerId = ownerId;
+    public TriangleCorrection(int order, int accident, int development, double corrigatedValue) {
+        this(order, new TriangleCell(accident, development), corrigatedValue);
+    }
+    
+    public TriangleCorrection(int order, TriangleCell cell, double corrigatedValue) {
         this.order = order;
-        this.accident = accident;
-        this.development = development;
+        this.cell = cell;
         this.corrigatedValue = corrigatedValue;
     }
     
+    @Override
     public int getOrder() {
         return order;
     }
     
-    public int getAccident() {
-        return accident;
-    }
-    
-    public int getDevelopment() {
-        return development;
+    @Override
+    public TriangleCell getTriangleCell() {
+        return cell;
     }
     
     public double getCorrigatedValue() {
         return corrigatedValue;
     }
-    
-    public String getOwnerId() {
-        return ownerId;
+
+    @Override
+    public TriangularDataModification createModification(TriangularData source) {
+        return new TriangleCorrectionModification(source, this);
+    }
+
+    @Override
+    public int compareTo(TriangleModification o) {
+        if(o == null)
+            return -1;
+        return order - o.getOrder();
     }
 }

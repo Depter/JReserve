@@ -4,16 +4,69 @@
 <filesystem>
     <folder name="JReserve">
         <folder name="Entities">
-            <file name="org-jreserve-triangle-entities-Triangle.entity">
-                <!--org.jreserve.triangle.entities.Triangle-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
-                <attr boolvalue="false" name="generatedId"/>
-            </file>
             <file name="org-jreserve-triangle-entities-AbstractTriangleModification.entity">
                 <!--org.jreserve.triangle.entities.AbstractTriangleModification-->
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.AbstractTriangleModification"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
+            <file name="org-jreserve-triangle-entities-TriangleComment.entity">
+                <!--org.jreserve.triangle.entities.TriangleComment-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleComment"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
+            <file name="org-jreserve-triangle-entities-Triangle.entity">
+                <!--org.jreserve.triangle.entities.Triangle-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
+        </folder>
+        <folder name="NewWizard">
+            <folder name="Data">
+                <file name="org-jreserve-triangle-visual-createdialog-VectorCreatorWizard.instance">
+                    <!--org.jreserve.triangle.visual.createdialog.VectorCreatorWizard-->
+                    <attr
+                        bundlevalue="org.jreserve.triangle.visual.createdialog.Bundle#LBL.VectorCreatorWizard.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="resources/vector.png"/>
+                    <attr intvalue="200" name="position"/>
+                </file>
+                <file name="org-jreserve-triangle-visual-createdialog-TriangleCreatorWizard.instance">
+                    <!--org.jreserve.triangle.visual.createdialog.TriangleCreatorWizard-->
+                    <attr
+                        bundlevalue="org.jreserve.triangle.visual.createdialog.Bundle#LBL.TriangleCreatorWizard.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="resources/triangle.png"/>
+                    <attr intvalue="100" name="position"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="Project">
+            <folder name="ElementFactories">
+                <file name="org-jreserve-triangle-project-TriangleLoader.instance">
+                    <!--org.jreserve.triangle.project.TriangleLoader-->
+                    <attr intvalue="100" name="priority"/>
+                </file>
+                <file name="org-jreserve-triangle-project-ProjectDataContainerLoader.instance">
+                    <!--org.jreserve.triangle.project.ProjectDataContainerLoader-->
+                    <attr intvalue="500" name="priority"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="Audit">
+            <folder name="AuditedEntityFactories">
+                <file name="org-jreserve-triangle-audit-ProjectTriangleAuditedEntityFactory.instance">
+                    <!--org.jreserve.triangle.audit.ProjectTriangleAuditedEntityFactory-->
+                    <attr intvalue="100" name="priority"/>
+                </file>
+            </folder>
+            <folder name="AuditFactories">
+                <file name="org-jreserve-triangle-audit-TriangleAuditor.instance">
+                    <!--org.jreserve.triangle.audit.TriangleAuditor-->
+                    <attr intvalue="50" name="priority"/>
+                </file>
+                <file name="org-jreserve-triangle-audit-ProjectTriangleAuditor.instance">
+                    <!--org.jreserve.triangle.audit.ProjectTriangleAuditor-->
+                    <attr intvalue="100" name="priority"/>
+                </file>
+            </folder>
         </folder>
     </folder>
 </filesystem>

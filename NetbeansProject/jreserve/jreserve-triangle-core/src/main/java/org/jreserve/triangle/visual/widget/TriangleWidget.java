@@ -111,11 +111,19 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
     }
     
     public void setWidgetEditorFolder(String path) {
-        if(this.widgetEditor != null)
-            lkpContent.remove(widgetEditor);
+        removeEditor();
         this.widgetEditor = WidgetEditorLoader.loadEditor(path);
-        if(this.widgetEditor != null)
+        if(this.widgetEditor != null) {
+            widgetEditor.setLookup(lookup);
             lkpContent.add(this.widgetEditor);
+        }
+    }
+    
+    private void removeEditor() {
+        if(this.widgetEditor != null) {
+            widgetEditor.setLookup(null);
+            lkpContent.remove(widgetEditor);
+        }
     }
     
     public void setDecimalDigits(int digits) {

@@ -1,22 +1,24 @@
 package org.jreserve.triangle.smoothing;
 
 import java.util.List;
-import org.hibernate.Session;
 import org.jreserve.rutil.RCode;
-import org.jreserve.triangle.value.AbstractTriangleModification;
+import org.jreserve.triangle.AbstractTriangularDataModification;
+import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.util.TriangleUtil;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleSmoothing extends AbstractTriangleModification {
+public class TriangleSmoothing extends AbstractTriangularDataModification {
     
     private Smoothing smoothing;
     private List<SmoothingCell> cells;
     private int cellCount;
     
-    public TriangleSmoothing(Smoothing smoothing) {
+    public TriangleSmoothing(TriangularData source, Smoothing smoothing) {
+        super(source);
         this.smoothing = smoothing;
         this.cells = smoothing.getCells();
         this.cellCount = cells.size();
@@ -25,33 +27,19 @@ public class TriangleSmoothing extends AbstractTriangleModification {
     public Smoothing getSmoothing() {
         return smoothing;
     }
-    
-    @Override
-    public String getOwnerId() {
-        return smoothing.getOwnerId();
-    }
-
-    @Override
-    public int getOrder() {
-        return smoothing.getOrder();
-    }
-
-    @Override
-    public void save(Session session) {
-        session.saveOrUpdate(smoothing);
-    }
-
-    @Override
-    public void delete(Session session) {
-        Object contained = session.merge(smoothing);
-        session.delete(contained);
-    }
 
     @Override
     public double getValue(int accident, int development) {
         if(cellsWithinSourceBounds())
             return getSmoothedValue(accident, development);
         return source.getValue(accident, development);
+    }
+    
+    private boolean cellsWithinSourceBounds() {
+        for(SmoothingCell cell : smoothing.getCells())
+            if(!withinSourceBounds(cell))
+                return false;
+        return true;
     }
     
     private double getSmoothedValue(int accident, int development) {
@@ -69,22 +57,9 @@ public class TriangleSmoothing extends AbstractTriangleModification {
     }
     
     private double getSmoothedValue(int index) {
-        double[] input = getInput();
+        double[] input = TriangleUtil.getCellValues(cells, source);
         double[] smoothed = smoothing.smooth(input);
         return smoothed[index];
-    }
-    
-    private double[] getInput() {
-        double[] input = new double[cellCount];
-        for(int i=0; i<cellCount; i++)
-            input[i] = getInput(cells.get(i));
-        return input;
-    }
-    
-    private double getInput(SmoothingCell cell) {
-        int accident = cell.getAccidentPeriod();
-        int development = cell.getDevelopmentPeriod();
-        return source.getValue(accident, development);
     }
 
     @Override
@@ -100,23 +75,10 @@ public class TriangleSmoothing extends AbstractTriangleModification {
             return source.getLayerTypeId(accident, development);
         return Smoothing.LAYER_ID;
     }
-    
+
     @Override
-    protected void appendModification(String triangleName, RCode rCode) {
+    public void createTriangle(String triangleName, RCode rCode) {
         if(cellsWithinSourceBounds())
             smoothing.appendSmoothing(triangleName, rCode);
-    }
-    
-    private boolean cellsWithinSourceBounds() {
-        for(SmoothingCell cell : smoothing.getCells())
-            if(!cellWithinSourceBounds(cell))
-                return false;
-        return true;
-    }
-    
-    private boolean cellWithinSourceBounds(SmoothingCell cell) {
-        return withinSourceBounds(
-                cell.getAccidentPeriod(), 
-                cell.getDevelopmentPeriod());
     }
 }

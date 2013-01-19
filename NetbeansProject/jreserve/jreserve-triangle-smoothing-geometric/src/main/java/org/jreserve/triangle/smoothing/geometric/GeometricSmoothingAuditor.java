@@ -1,5 +1,6 @@
 package org.jreserve.triangle.smoothing.geometric;
 
+import org.jreserve.triangle.smoothing.geometric.entities.GeometricSmoothing;
 import org.jreserve.audit.Auditor;
 import org.jreserve.triangle.smoothing.SmoothingAuditor;
 import org.openide.util.NbBundle.Messages;

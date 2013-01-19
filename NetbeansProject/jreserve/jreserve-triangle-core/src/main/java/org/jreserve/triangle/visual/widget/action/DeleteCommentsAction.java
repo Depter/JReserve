@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.Action;
 import org.jreserve.triangle.comment.CommentableTriangle;
-import org.jreserve.triangle.comment.TriangleCommentUtil;
 import org.jreserve.triangle.entities.TriangleComment;
+import org.jreserve.triangle.util.TriangleUtil;
 import org.jreserve.triangle.visual.DeleteTriangleCommentDialog;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
@@ -59,7 +59,7 @@ public class DeleteCommentsAction extends AbstractSingleCellPopUpAction {
     }
     
     private List<TriangleComment> getComments() {
-        return TriangleCommentUtil.getComments(commentable, cell);
+        return TriangleUtil.filterValues(commentable.getComments(), cell);
     }
     
     @Override

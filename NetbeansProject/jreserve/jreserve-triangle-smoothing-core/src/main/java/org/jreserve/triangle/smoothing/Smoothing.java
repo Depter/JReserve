@@ -1,8 +1,9 @@
 package org.jreserve.triangle.smoothing;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.persistence.*;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -13,6 +14,10 @@ import org.jreserve.persistence.PersistentObject;
 import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RFunction;
 import org.jreserve.rutil.RUtil;
+import org.jreserve.triangle.TriangleModification;
+import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.TriangularDataModification;
+import org.jreserve.triangle.entities.TriangleCell;
 
 /**
  *
@@ -24,7 +29,7 @@ import org.jreserve.rutil.RUtil;
 @Entity
 @Table(name="SMOOTHING", schema="JRESERVE")
 @Inheritance(strategy= InheritanceType.JOINED)
-public abstract class Smoothing implements PersistentObject {
+public abstract class Smoothing implements PersistentObject, TriangleModification {
 
     public final static String LAYER_ID = "smoothing-layer";
     private final static int NAME_LENGTH = 64;
@@ -42,21 +47,16 @@ public abstract class Smoothing implements PersistentObject {
     @Column(name="VERSION", nullable=false)
     private Long version;
     
-    @Column(name="OWNER_ID", columnDefinition=AbstractPersistentObject.COLUMN_DEF, nullable=false)
-    private String ownerId;
-    
     @Column(name="SMOOTHING_NAME", length=NAME_LENGTH, nullable=false)
     private String name;
     
-    @NotAudited
     @OneToMany(mappedBy="smoothing", orphanRemoval=true, fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    private List<SmoothingCell> cells = new ArrayList<SmoothingCell>();
+    private Set<SmoothingCell> cells = new TreeSet<SmoothingCell>();
     
     protected Smoothing() {
     }
     
-    protected Smoothing(PersistentObject owner, int order, String name) {
-        this.ownerId = owner.getId();
+    protected Smoothing(int order, String name) {
         this.order = order;
         this.name = name;
     }
@@ -70,6 +70,7 @@ public abstract class Smoothing implements PersistentObject {
         this.id = id;
     }
     
+    @Override
     public int getOrder() {
         return order;
     }
@@ -83,21 +84,16 @@ public abstract class Smoothing implements PersistentObject {
         this.version = version;
     }
     
-    public String getOwnerId() {
-        return ownerId;
-    }    
-    
     public String getName() {
         return name;
     }
     
     public List<SmoothingCell> getCells() {
-        return cells;
+        return new ArrayList<SmoothingCell>(cells);
     }
     
     protected void addCell(SmoothingCell cell) {
         this.cells.add(cell);
-        Collections.sort(cells);
     }
     
     public abstract double[] smooth(double[] input);
@@ -113,11 +109,13 @@ public abstract class Smoothing implements PersistentObject {
         int[] x = new int[size];
         int[] y = new int[size];
         boolean[] used = new boolean[size];
-        for(int i=0; i<size; i++) {
-            SmoothingCell cell = cells.get(i);
-            x[i] = cell.getAccidentPeriod() + 1;
-            y[i] = cell.getDevelopmentPeriod() + 1;
+        int i=0;
+        for(SmoothingCell cell : cells) {
+            TriangleCell coordinate = cell.getTriangleCell();
+            x[i] = coordinate.getAccident() + 1;
+            y[i] = coordinate.getDevelopment() + 1;
             used[i] = cell.isApplied();
+            i++;
         }
         
         String r = String.format("%s <- %s%n", triangleName, getRSmoothingString(triangleName, x, y, used));
@@ -129,6 +127,17 @@ public abstract class Smoothing implements PersistentObject {
               RUtil.createVector(x), 
               RUtil.createVector(y), 
               RUtil.createVector(applied));
+    }
+    @Override
+    public TriangularDataModification createModification(TriangularData source) {
+        return new TriangleSmoothing(source, this);
+    }
+
+    @Override
+    public int compareTo(TriangleModification o) {
+        if(o == null)
+            return -1;
+        return order - o.getOrder();
     }
     
     @Override

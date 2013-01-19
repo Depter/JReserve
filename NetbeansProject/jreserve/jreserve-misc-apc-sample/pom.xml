@@ -92,12 +92,6 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>jreserve-triangle-data</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>jreserve-estimate-core</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -110,14 +104,14 @@
         
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-triangle-comment</artifactId>
+            <artifactId>jreserve-triangle-smoothing-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-triangle-smoothing-geometric</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

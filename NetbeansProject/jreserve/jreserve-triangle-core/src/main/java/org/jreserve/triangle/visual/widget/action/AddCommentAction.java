@@ -3,7 +3,7 @@ package org.jreserve.triangle.visual.widget.action;
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import org.jreserve.triangle.comment.CommentableTriangle;
-import org.jreserve.triangle.comment.TriangleCommentUtil;
+import org.jreserve.triangle.entities.TriangleComment;
 import org.jreserve.triangle.visual.AddTriangleCommentDialog;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
@@ -56,7 +56,7 @@ public class AddCommentAction extends AbstractSingleCellPopUpAction {
     public void actionPerformed(ActionEvent e) {
         String comment = AddTriangleCommentDialog.getComment();
         if(comment != null)
-            TriangleCommentUtil.createComment(commentable, cell, comment);
+            commentable.addComment(new TriangleComment(cell, comment));
     }
 
     @Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.triangle.correction">
-    <module_version install_time="1358246481725" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1358636705925" last="true" origin="installer" specification_version="1.0">
         <file crc="1269513503" name="config/Modules/org-jreserve-jreserve-triangle-correction.xml"/>
-        <file crc="2477985330" name="modules/org-jreserve-jreserve-triangle-correction.jar"/>
+        <file crc="3224625843" name="modules/org-jreserve-jreserve-triangle-correction.jar"/>
     </module_version>
 </module>

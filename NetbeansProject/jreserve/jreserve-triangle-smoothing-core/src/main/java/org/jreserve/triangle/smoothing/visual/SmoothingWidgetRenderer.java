@@ -3,8 +3,8 @@ package org.jreserve.triangle.smoothing.visual;
 import java.awt.Color;
 import javax.swing.JTable;
 import org.jreserve.triangle.smoothing.Smoothing;
-import org.jreserve.triangle.widget.DefaultWidgetRenderer;
-import org.jreserve.triangle.widget.WidgetRendererRegistration;
+import org.jreserve.triangle.visual.widget.DefaultWidgetRenderer;
+import org.jreserve.triangle.visual.widget.DefaultWidgetRenderer.WidgetRendererRegistration;
 
 /**
  *

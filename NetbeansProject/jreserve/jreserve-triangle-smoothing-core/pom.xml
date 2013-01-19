@@ -89,12 +89,6 @@
             <artifactId>jreserve-triangle-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
-        <dependency>
-            <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-triangle-widget</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

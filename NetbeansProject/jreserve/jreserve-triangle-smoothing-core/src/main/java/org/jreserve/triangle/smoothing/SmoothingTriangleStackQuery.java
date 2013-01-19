@@ -2,9 +2,9 @@ package org.jreserve.triangle.smoothing;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.triangle.ModifiableTriangularData;
-import org.jreserve.triangle.value.TriangleCoordiante;
-import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.TriangleModification;
+import org.jreserve.triangle.entities.TriangleCell;
 import org.jreserve.triangle.util.AbstractTriangleStackQuery;
 
 /**
@@ -12,21 +12,21 @@ import org.jreserve.triangle.util.AbstractTriangleStackQuery;
  * @author Peter Decsi
  * @version 1.0
  */
-public class SmoothingTriangleStackQuery extends AbstractTriangleStackQuery<List<TriangleSmoothing>> {
+public class SmoothingTriangleStackQuery extends AbstractTriangleStackQuery<List<Smoothing>> {
     
-    public static List<TriangleSmoothing> getSmoothings(ModifiableTriangularData triangle, TriangleCoordiante cell) {
+    public static List<Smoothing> getSmoothings(ModifiableTriangle triangle, TriangleCell cell) {
         return new SmoothingTriangleStackQuery(cell).query(triangle);
     }
     
-    public static List<TriangleSmoothing> getSmoothings(ModifiableTriangularData triangle, int accident, int development) {
+    public static List<Smoothing> getSmoothings(ModifiableTriangle triangle, int accident, int development) {
         return new SmoothingTriangleStackQuery(accident, development).query(triangle);
     }
     
     private int accident;
     private int development;
-    private List<TriangleSmoothing> smoothings;
+    private List<Smoothing> smoothings;
     
-    public SmoothingTriangleStackQuery(TriangleCoordiante cell) {
+    public SmoothingTriangleStackQuery(TriangleCell cell) {
         this(cell.getAccident(), cell.getDevelopment());
     }
     
@@ -37,13 +37,13 @@ public class SmoothingTriangleStackQuery extends AbstractTriangleStackQuery<List
     
     @Override
     protected void initQuery() {
-        smoothings = new ArrayList<TriangleSmoothing>();
+        smoothings = new ArrayList<Smoothing>();
     }
 
     @Override
-    protected boolean acceptsData(TriangularData data) {
-        if((data instanceof TriangleSmoothing))
-            return smoothesCell(((TriangleSmoothing) data).getSmoothing());
+    protected boolean accepts(TriangleModification modification) {
+        if(modification instanceof Smoothing)
+            return smoothesCell((Smoothing) modification);
         return false;
     }
     
@@ -60,12 +60,12 @@ public class SmoothingTriangleStackQuery extends AbstractTriangleStackQuery<List
     }
 
     @Override
-    protected void processData(TriangularData data) {
-        smoothings.add(((TriangleSmoothing) data));
+    protected void process(TriangleModification modification) {
+        smoothings.add(((Smoothing) modification));
     }
 
     @Override
-    protected List<TriangleSmoothing> getResult() {
+    protected List<Smoothing> getResult() {
         return smoothings;
     }
 }

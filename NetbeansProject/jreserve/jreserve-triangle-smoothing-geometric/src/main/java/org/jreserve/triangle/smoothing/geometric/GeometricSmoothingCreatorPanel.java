@@ -1,5 +1,6 @@
 package org.jreserve.triangle.smoothing.geometric;
 
+import org.jreserve.triangle.smoothing.geometric.entities.GeometricSmoothing;
 import java.beans.PropertyChangeListener;
 import javax.swing.JPanel;
 import org.jreserve.triangle.smoothing.visual.SmoothingCreatorPanel;

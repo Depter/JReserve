@@ -5,10 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import org.hibernate.envers.Audited;
 import org.jreserve.persistence.EntityRegistration;
-import org.jreserve.persistence.PersistentObject;
 import org.jreserve.rutil.RFunction;
 import org.jreserve.triangle.smoothing.Smoothing;
 import org.jreserve.triangle.smoothing.SmoothingCell;
+import org.jreserve.triangle.smoothing.exponential.RExponentialSmoothing;
 
 /**
  *
@@ -27,8 +27,8 @@ public class ExponentialSmoothing extends Smoothing {
     protected ExponentialSmoothing() {
     }
     
-    public ExponentialSmoothing(PersistentObject owner, int order, String name, double alpha) {
-        super(owner, order, name);
+    public ExponentialSmoothing(int order, String name, double alpha) {
+        super(order, name);
         setCheckedAlpha(alpha);
     }
 

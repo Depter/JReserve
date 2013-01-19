@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.persistence.*;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
@@ -55,7 +54,6 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     @Embedded
     private TriangleGeometry geometry;
     
-    @NotAudited
     @OneToMany(cascade=CascadeType.ALL)
     @JoinTable(
         name="TRIANGLE_MODIFICATION_LINK", schema="JRESERVE",
@@ -64,7 +62,6 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     )
     private Set<TriangleModification> modifications = new TreeSet<TriangleModification>();
     
-    @NotAudited
     @OneToMany(cascade=CascadeType.ALL)
     @JoinTable(
         name="TRIANGLE_COMMENT_LINK", schema="JRESERVE",
@@ -209,11 +206,9 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     }
     
     @Override
-    public TriangleComment createComment(int accident, int development, String user, String comment) {
-        TriangleComment tc = new TriangleComment(this, accident, development, user, comment);
-        comments.add(tc);
+    public void addComment(TriangleComment comment) {
+        comments.add(comment);
         fireCommentsChanged();
-        return tc;
     }
     
     @Override

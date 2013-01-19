@@ -6,12 +6,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.smoothing.Smoothing;
-import org.jreserve.triangle.smoothing.TriangleSmoothing;
 import org.jreserve.triangle.smoothing.util.SmootherImpl;
 import org.jreserve.triangle.smoothing.util.SmoothingMethodRegistry;
-import org.jreserve.triangle.widget.actions.ContinuousSelectionAction;
+import org.jreserve.triangle.visual.widget.action.ContinuousSelectionAction;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
 import org.openide.util.NbBundle.Messages;
@@ -27,8 +26,8 @@ import org.openide.util.actions.Presenter;
 })
 public class AddSmoothingAction extends ContinuousSelectionAction implements Presenter.Popup {
     
-    private Result<ModifiableTriangularData> tResult;
-    private ModifiableTriangularData triangle;
+    private Result<TriangularData> sResult;
+    private TriangularData source;
     
     public AddSmoothingAction() {
     }
@@ -39,17 +38,17 @@ public class AddSmoothingAction extends ContinuousSelectionAction implements Pre
     
     @Override
     protected void init(Lookup lookup) {
-        if(tResult != null)
+        if(sResult != null)
             return;
-        tResult = lookup.lookupResult(ModifiableTriangularData.class);
-        tResult.addLookupListener(this);
+        sResult = lookup.lookupResult(TriangularData.class);
+        sResult.addLookupListener(this);
         super.init(lookup);
     }
     
     @Override
     protected boolean checkEnabled() {
         if(super.checkEnabled())
-            return hasSmoothers() && hasModifiableTriangle();
+            return hasSmoothers() && hasSourceData();
         return false;
     }
     
@@ -58,9 +57,9 @@ public class AddSmoothingAction extends ContinuousSelectionAction implements Pre
         return !smoothers.isEmpty();
     }
     
-    private boolean hasModifiableTriangle() {
-        triangle = lookupOne(tResult);
-        return triangle != null;
+    private boolean hasSourceData() {
+        source = lookupOne(sResult);
+        return source != null;
     }
 
     @Override
@@ -93,18 +92,9 @@ public class AddSmoothingAction extends ContinuousSelectionAction implements Pre
         
         @Override
         public void actionPerformed(ActionEvent e) {
-            Smoothing smoothing = createSmoothing();
-            if(smoothing != null) {
-                TriangleSmoothing modification = new TriangleSmoothing(smoothing);
-                triangle.addModification(modification);
-            }
-        }
-        
-        private Smoothing createSmoothing() {
-            return smoother.createSmoothing(
-                triangle,
-                cells, 
-                widget.getVisibleDigits());
+            Smoothing smoothing = smoother.createSmoothing(lookup);
+            if(smoothing != null)
+                triangle.addModification(smoothing);
         }
     }
 }

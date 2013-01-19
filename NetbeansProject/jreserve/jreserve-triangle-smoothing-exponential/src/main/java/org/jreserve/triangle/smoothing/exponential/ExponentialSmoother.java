@@ -1,10 +1,8 @@
 package org.jreserve.triangle.smoothing.exponential;
 
-import java.util.List;
-import org.jreserve.triangle.ModifiableTriangularData;
-import org.jreserve.triangle.value.TriangleCoordiante;
 import org.jreserve.triangle.smoothing.Smoother;
 import org.jreserve.triangle.smoothing.Smoothing;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -22,8 +20,8 @@ import org.openide.util.NbBundle.Messages;
 public class ExponentialSmoother implements Smoother {
 
     @Override
-    public Smoothing createSmoothing(ModifiableTriangularData triangle, List<TriangleCoordiante> cells, int visibleDigits) {
-        ExponentialSmoothingFactory factory = new ExponentialSmoothingFactory(triangle, cells, visibleDigits);
+    public Smoothing createSmoothing(Lookup lookup) {
+        ExponentialSmoothingFactory factory = new ExponentialSmoothingFactory(lookup);
         return factory.createSmoothing();
     }
 }

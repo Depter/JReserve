@@ -3,7 +3,7 @@ package org.jreserve.triangle.smoothing;
 import javax.persistence.*;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
-import org.jreserve.triangle.value.TriangleCoordiante;
+import org.jreserve.triangle.entities.TriangleCell;
 
 /**
  *
@@ -13,17 +13,14 @@ import org.jreserve.triangle.value.TriangleCoordiante;
 @EntityRegistration
 @Entity
 @Table(name="SMOOTHING_CELL", schema="JRESERVE")
-public class SmoothingCell extends AbstractPersistentObject implements Comparable<SmoothingCell> {
+public class SmoothingCell extends AbstractPersistentObject implements Comparable<SmoothingCell>, TriangleCell.Provider {
     
     @ManyToOne(fetch=FetchType.EAGER, optional=false)
     @JoinColumn(name="SMOOTHING_ID", referencedColumnName="ID", nullable=false)
     private Smoothing smoothing;
     
-    @Column(name="ACCIDENT_PERIOD")
-    private int accident;
-    
-    @Column(name="DEVELOPMENT_PERIOD")
-    private int development;
+    @Embedded
+    private TriangleCell cell;
     
     @Column(name="APPLIED", nullable=false)
     private boolean applied;
@@ -31,28 +28,23 @@ public class SmoothingCell extends AbstractPersistentObject implements Comparabl
     protected SmoothingCell() {
     }
     
-    public SmoothingCell(Smoothing smoothing, TriangleCoordiante coordiante, boolean applied) {
-        this(smoothing, coordiante.getAccident(), coordiante.getDevelopment(), applied);
+    public SmoothingCell(Smoothing smoothing, int accident, int development, boolean applied) {
+        this(smoothing, new TriangleCell(accident, development), applied);
     }
     
-    public SmoothingCell(Smoothing smoothing, int accident, int development, boolean applied) {
+    public SmoothingCell(Smoothing smoothing, TriangleCell cell, boolean applied) {
         this.smoothing = smoothing;
-        this.accident = accident;
-        this.development = development;
+        this.cell = cell;
         this.applied = applied;
     }
-
-    public int getAccidentPeriod() {
-        return accident;
-    }
     
-    public int getDevelopmentPeriod() {
-        return development;
+    @Override
+    public TriangleCell getTriangleCell() {
+        return cell;
     }
     
     public boolean isSameCell(int accident, int development) {
-        return this.accident == accident &&
-               this.development == development;
+        return cell.equals(accident, development);
     }
 
     public boolean isApplied() {
@@ -66,9 +58,7 @@ public class SmoothingCell extends AbstractPersistentObject implements Comparabl
     @Override
     public int compareTo(SmoothingCell o) {
         if(o == null) return -1;
-        int dif = accident - o.accident;
-        if(dif != 0) return dif;
-        return development - o.development;
+        return cell.compareTo(o.cell);
     }
 }
 

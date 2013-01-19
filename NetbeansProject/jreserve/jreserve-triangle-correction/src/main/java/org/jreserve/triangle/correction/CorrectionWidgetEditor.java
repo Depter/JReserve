@@ -1,16 +1,15 @@
 package org.jreserve.triangle.correction;
 
-import java.util.Collection;
-import org.jreserve.triangle.ModifiableTriangularData;
-import org.jreserve.triangle.TriangularDataModification;
-import org.jreserve.triangle.util.TriangleUtil;
+import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.TriangleModification;
+import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.correction.entities.TriangleCorrection;
+import org.jreserve.triangle.entities.TriangleCell;
+import org.jreserve.triangle.util.TriangleUtil;
+import org.jreserve.triangle.visual.widget.TriangleWidgetProperties;
 import org.jreserve.triangle.visual.widget.WidgetEditor;
-import org.jreserve.triangle.widget.model.WidgetTableModel;
-import org.openide.util.Lookup.Result;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
-import org.openide.util.Utilities;
+import org.jreserve.triangle.visual.widget.WidgetTableModel;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -20,92 +19,107 @@ import org.openide.util.Utilities;
 @WidgetEditor.Registration(category="Triangle")
 public class CorrectionWidgetEditor implements WidgetEditor {
     
-    private ModifiableTriangularData triangle;
+    private Lookup lookup;
 
     public CorrectionWidgetEditor() {
-        new TriangleListener();
+    }
+    
+    @Override
+    public void setLookup(Lookup lookup) {
+        this.lookup = lookup;
     }
     
     @Override
     public boolean setCellValue(WidgetTableModel model, int accident, int development, Double value) {
-        Double originalValue = (Double) model.getValueAt(accident, development+1);
-        if(value==null || value.equals(originalValue))
-            deleteCorrection(accident, development);
-        else
-            addCorrection(model, accident, development, value);
-        return true;
+        ModifiableTriangle triangle = lookup(ModifiableTriangle.class);
+        if(triangle == null) {
+            return false;
+        } else if(isCorrectionDeleted(model, accident, development, value)) {
+            deleteCorrection(triangle, new TriangleCell(accident, development));
+        } else {
+            addCorrection(triangle, new TriangleCell(accident, development), value);
+        }
+        return false;
     }
     
-    private void deleteCorrection(int accident, int development) {
-        TriangularDataModification mod = getCorrectionAt(accident, development);
+    private <T> T lookup(Class<T> clazz) {
+        if(lookup == null)
+            return null;
+        return lookup.lookup(clazz);
+    }
+    
+    private boolean isCorrectionDeleted(WidgetTableModel model, int accident, int development, Double value) {
+        if(value == null)
+            return true;
+        Double originalValue = (Double) model.getValueAt(accident, development + 1);
+        return value==null ||
+               value.equals(originalValue);
+    }
+    
+    private void deleteCorrection(ModifiableTriangle triangle, TriangleCell cell) {
+        TriangleModification mod = getCorrectionAt(triangle, cell);
         if(mod != null)
             triangle.removeModification(mod);
     }
     
-    private TriangularDataModification getCorrectionAt(int accident, int development) {
-        for(TriangularDataModification mod : triangle.getModifications())
-            if(isMyCorrection(mod, accident, development))
+    private TriangleModification getCorrectionAt(ModifiableTriangle triangle, TriangleCell cell) {
+        for(TriangleModification mod : triangle.getModifications())
+            if(isMyCorrection(mod, cell)) 
                 return mod;
         return null;
     }
     
-    private boolean isMyCorrection(TriangularDataModification mod, int accident, int development) {
-        if(!(mod instanceof TriangleCorrectionModification))
-            return false;
-        TriangleCorrectionModification corr = (TriangleCorrectionModification) mod;
-        return corr.myCell(accident, development);
+    private boolean isMyCorrection(TriangleModification mod, TriangleCell cell) {
+        if(mod instanceof TriangleCorrection) {
+            TriangleCell modCell = ((TriangleCorrection)mod).getTriangleCell();
+            return cell.equals(modCell);
+        }
+        return false;
     }
     
-    private void addCorrection(WidgetTableModel model, int accident, int development, double value) {
-        deleteCorrection(accident, development);
-        TriangleCorrection correction = createCorrection(model, accident, development, value);
-        TriangleCorrectionModification modification = new TriangleCorrectionModification(correction);
-        triangle.addModification(modification);
+    private void addCorrection(ModifiableTriangle triangle, TriangleCell cell, double value) {
+        deleteCorrection(triangle, cell);
+        TriangleCorrection correction = createCorrection(triangle, cell, value);
+        triangle.addModification(correction);
     }
     
-    private TriangleCorrection createCorrection(WidgetTableModel model, int accident, int development, double value) {
-        value = getCorrigatedValue(model, accident, development, value);
+    private TriangleCorrection createCorrection(ModifiableTriangle triangle, TriangleCell cell, double value) {
+        value = getCorrigatedValue(cell, value);
         int order = triangle.getMaxModificationOrder() + 1;
-        String ownerId = triangle.getOwner().getId();
-        return new TriangleCorrection(ownerId, order, accident, development, value);
+        return new TriangleCorrection(order, cell, value);
     }
 
-    private double getCorrigatedValue(WidgetTableModel model, int accident, int development, double value) {
-        if(development > 0 && model.isCummulated()) {
-            double prev = getPreviousModelValue(model, accident, development);
+    private double getCorrigatedValue(TriangleCell cell, double value) {
+        if(cell.getDevelopment() > 0 && isCummulated()) {
+            double prev = getPreviousModelValue(cell);
             if(!Double.isNaN(prev))
                 value -= prev;
         }
         return value;
     }
     
-    private double getPreviousModelValue(WidgetTableModel model, int accident, int development) {
-        double[][] values = model.getData().toArray();
+    private boolean isCummulated() {
+        TriangleWidgetProperties props = lookup(TriangleWidgetProperties.class);
+        return props != null &&
+               props.isCummualted();
+    }
+    
+    private double getPreviousModelValue(TriangleCell cell) {
+        TriangularData data = lookup(TriangularData.class);
+        if(data == null)
+            return Double.NaN;
+        double[][] values = data.toArray();
         TriangleUtil.cummulate(values);
-        return values[accident][development-1];
+        return TriangleUtil.getValue(cell.getAccident(), cell.getDevelopment()-1, values);
     }
     
     @Override
     public boolean isCellEditable(int accident, int development) {
-        return triangle != null;
-    }
-    
-    private class TriangleListener implements LookupListener {
-        
-        private Result<ModifiableTriangularData> result;
-
-        private TriangleListener() {
-            result = Utilities.actionsGlobalContext().lookupResult(ModifiableTriangularData.class);
-            result.addLookupListener(this);
-            resultChanged(null);
-        }
-        
-        @Override
-        public void resultChanged(LookupEvent le) {
-            triangle = null;
-            Collection<? extends ModifiableTriangularData> items = result.allInstances();
-            if(!items.isEmpty())
-                triangle = items.iterator().next();
-        }
+        if(lookup(ModifiableTriangle.class) == null)
+            return false;
+        TriangularData data = lookup(TriangularData.class);
+        return data != null &&
+               accident < data.getAccidentCount() &&
+               development < data.getDevelopmentCount(accident);
     }
 }

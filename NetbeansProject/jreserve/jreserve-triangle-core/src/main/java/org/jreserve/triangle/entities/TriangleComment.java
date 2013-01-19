@@ -22,9 +22,6 @@ public class TriangleComment extends AbstractPersistentObject implements Triangl
     private final static long serialVersionUID = 1L;
     
     private final static int NAME_SIZE = 64;
-
-    @Column(name="OWNER_ID", length=AbstractPersistentObject.ID_LENGTH)
-    private String ownerId;
     
     @Column(name="CREATION_DATE", nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,9 +40,16 @@ public class TriangleComment extends AbstractPersistentObject implements Triangl
     protected TriangleComment() {
     }
     
-    public TriangleComment(PersistentObject owner, int accident, int development, String user, String comment) {
-        this.ownerId = owner.getId();
-        this.cell = new TriangleCell(accident, development);
+    public TriangleComment(int accident, int development, String user, String comment) {
+        this(new TriangleCell(accident, development), user, comment);
+    }
+    
+    public TriangleComment(TriangleCell cell, String comment) {
+        this(cell, System.getProperty("user.home"), comment);
+    }
+    
+    public TriangleComment(TriangleCell cell, String user, String comment) {
+        this.cell = cell;
         initUserName(user);
         initComment(comment);
         creationDate = new Date();
@@ -81,10 +85,6 @@ public class TriangleComment extends AbstractPersistentObject implements Triangl
     
     public void setCommentText(String comment) {
         initComment(comment);
-    }
-    
-    public String getOwnerId() {
-        return this.ownerId;
     }
     
     @Override

@@ -44,6 +44,12 @@
         
         <dependency>
             <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-dialogs</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
@@ -87,7 +93,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>org.jreserve.triangle.smoothing.geometric.factory</publicPackage>
+                        <publicPackage>org.jreserve.triangle.smoothing.geometric.entities</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

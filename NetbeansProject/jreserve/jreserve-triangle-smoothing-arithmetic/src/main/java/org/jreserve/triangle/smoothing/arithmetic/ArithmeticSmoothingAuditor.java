@@ -1,5 +1,6 @@
 package org.jreserve.triangle.smoothing.arithmetic;
 
+import org.jreserve.triangle.smoothing.arithmetic.entities.ArithmeticSmoothing;
 import org.jreserve.audit.Auditor;
 import org.jreserve.triangle.smoothing.SmoothingAuditor;
 import org.openide.util.NbBundle.Messages;

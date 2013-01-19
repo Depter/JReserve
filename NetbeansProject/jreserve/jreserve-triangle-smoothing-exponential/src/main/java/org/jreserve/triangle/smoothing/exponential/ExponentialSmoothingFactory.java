@@ -2,11 +2,12 @@ package org.jreserve.triangle.smoothing.exponential;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import org.jreserve.persistence.PersistentObject;
-import org.jreserve.triangle.ModifiableTriangularData;
-import org.jreserve.triangle.value.TriangleCoordiante;
+import org.jreserve.triangle.ModifiableTriangle;
 import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.entities.TriangleCell;
 import org.jreserve.triangle.smoothing.Smoothing;
 import org.jreserve.triangle.smoothing.SmoothingCell;
 import org.jreserve.triangle.smoothing.SmoothingNameChecker;
@@ -15,9 +16,12 @@ import static org.jreserve.triangle.smoothing.exponential.ExponentialSmoothingCr
 import static org.jreserve.triangle.smoothing.visual.SmoothingCreatorPanel.SMOOTHING_APPLIED_CELLS_PROPERTY;
 import static org.jreserve.triangle.smoothing.visual.SmoothingCreatorPanel.SMOOTHING_NAME_PROPERTY;
 import org.jreserve.triangle.util.ClassCounterTriangleStackQuery;
+import org.jreserve.triangle.util.TriangleUtil;
+import org.jreserve.triangle.visual.widget.TriangleWidgetProperties;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotificationLineSupport;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -42,31 +46,36 @@ public class ExponentialSmoothingFactory implements PropertyChangeListener {
     private final static int OPTION_TYPE = DialogDescriptor.OK_CANCEL_OPTION;
     private final static Object DEFAULT_OPTION = DialogDescriptor.OK_OPTION;
     
-    private ModifiableTriangularData triangle;
-    private List<TriangleCoordiante> cells;
+    private ModifiableTriangle triangle;
+    private TriangularData source;
+    private List<TriangleCell> cells;
     
     private ExponentialSmoothingCreatorPanel panel;
     private DialogDescriptor dd; 
     private NotificationLineSupport nls;
     
-    ExponentialSmoothingFactory(ModifiableTriangularData triangle, List<TriangleCoordiante> cells, int visibleDigits) {
-        this.triangle = triangle;
-        this.cells = cells;
-        createPanel(visibleDigits);
+    ExponentialSmoothingFactory(Lookup lookup) {
+        this.triangle = lookup.lookup(ModifiableTriangle.class);
+        this.cells = new ArrayList<TriangleCell>(lookup.lookupAll(TriangleCell.class));
+        this.source = lookup.lookup(TriangularData.class);
+        Collections.sort(cells);
+        createPanel(lookup);
         createDialogDescriptor();
         nls = dd.createNotificationLineSupport();
     }
     
-    private void createPanel(int visibleDigits) {
-        double[] input = getInput();
-        panel = new ExponentialSmoothingCreatorPanel(visibleDigits, input);
+    private void createPanel(Lookup lookup) {
+        double[] input = TriangleUtil.getValues(cells, source);
+        panel = new ExponentialSmoothingCreatorPanel(getVisibleDigits(lookup), input);
         setDefaultSmoothingName();
         panel.addPropertyChangeListener(this, SMOOTHING_NAME_PROPERTY, SMOOTHING_APPLIED_CELLS_PROPERTY, SMOOTHING_ALPHA_PROPARTY);
     }
     
-    private double[] getInput() {
-        TriangularData data = triangle.getTriangularData();
-        return TriangleCoordiante.getValues(cells, data);
+    private int getVisibleDigits(Lookup lookup) {
+        TriangleWidgetProperties props = lookup.lookup(TriangleWidgetProperties.class);
+        if(props == null)
+            return 0;
+        return props.getVisibleDigits();
     }
     
     private void setDefaultSmoothingName() {
@@ -142,11 +151,10 @@ public class ExponentialSmoothingFactory implements PropertyChangeListener {
     }
     
     private ExponentialSmoothing initSmoothing() {
-        PersistentObject owner = triangle.getOwner();
         int order = triangle.getMaxModificationOrder() + 1;
         String name = panel.getSmoothingName();
         double alpha = panel.getAlpha();
-        return new ExponentialSmoothing(owner, order, name, alpha);
+        return new ExponentialSmoothing(order, name, alpha);
     }
     
     private void addSmoothingCells(ExponentialSmoothing smoothing) {

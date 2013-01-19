@@ -17,14 +17,14 @@ import org.jreserve.project.factories.LoBFactory;
 import org.jreserve.project.factories.ProjectFactory;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
-import org.jreserve.triangle.ModifiableTriangularData;
-import org.jreserve.triangle.comment.CommentableTriangle;
-import org.jreserve.triangle.comment.TriangleCommentFactory;
-import org.jreserve.triangle.correction.factory.TriangleCorrectionFactory;
-import org.jreserve.triangle.data.factories.ProjectDataContainerFactoy;
-import org.jreserve.triangle.data.factories.TriangleFactory;
-import org.jreserve.triangle.smoothing.geometric.factory.GeometricSmoothingFactory;
-import org.netbeans.api.actions.Savable;
+import org.jreserve.triangle.correction.entities.TriangleCorrection;
+import org.jreserve.triangle.entities.TriangleCell;
+import org.jreserve.triangle.entities.TriangleComment;
+import org.jreserve.triangle.smoothing.Smoothing;
+import org.jreserve.triangle.smoothing.SmoothingCell;
+import org.jreserve.triangle.smoothing.geometric.entities.GeometricSmoothing;
+import org.jreserve.triangle.util.ProjectDataContainerFactory;
+import org.jreserve.triangle.util.TriangleFactory;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -121,7 +121,7 @@ public class SampleBuilder {
     }
     
     private void createDatas(ProjectElement<Project> project) throws Exception {
-        ProjectElement<ProjectElementContainer> child = ProjectDataContainerFactoy.getInstance().createProjectElement(project.getValue());
+        ProjectElement<ProjectElementContainer> child = ProjectDataContainerFactory.getInstance().createProjectElement(project.getValue());
         project.addChild(child);
         ProjectElementContainer container = child.getValue();
         for(ProjectDataType dt : (List<ProjectDataType>) project.getParent().getChildValues(ProjectDataType.class))
@@ -137,33 +137,24 @@ public class SampleBuilder {
     
     private void createTriangle(ProjectElementContainer container, ProjectDataType dt) throws Exception {
         TriangleFactory factory = new TriangleFactory(container.getProject(), dt, dt.getName(), InputData.TRIANGLE_GEOMETRY, true);
+        if(isBiClaimCountTriangle(dt)) {
+            factory.addModifications(new TriangleCorrection(0, 0, 1, 60));
+            factory.addComments(new TriangleComment(new TriangleCell(0, 1), Bundle.MSG_SampleBuilder_Comment_Correction()));
+            factory.addModifications(createGeometricSmoothing(1, new int[][]{{3, 0}, {4, 0}, {5, 0}}, new boolean[]{false, true, false}));
+            factory.addComments(new TriangleComment(new TriangleCell(4, 0), Bundle.MSG_SampleBuilder_Smoothing_Comment()));
+        }
+        
         ProjectElement triangle = doWork(factory, null);
         container.addElement(triangle);
-        
-        if(isBiClaimCountTriangle(dt)) {
-            addCorrection(triangle);
-            addComment(triangle, 0, 1, Bundle.MSG_SampleBuilder_Comment_Correction());
-            addGeometricSmoothing(triangle, 1, new int[][]{{3, 0}, {4, 0}, {5, 0}}, new boolean[]{false, true, false});
-            addComment(triangle, 4, 0, Bundle.MSG_SampleBuilder_Smoothing_Comment());
+    }
+    
+    private Smoothing createGeometricSmoothing(int index, int[][] cells, boolean[] applied) throws Exception {
+        GeometricSmoothing smoothing = new GeometricSmoothing(index, name);
+        for(int i=0, size=applied.length; i<size; i++) {
+            TriangleCell cell = new TriangleCell(cells[i][0], cells[i][1]);
+            smoothing.addCell(new SmoothingCell(smoothing, cell, applied[i]));
         }
-    }
-    
-    private void addCorrection(ProjectElement element) throws Exception {
-        ModifiableTriangularData triangle = (ModifiableTriangularData) element;
-        TriangleCorrectionFactory factory = new TriangleCorrectionFactory(triangle, 0, 1, 60);
-        doWork(factory, null);
-    }
-    
-    private void addComment(ProjectElement element, int accident, int development, String msg) throws Exception {
-        CommentableTriangle commentable = element.getLookup().lookup(CommentableTriangle.class);
-        TriangleCommentFactory factory = new TriangleCommentFactory(commentable, accident, development, msg);
-        doWork(factory, null);
-    }
-    
-    private void addGeometricSmoothing(ProjectElement element, int index, int[][] cells, boolean[] applied) throws Exception {
-        ModifiableTriangularData triangle = (ModifiableTriangularData) element;
-        GeometricSmoothingFactory factory = new GeometricSmoothingFactory(triangle, Bundle.MSG_SampleBuilder_Smoothing_Name(index), cells, applied);
-        doWork(factory, null);
+        return smoothing;
     }
     
     private boolean isBiClaimCountTriangle(ProjectDataType dt) {

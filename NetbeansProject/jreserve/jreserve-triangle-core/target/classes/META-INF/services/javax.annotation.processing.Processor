@@ -1,0 +1,3 @@
+org.jreserve.triangle.visual.widget.util.WidgetEditorRegistrationProcessor
+org.jreserve.triangle.visual.widget.util.WidgetRendererRegistrationProcessor
+org.jreserve.triangle.visual.widget.util.WidgetTableModelRegistrationProcessor

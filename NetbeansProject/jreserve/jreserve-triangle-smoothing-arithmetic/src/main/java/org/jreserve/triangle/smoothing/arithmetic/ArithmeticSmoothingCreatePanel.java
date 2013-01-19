@@ -1,5 +1,6 @@
 package org.jreserve.triangle.smoothing.arithmetic;
 
+import org.jreserve.triangle.smoothing.arithmetic.entities.ArithmeticSmoothing;
 import java.beans.PropertyChangeListener;
 import javax.swing.JPanel;
 import org.jreserve.triangle.smoothing.visual.SmoothingCreatorPanel;

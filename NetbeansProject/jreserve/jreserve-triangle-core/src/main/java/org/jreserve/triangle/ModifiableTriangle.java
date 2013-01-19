@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface ModifiableTriangle {
     
+    public final static String MODIFICATIONS_PROPERTY = "TRIANGLE_MODIFICATIONS";
+    
     public void addModification(TriangleModification modification);
     
     public void removeModification(TriangleModification modification);

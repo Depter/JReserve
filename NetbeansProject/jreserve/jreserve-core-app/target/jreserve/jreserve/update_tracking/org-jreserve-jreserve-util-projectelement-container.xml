@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.util.projectelement.container">
-    <module_version install_time="1358246483084" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1358636708075" last="true" origin="installer" specification_version="1.0">
         <file crc="1302260253" name="config/Modules/org-jreserve-jreserve-util-projectelement-container.xml"/>
-        <file crc="2878847460" name="modules/org-jreserve-jreserve-util-projectelement-container.jar"/>
+        <file crc="1794172178" name="modules/org-jreserve-jreserve-util-projectelement-container.jar"/>
     </module_version>
 </module>

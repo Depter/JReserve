@@ -10,7 +10,7 @@ import org.jreserve.triangle.entities.TriangleComment;
  */
 public interface CommentableTriangle {
     
-    public TriangleComment createComment(int accident, int development, String user, String comment);
+    public void addComment(TriangleComment comment);
     
     public void removeComment(TriangleComment comment);
     

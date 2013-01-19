@@ -1,7 +1,6 @@
 package org.jreserve.triangle.smoothing.actions;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -9,10 +8,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import org.jreserve.triangle.ModifiableTriangularData;
+import org.jreserve.triangle.smoothing.Smoothing;
 import org.jreserve.triangle.smoothing.SmoothingTriangleStackQuery;
 import org.jreserve.triangle.smoothing.TriangleSmoothing;
-import org.jreserve.triangle.widget.actions.AbstractSingleCellPopUpAction;
+import org.jreserve.triangle.visual.widget.action.AbstractSingleCellPopUpAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
@@ -36,9 +35,6 @@ public class DeleteSmoothingAction extends AbstractSingleCellPopUpAction impleme
         }
     };
     
-    private Lookup.Result<ModifiableTriangularData> tResult;
-    private ModifiableTriangularData triangle;
-    
     public DeleteSmoothingAction() {
     }
     
@@ -47,33 +43,18 @@ public class DeleteSmoothingAction extends AbstractSingleCellPopUpAction impleme
     }
     
     @Override
-    protected void init(Lookup lookup) {
-        if(tResult != null)
-            return;
-        tResult = lookup.lookupResult(ModifiableTriangularData.class);
-        tResult.addLookupListener(this);
-        super.init(lookup);
-    }
-    
-    @Override
     protected boolean checkEnabled() {
         return super.checkEnabled() &&
-               hasModifiableTriangle() && 
                hasSmoothings();
-    }
-    
-    private boolean hasModifiableTriangle() {
-        triangle = lookupOne(tResult);
-        return triangle != null;
     }
     
     private boolean hasSmoothings() {
         return !(getSmoothings().isEmpty());
     }
 
-    private List<TriangleSmoothing> getSmoothings() {
-        List<TriangleSmoothing> result = SmoothingTriangleStackQuery.getSmoothings(triangle, cell);
-        Collections.sort(result, COMPARATOR);
+    private List<Smoothing> getSmoothings() {
+        List<Smoothing> result = SmoothingTriangleStackQuery.getSmoothings(triangle, cell);
+        Collections.sort(result);
         return result;
     }
     
@@ -96,18 +77,17 @@ public class DeleteSmoothingAction extends AbstractSingleCellPopUpAction impleme
     }
     
     private void addSubActions(JMenu menu) {
-        for(TriangleSmoothing smoothing : getSmoothings())
+        for(Smoothing smoothing : getSmoothings())
             menu.add(new DeleteSmoothingSubAction(smoothing));
     }
     
     private class DeleteSmoothingSubAction extends AbstractAction {
         
-        private final TriangleSmoothing smoothing;
+        private final Smoothing smoothing;
         
-        private DeleteSmoothingSubAction(TriangleSmoothing smoothing) {
+        private DeleteSmoothingSubAction(Smoothing smoothing) {
             this.smoothing = smoothing;
-            String name = smoothing.getSmoothing().getName();
-            putValue(NAME, smoothing.getSmoothing().getName());
+            putValue(NAME, smoothing.getName());
             setEnabled(DeleteSmoothingAction.this.isEnabled());
         }
         
