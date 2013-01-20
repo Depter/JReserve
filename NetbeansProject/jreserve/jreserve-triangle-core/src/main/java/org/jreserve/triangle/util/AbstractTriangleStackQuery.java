@@ -1,7 +1,7 @@
 package org.jreserve.triangle.util;
 
 import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangleModification;
+import org.jreserve.triangle.entities.TriangleModification;
 
 /**
  *

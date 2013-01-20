@@ -1,6 +1,7 @@
 package org.jreserve.triangle.smoothing;
 
 import javax.persistence.*;
+import org.hibernate.envers.Audited;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.triangle.entities.TriangleCell;
@@ -11,6 +12,7 @@ import org.jreserve.triangle.entities.TriangleCell;
  * @version 1.0
  */
 @EntityRegistration
+@Audited
 @Entity
 @Table(name="SMOOTHING_CELL", schema="JRESERVE")
 public class SmoothingCell extends AbstractPersistentObject implements Comparable<SmoothingCell>, TriangleCell.Provider {

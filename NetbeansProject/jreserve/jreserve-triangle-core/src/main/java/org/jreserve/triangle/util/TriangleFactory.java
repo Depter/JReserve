@@ -10,10 +10,10 @@ import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.SessionTask;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.system.ProjectElement;
-import org.jreserve.triangle.TriangleModification;
 import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleComment;
 import org.jreserve.triangle.entities.TriangleGeometry;
+import org.jreserve.triangle.entities.TriangleModification;
 import org.jreserve.triangle.project.TriangleProjectElement;
 
 /**

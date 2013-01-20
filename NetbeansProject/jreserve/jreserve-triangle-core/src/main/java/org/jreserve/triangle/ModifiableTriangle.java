@@ -1,6 +1,7 @@
 package org.jreserve.triangle;
 
 import java.util.List;
+import org.jreserve.triangle.entities.TriangleModification;
 
 /**
  *

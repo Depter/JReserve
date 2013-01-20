@@ -6,18 +6,15 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.persistence.*;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
-import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
-import org.jreserve.persistence.IdGenerator;
 import org.jreserve.persistence.PersistentObject;
 import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RFunction;
 import org.jreserve.rutil.RUtil;
-import org.jreserve.triangle.TriangleModification;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.TriangularDataModification;
 import org.jreserve.triangle.entities.TriangleCell;
+import org.jreserve.triangle.entities.TriangleModification;
 
 /**
  *
@@ -29,23 +26,10 @@ import org.jreserve.triangle.entities.TriangleCell;
 @Entity
 @Table(name="SMOOTHING", schema="JRESERVE")
 @Inheritance(strategy= InheritanceType.JOINED)
-public abstract class Smoothing implements PersistentObject, TriangleModification {
+public abstract class Smoothing extends TriangleModification implements PersistentObject {
 
     public final static String LAYER_ID = "smoothing-layer";
     private final static int NAME_LENGTH = 64;
-    
-    @Id
-    @Column(name="ID", length=AbstractPersistentObject.ID_LENGTH)
-    private String id = IdGenerator.getId();
-    
-    @NotAudited
-    @Column(name="SMOOTH_ORDER", nullable=false)
-    private int order;
-    
-    @NotAudited
-    @Version
-    @Column(name="VERSION", nullable=false)
-    private Long version;
     
     @Column(name="SMOOTHING_NAME", length=NAME_LENGTH, nullable=false)
     private String name;
@@ -57,31 +41,8 @@ public abstract class Smoothing implements PersistentObject, TriangleModificatio
     }
     
     protected Smoothing(int order, String name) {
-        this.order = order;
+        super(order);
         this.name = name;
-    }
-    
-    @Override
-    public String getId() {
-        return id;
-    }
-    
-    protected void setId(String id) {
-        this.id = id;
-    }
-    
-    @Override
-    public int getOrder() {
-        return order;
-    }
-
-    @Override
-    public Long getVersion() {
-        return version;
-    }
-    
-    protected void setVersion(Long version) {
-        this.version = version;
     }
     
     public String getName() {
@@ -132,32 +93,9 @@ public abstract class Smoothing implements PersistentObject, TriangleModificatio
     public TriangularDataModification createModification(TriangularData source) {
         return new TriangleSmoothing(source, this);
     }
-
-    @Override
-    public int compareTo(TriangleModification o) {
-        if(o == null)
-            return -1;
-        return order - o.getOrder();
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if(this == o)
-            return true;
-        if(o==null || id==null || !(o instanceof Smoothing))
-            return false;
-        return id.equals(((Smoothing)o).getId());
-    }
-    
-    @Override
-    public int hashCode() {
-        if(id == null)
-            return super.hashCode();
-        return id.hashCode();
-    }
     
     @Override
     public String toString() {
-        return String.format("Smoothing [%s; %s]", name, id);
+        return String.format("Smoothing [%s; %s]", name, super.getId());
     }
 }

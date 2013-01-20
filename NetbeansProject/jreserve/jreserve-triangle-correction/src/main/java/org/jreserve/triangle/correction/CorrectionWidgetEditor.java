@@ -1,10 +1,10 @@
 package org.jreserve.triangle.correction;
 
 import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangleModification;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.correction.entities.TriangleCorrection;
 import org.jreserve.triangle.entities.TriangleCell;
+import org.jreserve.triangle.entities.TriangleModification;
 import org.jreserve.triangle.util.TriangleUtil;
 import org.jreserve.triangle.visual.widget.TriangleWidgetProperties;
 import org.jreserve.triangle.visual.widget.WidgetEditor;

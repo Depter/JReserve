@@ -86,12 +86,6 @@
         
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-triangle-data</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jreserve</groupId>
             <artifactId>jreserve-estimate-core</artifactId>
             <version>${project.version}</version>
         </dependency>

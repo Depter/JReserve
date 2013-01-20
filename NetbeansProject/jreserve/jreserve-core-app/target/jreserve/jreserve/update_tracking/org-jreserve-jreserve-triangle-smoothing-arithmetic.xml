@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.triangle.smoothing.arithmetic">
-    <module_version install_time="1358636706109" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1358715255471" last="true" origin="installer" specification_version="1.0">
         <file crc="2165530827" name="config/Modules/org-jreserve-jreserve-triangle-smoothing-arithmetic.xml"/>
-        <file crc="2294214959" name="modules/org-jreserve-jreserve-triangle-smoothing-arithmetic.jar"/>
+        <file crc="1757564934" name="modules/org-jreserve-jreserve-triangle-smoothing-arithmetic.jar"/>
     </module_version>
 </module>

@@ -13,8 +13,8 @@ import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.container.ProjectElementContainer;
 import org.jreserve.project.system.visual.ProjectElementComboBox;
 import org.jreserve.triangle.TriangularData;
-import org.jreserve.triangle.data.factories.ProjectDataContainerFactoy;
 import org.jreserve.triangle.entities.Triangle;
+import org.jreserve.triangle.util.ProjectDataContainerFactory;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
@@ -41,7 +41,7 @@ class DataSelectVisualPanel extends JPanel {
     }
 
     void setProject(ProjectElement element) {
-        element = element.getFirstChild(ProjectDataContainerFactoy.POSITION, ProjectElementContainer.class);
+        element = element.getFirstChild(ProjectDataContainerFactory.POSITION, ProjectElementContainer.class);
         triangleCombo.setElements(getTriangles(element));
         exposureCombo.setElements(getExposures(element));
     }

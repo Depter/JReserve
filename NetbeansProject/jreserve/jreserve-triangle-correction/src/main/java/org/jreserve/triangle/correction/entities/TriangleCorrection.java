@@ -2,13 +2,12 @@ package org.jreserve.triangle.correction.entities;
 
 import javax.persistence.*;
 import org.hibernate.envers.Audited;
-import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
-import org.jreserve.triangle.TriangleModification;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.TriangularDataModification;
 import org.jreserve.triangle.correction.TriangleCorrectionModification;
 import org.jreserve.triangle.entities.TriangleCell;
+import org.jreserve.triangle.entities.TriangleModification;
 
 /**
  *
@@ -20,7 +19,7 @@ import org.jreserve.triangle.entities.TriangleCell;
 @Entity
 @Table(name="TRIANGLE_CORRECTION", schema="JRESERVE")
 @Inheritance(strategy=InheritanceType.JOINED)
-public class TriangleCorrection extends AbstractPersistentObject implements TriangleModification, TriangleCell.Provider {
+public class TriangleCorrection extends TriangleModification implements TriangleCell.Provider {
     
     public final static String LAYER_ID = "TRIANGLE_CORRECTION";
 

@@ -7,7 +7,6 @@ import org.hibernate.envers.Audited;
 import org.jreserve.persistence.AbstractPersistentObject;
 import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
-import org.jreserve.persistence.PersistentObject;
 
 /**
  *

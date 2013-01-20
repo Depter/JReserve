@@ -4,9 +4,9 @@
 <filesystem>
     <folder name="JReserve">
         <folder name="Entities">
-            <file name="org-jreserve-triangle-entities-AbstractTriangleModification.entity">
-                <!--org.jreserve.triangle.entities.AbstractTriangleModification-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.AbstractTriangleModification"/>
+            <file name="org-jreserve-triangle-entities-TriangleModification.entity">
+                <!--org.jreserve.triangle.entities.TriangleModification-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleModification"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
             <file name="org-jreserve-triangle-entities-TriangleComment.entity">

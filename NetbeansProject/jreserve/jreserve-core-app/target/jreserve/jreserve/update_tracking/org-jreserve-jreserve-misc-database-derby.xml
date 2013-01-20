@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.misc.database.derby">
-    <module_version install_time="1358636708118" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1358715256166" last="true" origin="installer" specification_version="1.0">
         <file crc="1118614683" name="config/Modules/org-jreserve-jreserve-misc-database-derby.xml"/>
         <file crc="3626887789" name="modules/ext/org.apache.derby/derby-10.9.1.0.jar"/>
-        <file crc="508584130" name="modules/org-jreserve-jreserve-misc-database-derby.jar"/>
+        <file crc="4111362520" name="modules/org-jreserve-jreserve-misc-database-derby.jar"/>
     </module_version>
 </module>

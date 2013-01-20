@@ -14,7 +14,6 @@ import org.jreserve.project.entities.Project;
 import org.jreserve.project.util.ProjectData;
 import org.jreserve.triangle.ChangeableTriangularData;
 import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangleModification;
 import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.data.TriangleBundle;
 

@@ -1,21 +1,20 @@
 package org.jreserve.triangle.project;
 
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.List;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
-import org.jreserve.triangle.ChangeableTriangularData;
-import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangleModification;
+import org.jreserve.project.system.management.RenameableProjectElement;
 import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.entities.Triangle;
-import org.jreserve.triangle.entities.TriangleComment;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.entities.TriangleListener;
+import org.jreserve.triangle.entities.TriangleModification;
 import org.jreserve.triangle.visual.editor.Editor;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle.Messages;
@@ -51,6 +50,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     
     public TriangleProjectElement(Triangle triangle) {
         super(triangle);
+        triangle.addTriangleListener(new TriangleUpdateListener());
         this.position = triangle.isTriangle()? TRIANGLE_POSITION : VECTOR_POSITION;
         initProperties(triangle);
         initLookup();
@@ -60,18 +60,17 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         super.setProperty(NAME_PROPERTY, triangle.getName());
         super.setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         super.setProperty(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
-        //TODO modifications
-        //TODO comments
+        super.setProperty(TriangleModification.MODIFICATION_PROPERTY, triangle.getModifications());
+        super.setProperty(CommentableTriangle.COMMENT_PROPERTY, triangle.getComments());
     }
     
     private void initLookup() {
-//        super.addToLookup(new PersistentDeletable<Triangle>(this));
-//        super.addToLookup(new TriangleOpenable());
-//        super.addToLookup(new RenameableProjectElement(this));
-//        super.addToLookup(new AuditableProjectElement(this));
-//        super.addToLookup(new TriangleUndoRedo());
-//        super.addToLookup(new AbstractCommentable(this, getValue()));
-//        new TriangleSavable();
+        super.addToLookup(new PersistentDeletable<Triangle>(this));
+        super.addToLookup(new TriangleOpenable());
+        super.addToLookup(new RenameableProjectElement(this));
+        super.addToLookup(new AuditableProjectElement(this));
+        super.addToLookup(new TriangleUndoRedo());
+        new TriangleSavable();
     }
 
     @Override
@@ -119,29 +118,28 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     private class TriangleUpdateListener implements TriangleListener {
         @Override
         public void nameChanged(Triangle triangle) {
-            setProperty(NAME_PROPERTY, triangle.getName());
+            //setProperty(NAME_PROPERTY, triangle.getName());
         }
 
         @Override
         public void descriptionChanged(Triangle triangle) {
-            setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
+            //setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         }
 
         @Override
         public void geometryChanged(Triangle triangle) {
-            setProperty("GEOEMTRY", triangle.getGeometry());
+            setProperty(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
         }
 
         @Override
         public void modificationsChanged(Triangle triangle) {
-            setProperty("MODIFICATIONS", triangle.getModifications());
+            setProperty(TriangleModification.MODIFICATION_PROPERTY, triangle.getModifications());
         }
 
         @Override
         public void commentsChanged(Triangle triangle) {
-            setProperty("COMMENTS", triangle.getComments());
+            setProperty(CommentableTriangle.COMMENT_PROPERTY, triangle.getComments());
         }
-
     }
     
     private class TriangleSavable extends PersistentSavable<Triangle> {
@@ -156,9 +154,11 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             originalProperties.put(NAME_PROPERTY, triangle.getName());
             originalProperties.put(DESCRIPTION_PROPERTY, triangle.getDescription());
             originalProperties.put(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
-            originalProperties.put(MODIFICATION_PROPERTY, triangle.getModifications());
-//            originalProperties.put(CommentableTriangle.COMMENT_PROPERTY, element.getProperty(CommentableTriangle.COMMENT_PROPERTY));
+            originalProperties.put(TriangleModification.MODIFICATION_PROPERTY, triangle.getModifications());
+            originalProperties.put(CommentableTriangle.COMMENT_PROPERTY, triangle.getComments());
         }
+
+        
         
         @Override
         protected boolean isChanged(String property, Object o1, Object o2) {
@@ -184,9 +184,6 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     }
     
     private class TriangleUndoRedo extends ProjectElementUndoRedo {
-        
-        //TODO modify super class, by addin an abstract method,
-        //which sets the property on the underlying value.
 
         private TriangleUndoRedo() {
             super(TriangleProjectElement.this);
@@ -210,6 +207,20 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
                 return Bundle.MSG_TriangleProjectElement_UndoRedo_Geometry();
             else
                 return super.getPropertyName(property);
-        }   
+        }
+
+        @Override
+        public void redo() throws CannotRedoException {
+            //TODO implement
+            super.redo();
+        }
+
+        @Override
+        public void undo() throws CannotUndoException {
+            //TODO implement
+            super.undo();
+        }
+        
+        
     }   
 }

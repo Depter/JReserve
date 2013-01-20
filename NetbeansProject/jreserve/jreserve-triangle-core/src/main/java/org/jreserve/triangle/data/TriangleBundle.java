@@ -7,12 +7,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.rutil.RCode;
 import org.jreserve.triangle.ChangeableTriangularData;
-import org.jreserve.triangle.TriangleModification;
 import org.jreserve.triangle.TriangularData;
-import org.jreserve.triangle.entities.Triangle;
-import org.jreserve.triangle.entities.TriangleAdapter;
-import org.jreserve.triangle.entities.TriangleComment;
-import org.jreserve.triangle.entities.TriangleListener;
+import org.jreserve.triangle.entities.*;
 import org.openide.util.WeakListeners;
 
 /**

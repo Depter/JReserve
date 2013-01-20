@@ -3,8 +3,8 @@ package org.jreserve.triangle.smoothing;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.triangle.ModifiableTriangle;
-import org.jreserve.triangle.TriangleModification;
 import org.jreserve.triangle.entities.TriangleCell;
+import org.jreserve.triangle.entities.TriangleModification;
 import org.jreserve.triangle.util.AbstractTriangleStackQuery;
 
 /**
