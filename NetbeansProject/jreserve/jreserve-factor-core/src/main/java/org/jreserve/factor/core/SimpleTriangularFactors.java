@@ -76,8 +76,8 @@ public class SimpleTriangularFactors extends AbstractChangeableTriangularDataMod
     }
 
     @Override
-    public void createTriangle(String triangleName, RCode rCode) {
-        source.createTriangle(triangleName, rCode);
+    public void createRTriangle(String triangleName, RCode rCode) {
+        source.createRTriangle(triangleName, rCode);
         rCode.addFunction(RFactorsFunction.NAME);
         rCode.addSource(RFactorsFunction.factors(triangleName)+"\n\n");
     }

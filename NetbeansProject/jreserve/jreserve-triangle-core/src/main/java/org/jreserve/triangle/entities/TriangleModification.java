@@ -74,4 +74,6 @@ public abstract class TriangleModification implements PersistentObject, Comparab
     }
     
     public abstract TriangularDataModification createModification(TriangularData source);
+    
+    public abstract String createAuditRepresentation();
 }

@@ -15,12 +15,19 @@ import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.TriangularDataModification;
 import org.jreserve.triangle.entities.TriangleCell;
 import org.jreserve.triangle.entities.TriangleModification;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "# {0} - accident",
+    "# {1} - development",
+    "# {2} - applied, 0=false, 1=true",
+    "MSG.Smoothing.SmoothingCell.AuditMessage=[{0}; {1}, {2, choice, 0#Not applied|1#Applied}]"
+})
 @EntityRegistration
 @Audited
 @Entity
@@ -92,6 +99,20 @@ public abstract class Smoothing extends TriangleModification implements Persiste
     @Override
     public TriangularDataModification createModification(TriangularData source) {
         return new TriangleSmoothing(source, this);
+    }
+    
+    protected String getCellsAuditRepresentation() {
+        StringBuilder sb = new StringBuilder("{");
+        for(SmoothingCell cell : cells)
+            sb.append(getCellAuditRepresentation(cell));
+        return sb.toString();
+    }
+    
+    private String getCellAuditRepresentation(SmoothingCell cell) {
+        int accident = cell.getTriangleCell().getAccident();
+        int development = cell.getTriangleCell().getDevelopment();
+        int applied = cell.isApplied()? 1 : 0;
+        return Bundle.MSG_Smoothing_SmoothingCell_AuditMessage(accident, development, applied);
     }
     
     @Override

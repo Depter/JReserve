@@ -119,6 +119,7 @@ public class AsynchronousTriangleInput implements ChangeableTriangularData {
     }
     
     public void setTriangleGeometry(TriangleGeometry geometry) {
+        checkLoaded();
         initGeometry(geometry);
         buildData();
     }
@@ -130,7 +131,7 @@ public class AsynchronousTriangleInput implements ChangeableTriangularData {
     }
     
     private void buildData() {
-        data = new TriangleDataFactory(geometry).buildTriangle(values);
+        data = new TriangleDataFactory(geometry).buildTriangle(values==null? Collections.EMPTY_LIST : values);
         ((TriangleData) data).setComments(comments);
         fireChange();
     }
@@ -147,9 +148,9 @@ public class AsynchronousTriangleInput implements ChangeableTriangularData {
     }
 
     @Override
-    public void createTriangle(String triangleName, RCode rCode) {
+    public void createRTriangle(String triangleName, RCode rCode) {
         checkLoaded();
-        data.createTriangle(triangleName, rCode);
+        data.createRTriangle(triangleName, rCode);
     }
 
     @Override
@@ -194,9 +195,9 @@ public class AsynchronousTriangleInput implements ChangeableTriangularData {
 
         @Override
         protected void done() {
-            setValues(getValues());
             loading = false;
             loader = null;
+            setValues(getValues());
         }
         
         private List<ClaimValue> getValues() {

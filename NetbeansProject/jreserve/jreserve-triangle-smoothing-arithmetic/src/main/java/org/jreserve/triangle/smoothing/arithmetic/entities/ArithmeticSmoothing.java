@@ -9,11 +9,16 @@ import org.jreserve.rutil.RFunction;
 import org.jreserve.triangle.smoothing.Smoothing;
 import org.jreserve.triangle.smoothing.SmoothingCell;
 import org.jreserve.triangle.smoothing.arithmetic.RArithmeticSmoothing;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  */
+@Messages({
+    "# {0} - cells",
+    "MSG.ArithmeticSmoothing.AuditText=Arithmetic smoothing {0}"
+})
 @EntityRegistration
 @Audited
 @Entity
@@ -54,5 +59,11 @@ public class ArithmeticSmoothing extends Smoothing {
     @Override
     public RFunction getRFunction() {
         return new RArithmeticSmoothing();
+    }
+
+    @Override
+    public String createAuditRepresentation() {
+        String cells = super.getCellsAuditRepresentation();
+        return Bundle.MSG_ArithmeticSmoothing_AuditText(cells);
     }
 }

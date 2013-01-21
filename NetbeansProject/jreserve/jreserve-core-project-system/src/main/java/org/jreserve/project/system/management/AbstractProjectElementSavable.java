@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.jreserve.project.system.ProjectElement;
+import org.jreserve.resources.WindowUtil;
 import org.netbeans.spi.actions.AbstractSavable;
 import org.openide.nodes.Node;
 
@@ -105,10 +106,15 @@ public abstract class AbstractProjectElementSavable<T> extends AbstractSavable i
 
     @Override
     protected void handleSave() throws IOException {
-        saveElement();
-        initOriginalProperties();
-        unregisterSavable();
-        clearUndoRedo();
+        try {
+            WindowUtil.showWaitCursor();
+            saveElement();
+            initOriginalProperties();
+            unregisterSavable();
+            clearUndoRedo();
+        } finally {
+            WindowUtil.showNormalCursor();
+        }
     }
     
     protected abstract void saveElement() throws IOException;

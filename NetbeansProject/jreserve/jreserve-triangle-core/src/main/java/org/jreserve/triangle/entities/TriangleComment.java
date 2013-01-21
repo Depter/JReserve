@@ -17,9 +17,9 @@ import org.jreserve.persistence.PersistenceUtil;
 @Audited
 @Entity
 @Table(schema="JRESERVE", name="TRIANGLE_COMMENT")
-public class TriangleComment extends AbstractPersistentObject implements TriangleCell.Provider {
+public class TriangleComment extends AbstractPersistentObject implements TriangleCell.Provider, Comparable<TriangleComment>{
     private final static long serialVersionUID = 1L;
-    
+    public final static String COMMENT_PROPERTY = "TRIANGLE_COMMENT";
     private final static int NAME_SIZE = 64;
     
     @Column(name="CREATION_DATE", nullable=false)
@@ -44,7 +44,7 @@ public class TriangleComment extends AbstractPersistentObject implements Triangl
     }
     
     public TriangleComment(TriangleCell cell, String comment) {
-        this(cell, System.getProperty("user.home"), comment);
+        this(cell, System.getProperty("user.name"), comment);
     }
     
     public TriangleComment(TriangleCell cell, String user, String comment) {
@@ -90,5 +90,13 @@ public class TriangleComment extends AbstractPersistentObject implements Triangl
     public String toString() {
         return String.format("%1$s [%2$tF %2$tT]: %3$s", 
             userName, creationDate, commentText);
+    }
+
+    @Override
+    public int compareTo(TriangleComment o) {
+        int dif = cell.compareTo(o.cell);
+        if(dif != 0) 
+            return dif;
+        return creationDate.compareTo(o.creationDate);
     }
 }

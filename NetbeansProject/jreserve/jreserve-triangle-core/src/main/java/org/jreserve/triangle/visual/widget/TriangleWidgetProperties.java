@@ -55,4 +55,10 @@ public class TriangleWidgetProperties {
         for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
             listener.stateChanged(evt);
     }
+    
+    @Override
+    public String toString() {
+        String msg = "TriangleWidgetProperties [cummulated = %s; visibleDigits = %d]";
+        return String.format(msg, cummulated, visibleDigits);
+    }
 }

@@ -28,10 +28,10 @@ import org.openide.util.NbBundle.Messages;
 })
 public class ProjectElementUndoRedo implements PropertyChangeListener, UndoRedo {
 
-    private ProjectElement element;
+    protected ProjectElement element;
     private List<Event> events = new ArrayList<Event>();
     private int lastExecutedEvent = -1;
-    private boolean myChange = false;
+    protected boolean myChange = false;
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
     public ProjectElementUndoRedo(ProjectElement element) {
@@ -98,7 +98,7 @@ public class ProjectElementUndoRedo implements PropertyChangeListener, UndoRedo 
         fireChange();
     }
     
-    private void undo(Event evt) {
+    protected void undo(Event evt) {
         myChange = true;
         element.setProperty(evt.property, evt.oldValue);
         myChange = false;
@@ -116,7 +116,7 @@ public class ProjectElementUndoRedo implements PropertyChangeListener, UndoRedo 
         fireChange();
     }
     
-    private void redo(Event evt) {
+    protected void redo(Event evt) {
         myChange = true;
         element.setProperty(evt.property, evt.newValue);
         myChange = false;
@@ -163,11 +163,11 @@ public class ProjectElementUndoRedo implements PropertyChangeListener, UndoRedo 
         fireChange();
     }
     
-    private static class Event {
+    public static class Event {
     
-        private String property;
-        private Object oldValue;
-        private Object newValue;
+        public final String property;
+        public final Object oldValue;
+        public final Object newValue;
         
         private Event(PropertyChangeEvent evt) {
             this.property = evt.getPropertyName();

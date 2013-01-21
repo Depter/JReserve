@@ -8,12 +8,19 @@ import org.jreserve.triangle.TriangularDataModification;
 import org.jreserve.triangle.correction.TriangleCorrectionModification;
 import org.jreserve.triangle.entities.TriangleCell;
 import org.jreserve.triangle.entities.TriangleModification;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "# {0} - accident",
+    "# {1} - development",
+    "# {2} - value",
+    "MSG.TriangleCorrection.AuditMessage=Correction [{0}; {1}] = {2}"
+})
 @EntityRegistration
 @Audited
 @Entity
@@ -62,6 +69,13 @@ public class TriangleCorrection extends TriangleModification implements Triangle
     @Override
     public TriangularDataModification createModification(TriangularData source) {
         return new TriangleCorrectionModification(source, this);
+    }
+
+    @Override
+    public String createAuditRepresentation() {
+        int accident = cell.getAccident() + 1;
+        int development = cell.getDevelopment() + 1;
+        return Bundle.MSG_TriangleCorrection_AuditMessage(accident, development, corrigatedValue);
     }
 
     @Override

@@ -23,4 +23,10 @@ public class AuditableProjectElement implements Auditable {
     public String getDisplayName() {
         return element.getNamePath();
     }
+    
+    @Override
+    public String toString() {
+        String msg = "Auditable [value = %s]";
+        return String.format(msg, element.getValue());
+    }
 }

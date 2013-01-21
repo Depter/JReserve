@@ -37,8 +37,8 @@ public class CummulatedTriangularData extends AbstractChangeableTriangularDataMo
     }
 
     @Override
-    public void createTriangle(String triangleName, RCode rCode) {
-        source.createTriangle(triangleName, rCode);
+    public void createRTriangle(String triangleName, RCode rCode) {
+        source.createRTriangle(triangleName, rCode);
         rCode.addFunction(RCummulateFunction.NAME);
         rCode.addSource(RCummulateFunction.cummulate(triangleName));
     }

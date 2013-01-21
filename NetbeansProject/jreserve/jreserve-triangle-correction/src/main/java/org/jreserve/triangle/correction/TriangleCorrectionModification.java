@@ -13,7 +13,7 @@ import org.jreserve.triangle.entities.TriangleCell;
  */
 public class TriangleCorrectionModification extends AbstractTriangularDataModification {
 
-    private final static String R_CODE = "%s[%d, %d] = %d";
+    private final static String R_CODE = "%s[%d, %d] = ";
     
     private final int accident;
     private final int development;
@@ -48,15 +48,14 @@ public class TriangleCorrectionModification extends AbstractTriangularDataModifi
     }
 
     @Override
-    public void createTriangle(String triangleName, RCode rCode) {
-        source.createTriangle(triangleName, rCode);
+    public void createRTriangle(String triangleName, RCode rCode) {
+        source.createRTriangle(triangleName, rCode);
         rCode.addSource(getRCode(triangleName));
     }
     
     private String getRCode(String triangleName) {
         return String.format(R_CODE, 
                 triangleName,
-                accident, development,
-                value);
+                accident, development) + value + "\n";
     }
 }

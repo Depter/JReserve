@@ -75,7 +75,7 @@ class TriangleData implements TriangularData {
     }
 
     @Override
-    public void createTriangle(String triangleName, RCode rCode) {
+    public void createRTriangle(String triangleName, RCode rCode) {
         String data = RUtil.createArray(values);
         rCode.addSource(String.format("%s <- %s%n", triangleName, data));
     }

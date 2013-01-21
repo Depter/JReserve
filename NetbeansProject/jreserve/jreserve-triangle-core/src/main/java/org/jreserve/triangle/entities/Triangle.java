@@ -1,9 +1,6 @@
 package org.jreserve.triangle.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import javax.persistence.*;
 import org.hibernate.envers.Audited;
 import org.jreserve.data.ProjectDataType;
@@ -163,22 +160,26 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     }
     
     private void checkModification(TriangleModification modification) {
-        if(modification == null) 
-            throw new NullPointerException("Modification is null!");
-        checkModificationOrder(modification);
+        checkModification(modifications, modification);
     }
     
-    private void checkModificationOrder(TriangleModification modification) {
+    private void checkModification(Set<TriangleModification> mods, TriangleModification modification) {
+        if(modification == null) 
+            throw new NullPointerException("Modification is null!");
+        checkModificationOrder(mods, modification);
+    }
+    
+    private void checkModificationOrder(Set<TriangleModification> mods, TriangleModification modification) {
         int order = modification.getOrder();
-        if(containsOrder(order)) {
+        if(containsOrder(mods, order)) {
             String msg = "Can not add modification %s to triangle %s! Order %d already exists!";
             msg = String.format(msg, modification, this, order);
             throw new IllegalArgumentException(msg);
         }
     }
     
-    private boolean containsOrder(int order) {
-        for(TriangleModification mod : modifications)
+    private boolean containsOrder(Set<TriangleModification> mods, int order) {
+        for(TriangleModification mod : mods)
             if(mod.getOrder() == order)
                 return true;
         return false;
@@ -187,6 +188,16 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     @Override
     public void removeModification(TriangleModification modification) {
         modifications.remove(modification);
+        fireModificationsChanged();
+    }
+    
+    public void setModifications(Collection<TriangleModification> modifications) {
+        Set<TriangleModification> newMods = new TreeSet<TriangleModification>();
+        for(TriangleModification mod : modifications) {
+            checkModification(newMods, mod);
+            newMods.add(mod);
+        }
+        this.modifications = newMods;
         fireModificationsChanged();
     }
 
@@ -219,6 +230,14 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     @Override
     public List<TriangleComment> getComments() {
         return new ArrayList<TriangleComment>(comments);
+    }
+    
+    public void setComments(Collection<TriangleComment> comments) {
+        Set<TriangleComment> newComments = new TreeSet<TriangleComment>();
+        for(TriangleComment comment : comments)
+            newComments.add(comment);
+        this.comments = newComments;
+        fireCommentsChanged();
     }
 
     public void addTriangleListener(TriangleListener listener) {
@@ -258,5 +277,11 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     @Override
     public ChangeableTriangularData getTriangularData() {
         return new TriangleBundle(this);
+    }
+    
+    @Override
+    public String toString() {
+        String msg = isTriangle? "Triangle [%s]" : "Vector [%s]";
+        return String.format(msg, name);
     }
 }

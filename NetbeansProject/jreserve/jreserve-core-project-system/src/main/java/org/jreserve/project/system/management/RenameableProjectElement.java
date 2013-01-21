@@ -86,4 +86,10 @@ public class RenameableProjectElement implements Renameable {
     protected void setNewName(String newName) {
         element.setProperty(ProjectElement.NAME_PROPERTY, newName);
     }
+    
+    @Override
+    public String toString() {
+        String msg = "Renameable [%s]";
+        return String.format(msg, element.getValue());
+    }
 }

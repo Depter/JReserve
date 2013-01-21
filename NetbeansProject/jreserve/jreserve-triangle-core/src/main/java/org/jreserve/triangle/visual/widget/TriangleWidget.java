@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.*;
+import javax.swing.table.TableModel;
 import javax.swing.text.DefaultEditorKit;
 import org.jreserve.localesettings.util.DecimalSpinner;
 import org.jreserve.resources.ActionUtil;
@@ -84,8 +85,8 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
     private TriangleWidgetProperties properties = new TriangleWidgetProperties();
     
     public TriangleWidget() {
-        initComponent();
         lookup = new ProxyLookup(Lookups.fixed(properties, getActionMap()), dataLookup);
+        initComponent();
         super.addComponentListener(new ResizeListener());
         registerCopyAction();
         setPreferredSize(PREFFERED_SIZE);    
@@ -99,14 +100,14 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
     }
     
     private void clearLookup() {
-        if(source != null)
-            lkpContent.remove(source);
+        //if(source != null)
+        //    lkpContent.remove(source);
         lkpContent.remove(data);
     }
     
     private void fillLookup() {
-        if(source != null)
-            lkpContent.add(source);
+        //if(source != null)
+        //    lkpContent.add(source);
         lkpContent.add(data);
     }
     
@@ -196,8 +197,10 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
             toolBar.add(strut);
         }
         if(!models.isEmpty()) {
-            table.setModel(models.get(0).getModel());
-            table.getModel().addTableModelListener(dataListener);
+            WidgetTableModel model = models.get(0).getModel();
+            model.setLookup(getLookup());
+            table.setModel(model);
+            model.addTableModelListener(dataListener);
         }
     }
     
@@ -370,15 +373,19 @@ public class TriangleWidget extends JPanel implements Lookup.Provider {
         
         @Override
         public void actionPerformed(ActionEvent e) {
-            Object o = table.getModel();
-            if(o instanceof WidgetTableModel)
-                initModelFromOld((WidgetTableModel) o);
+            releaseOldModel();
+            initModel();
             table.setModel(model);
         }
         
-        private void initModelFromOld(WidgetTableModel oldModel) {
-            oldModel.removeTableModelListener(dataListener);
-            oldModel.setLookup(null);
+        private void releaseOldModel() {
+            TableModel o = table.getModel();
+            o.removeTableModelListener(dataListener);
+            if(o instanceof WidgetTableModel)
+                ((WidgetTableModel)o).setLookup(null);
+        }
+        
+        private void initModel() {
             model.setLookup(getLookup());
             model.addTableModelListener(dataListener);
         }

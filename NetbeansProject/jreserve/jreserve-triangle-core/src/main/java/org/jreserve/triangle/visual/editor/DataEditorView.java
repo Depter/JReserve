@@ -4,42 +4,83 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box.Filler;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.navigator.NavigablePanel;
+import org.jreserve.triangle.entities.Triangle;
 import org.jreserve.triangle.entities.TriangleGeometry;
 import org.jreserve.triangle.project.TriangleProjectElement;
 import org.jreserve.triangle.visual.createdialog.GeometrySettingPanel;
 import org.jreserve.triangle.visual.widget.TriangleWidget;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.WeakListeners;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@ActionReferences({
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.visual.widget.action.AddCommentAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/TriangleDataEditor",
+        position=100,
+        separatorBefore=90
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.visual.widget.action.DeleteCommentsAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/TriangleDataEditor",
+        position=200
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.smoothing.actions.AddSmoothingAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/TriangleDataEditor",
+        position=300,
+        separatorBefore=290
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.smoothing.actions.DeleteSmoothingAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/TriangleDataEditor",
+        position=400
+    )
+})
 @Messages({
     "LBL.DataEditorView.Title=Geometry",
     "LBL.DataEditorView.GeometrySetting.Title=Geometry"
 })
 class DataEditorView extends NavigablePanel {
     
-    private final static String POP_UP_PATH = "JReserve/Popup/DataEditor";
+    private final static String POP_UP_PATH = "JReserve/Popup/TriangleDataEditor";
     private final static String EDITOR_CATEGORY = "Triangle";
     
     protected GeometrySettingPanel geometrySetting;
     protected TriangleWidget triangle;
     
     protected TriangleProjectElement element;
+    private PropertyChangeListener elementListener;
+    private PropertyChangeListener weakElementListener;
+    private boolean fireGeoemtryChange = true;
     
     DataEditorView(TriangleProjectElement element) {
         super(Bundle.LBL_DataEditorView_Title(), Editor.getImage(element));
         this.element = element;
+        registerElementListener();
         initComponents();
+    }
+    
+    private void registerElementListener() {
+        elementListener = new ElementGeometryPropertyListener();
+        weakElementListener = WeakListeners.propertyChange(elementListener, element);
+        element.addPropertyChangeListener(weakElementListener);
     }
     
     private void initComponents() {
@@ -87,12 +128,15 @@ class DataEditorView extends NavigablePanel {
     }
     
     public void closed() {
+        element.removePropertyChangeListener(weakElementListener);
     }
     
     private class GeometryListener implements ChangeListener {
 
         @Override
         public void stateChanged(ChangeEvent e) {
+            if(!fireGeoemtryChange)
+                return;
             TriangleGeometry geometry = geometrySetting.getTriangleGeometry();
             if(geometry != null)
                 element.getValue().setGeometry(geometry);
@@ -105,5 +149,16 @@ class DataEditorView extends NavigablePanel {
         public Lookup getLookup() {
             return triangle.getLookup();
         }    
+    }
+    
+    private class ElementGeometryPropertyListener implements PropertyChangeListener {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if(Triangle.GEOMETRY_PROPERTY.equals(evt.getPropertyName())) {
+                fireGeoemtryChange = false;
+                geometrySetting.setGeometry(getElementGeometry());
+                fireGeoemtryChange = true;
+            }
+        }
     }
 }

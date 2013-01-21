@@ -29,21 +29,21 @@ public class TriangleBundle implements ChangeableTriangularData {
     public TriangleBundle(Triangle triangle) {
         this.triangle = triangle;
         this.source = new AsynchronousTriangleInput(triangle.getGeometry(), triangle.getDataType());
-        registerTriangleListener();
+        registerListeners();
         update();
     }
     
-    private void registerTriangleListener() {
+    private void registerListeners() {
         updateListener = new UpdateListener();
         weakUpdateListener = WeakListeners.create(TriangleListener.class, updateListener, triangle);
         triangle.addTriangleListener(weakUpdateListener);
+        source.addChangeListener(new SourceChangeListener());
     }
     
     private void update() {
         updateGeometry();
         updateModifications();
         updateComments();
-        fireChange();
     }
     
     private void updateGeometry() {
@@ -120,8 +120,8 @@ public class TriangleBundle implements ChangeableTriangularData {
     }
 
     @Override
-    public void createTriangle(String triangleName, RCode rCode) {
-        top.createTriangle(triangleName, rCode);
+    public void createRTriangle(String triangleName, RCode rCode) {
+        top.createRTriangle(triangleName, rCode);
     }
 
     @Override
@@ -148,6 +148,13 @@ public class TriangleBundle implements ChangeableTriangularData {
         this.triangle = null;
     }
     
+    @Override
+    public String toString() {
+        String msg = "TriangleBundle [triangle = %s]";
+        String name = triangle==null? null : triangle.getName();
+        return String.format(msg, name);
+    }
+    
     private class UpdateListener extends TriangleAdapter {
 
         @Override
@@ -159,11 +166,20 @@ public class TriangleBundle implements ChangeableTriangularData {
         @Override
         public void geometryChanged(Triangle triangle) {
             update();
+            fireChange();
         }
 
         @Override
         public void modificationsChanged(Triangle triangle) {
             updateModifications();
+            fireChange();
+        }
+    }
+    
+    private class SourceChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent event) {
+            fireChange();
         }
     }
 }

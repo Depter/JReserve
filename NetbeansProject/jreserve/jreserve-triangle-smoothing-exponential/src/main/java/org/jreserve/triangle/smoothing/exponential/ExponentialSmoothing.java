@@ -8,13 +8,18 @@ import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.rutil.RFunction;
 import org.jreserve.triangle.smoothing.Smoothing;
 import org.jreserve.triangle.smoothing.SmoothingCell;
-import org.jreserve.triangle.smoothing.exponential.RExponentialSmoothing;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "# {0} - alpha",
+    "# {1} - cells",
+    "MSG.ExponentialSmoothing.AuditText=Exponential smoothing: alpha={0}, {1}"
+})
 @EntityRegistration
 @Audited
 @Entity
@@ -71,5 +76,11 @@ public class ExponentialSmoothing extends Smoothing {
     
     void setAlpha(double alpha) {
         setCheckedAlpha(alpha);
+    }
+
+    @Override
+    public String createAuditRepresentation() {
+        String cells = super.getCellsAuditRepresentation();
+        return Bundle.MSG_ExponentialSmoothing_AuditText(alpha, cells);
     }
 }

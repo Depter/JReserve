@@ -154,4 +154,12 @@ public class DefaultProjectNode extends AbstractNode implements PropertyChangeLi
             }
         };
     }
+    
+    @Override
+    public String toString() {
+        String msg = "ProjectNode [value = %s]";
+        ProjectElement element = getLookup().lookup(ProjectElement.class);
+        Object value = element==null? null : element.getValue();
+        return String.format(msg, element==null? null : value);
+    }
 }

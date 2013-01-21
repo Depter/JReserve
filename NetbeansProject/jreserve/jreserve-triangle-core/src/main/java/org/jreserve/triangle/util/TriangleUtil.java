@@ -50,8 +50,8 @@ public class TriangleUtil {
     }
     
     public static double getValue(int accident, int development, double[][] data) {
-        if(data.length < accident)
-            if(data[accident].length < development)
+        if(accident < data.length)
+            if(development < data[accident].length)
                 return data[accident][development];
         return Double.NaN;
     }

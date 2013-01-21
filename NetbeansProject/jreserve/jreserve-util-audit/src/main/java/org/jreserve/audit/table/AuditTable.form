@@ -33,7 +33,7 @@
             <Property name="fillsViewportHeight" type="boolean" value="true"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="table.setDefaultRenderer(Date.class, new DateCellRenderer(df));"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="table.setDefaultRenderer(Date.class, new DateCellRenderer(df));&#xa;table.setDefaultRenderer(String.class, new StringRenderer());"/>
           </AuxValues>
         </Component>
       </SubComponents>

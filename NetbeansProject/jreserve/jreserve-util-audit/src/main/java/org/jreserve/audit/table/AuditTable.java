@@ -1,7 +1,7 @@
 package org.jreserve.audit.table;
 
+import java.awt.Component;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,6 +9,7 @@ import javax.swing.InputMap;
 import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import org.hibernate.Session;
 import org.hibernate.envers.AuditReader;
@@ -36,11 +37,8 @@ public class AuditTable extends javax.swing.JPanel {
     }
     
     private void initDateFormat() {
-        String format = LocaleSettings.getDateFormatString();
-        format += " hh:mm:ss";
         Locale locale = LocaleSettings.getLocale();
         df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
-        //df = new SimpleDateFormat(format);
     }
     
     public void setAuditable(Auditable auditable) {
@@ -125,6 +123,7 @@ public class AuditTable extends javax.swing.JPanel {
         table.setModel(new ChangeTableModel());
         table.setFillsViewportHeight(true);
         table.setDefaultRenderer(Date.class, new DateCellRenderer(df));
+        table.setDefaultRenderer(String.class, new StringRenderer());
         tableScroll.setViewportView(table);
 
         add(tableScroll, java.awt.BorderLayout.CENTER);
@@ -190,9 +189,31 @@ public class AuditTable extends javax.swing.JPanel {
         
         private void setChanges(List<AuditElement> changes) {
             table.setModel(new ChangeTableModel(changes));
+            setRowHeights();
             loader = null;
             fireChangeEvent();
         }
+        
+        private void setRowHeights() {
+            int rowCount = table.getRowCount();
+            for(int r=0; r<rowCount; r++)
+                setRowHight(r);
+        }
+        
+        private void setRowHight(int row) {
+            try {
+                int height = 0;
+                for(int c=0, count=table.getColumnCount(); c<count; c++)
+                    height = Math.max(height, getCellHeight(row, c));
+                table.setRowHeight(row, height);
+            } catch(Exception ex) {
+            }
+        }
+    
+        private int getCellHeight(int row, int column) {
+            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            Component comp = table.prepareRenderer(renderer, row, column);
+            return comp.getPreferredSize().height;
+        }
     }
-
 }

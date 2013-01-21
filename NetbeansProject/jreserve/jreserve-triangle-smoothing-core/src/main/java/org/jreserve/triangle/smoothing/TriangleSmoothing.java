@@ -77,7 +77,8 @@ public class TriangleSmoothing extends AbstractTriangularDataModification {
     }
 
     @Override
-    public void createTriangle(String triangleName, RCode rCode) {
+    public void createRTriangle(String triangleName, RCode rCode) {
+        source.createRTriangle(triangleName, rCode);
         if(cellsWithinSourceBounds())
             smoothing.appendSmoothing(triangleName, rCode);
     }

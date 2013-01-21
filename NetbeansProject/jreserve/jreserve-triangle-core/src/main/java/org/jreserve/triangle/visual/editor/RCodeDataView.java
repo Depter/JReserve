@@ -43,7 +43,7 @@ public class RCodeDataView extends NavigableRCodePanel {
     private void createCode() {
         rCode.clear();
         String name = getElementName();
-        data.createTriangle(name, rCode);
+        data.createRTriangle(name, rCode);
         rCode.fireChangeEvent();
     }
     

@@ -1,77 +1,10 @@
 ----------------------------------------------------------------
-Sun Jan 20 21:57:28 CET 2013:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-013c-59c0-6c18-000000e2aac0 
-on database directory C:\Users\Peti\Desktop\db1  with class loader ModuleCL@689e8c34[org.jreserve.jreserve.misc.database.derby] 
-Loaded from jar:file:/C:/Munka/GitRepos/JReserve/NetbeansProject/jreserve/jreserve-core-app/target/jreserve/jreserve/modules/ext/org.apache.derby/derby-10.9.1.0.jar!/
+Mon Jan 21 17:31:25 CET 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-013c-5df3-3034-000000bdb8f8 
+on database directory C:\Documents and Settings\aa461472\Desktop\Db1  with class loader ModuleCL@a56214[org.jreserve.jreserve.misc.database.derby] 
+Loaded from jar:file:/D:/Eigen/GitRepos/JReserve/NetbeansProject/jreserve/jreserve-core-app/target/jreserve/jreserve/modules/ext/org.apache.derby/derby-10.9.1.0.jar!/
 java.vendor=Sun Microsystems Inc.
-java.runtime.version=1.6.0_33-b05
-user.dir=C:\Munka\GitRepos\JReserve\NetbeansProject\jreserve\jreserve-core-app\target\jreserve
-derby.system.home=null
-Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Sun Jan 20 21:57:30 CET 2013:
-Shutting down instance a816c00e-013c-59c0-6c18-000000e2aac0 on database directory C:\Users\Peti\Desktop\db1 with class loader ModuleCL@689e8c34[org.jreserve.jreserve.misc.database.derby] 
-Sun Jan 20 21:57:30 CET 2013 Thread[wizard-descriptor-asynchronous-jobs,1,system] Cleanup action starting
-java.sql.SQLException: Database 'C:\Users\Peti\Desktop\db1' not found.
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection30.<init>(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection40.<init>(Unknown Source)
-	at org.apache.derby.jdbc.Driver40.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.EmbeddedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(DriverManager.java:582)
-	at java.sql.DriverManager.getConnection(DriverManager.java:207)
-	at org.jreserve.database.derby.create.DerbyDatabaseFactory.shutDownDb(DerbyDatabaseFactory.java:92)
-	at org.jreserve.database.derby.create.DerbyDatabaseFactory.createDatabase(DerbyDatabaseFactory.java:52)
-	at org.jreserve.database.derby.create.DerbyDatabaseFactory.createDb(DerbyDatabaseFactory.java:42)
-	at org.jreserve.database.derby.create.CreateDatabaseWizardPanel2.validate(CreateDatabaseWizardPanel2.java:90)
-	at org.openide.WizardDescriptor$10.run(WizardDescriptor.java:1463)
-	at org.openide.util.RequestProcessor$Task.run(RequestProcessor.java:1452)
-	at org.openide.util.RequestProcessor$Processor.run(RequestProcessor.java:2032)
-Caused by: java.sql.SQLException: Database 'C:\Users\Peti\Desktop\db1' not found.
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	... 21 more
-============= begin nested exception, level (1) ===========
-java.sql.SQLException: Database 'C:\Users\Peti\Desktop\db1' not found.
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection30.<init>(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection40.<init>(Unknown Source)
-	at org.apache.derby.jdbc.Driver40.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.EmbeddedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(DriverManager.java:582)
-	at java.sql.DriverManager.getConnection(DriverManager.java:207)
-	at org.jreserve.database.derby.create.DerbyDatabaseFactory.shutDownDb(DerbyDatabaseFactory.java:92)
-	at org.jreserve.database.derby.create.DerbyDatabaseFactory.createDatabase(DerbyDatabaseFactory.java:52)
-	at org.jreserve.database.derby.create.DerbyDatabaseFactory.createDb(DerbyDatabaseFactory.java:42)
-	at org.jreserve.database.derby.create.CreateDatabaseWizardPanel2.validate(CreateDatabaseWizardPanel2.java:90)
-	at org.openide.WizardDescriptor$10.run(WizardDescriptor.java:1463)
-	at org.openide.util.RequestProcessor$Task.run(RequestProcessor.java:1452)
-	at org.openide.util.RequestProcessor$Processor.run(RequestProcessor.java:2032)
-============= end nested exception, level (1) ===========
-Cleanup action completed
-----------------------------------------------------------------
-Sun Jan 20 21:57:39 CET 2013:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance 94bc40a2-013c-59c0-6c18-000000e2aac0 
-on database directory C:\Users\Peti\Desktop\db1  with class loader ModuleCL@689e8c34[org.jreserve.jreserve.misc.database.derby] 
-Loaded from jar:file:/C:/Munka/GitRepos/JReserve/NetbeansProject/jreserve/jreserve-core-app/target/jreserve/jreserve/modules/ext/org.apache.derby/derby-10.9.1.0.jar!/
-java.vendor=Sun Microsystems Inc.
-java.runtime.version=1.6.0_33-b05
-user.dir=C:\Munka\GitRepos\JReserve\NetbeansProject\jreserve\jreserve-core-app\target\jreserve
+java.runtime.version=1.6.0_17-b04
+user.dir=D:\Eigen\GitRepos\JReserve\NetbeansProject\jreserve\jreserve-core-app\target\jreserve
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''

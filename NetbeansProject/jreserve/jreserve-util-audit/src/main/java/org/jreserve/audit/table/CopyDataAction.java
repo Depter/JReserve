@@ -44,7 +44,7 @@ public class CopyDataAction extends AbstractAction {
         sb.append(element.getType()).append("\t");
         sb.append(element.getChange());
     }
-
+    
     private void newLine() {
         if (sb.length() > 0) {
             sb.append("\n");

@@ -59,4 +59,10 @@ public class PersistentDeletable<T> extends AbstractProjectElementDeletable<T> {
     
     protected void cleanUpAfterEntity(Session session) {
     }
+    
+    @Override
+    public String toString() {
+        String msg = "PersistentDeletable [toDdelete = %s]";
+        return String.format(msg, element.getValue());
+    }
 }

@@ -42,17 +42,9 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     }
     
     private void clearState() {
-        clearLookup();
         clearData();
         clearProperties();
-    }
-    
-    private void clearLookup() {
-        if(this.dataResult != null)
-            this.dataResult.removeLookupListener(dataListener);
-        this.dataResult = null;
-        this.lookup = null;
-        this.data = TriangularData.EMPTY;
+        clearLookup();
     }
     
     private void clearData() {
@@ -67,6 +59,13 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
             properties = null;
         }
         cummulated = false;
+    }
+    
+    private void clearLookup() {
+        if(this.dataResult != null)
+            this.dataResult.removeLookupListener(dataListener);
+        this.dataResult = null;
+        this.lookup = null;
     }
     
     private void initState(Lookup lookup) {
@@ -102,7 +101,14 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
 
     @Override
     public int getColumnCount() {
-        return data.getDevelopmentCount();
+        return data.getDevelopmentCount() + 1;
+    }
+
+    @Override
+    public Class<?> getColumnClass(int column) {
+        if(column == 0)
+            return java.util.Date.class;
+        return Double.class;
     }
     
     @Override
@@ -183,6 +189,23 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
         int accident = getAccident(row, column - 1);
         int development = getDevelopment(row, column - 1);
         return data.getLayerTypeId(accident, development);
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        int accident = getAccident(row, column - 1);
+        int development = getDevelopment(row, column - 1);
+        return column > 0 &&
+               isValidCoordiantes(accident, development) &&
+               lookup.lookup(WidgetEditor.class) != null;
+    }
+
+    @Override
+    public void setValueAt(Object value, int row, int column) {
+        WidgetEditor editor = lookup.lookup(WidgetEditor.class);
+        int accident = getAccident(row, column - 1);
+        int development = getDevelopment(row, column - 1);
+        editor.setCellValue(this, accident, development, (Double) value);
     }
     
     private class DataListener implements LookupListener {

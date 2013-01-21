@@ -126,4 +126,10 @@ public class ProjectElementContainer {
     public int hashCode() {
         return position;
     }
+    
+    @Override
+    public String toString() {
+        String name = (String) myElement.getProperty(ProjectElement.NAME_PROPERTY);
+        return String.format("ProjectElementContainer [%s]", name);
+    }
 }

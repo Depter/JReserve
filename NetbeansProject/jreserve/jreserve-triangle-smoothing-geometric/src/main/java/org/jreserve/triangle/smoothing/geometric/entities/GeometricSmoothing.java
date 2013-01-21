@@ -9,12 +9,17 @@ import org.jreserve.rutil.RFunction;
 import org.jreserve.triangle.smoothing.Smoothing;
 import org.jreserve.triangle.smoothing.SmoothingCell;
 import org.jreserve.triangle.smoothing.geometric.RGeometricSmoothing;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "# {0} - cells",
+    "MSG.GeometricSmoothing.AuditText=Geometric smoothing {0}"
+})
 @EntityRegistration
 @Audited
 @Entity
@@ -57,5 +62,11 @@ public class GeometricSmoothing extends Smoothing {
     @Override
     public RFunction getRFunction() {
         return new RGeometricSmoothing();
+    }
+
+    @Override
+    public String createAuditRepresentation() {
+        String cells = super.getCellsAuditRepresentation();
+        return Bundle.MSG_GeometricSmoothing_AuditText(cells);
     }
 }

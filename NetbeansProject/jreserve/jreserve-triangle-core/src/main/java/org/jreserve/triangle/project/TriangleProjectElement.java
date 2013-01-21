@@ -1,8 +1,7 @@
 package org.jreserve.triangle.project;
 
 import java.beans.PropertyChangeEvent;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
+import java.util.List;
 import org.jreserve.audit.AuditableProjectElement;
 import org.jreserve.persistence.visual.PersistentOpenable;
 import org.jreserve.project.system.ProjectElement;
@@ -10,11 +9,7 @@ import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
-import org.jreserve.triangle.comment.CommentableTriangle;
-import org.jreserve.triangle.entities.Triangle;
-import org.jreserve.triangle.entities.TriangleGeometry;
-import org.jreserve.triangle.entities.TriangleListener;
-import org.jreserve.triangle.entities.TriangleModification;
+import org.jreserve.triangle.entities.*;
 import org.jreserve.triangle.visual.editor.Editor;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle.Messages;
@@ -44,8 +39,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     
     public final static int TRIANGLE_POSITION = 100;
     public final static int VECTOR_POSITION = 200;
-    private final static String MODIFICATION_PROPERTY = "MODIFICATION_PROPERTY"; 
-            
+
     private int position;
     
     public TriangleProjectElement(Triangle triangle) {
@@ -61,7 +55,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         super.setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         super.setProperty(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
         super.setProperty(TriangleModification.MODIFICATION_PROPERTY, triangle.getModifications());
-        super.setProperty(CommentableTriangle.COMMENT_PROPERTY, triangle.getComments());
+        super.setProperty(TriangleComment.COMMENT_PROPERTY, triangle.getComments());
     }
     
     private void initLookup() {
@@ -84,46 +78,21 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
     }
     
     @Override
-    public Object getProperty(Object property) {
-//        if(MODIFICATION_PROPERTY.equals(property)) {
-//            List<TriangleModification> mods = (List<TriangleModification>) super.getProperty(property);
-//            return new ArrayList<TriangleModification>(mods);
-//        }
-        return super.getProperty(property);
-    }
-    
-    @Override
     public void setProperty(String property, Object value) {
         if(NAME_PROPERTY.equals(property))
             getValue().setName((String) value);
         else if(DESCRIPTION_PROPERTY.equals(property))
             getValue().setDescription((String) value);
-//        else if(Triangle.GEOMETRY_PROPERTY.equals(property))
-//            setTriangleGeometryProperty((TriangleGeometry) value);
-//        else if(MODIFICATION_PROPERTY.equals(property)) {
-//            List<TriangularDataModification> mods = (List<TriangularDataModification>) value;
-//            data.setModifications(mods);
-//            value = new ArrayList<TriangularDataModification>(mods);
-//        } else if(CommentableTriangle.COMMENT_PROPERTY.equals(property)) {
-//            value = new ArrayList<TriangleComment>((List<TriangleComment>) value);
-//        }
         super.setProperty(property, value);
     }
-    
-//    private void setTriangleGeometryProperty(TriangleGeometry geometry) {
-//        getValue().setGeometry(geometry);
-//        input.setTriangleGeometry(geometry);
-//    }
     
     private class TriangleUpdateListener implements TriangleListener {
         @Override
         public void nameChanged(Triangle triangle) {
-            //setProperty(NAME_PROPERTY, triangle.getName());
         }
 
         @Override
         public void descriptionChanged(Triangle triangle) {
-            //setProperty(DESCRIPTION_PROPERTY, triangle.getDescription());
         }
 
         @Override
@@ -138,7 +107,7 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
 
         @Override
         public void commentsChanged(Triangle triangle) {
-            setProperty(CommentableTriangle.COMMENT_PROPERTY, triangle.getComments());
+            setProperty(TriangleComment.COMMENT_PROPERTY, triangle.getComments());
         }
     }
     
@@ -155,10 +124,8 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
             originalProperties.put(DESCRIPTION_PROPERTY, triangle.getDescription());
             originalProperties.put(Triangle.GEOMETRY_PROPERTY, triangle.getGeometry());
             originalProperties.put(TriangleModification.MODIFICATION_PROPERTY, triangle.getModifications());
-            originalProperties.put(CommentableTriangle.COMMENT_PROPERTY, triangle.getComments());
+            originalProperties.put(TriangleComment.COMMENT_PROPERTY, triangle.getComments());
         }
-
-        
         
         @Override
         protected boolean isChanged(String property, Object o1, Object o2) {
@@ -180,6 +147,12 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         @Override
         protected TopComponent createComponent() {
             return Editor.createTriangleEditor(TriangleProjectElement.this);
+        }
+    
+        @Override
+        public String toString() {
+            String msg = "Openable [value = %s]";
+            return String.format(msg, getValue());
         }
     }
     
@@ -210,17 +183,44 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         }
 
         @Override
-        public void redo() throws CannotRedoException {
-            //TODO implement
-            super.redo();
+        protected void redo(ProjectElementUndoRedo.Event evt) {
+            myChange = true;
+            if(interestingProperty(evt.property))
+                setProperty(evt.property, evt.newValue);
+            else
+                element.setProperty(evt.property, evt.newValue);
+            myChange = false;
         }
-
+        
+        private boolean interestingProperty(String property) {
+            return Triangle.GEOMETRY_PROPERTY.equals(property) ||
+                   TriangleModification.MODIFICATION_PROPERTY.equals(property) ||
+                   TriangleComment.COMMENT_PROPERTY.equals(property);
+        }
+        
+        private void setProperty(String property, Object value) {
+            if(Triangle.GEOMETRY_PROPERTY.equals(property))
+                getValue().setGeometry((TriangleGeometry)value);
+            else if(TriangleModification.MODIFICATION_PROPERTY.equals(property))
+                getValue().setModifications((List<TriangleModification>) value);
+            else if(TriangleComment.COMMENT_PROPERTY.equals(property))
+                getValue().setComments((List<TriangleComment>) value);
+        }
+        
         @Override
-        public void undo() throws CannotUndoException {
-            //TODO implement
-            super.undo();
+        protected void undo(ProjectElementUndoRedo.Event evt) {
+            myChange = true;
+            if(interestingProperty(evt.property))
+                setProperty(evt.property, evt.oldValue);
+            else
+                element.setProperty(evt.property, evt.oldValue);
+            myChange = false;
         }
-        
-        
+    
+        @Override
+        public String toString() {
+            String msg = "UndoRedo [value = %s]";
+            return String.format(msg, getValue());
+        }
     }   
 }

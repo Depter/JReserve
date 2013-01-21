@@ -122,4 +122,9 @@ public class CorrectionWidgetEditor implements WidgetEditor {
                accident < data.getAccidentCount() &&
                development < data.getDevelopmentCount(accident);
     }
+    
+    @Override
+    public String toString() {
+        return "CorrectionWidgetEditor";
+    }
 }

@@ -35,7 +35,7 @@ public interface TriangularData {
     
     public String getLayerTypeId(int accident, int development);
     
-    public void createTriangle(String triangleName, RCode rCode);
+    public void createRTriangle(String triangleName, RCode rCode);
     
     public void close();
     
@@ -86,7 +86,7 @@ public interface TriangularData {
         }
         
         @Override
-        public void createTriangle(String triangleName, RCode rCode) {
+        public void createRTriangle(String triangleName, RCode rCode) {
             String values = RUtil.createArray(new double[0][0]);
             rCode.addSource(String.format("%s <- %s%n", triangleName, values));
         }
