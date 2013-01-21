@@ -62,9 +62,9 @@ class ChangeTableModel implements TableModel {
             case 0:
                 return Date.class;
             case 1:
-                return String.class;
+                return Object.class;
             case 2:
-                return String.class;
+                return Object.class;
             case 3:
                 return String.class;
             default:

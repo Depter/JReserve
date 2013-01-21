@@ -21,7 +21,11 @@ public class ChartUtil {
     public final static Image CHART_XY = ImageUtilities.loadImage("resources/chart_xy.png", false);
     public final static java.awt.Color BACKGROUND = new java.awt.Color(255, 125, 48);
     
-    public static ChartPanel createChartPanel(Chart chart, boolean fixedRangeAxis) {
+    public static JPanel createPanel(Chart chart, boolean fixedRangeAxis) {
+        return createChartPanel(chart, fixedRangeAxis);
+    }
+    
+    private static ChartPanel createChartPanel(Chart chart, boolean fixedRangeAxis) {
         ChartPanel panel = new ChartPanel(chart.getJFreeChart());
         panel.setPopupMenu(fixedRangeAxis? null : createPopUp(chart));
         return panel;

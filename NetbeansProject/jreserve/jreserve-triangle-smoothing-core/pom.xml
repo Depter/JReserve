@@ -77,16 +77,22 @@
             <artifactId>jreserve-core-resources</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>jreserve-triangle-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>jreserve-util-r</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-triangle-core</artifactId>
+            <artifactId>jreserve-util-chart</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

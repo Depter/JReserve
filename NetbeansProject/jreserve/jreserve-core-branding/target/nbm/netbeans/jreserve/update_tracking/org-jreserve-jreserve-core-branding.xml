@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.core.branding">
-    <module_version install_time="1358761757492" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1358800822347" last="true" origin="installer" specification_version="1.0">
         <file crc="2351950063" name="config/Modules/org-jreserve-jreserve-core-branding.xml"/>
-        <file crc="2304558238" name="core/locale/core_jreserve.jar"/>
-        <file crc="2149497573" name="modules/locale/org-netbeans-core-windows_jreserve.jar"/>
-        <file crc="485278583" name="modules/locale/org-netbeans-core_jreserve.jar"/>
-        <file crc="2028278491" name="modules/org-jreserve-jreserve-core-branding.jar"/>
+        <file crc="3463238022" name="core/locale/core_jreserve.jar"/>
+        <file crc="440175020" name="modules/locale/org-netbeans-core-windows_jreserve.jar"/>
+        <file crc="1296014853" name="modules/locale/org-netbeans-core_jreserve.jar"/>
+        <file crc="682036011" name="modules/org-jreserve-jreserve-core-branding.jar"/>
     </module_version>
 </module>

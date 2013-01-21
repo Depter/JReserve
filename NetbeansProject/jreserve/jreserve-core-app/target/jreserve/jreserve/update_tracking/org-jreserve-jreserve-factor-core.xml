@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.factor.core">
-    <module_version install_time="1358761893321" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1358800930284" last="true" origin="installer" specification_version="1.0">
         <file crc="2308506575" name="config/Modules/org-jreserve-jreserve-factor-core.xml"/>
-        <file crc="1354496070" name="modules/org-jreserve-jreserve-factor-core.jar"/>
+        <file crc="2871106639" name="modules/org-jreserve-jreserve-factor-core.jar"/>
     </module_version>
 </module>

@@ -99,4 +99,8 @@ public class SmoothingTablePanel extends JPanel implements ChangeListener {
     void setEventSource(Object source) {
         table.setEventSource(source);
     }
+    
+    SmoothingTableModel getModel() {
+        return (SmoothingTableModel) table.getModel();
+    }
 }

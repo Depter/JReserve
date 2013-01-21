@@ -38,6 +38,7 @@ class StringRenderer extends JTextArea implements TableCellRenderer {
     public StringRenderer() {
         setLineWrap(true);
         setTabSize(CHARACTERS_PER_TAB);
+        setWrapStyleWord(true);
     }
     
     @Override

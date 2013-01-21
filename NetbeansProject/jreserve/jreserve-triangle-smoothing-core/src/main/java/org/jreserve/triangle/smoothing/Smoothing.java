@@ -1,9 +1,6 @@
 package org.jreserve.triangle.smoothing;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import javax.persistence.*;
 import org.hibernate.envers.Audited;
 import org.jreserve.persistence.EntityRegistration;
@@ -57,7 +54,9 @@ public abstract class Smoothing extends TriangleModification implements Persiste
     }
     
     public List<SmoothingCell> getCells() {
-        return new ArrayList<SmoothingCell>(cells);
+        List<SmoothingCell> result = new ArrayList<SmoothingCell>(cells);
+        Collections.sort(result);
+        return result;
     }
     
     protected void addCell(SmoothingCell cell) {
@@ -102,10 +101,10 @@ public abstract class Smoothing extends TriangleModification implements Persiste
     }
     
     protected String getCellsAuditRepresentation() {
-        StringBuilder sb = new StringBuilder("{");
-        for(SmoothingCell cell : cells)
+        StringBuilder sb = new StringBuilder('{');
+        for(SmoothingCell cell : getCells())
             sb.append(getCellAuditRepresentation(cell));
-        return sb.toString();
+        return sb.append('}').toString();
     }
     
     private String getCellAuditRepresentation(SmoothingCell cell) {

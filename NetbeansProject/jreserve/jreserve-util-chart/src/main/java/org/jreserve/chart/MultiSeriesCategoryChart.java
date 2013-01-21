@@ -35,6 +35,7 @@ public abstract class MultiSeriesCategoryChart<R extends Comparable<R>, C extend
         this.chartData = chartData;
         this.chartData.addChangeListener(this);
         this.colorGenerator = colorGenerator==null? new DefaultColorGenerator() : colorGenerator;
+        stateChanged(null);
     }
     
     @Override

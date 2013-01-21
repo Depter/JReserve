@@ -1,15 +1,13 @@
 package org.jreserve.triangle.smoothing.visual;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -38,9 +36,24 @@ public abstract class SmoothingCreatorPanel extends JPanel {
     private void initComponents(int visibleDigits, double[] input) {
         setBorder(BorderFactory.createEmptyBorder(15, 15, 0, 15));
         setLayout(new BorderLayout(15, 15));
-        add(createInputPanel(), BorderLayout.NORTH);
+        
+        JPanel leftPanel = new JPanel(new BorderLayout(15, 15));
+        leftPanel.add(createInputPanel(), BorderLayout.NORTH);
+        
         initTable(visibleDigits, input);
-        add(table, BorderLayout.CENTER);
+        leftPanel.add(table, BorderLayout.CENTER);
+        add(leftPanel, BorderLayout.WEST);
+        
+        SmoothingTableModel model = (SmoothingTableModel) table.getModel();
+        JPanel chart = SmoothingChart.createChart(model);
+        chart.setOpaque(true);
+        chart.setBackground(Color.WHITE);
+        chart.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(Color.BLACK, 1, true), 
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        Dimension size = leftPanel.getPreferredSize();
+        chart.setPreferredSize(new Dimension(size.height*2, size.height));
+        add(chart, BorderLayout.CENTER);
     }
     
     private JPanel createInputPanel() {

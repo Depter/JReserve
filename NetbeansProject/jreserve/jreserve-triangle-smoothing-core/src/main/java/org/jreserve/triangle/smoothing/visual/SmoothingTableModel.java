@@ -47,6 +47,7 @@ class SmoothingTableModel extends AbstractTableModel {
                 dummies.get(i).smoothed = smoothed[i];
         }
         fireTableDataChanged();
+        fireChanged();
     }
     
     @Override

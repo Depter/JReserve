@@ -10,6 +10,7 @@ import org.jreserve.triangle.visual.widget.TriangleWidgetProperties;
 import org.jreserve.triangle.visual.widget.WidgetEditor;
 import org.jreserve.triangle.visual.widget.WidgetTableModel;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -43,9 +44,10 @@ public class CorrectionWidgetEditor implements WidgetEditor {
     }
     
     private <T> T lookup(Class<T> clazz) {
-        if(lookup == null)
-            return null;
-        return lookup.lookup(clazz);
+        T result = lookup==null? null : lookup.lookup(clazz);
+        if(result == null)
+            return Utilities.actionsGlobalContext().lookup(clazz);
+        return result;
     }
     
     private boolean isCorrectionDeleted(WidgetTableModel model, int accident, int development, Double value) {

@@ -73,6 +73,18 @@ public abstract class TriangleModification implements PersistentObject, Comparab
         return order - o.getOrder();
     }
     
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof TriangleModification)
+            return id.equals(((TriangleModification)o).id);
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+    
     public abstract TriangularDataModification createModification(TriangularData source);
     
     public abstract String createAuditRepresentation();

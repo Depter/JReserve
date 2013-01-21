@@ -35,14 +35,19 @@
                     <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/org-jreserve-triangle-smoothing-actions-DeleteSmoothingAction.instance"/>
                     <attr intvalue="400" name="position"/>
                 </file>
+                <file name="org-jreserve-triangle-correction-DeleteCorrectionAction.shadow">
+                    <!--org.jreserve.triangle.visual.editor.DataEditorView-->
+                    <attr name="originalFile" stringvalue="Actions/JReserve/TriangleWidget/org-jreserve-triangle-correction-DeleteCorrectionAction.instance"/>
+                    <attr intvalue="2000" name="position"/>
+                </file>
+                <file name="org-jreserve-triangle-correction-DeleteCorrectionAction-separatorBefore.instance">
+                    <!--org.jreserve.triangle.visual.editor.DataEditorView-->
+                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
+                    <attr intvalue="1990" name="position"/>
+                </file>
             </folder>
         </folder>
         <folder name="Entities">
-            <file name="org-jreserve-triangle-entities-Triangle.entity">
-                <!--org.jreserve.triangle.entities.Triangle-->
-                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
-                <attr boolvalue="false" name="generatedId"/>
-            </file>
             <file name="org-jreserve-triangle-entities-TriangleModification.entity">
                 <!--org.jreserve.triangle.entities.TriangleModification-->
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleModification"/>
@@ -51,6 +56,11 @@
             <file name="org-jreserve-triangle-entities-TriangleComment.entity">
                 <!--org.jreserve.triangle.entities.TriangleComment-->
                 <attr name="className" stringvalue="org.jreserve.triangle.entities.TriangleComment"/>
+                <attr boolvalue="false" name="generatedId"/>
+            </file>
+            <file name="org-jreserve-triangle-entities-Triangle.entity">
+                <!--org.jreserve.triangle.entities.Triangle-->
+                <attr name="className" stringvalue="org.jreserve.triangle.entities.Triangle"/>
                 <attr boolvalue="false" name="generatedId"/>
             </file>
         </folder>
@@ -74,13 +84,13 @@
         </folder>
         <folder name="Project">
             <folder name="ElementFactories">
-                <file name="org-jreserve-triangle-project-ProjectDataContainerLoader.instance">
-                    <!--org.jreserve.triangle.project.ProjectDataContainerLoader-->
-                    <attr intvalue="500" name="priority"/>
-                </file>
                 <file name="org-jreserve-triangle-project-TriangleLoader.instance">
                     <!--org.jreserve.triangle.project.TriangleLoader-->
                     <attr intvalue="100" name="priority"/>
+                </file>
+                <file name="org-jreserve-triangle-project-ProjectDataContainerLoader.instance">
+                    <!--org.jreserve.triangle.project.ProjectDataContainerLoader-->
+                    <attr intvalue="500" name="priority"/>
                 </file>
             </folder>
         </folder>
@@ -92,13 +102,13 @@
                 </file>
             </folder>
             <folder name="AuditFactories">
-                <file name="org-jreserve-triangle-audit-ProjectTriangleAuditor.instance">
-                    <!--org.jreserve.triangle.audit.ProjectTriangleAuditor-->
-                    <attr intvalue="100" name="priority"/>
-                </file>
                 <file name="org-jreserve-triangle-audit-TriangleAuditor.instance">
                     <!--org.jreserve.triangle.audit.TriangleAuditor-->
                     <attr intvalue="50" name="priority"/>
+                </file>
+                <file name="org-jreserve-triangle-audit-ProjectTriangleAuditor.instance">
+                    <!--org.jreserve.triangle.audit.ProjectTriangleAuditor-->
+                    <attr intvalue="100" name="priority"/>
                 </file>
             </folder>
         </folder>

@@ -123,6 +123,7 @@ public class AuditTable extends javax.swing.JPanel {
         table.setModel(new ChangeTableModel());
         table.setFillsViewportHeight(true);
         table.setDefaultRenderer(Date.class, new DateCellRenderer(df));
+        table.setDefaultRenderer(Object.class, new ObjectRenderer());
         table.setDefaultRenderer(String.class, new StringRenderer());
         tableScroll.setViewportView(table);
 
@@ -202,6 +203,7 @@ public class AuditTable extends javax.swing.JPanel {
         
         private void setRowHight(int row) {
             try {
+                table.setRowHeight(16);
                 int height = 0;
                 for(int c=0, count=table.getColumnCount(); c<count; c++)
                     height = Math.max(height, getCellHeight(row, c));

@@ -51,6 +51,12 @@ import org.openide.util.WeakListeners;
         id=@ActionID(id="org.jreserve.triangle.smoothing.actions.DeleteSmoothingAction", category="JReserve/TriangleWidget"),
         path="JReserve/Popup/TriangleDataEditor",
         position=400
+    ),
+    @ActionReference(
+        id=@ActionID(id="org.jreserve.triangle.correction.DeleteCorrectionAction", category="JReserve/TriangleWidget"),
+        path="JReserve/Popup/TriangleDataEditor",
+        position=2000,
+        separatorBefore=1990
     )
 })
 @Messages({

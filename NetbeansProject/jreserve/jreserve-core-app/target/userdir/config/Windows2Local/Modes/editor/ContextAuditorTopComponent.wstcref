@@ -2,5 +2,5 @@
 
 <tc-ref version="2.2">
     <tc-id id="ContextAuditorTopComponent" />
-    <state opened="true" />
+    <state opened="false" />
 </tc-ref>
