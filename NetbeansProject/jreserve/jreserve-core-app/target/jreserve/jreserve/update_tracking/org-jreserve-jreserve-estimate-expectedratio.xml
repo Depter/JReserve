@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.estimate.expectedratio">
-    <module_version install_time="1358800930308" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1358842500938" last="true" origin="installer" specification_version="1.0">
         <file crc="3497722566" name="config/Modules/org-jreserve-jreserve-estimate-expectedratio.xml"/>
-        <file crc="3194738432" name="modules/org-jreserve-jreserve-estimate-expectedratio.jar"/>
+        <file crc="2019616507" name="modules/org-jreserve-jreserve-estimate-expectedratio.jar"/>
     </module_version>
 </module>

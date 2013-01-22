@@ -33,9 +33,6 @@ public class TriangleCorrection extends TriangleModification implements Triangle
     @Column(name="CORRIGATED_VALUE", nullable=false)
     private double corrigatedValue;
     
-    @Column(name="MODIFICATION_ORDER", nullable=false)
-    private int order;
-    
     @Embedded
     private TriangleCell cell;
     
@@ -47,14 +44,9 @@ public class TriangleCorrection extends TriangleModification implements Triangle
     }
     
     public TriangleCorrection(int order, TriangleCell cell, double corrigatedValue) {
-        this.order = order;
+        super(order);
         this.cell = cell;
         this.corrigatedValue = corrigatedValue;
-    }
-    
-    @Override
-    public int getOrder() {
-        return order;
     }
     
     @Override
@@ -76,12 +68,5 @@ public class TriangleCorrection extends TriangleModification implements Triangle
         int accident = cell.getAccident() + 1;
         int development = cell.getDevelopment() + 1;
         return Bundle.MSG_TriangleCorrection_AuditMessage(accident, development, corrigatedValue);
-    }
-
-    @Override
-    public int compareTo(TriangleModification o) {
-        if(o == null)
-            return -1;
-        return order - o.getOrder();
     }
 }

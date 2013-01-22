@@ -35,6 +35,12 @@ public abstract class AbstractChangeableTriangularDataModification extends Abstr
 
     @Override
     public void close() {
+        closeSource();
+        sourceChanged();
+        fireChange();
+    }
+    
+    private void closeSource() {
         if(source instanceof ChangeableTriangularData)
             ((ChangeableTriangularData)source).removeChangeListener(sourceListener);
         source.close();

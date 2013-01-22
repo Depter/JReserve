@@ -2,6 +2,7 @@ package org.jreserve.triangle.entities;
 
 import java.util.*;
 import javax.persistence.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.jreserve.data.ProjectDataType;
 import org.jreserve.persistence.AbstractPersistentObject;
@@ -12,6 +13,8 @@ import org.jreserve.project.util.ProjectData;
 import org.jreserve.triangle.ChangeableTriangularData;
 import org.jreserve.triangle.ModifiableTriangle;
 import org.jreserve.triangle.comment.CommentableTriangle;
+import org.jreserve.triangle.comment.TriangleCommentContainer;
+import org.jreserve.triangle.comment.TriangleCommentListener;
 import org.jreserve.triangle.data.TriangleBundle;
 
 /**
@@ -42,6 +45,7 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     private String name;
     
     @Column(name="DESCRIPTION")
+    @Type(type="org.hibernate.type.TextType")
     private String description;
     
     @Column(name="IS_TRIANGLE", nullable=false)
@@ -68,6 +72,10 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     
     @Transient
     private List<TriangleListener> listeners = new ArrayList<TriangleListener>();
+    @Transient
+    private TriangleModificationContainer modificationContainer = new TriangleModificationContainer(this, modifications);
+    @Transient
+    private TriangleCommentContainer commentContainer = new TriangleCommentContainer(this, comments);
     
     protected Triangle() {
     }
@@ -154,99 +162,74 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     
     @Override
     public void addModification(TriangleModification modification) {
-        checkModification(modification);
-        modifications.add(modification);
-        fireModificationsChanged();
-    }
-    
-    private void checkModification(TriangleModification modification) {
-        checkModification(modifications, modification);
-    }
-    
-    private void checkModification(Set<TriangleModification> mods, TriangleModification modification) {
-        if(modification == null) 
-            throw new NullPointerException("Modification is null!");
-        checkModificationOrder(mods, modification);
-    }
-    
-    private void checkModificationOrder(Set<TriangleModification> mods, TriangleModification modification) {
-        int order = modification.getOrder();
-        if(containsOrder(mods, order)) {
-            String msg = "Can not add modification %s to triangle %s! Order %d already exists!";
-            msg = String.format(msg, modification, this, order);
-            throw new IllegalArgumentException(msg);
-        }
-    }
-    
-    private boolean containsOrder(Set<TriangleModification> mods, int order) {
-        for(TriangleModification mod : mods)
-            if(mod.getOrder() == order)
-                return true;
-        return false;
+        modificationContainer.addModification(modification);
     }
     
     @Override
     public void removeModification(TriangleModification modification) {
-        modifications.remove(modification);
-        fireModificationsChanged();
+        modificationContainer.removeModification(modification);
     }
     
     public void setModifications(Collection<TriangleModification> modifications) {
-        Set<TriangleModification> newMods = new TreeSet<TriangleModification>();
-        for(TriangleModification mod : modifications) {
-            checkModification(newMods, mod);
-            newMods.add(mod);
-        }
-        this.modifications = newMods;
-        fireModificationsChanged();
+        modificationContainer.setModifications(modifications);
     }
 
     @Override
     public int getMaxModificationOrder() {
-        int max = 0;
-        for(TriangleModification mod : modifications)
-            if(max < mod.getOrder())
-                max = mod.getOrder();
-        return max;
+        return modificationContainer.getMaxModificationOrder();
     }
     
     @Override
     public List<TriangleModification> getModifications() {
-        return new ArrayList<TriangleModification>(modifications);
+        return modificationContainer.getModifications();
     }
     
     @Override
     public void addComment(TriangleComment comment) {
-        comments.add(comment);
-        fireCommentsChanged();
+        commentContainer.addComment(comment);
     }
     
     @Override
     public void removeComment(TriangleComment comment) {
-        comments.remove(comment);
-        fireCommentsChanged();
+        commentContainer.removeComment(comment);
     }
     
     @Override
     public List<TriangleComment> getComments() {
-        return new ArrayList<TriangleComment>(comments);
+        return commentContainer.getComments();
     }
     
     public void setComments(Collection<TriangleComment> comments) {
-        Set<TriangleComment> newComments = new TreeSet<TriangleComment>();
-        for(TriangleComment comment : comments)
-            newComments.add(comment);
-        this.comments = newComments;
-        fireCommentsChanged();
+        commentContainer.setComments(comments);
     }
 
     public void addTriangleListener(TriangleListener listener) {
         if(!listeners.contains(listener))
             listeners.add(listener);
+        addTriangleModificationListener(listener);
+        addTriangleCommentListener(listener);
     }
 
     public void removeTriangleListener(TriangleListener listener) {
         listeners.remove(listener);
+        removeTriangleModificationListener(listener);
+        removeTriangleCommentListener(listener);
+    }
+    
+    public void addTriangleModificationListener(TriangleModificationListener listener) {
+        modificationContainer.addTriangleModificationListener(listener);
+    }
+    
+    public void removeTriangleModificationListener(TriangleModificationListener listener) {
+        modificationContainer.removeTriangleModificationListener(listener);
+    }
+    
+    public void addTriangleCommentListener(TriangleCommentListener listener) {
+        commentContainer.addTriangleCommentListener(listener);
+    }
+    
+    public void removeTriangleCommentListener(TriangleCommentListener listener) {
+        commentContainer.removeTriangleCommentListener(listener);
     }
     
     private void fireNameChanged() {
@@ -262,16 +245,6 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     private void fireGeometryChanged() {
         for(TriangleListener listener : new ArrayList<TriangleListener>(listeners))
             listener.geometryChanged(this);
-    }
-
-    private void fireModificationsChanged() {
-        for(TriangleListener listener : new ArrayList<TriangleListener>(listeners))
-            listener.modificationsChanged(this);
-    }
-
-    private void fireCommentsChanged() {
-        for(TriangleListener listener : new ArrayList<TriangleListener>(listeners))
-            listener.commentsChanged(this);
     }
 
     @Override

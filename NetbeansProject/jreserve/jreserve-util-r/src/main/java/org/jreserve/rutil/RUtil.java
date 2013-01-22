@@ -7,6 +7,8 @@ package org.jreserve.rutil;
  */
 public class RUtil {
     
+    public final static String NAN_VALUE = "NA";
+    
     public static String createArray(double[][] data) {
         int columns = getColumnCount(data);
         StringBuilder sb = new StringBuilder("rbind(\n");
@@ -39,7 +41,7 @@ public class RUtil {
         for(int c=0; c<length; c++) {
             if(c > 0) sb.append(", ");
             if(c >= size || Double.isNaN(values[c])) {
-                sb.append("NA");
+                sb.append(NAN_VALUE);
             } else {
                 sb.append(values[c]);
             }
@@ -59,7 +61,7 @@ public class RUtil {
         for(int c=0; c<length; c++) {
             if(c > 0) sb.append(", ");
             if(c >= size) {
-                sb.append("NA");
+                sb.append(NAN_VALUE);
             } else {
                 sb.append(values[c]);
             }

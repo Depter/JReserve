@@ -34,7 +34,7 @@ public abstract class TriangleModification implements PersistentObject, Comparab
     private Long version;
     
     @NotAudited
-    @Column(name="SMOOTH_ORDER", nullable=false)
+    @Column(name="MODIFICATION_ORDER", nullable=false)
     private int order;
     
     protected TriangleModification() {

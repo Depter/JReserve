@@ -7,7 +7,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.rutil.RCode;
 import org.jreserve.triangle.ChangeableTriangularData;
+import org.jreserve.triangle.ModifiableTriangle;
 import org.jreserve.triangle.TriangularData;
+import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.entities.*;
 import org.openide.util.WeakListeners;
 
@@ -158,7 +160,7 @@ public class TriangleBundle implements ChangeableTriangularData {
     private class UpdateListener extends TriangleAdapter {
 
         @Override
-        public void commentsChanged(Triangle triangle) {
+        public void commentsChanged(CommentableTriangle triangle) {
             updateComments();
             fireChange();
         }
@@ -170,7 +172,7 @@ public class TriangleBundle implements ChangeableTriangularData {
         }
 
         @Override
-        public void modificationsChanged(Triangle triangle) {
+        public void modificationsChanged(ModifiableTriangle triangle) {
             updateModifications();
             fireChange();
         }

@@ -1,5 +1,8 @@
 package org.jreserve.triangle.entities;
 
+import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.comment.CommentableTriangle;
+
 /**
  *
  * @author Peter Decsi
@@ -19,10 +22,10 @@ public class TriangleAdapter implements TriangleListener {
     }
     
     @Override 
-    public void modificationsChanged(Triangle triangle) {
+    public void modificationsChanged(ModifiableTriangle triangle) {
     }
     
     @Override 
-    public void commentsChanged(Triangle triangle) {
+    public void commentsChanged(CommentableTriangle triangle) {
     }
 }

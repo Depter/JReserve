@@ -9,6 +9,8 @@ import org.jreserve.project.system.management.PersistentDeletable;
 import org.jreserve.project.system.management.PersistentSavable;
 import org.jreserve.project.system.management.ProjectElementUndoRedo;
 import org.jreserve.project.system.management.RenameableProjectElement;
+import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.entities.*;
 import org.jreserve.triangle.visual.editor.Editor;
 import org.openide.nodes.Node;
@@ -101,12 +103,12 @@ public class TriangleProjectElement extends ProjectElement<Triangle> {
         }
 
         @Override
-        public void modificationsChanged(Triangle triangle) {
+        public void modificationsChanged(ModifiableTriangle triangle) {
             setProperty(TriangleModification.MODIFICATION_PROPERTY, triangle.getModifications());
         }
 
         @Override
-        public void commentsChanged(Triangle triangle) {
+        public void commentsChanged(CommentableTriangle triangle) {
             setProperty(TriangleComment.COMMENT_PROPERTY, triangle.getComments());
         }
     }

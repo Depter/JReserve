@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.jreserve.triangle.smoothing.exponential">
-    <module_version install_time="1358800930273" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1358842500875" last="true" origin="installer" specification_version="1.0">
         <file crc="3664409551" name="config/Modules/org-jreserve-jreserve-triangle-smoothing-exponential.xml"/>
-        <file crc="1288739437" name="modules/org-jreserve-jreserve-triangle-smoothing-exponential.jar"/>
+        <file crc="1939191398" name="modules/org-jreserve-jreserve-triangle-smoothing-exponential.jar"/>
     </module_version>
 </module>
