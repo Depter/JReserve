@@ -146,7 +146,7 @@
         <!-- FACTOR -->
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>jreserve-factor-core</artifactId>
+            <artifactId>jreserve-factors-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         

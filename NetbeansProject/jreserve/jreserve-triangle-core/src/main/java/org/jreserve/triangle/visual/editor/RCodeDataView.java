@@ -7,7 +7,6 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.project.system.ProjectElement;
 import org.jreserve.rutil.NavigableRCodePanel;
 import org.jreserve.rutil.RCode;
-import org.jreserve.triangle.ChangeableTriangularData;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.project.TriangleProjectElement;
 import org.openide.util.NbBundle.Messages;
@@ -34,8 +33,8 @@ public class RCodeDataView extends NavigableRCodePanel {
         this.element.addPropertyChangeListener(nameListener);
         
         data = element.getValue().getTriangularData();
-        if(data instanceof ChangeableTriangularData)
-            ((ChangeableTriangularData)data).addChangeListener(dataListener);
+        data.addChangeListener(dataListener);
+        
         this.rCode = super.getRCode();
         createCode();
     }
@@ -58,8 +57,7 @@ public class RCodeDataView extends NavigableRCodePanel {
     public void parentClosed() {
         super.parentClosed();
         element.removePropertyChangeListener(nameListener);
-        if(data instanceof ChangeableTriangularData)
-            ((ChangeableTriangularData)data).removeChangeListener(dataListener);
+        data.removeChangeListener(dataListener);
     }
     
     private class DataListener implements ChangeListener {

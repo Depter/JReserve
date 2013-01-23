@@ -6,7 +6,6 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.rutil.RCode;
-import org.jreserve.triangle.ChangeableTriangularData;
 import org.jreserve.triangle.ModifiableTriangle;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.comment.CommentableTriangle;
@@ -18,7 +17,7 @@ import org.openide.util.WeakListeners;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleBundle implements ChangeableTriangularData {
+public class TriangleBundle implements TriangularData {
     
     private Triangle triangle;
     private TriangleListener updateListener;
@@ -69,11 +68,6 @@ public class TriangleBundle implements ChangeableTriangularData {
     
     private void updateComments() {
         source.setComments(triangle.getComments());
-    }
-    
-    @Override
-    public List<TriangularData> getLayers() {
-        return new ArrayList<TriangularData>(mods);
     }
 
     @Override
@@ -144,8 +138,8 @@ public class TriangleBundle implements ChangeableTriangularData {
     }
     
     @Override
-    public void close() {
-        top.close();
+    public void detach() {
+        top.detach();
         triangle.removeTriangleListener(weakUpdateListener);
         this.triangle = null;
     }
@@ -155,6 +149,15 @@ public class TriangleBundle implements ChangeableTriangularData {
         String msg = "TriangleBundle [triangle = %s]";
         String name = triangle==null? null : triangle.getName();
         return String.format(msg, name);
+    }
+
+    @Override
+    public TriangularData getSource() {
+        return null;
+    }
+
+    @Override
+    public void recalculate() {
     }
     
     private class UpdateListener extends TriangleAdapter {

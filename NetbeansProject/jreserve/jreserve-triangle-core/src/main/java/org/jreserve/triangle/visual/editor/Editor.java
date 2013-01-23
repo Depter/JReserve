@@ -106,7 +106,7 @@ public class Editor extends NavigableTopComponent implements UndoRedo.Provider {
     @Override
     protected void componentClosed() {
         super.componentClosed();
-        this.data.close();
+        this.data.detach();
     }
     
     @Override

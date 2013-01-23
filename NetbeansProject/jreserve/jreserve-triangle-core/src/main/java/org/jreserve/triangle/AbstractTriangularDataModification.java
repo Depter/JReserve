@@ -1,7 +1,11 @@
 package org.jreserve.triangle;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import org.jreserve.rutil.RCode;
 import org.jreserve.triangle.entities.TriangleCell;
 import org.jreserve.triangle.entities.TriangleComment;
 
@@ -13,9 +17,14 @@ import org.jreserve.triangle.entities.TriangleComment;
 public abstract class AbstractTriangularDataModification implements TriangularDataModification {
 
     protected TriangularData source = TriangularData.EMPTY;
+    protected ChangeListener sourceListener;
+    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private boolean detached = false;
     
     protected AbstractTriangularDataModification(TriangularData source) {
         this.source = source==null? TriangularData.EMPTY : source;
+        sourceListener = new SourceListener();
+        this.source.addChangeListener(sourceListener);
     }
     
     @Override
@@ -23,6 +32,11 @@ public abstract class AbstractTriangularDataModification implements TriangularDa
         this.source = source==null? TriangularData.EMPTY : source;
     }
 
+    @Override
+    public TriangularData getSource() {
+        return source;
+    }
+    
     @Override
     public int getAccidentCount() {
         return source.getAccidentCount();
@@ -69,18 +83,61 @@ public abstract class AbstractTriangularDataModification implements TriangularDa
     public List<TriangleComment> getComments(int accident, int development) {
         return source.getComments(accident, development);
     }
-
+    
     @Override
-    public List<TriangularData> getLayers() {
-        List<TriangularData> layers = source.getLayers();
-        layers.add(this);
-        return layers;
+    public void recalculate() {
+        if(source != null)
+            source.recalculate();
+        recalculateCorrection();
     }
 
+    protected abstract void recalculateCorrection();
+    
     @Override
-    public void close() {
+    public void detach() {
+        if(!detached) {
+            detached = true;
+            detachSource();
+            listeners.clear();
+        }
+    }
+    
+    private void detachSource() {
+        if(source != null) {
+            source.detach();
+            source.removeChangeListener(sourceListener);
+        }
+    }
+    
+    @Override
+    public void addChangeListener(ChangeListener listener) {
+        if(!listeners.contains(listener))
+            listeners.add(listener);
+    }
+    
+    
+    @Override
+    public void createRTriangle(String triangleName, RCode rCode) {
         if(source != null)
-            source.close();
+            source.createRTriangle(triangleName, rCode);
+        modifyRTriangle(triangleName, rCode);
+    }
+
+    /**
+     * Appends the modification to the r-code.
+     */
+    protected abstract void modifyRTriangle(String triangleName, RCode rCode);
+    
+    @Override
+    public void removeChangeListener(ChangeListener listener) {
+        listeners.remove(listener);
+    }
+    
+    protected void fireChange() {
+        if(detached) return;
+        ChangeEvent evt = new ChangeEvent(this);
+        for(ChangeListener listener : new ArrayList<ChangeListener>(listeners))
+            listener.stateChanged(evt);
     }
     
     protected boolean withinSourceBounds(TriangleCell.Provider cell) {
@@ -99,4 +156,12 @@ public abstract class AbstractTriangularDataModification implements TriangularDa
                development >= 0 && 
                development < source.getDevelopmentCount(accident);
     }    
+
+    private class SourceListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            recalculate();
+            fireChange();
+        }
+    }
 }

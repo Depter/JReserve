@@ -6,7 +6,6 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
-import org.jreserve.triangle.ChangeableTriangularData;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.entities.TriangleCell;
 import org.jreserve.triangle.entities.TriangleComment;
@@ -48,8 +47,7 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     }
     
     private void clearData() {
-        if(data instanceof ChangeableTriangularData)
-            ((ChangeableTriangularData)data).removeChangeListener(changeListener);
+        data.removeChangeListener(changeListener);
         this.data = TriangularData.EMPTY;
     }
     
@@ -82,8 +80,7 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     
     private void initData(TriangularData data) {
         this.data = data==null? TriangularData.EMPTY : data;
-        if(this.data instanceof ChangeableTriangularData)
-            ((ChangeableTriangularData)this.data).addChangeListener(changeListener);
+        this.data.addChangeListener(changeListener);
     }
     
     private void initProperties() {
@@ -211,8 +208,7 @@ public abstract class AbstractWidgetTableModel extends AbstractTableModel implem
     private class DataListener implements LookupListener {
         @Override
         public void resultChanged(LookupEvent le) {
-            if(data instanceof ChangeableTriangularData)
-                ((ChangeableTriangularData)data).removeChangeListener(changeListener);
+            data.removeChangeListener(changeListener);
             initData(lookup.lookup(TriangularData.class));
             fireTableStructureChanged();
         }

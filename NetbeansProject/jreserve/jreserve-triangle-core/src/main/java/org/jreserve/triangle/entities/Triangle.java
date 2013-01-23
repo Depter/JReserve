@@ -10,8 +10,8 @@ import org.jreserve.persistence.EntityRegistration;
 import org.jreserve.persistence.PersistenceUtil;
 import org.jreserve.project.entities.Project;
 import org.jreserve.project.util.ProjectData;
-import org.jreserve.triangle.ChangeableTriangularData;
 import org.jreserve.triangle.ModifiableTriangle;
+import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.comment.CommentableTriangle;
 import org.jreserve.triangle.comment.TriangleCommentContainer;
 import org.jreserve.triangle.comment.TriangleCommentListener;
@@ -26,7 +26,7 @@ import org.jreserve.triangle.data.TriangleBundle;
 @Audited
 @Entity
 @Table(name="TRIANGLE", schema="JRESERVE")
-public class Triangle extends AbstractPersistentObject implements ProjectData, ModifiableTriangle, CommentableTriangle, ChangeableTriangularData.Provider {
+public class Triangle extends AbstractPersistentObject implements ProjectData, ModifiableTriangle, CommentableTriangle, TriangularData.Provider {
     
     public final static String GEOMETRY_PROPERTY = "TRIANGLE_GEOMETRY_PROPERTY";
     public final static int TRIANGLE_POSITION = 100;
@@ -248,7 +248,7 @@ public class Triangle extends AbstractPersistentObject implements ProjectData, M
     }
 
     @Override
-    public ChangeableTriangularData getTriangularData() {
+    public TriangularData getTriangularData() {
         return new TriangleBundle(this);
     }
     

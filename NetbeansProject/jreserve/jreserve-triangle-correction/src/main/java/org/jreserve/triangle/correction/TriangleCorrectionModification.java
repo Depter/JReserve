@@ -48,14 +48,18 @@ public class TriangleCorrectionModification extends AbstractTriangularDataModifi
     }
 
     @Override
-    public void createRTriangle(String triangleName, RCode rCode) {
-        source.createRTriangle(triangleName, rCode);
-        rCode.addSource(getRCode(triangleName));
+    protected void modifyRTriangle(String triangleName, RCode rCode) {
+        if(withinSourceBounds(accident, development))
+            rCode.addSource(getRCode(triangleName));
     }
     
     private String getRCode(String triangleName) {
         return String.format(R_CODE, 
                 triangleName,
                 accident, development) + value + "\n";
+    }
+
+    @Override
+    protected void recalculateCorrection() {
     }
 }

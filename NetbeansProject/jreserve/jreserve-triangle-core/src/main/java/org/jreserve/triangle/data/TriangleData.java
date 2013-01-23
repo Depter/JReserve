@@ -1,6 +1,10 @@
 package org.jreserve.triangle.data;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import javax.swing.event.ChangeListener;
 import org.jreserve.rutil.RCode;
 import org.jreserve.rutil.RUtil;
 import org.jreserve.triangle.TriangularData;
@@ -102,19 +106,25 @@ class TriangleData implements TriangularData {
     public String toString() {
         return String.format("TriangleInput [%d; %d]", accidentCount, developmentCount);
     }
-
-    @Override
-    public List<TriangularData> getLayers() {
-        return Arrays.asList((TriangularData)this);
-    }
     
     @Override
-    public void close() {
-        accidentCount = 0;
-        developmentCount = 0;
-        accidentDates = null;
-        developmentDates = null;
-        values = null;
-        comments = null;
+    public void detach() {
+    }
+
+    @Override
+    public TriangularData getSource() {
+        return null;
+    }
+
+    @Override
+    public void recalculate() {
+    }
+
+    @Override
+    public void addChangeListener(ChangeListener listener) {
+    }
+
+    @Override
+    public void removeChangeListener(ChangeListener listener) {
     }
 }

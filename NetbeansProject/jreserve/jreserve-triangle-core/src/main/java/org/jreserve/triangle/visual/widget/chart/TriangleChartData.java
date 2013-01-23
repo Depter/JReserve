@@ -6,7 +6,6 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.chart.ChartData;
-import org.jreserve.triangle.ChangeableTriangularData;
 import org.jreserve.triangle.TriangularData;
 import org.jreserve.triangle.util.TriangleUtil;
 import org.jreserve.triangle.visual.widget.TriangleWidgetProperties;
@@ -57,8 +56,7 @@ public abstract class TriangleChartData<R extends Comparable<R>, C extends Compa
     
     private void initData(TriangularData data) {
         this.data = data==null? TriangularData.EMPTY : data;
-        if(this.data instanceof ChangeableTriangularData)
-            ((ChangeableTriangularData)this.data).addChangeListener(changeListener);
+        this.data.addChangeListener(changeListener);
     }
     
     private void initPropertiesState() {
@@ -113,8 +111,7 @@ public abstract class TriangleChartData<R extends Comparable<R>, C extends Compa
     private class DataListener implements LookupListener {
         @Override
         public void resultChanged(LookupEvent le) {
-            if(data instanceof ChangeableTriangularData)
-                ((ChangeableTriangularData)data).removeChangeListener(changeListener);
+            data.removeChangeListener(changeListener);
             lookupData();
             fireChangeEvent();
         }
@@ -135,8 +132,7 @@ public abstract class TriangleChartData<R extends Comparable<R>, C extends Compa
     private class PropertiesListener implements LookupListener {
         @Override
         public void resultChanged(LookupEvent le) {
-            if(data instanceof ChangeableTriangularData)
-                ((ChangeableTriangularData)data).removeChangeListener(changeListener);
+            data.removeChangeListener(changeListener);
             lookupData();
             fireChangeEvent();
         }

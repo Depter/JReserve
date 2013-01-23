@@ -16,12 +16,14 @@ public class TriangleSmoothing extends AbstractTriangularDataModification {
     private Smoothing smoothing;
     private List<SmoothingCell> cells;
     private int cellCount;
+    private double[] smoothedValues = null;
     
     public TriangleSmoothing(TriangularData source, Smoothing smoothing) {
         super(source);
         this.smoothing = smoothing;
         this.cells = smoothing.getCells();
         this.cellCount = cells.size();
+        recalculate();
     }
     
     public Smoothing getSmoothing() {
@@ -46,7 +48,7 @@ public class TriangleSmoothing extends AbstractTriangularDataModification {
         int index = getSmoothedIndex(accident, development);
         if(index < 0)
             return source.getValue(accident, development);
-        return getSmoothedValue(index);
+        return smoothedValues[index];
     }
     
     private int getSmoothedIndex(int accident, int development) {
@@ -54,12 +56,6 @@ public class TriangleSmoothing extends AbstractTriangularDataModification {
             if(cells.get(i).isSameCell(accident, development))
                 return cells.get(i).isApplied()? i : -1;
         return -1;
-    }
-    
-    private double getSmoothedValue(int index) {
-        double[] input = TriangleUtil.getCellValues(cells, source);
-        double[] smoothed = smoothing.smooth(input);
-        return smoothed[index];
     }
 
     @Override
@@ -77,9 +73,18 @@ public class TriangleSmoothing extends AbstractTriangularDataModification {
     }
 
     @Override
-    public void createRTriangle(String triangleName, RCode rCode) {
-        source.createRTriangle(triangleName, rCode);
+    protected void modifyRTriangle(String triangleName, RCode rCode) {
         if(cellsWithinSourceBounds())
             smoothing.appendSmoothing(triangleName, rCode);
+    }
+
+    @Override
+    protected void recalculateCorrection() {
+        if(cellsWithinSourceBounds()) {
+            double[] input = TriangleUtil.getCellValues(cells, source);
+            smoothedValues = smoothing.smooth(input);
+        } else {
+            smoothedValues = null;
+        }
     }
 }

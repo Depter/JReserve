@@ -80,7 +80,7 @@
         <module>jreserve-triangle-smoothing-exponential</module>
     
         <!-- FACTORS -->
-        <module>jreserve-factor-core</module>
+        <module>jreserve-factors-core</module>
         
         <!-- ESTIMATES -->
         <module>jreserve-estimate-core</module>
